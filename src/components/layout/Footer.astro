@@ -1,0 +1,195 @@
+<footer class="footer">
+
+    <div class="footer-inner">
+  
+      <div class="footer-brand">
+  
+        <a href="/" class="logo">
+          Cruzando Meridianos
+        </a>
+  
+        <p>
+          Viajes diseñados para quienes buscan
+          algo más que un destino.
+        </p>
+  
+      </div>
+  
+  
+      <nav class="footer-nav" aria-label="Navegación del pie de página">
+  
+        <a href="/">Inicio</a>
+        <a href="/destinos">Destinos</a>
+        <a href="/como-trabajamos">Cómo trabajamos</a>
+        <a href="/contacto">Contacto</a>
+  
+      </nav>
+  
+    </div>
+  
+  
+    <div class="footer-bottom">
+  
+      <span>
+        © {new Date().getFullYear()} Cruzando Meridianos
+      </span>
+  
+      <span>
+        Viajar con criterio.
+      </span>
+  
+    </div>
+  
+  </footer>
+  
+  
+  <style>
+  
+  .footer {
+  
+    padding: 5rem 2rem 2rem;
+  
+    background: var(--color-bosque);
+  
+    color: var(--color-papel);
+  
+  }
+  
+  
+  .footer-inner {
+  
+    max-width: 1200px;
+  
+    margin: 0 auto;
+  
+    display: flex;
+  
+    justify-content: space-between;
+  
+    gap: 4rem;
+  
+  }
+  
+  
+  .footer-brand {
+  
+    max-width: 400px;
+  
+  }
+  
+  
+  .logo {
+  
+    display: inline-block;
+  
+    color: var(--color-papel);
+  
+    font-family: var(--font-serif);
+  
+    font-size: 2rem;
+  
+    text-decoration: none;
+  
+  }
+  
+  
+  .footer-brand p {
+  
+    max-width: 340px;
+  
+    margin-top: 1.2rem;
+  
+    font-size: .95rem;
+  
+    line-height: 1.7;
+  
+    color: rgba(251, 249, 245, .68);
+  
+  }
+  
+  
+  .footer-nav {
+  
+    display: flex;
+  
+    flex-direction: column;
+  
+    gap: .8rem;
+  
+  }
+  
+  
+  .footer-nav a {
+  
+    color: var(--color-papel);
+  
+    text-decoration: none;
+  
+    font-size: .95rem;
+  
+    transition: opacity .2s ease;
+  
+  }
+  
+  
+  .footer-nav a:hover {
+  
+    opacity: .65;
+  
+  }
+  
+  
+  .footer-bottom {
+  
+    max-width: 1200px;
+  
+    margin: 5rem auto 0;
+  
+    padding-top: 1.5rem;
+  
+    border-top: 1px solid rgba(251, 249, 245, .16);
+  
+    display: flex;
+  
+    justify-content: space-between;
+  
+    gap: 2rem;
+  
+    font-size: .75rem;
+  
+    color: rgba(251, 249, 245, .5);
+  
+  }
+  
+  
+  @media (max-width: 700px) {
+  
+    .footer {
+  
+      padding: 4rem 1.5rem 1.5rem;
+  
+    }
+  
+  
+    .footer-inner {
+  
+      flex-direction: column;
+  
+      gap: 3rem;
+  
+    }
+  
+  
+    .footer-bottom {
+  
+      margin-top: 4rem;
+  
+      flex-direction: column;
+  
+      gap: .5rem;
+  
+    }
+  
+  }
+  
+  </style>
