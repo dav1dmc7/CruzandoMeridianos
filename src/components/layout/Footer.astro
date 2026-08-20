@@ -1,195 +1,434 @@
-<footer class="footer">
+<footer class="site-footer">
 
-    <div class="footer-inner">
-  
+  <div class="footer-inner">
+
+    <div class="footer-main">
+
       <div class="footer-brand">
-  
-        <a href="/" class="logo">
-          Cruzando Meridianos
+
+        <a
+          href="/"
+          aria-label="Cruzando Meridianos — Inicio"
+        >
+          <img
+            src="/isotipo.svg"
+            alt=""
+            class="footer-isotipo"
+          />
         </a>
-  
+
         <p>
-          Viajes diseñados para quienes buscan
-          algo más que un destino.
+          Viajes diseñados desde cómo quieres vivirlos.
         </p>
-  
+
       </div>
-  
-  
-      <nav class="footer-nav" aria-label="Navegación del pie de página">
-  
+
+
+      <div class="footer-column">
+
+        <h2>Explorar</h2>
+
         <a href="/">Inicio</a>
-        <a href="/destinos">Destinos</a>
         <a href="/como-trabajamos">Cómo trabajamos</a>
+        <a href="/viajes">Viajes</a>
+        <a href="/ideas">Ideas para viajar</a>
+
+      </div>
+
+
+      <div class="footer-column">
+
+        <h2>La marca</h2>
+
+        <a href="/sobre-nosotros">Sobre nosotros</a>
         <a href="/contacto">Contacto</a>
-  
-      </nav>
-  
+
+      </div>
+
+
+      <div class="footer-highlight">
+
+        <span class="footer-eyebrow">
+          ¿Tienes un viaje en mente?
+        </span>
+
+        <h2>
+          Cuéntanos qué estás imaginando.
+        </h2>
+
+        <p>
+          Nosotros empezamos a investigar.
+        </p>
+
+        <a
+        href="/cuentatuviaje"
+        class="footer-cta"
+      >
+        Cuéntanos tu viaje
+        <span aria-hidden="true">↗</span>
+      </a>
+
+      </div>
+
     </div>
-  
-  
+
+
     <div class="footer-bottom">
-  
+
       <span>
         © {new Date().getFullYear()} Cruzando Meridianos
       </span>
-  
-      <span>
-        Viajar con criterio.
-      </span>
-  
+
+      <div class="footer-legal">
+        <a href="/privacidad">Privacidad</a>
+        <a href="/aviso-legal">Aviso legal</a>
+        <a href="/cookies">Cookies</a>
+      </div>
+
     </div>
-  
-  </footer>
-  
-  
-  <style>
-  
-  .footer {
-  
-    padding: 5rem 2rem 2rem;
-  
+
+  </div>
+
+</footer>
+
+
+<style>
+
+  .site-footer {
+    padding: 7rem 2rem 2rem;
+
     background: var(--color-bosque);
-  
     color: var(--color-papel);
-  
   }
-  
-  
+
+
   .footer-inner {
-  
-    max-width: 1200px;
-  
+    width: min(1200px, 100%);
+
     margin: 0 auto;
-  
-    display: flex;
-  
-    justify-content: space-between;
-  
+  }
+
+
+  .footer-main {
+
+    display: grid;
+
+    grid-template-columns:
+      1.45fr
+      .8fr
+      .8fr
+      1.5fr;
+
     gap: 4rem;
-  
+
+    padding-bottom: 6rem;
   }
-  
-  
+
+
   .footer-brand {
-  
-    max-width: 400px;
-  
+    max-width: 280px;
   }
-  
-  
-  .logo {
-  
-    display: inline-block;
-  
-    color: var(--color-papel);
-  
-    font-family: var(--font-serif);
-  
-    font-size: 2rem;
-  
-    text-decoration: none;
-  
+
+
+  .footer-brand > a {
+    display: inline-flex;
   }
-  
-  
+
+
+  .footer-isotipo {
+
+    display: block;
+
+    width: 70px;
+    height: 70px;
+
+    margin-bottom: 1.5rem;
+  }
+
+
   .footer-brand p {
-  
-    max-width: 340px;
-  
-    margin-top: 1.2rem;
-  
-    font-size: .95rem;
-  
-    line-height: 1.7;
-  
-    color: rgba(251, 249, 245, .68);
-  
+
+    margin: 0;
+
+    max-width: 250px;
+
+    font-family: var(--font-serif);
+
+    font-size: 1.25rem;
+
+    line-height: 1.45;
+
+    color: rgba(251, 249, 245, .78);
   }
-  
-  
-  .footer-nav {
-  
+
+
+  .footer-column {
+
     display: flex;
-  
+
     flex-direction: column;
-  
-    gap: .8rem;
-  
+
+    align-items: flex-start;
+
+    gap: .75rem;
   }
-  
-  
-  .footer-nav a {
-  
-    color: var(--color-papel);
-  
+
+
+  .footer-column h2 {
+
+    margin: 0 0 1rem;
+
+    font-family: var(--font-sans);
+
+    font-size: .7rem;
+
+    font-weight: 500;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+
+    color: var(--color-cobre);
+  }
+
+
+  .footer-column a {
+
+    color: rgba(251, 249, 245, .72);
+
     text-decoration: none;
-  
+
+    font-size: .9rem;
+
+    transition:
+      color .2s ease,
+      transform .2s ease;
+  }
+
+
+  .footer-column a:hover {
+
+    color: var(--color-papel);
+
+    transform: translateX(2px);
+  }
+
+
+  .footer-highlight {
+
+    padding-left: 2.5rem;
+
+    border-left:
+      1px solid rgba(251, 249, 245, .16);
+  }
+
+
+  .footer-eyebrow {
+
+    display: block;
+
+    margin-bottom: 1rem;
+
+    font-size: .72rem;
+
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+
+    color: var(--color-cobre);
+  }
+
+
+  .footer-highlight h2 {
+
+    margin: 0;
+
+    max-width: 360px;
+
+    font-family: var(--font-serif);
+
+    font-size: 2rem;
+
+    font-weight: 400;
+
+    line-height: 1.2;
+  }
+
+
+  .footer-highlight p {
+
+    margin: 1rem 0 1.5rem;
+
+    color: rgba(251, 249, 245, .65);
+
     font-size: .95rem;
-  
-    transition: opacity .2s ease;
-  
+
+    line-height: 1.6;
   }
-  
-  
-  .footer-nav a:hover {
-  
-    opacity: .65;
-  
+
+
+  .footer-cta {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: .7rem;
+
+    color: var(--color-papel);
+
+    text-decoration: none;
+
+    font-size: .9rem;
+
+    font-weight: 500;
+
+    transition:
+      color .2s ease;
   }
-  
-  
+
+
+  .footer-cta span {
+
+    transition:
+      transform .2s ease;
+  }
+
+
+  .footer-cta:hover {
+
+    color: var(--color-cobre);
+  }
+
+
+  .footer-cta:hover span {
+
+    transform: translate(3px, -3px);
+  }
+
+
   .footer-bottom {
-  
-    max-width: 1200px;
-  
-    margin: 5rem auto 0;
-  
-    padding-top: 1.5rem;
-  
-    border-top: 1px solid rgba(251, 249, 245, .16);
-  
+
     display: flex;
-  
+
+    align-items: center;
+
     justify-content: space-between;
-  
+
     gap: 2rem;
-  
-    font-size: .75rem;
-  
-    color: rgba(251, 249, 245, .5);
-  
+
+    padding-top: 1.5rem;
+
+    border-top:
+      1px solid rgba(251, 249, 245, .16);
+
+    font-size: .7rem;
+
+    line-height: 1.5;
+
+    color: rgba(251, 249, 245, .45);
   }
-  
-  
-  @media (max-width: 700px) {
-  
-    .footer {
-  
-      padding: 4rem 1.5rem 1.5rem;
-  
+
+
+  .footer-legal {
+
+    display: flex;
+
+    gap: 1.5rem;
+  }
+
+
+  .footer-legal a {
+
+    color: inherit;
+
+    text-decoration: none;
+  }
+
+
+  .footer-legal a:hover {
+
+    color: var(--color-papel);
+  }
+
+
+  @media (max-width: 950px) {
+
+    .footer-main {
+
+      grid-template-columns: 1fr 1fr;
+
+      gap: 4rem 3rem;
     }
-  
-  
-    .footer-inner {
-  
-      flex-direction: column;
-  
+
+    .footer-brand {
+
+      grid-column: 1 / -1;
+    }
+
+    .footer-highlight {
+
+      padding-left: 0;
+
+      padding-top: 2rem;
+
+      border-left: 0;
+
+      border-top:
+        1px solid rgba(251, 249, 245, .16);
+    }
+
+  }
+
+
+  @media (max-width: 600px) {
+
+    .site-footer {
+
+      padding:
+        5rem 1.5rem 1.5rem;
+    }
+
+    .footer-main {
+
+      grid-template-columns: 1fr;
+
       gap: 3rem;
-  
+
+      padding-bottom: 4rem;
     }
-  
-  
+
+    .footer-brand {
+
+      grid-column: auto;
+    }
+
+    .footer-highlight {
+
+      padding-top: 2rem;
+    }
+
+    .footer-highlight h2 {
+
+      font-size: 1.8rem;
+    }
+
     .footer-bottom {
-  
-      margin-top: 4rem;
-  
+
+      align-items: flex-start;
+
       flex-direction: column;
-  
-      gap: .5rem;
-  
+
+      gap: .8rem;
     }
-  
+
+    .footer-legal {
+
+      flex-wrap: wrap;
+
+      gap: 1rem;
+    }
+
   }
-  
-  </style>
+
+</style>

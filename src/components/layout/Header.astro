@@ -1,44 +1,218 @@
-<header>
-    <div class="container">
-      <h1>Cruzando Meridianos</h1>
+<header class="site-header">
+    <div class="header-inner">
   
-      <nav>
+      <a
+        href="/"
+        class="brand"
+        aria-label="Cruzando Meridianos — Inicio"
+      >
+        <img
+          src="/logo.svg"
+          alt="Cruzando Meridianos"
+          class="brand-logo"
+        />
+      </a>
+  
+      <nav
+        class="main-nav"
+        aria-label="Navegación principal"
+      >
         <a href="/">Inicio</a>
-        <a href="/destinos">Destinos</a>
-        <a href="/filosofia">Cómo trabajamos</a>
+        <a href="/como-trabajamos">Cómo trabajamos</a>
+        <a href="/viajes">Viajes</a>
+        <a href="/ideas">Ideas para viajar</a>
+        <a href="/sobre-nosotros">Sobre nosotros</a>
         <a href="/contacto">Contacto</a>
       </nav>
+  
+      <a
+      href="/cuentatuviaje"
+      class="header-cta"
+    >
+      Cuéntanos tu viaje
+    </a>
+  
     </div>
   </header>
   
   <style>
-    header {
-      padding: 24px 0;
-      border-bottom: 1px solid #e6e1d8;
+    .site-header {
+      width: 100%;
+      background: var(--color-papel);
+      border-bottom: 1px solid rgba(28, 48, 38, .10);
     }
   
-    .container {
-      width: min(1100px, 90%);
+    .header-inner {
+      width: min(1280px, calc(100% - 3rem));
+      min-height: 88px;
       margin: 0 auto;
   
       display: flex;
-      justify-content: space-between;
       align-items: center;
+  
+      gap: 2.5rem;
     }
   
-    h1 {
-      font-size: 1.8rem;
-      margin: 0;
-    }
-  
-    nav {
+    .brand {
       display: flex;
-      gap: 2rem;
+      align-items: center;
+  
+      flex-shrink: 0;
     }
   
-    nav a {
+    .brand-logo {
+      display: block;
+  
+      width: 185px;
+      height: auto;
+    }
+  
+    .main-nav {
+      margin-left: auto;
+  
+      display: flex;
+      align-items: center;
+  
+      gap: 1.35rem;
+    }
+  
+    .main-nav a {
+      position: relative;
+  
+      color: var(--color-bosque);
+  
       text-decoration: none;
-      color: inherit;
+  
+      white-space: nowrap;
+  
+      font-size: .82rem;
       font-weight: 500;
+  
+      transition:
+        color .2s ease,
+        opacity .2s ease;
+    }
+  
+    .main-nav a::after {
+      content: "";
+  
+      position: absolute;
+  
+      left: 0;
+      right: 0;
+      bottom: -6px;
+  
+      height: 1px;
+  
+      background: var(--color-cobre);
+  
+      transform: scaleX(0);
+      transform-origin: center;
+  
+      transition: transform .2s ease;
+    }
+  
+    .main-nav a:hover {
+      color: var(--color-cobre);
+    }
+  
+    .main-nav a:hover::after {
+      transform: scaleX(1);
+    }
+  
+    .header-cta {
+      flex-shrink: 0;
+  
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+  
+      padding: .72rem 1.1rem;
+  
+      border: 1px solid var(--color-bosque);
+      border-radius: 999px;
+  
+      background: var(--color-bosque);
+      color: var(--color-papel);
+  
+      text-decoration: none;
+  
+      white-space: nowrap;
+  
+      font-size: .78rem;
+      font-weight: 500;
+  
+      transition:
+        transform .2s ease,
+        background .2s ease,
+        color .2s ease;
+    }
+  
+    .header-cta:hover {
+      transform: translateY(-1px);
+  
+      background: transparent;
+      color: var(--color-bosque);
+    }
+  
+    @media (max-width: 1120px) {
+  
+      .header-inner {
+        width: min(100% - 2rem, 1000px);
+        gap: 1.5rem;
+      }
+  
+      .brand-logo {
+        width: 165px;
+      }
+  
+      .main-nav {
+        gap: 1rem;
+      }
+  
+      .main-nav a {
+        font-size: .76rem;
+      }
+  
+      .header-cta {
+        padding: .68rem .9rem;
+        font-size: .74rem;
+      }
+    }
+  
+    @media (max-width: 900px) {
+  
+      .header-inner {
+        min-height: 80px;
+      }
+  
+      .main-nav {
+        display: none;
+      }
+  
+      .header-cta {
+        margin-left: auto;
+      }
+  
+      .brand-logo {
+        width: 175px;
+      }
+    }
+  
+    @media (max-width: 500px) {
+  
+      .header-inner {
+        width: calc(100% - 2rem);
+      }
+  
+      .brand-logo {
+        width: 145px;
+      }
+  
+      .header-cta {
+        padding: .65rem .8rem;
+  
+        font-size: .7rem;
+      }
     }
   </style>

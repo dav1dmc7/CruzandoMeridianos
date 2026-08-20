@@ -33,6 +33,8 @@ import auroras from "../../assets/images/aurora.jpg";
 
     <div class="destinations-grid">
 
+      <!-- 01 COSTA RICA -->
+
       <article class="destination destination-large">
 
         <div class="destination-image">
@@ -46,9 +48,13 @@ import auroras from "../../assets/images/aurora.jpg";
 
         <div class="destination-content">
 
-          <span class="destination-number">01</span>
+          <span class="destination-number">
+            01
+          </span>
 
-          <h3>Costa Rica</h3>
+          <h3>
+            Costa Rica
+          </h3>
 
           <p>
             Selva, fauna y costa. Un viaje de naturaleza y aventura
@@ -59,6 +65,8 @@ import auroras from "../../assets/images/aurora.jpg";
 
       </article>
 
+
+      <!-- 02 SUDÁFRICA -->
 
       <article class="destination">
 
@@ -73,9 +81,13 @@ import auroras from "../../assets/images/aurora.jpg";
 
         <div class="destination-content">
 
-          <span class="destination-number">02</span>
+          <span class="destination-number">
+            02
+          </span>
 
-          <h3>Sudáfrica</h3>
+          <h3>
+            Sudáfrica
+          </h3>
 
           <p>
             Kruger y Ciudad del Cabo. Safari, naturaleza, gastronomía
@@ -86,6 +98,8 @@ import auroras from "../../assets/images/aurora.jpg";
 
       </article>
 
+
+      <!-- 03 JORDANIA -->
 
       <article class="destination">
 
@@ -100,9 +114,13 @@ import auroras from "../../assets/images/aurora.jpg";
 
         <div class="destination-content">
 
-          <span class="destination-number">03</span>
+          <span class="destination-number">
+            03
+          </span>
 
-          <h3>Jordania</h3>
+          <h3>
+            Jordania
+          </h3>
 
           <p>
             Petra, desierto y cultura. Un viaje para descubrir
@@ -112,56 +130,73 @@ import auroras from "../../assets/images/aurora.jpg";
         </div>
 
       </article>
+
+
+      <!-- 04 GRECIA -->
+
       <article class="destination">
 
         <div class="destination-image">
-      
+
           <Image
             src={grecia}
             alt="Paisaje costero de Corfú, Grecia"
           />
-      
+
         </div>
-      
+
         <div class="destination-content">
-      
-          <span class="destination-number">04</span>
-      
-          <h3>Grecia</h3>
-      
+
+          <span class="destination-number">
+            04
+          </span>
+
+          <h3>
+            Grecia
+          </h3>
+
           <p>
             Islas, historia y Mediterráneo. Un viaje que combina
             cultura, paisaje y tiempo para disfrutar sin prisas.
           </p>
-      
+
         </div>
-      
+
       </article>
+
+
+      <!-- 05 AURORAS -->
+
       <article class="destination">
 
         <div class="destination-image">
-      
+
           <Image
             src={auroras}
             alt="Auroras boreales sobre un paisaje nórdico"
           />
-      
+
         </div>
-      
+
         <div class="destination-content">
-      
-          <span class="destination-number">05</span>
-      
-          <h3>Auroras</h3>
-      
+
+          <span class="destination-number">
+            05
+          </span>
+
+          <h3>
+            Auroras
+          </h3>
+
           <p>
             No es solo verlas. Es saber cuándo ir, dónde buscarlas
             y cómo construir el viaje alrededor de la experiencia.
           </p>
-      
+
         </div>
-      
+
       </article>
+
     </div>
 
   </div>
@@ -172,87 +207,64 @@ import auroras from "../../assets/images/aurora.jpg";
 <style>
 
 .destinations {
-
   padding: 9rem 2rem;
-
   background: #f7f4ef;
-
 }
 
 .destinations-inner {
-
   max-width: 1200px;
-
   margin: 0 auto;
-
 }
 
 .destinations-intro {
-
   max-width: 760px;
-
   margin-bottom: 6rem;
-
 }
 
 .eyebrow {
-
   margin: 0 0 1.5rem;
 
   letter-spacing: 3px;
-
   text-transform: uppercase;
 
   font-size: .8rem;
 
   color: var(--color-cobre);
-
 }
 
 h2 {
-
   margin: 0;
 
   font-size: 3.8rem;
-
   line-height: 1.08;
-
 }
 
 .destinations-intro p:last-child {
-
   margin-top: 2rem;
 
   max-width: 620px;
 
   font-size: 1.1rem;
-
   line-height: 1.8;
 
   color: #555;
-
 }
 
 
 .destinations-grid {
-
   display: grid;
 
   grid-template-columns: repeat(2, 1fr);
 
   gap: 5rem 3rem;
-
 }
 
 
 .destination {
-
   min-width: 0;
-
 }
 
 .destination-large {
-
   grid-column: 1 / -1;
 
   display: grid;
@@ -262,124 +274,104 @@ h2 {
   gap: 4rem;
 
   align-items: center;
-
 }
 
 
 .destination-image {
-
   overflow: hidden;
 
   border-radius: 24px;
-
 }
 
 .destination-image img {
-
   width: 100%;
-
   height: 100%;
 
   display: block;
 
   object-fit: cover;
-
 }
 
 .destination-large .destination-image {
-
   height: 520px;
-
 }
 
 .destination:not(.destination-large) .destination-image {
-
   height: 420px;
-
 }
 
 
 .destination-content {
-
   padding-top: 1.5rem;
-
 }
 
 .destination-number {
-
   display: block;
 
   margin-bottom: 1.5rem;
 
   font-size: .8rem;
-
   letter-spacing: 2px;
 
   color: var(--color-cobre);
-
 }
 
 h3 {
-
   margin: 0 0 1rem;
 
   font-size: 2.2rem;
-
 }
 
 .destination-content p {
-
   margin: 0;
-
-  font-size: 1rem;
-
-  line-height: 1.7;
-
-  color: #555;
 
   max-width: 460px;
 
+  font-size: 1rem;
+  line-height: 1.7;
+
+  color: #555;
 }
 
 
 @media (max-width: 800px) {
 
-  .destinations {
+.destinations {
+  padding: 6rem 1.5rem;
+}
 
-    padding: 6rem 1.5rem;
+h2 {
+  font-size: 2.7rem;
+}
 
-  }
+.destinations-grid {
+  grid-template-columns: 1fr;
+  gap: 4rem;
+}
 
-  h2 {
+.destination {
+  display: flex;
+  flex-direction: column;
+}
 
-    font-size: 2.7rem;
+.destination-large {
+  grid-column: auto;
+  gap: 2rem;
+}
 
-  }
+.destination-content {
+  order: 1;
+  padding-top: 0;
+}
 
-  .destinations-grid {
+.destination-image {
+  order: 2;
+}
 
-    grid-template-columns: 1fr;
-
-    gap: 4rem;
-
-  }
-
-  .destination-large {
-
-    grid-column: auto;
-
-    grid-template-columns: 1fr;
-
-    gap: 2rem;
-
-  }
-
-  .destination-large .destination-image,
-  .destination:not(.destination-large) .destination-image {
-
-    height: 380px;
-
-  }
+.destination-large .destination-image,
+.destination:not(.destination-large) .destination-image {
+  height: 380px;
+}
 
 }
 

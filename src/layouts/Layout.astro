@@ -1,7 +1,26 @@
 ---
-const title = "Cruzando Meridianos";
-const description =
-  "Viajes personalizados diseñados para descubrir el mundo de una forma diferente.";
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+}
+
+const {
+  title = "Cruzando Meridianos | Viajes a medida",
+  description = "Diseñamos viajes a medida desde cero, con investigación, experiencia y criterio. Cuéntanos cómo quieres viajar y diseñaremos una propuesta para ti.",
+  canonical,
+  ogImage = "/brujula.png",
+} = Astro.props;
+
+const siteUrl = "https://www.cruzandomeridianos.com";
+
+const canonicalUrl = canonical
+  ? new URL(canonical, siteUrl).href
+  : new URL(Astro.url.pathname, siteUrl).href;
+
+const ogImageUrl = new URL(ogImage, siteUrl).href;
+
 import "../styles/global.css";
 ---
 
@@ -9,19 +28,115 @@ import "../styles/global.css";
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
 
     <title>{title}</title>
-    <meta name="description" content={description} />
 
-    <link rel="icon" href="/favicon.ico" />
+    <meta
+      name="description"
+      content={description}
+    />
 
-	<link rel="preconnect" href="https://fonts.googleapis.com">
+    <meta
+      name="theme-color"
+      content="#FBF9F5"
+    />
 
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Canonical -->
+    <link
+      rel="canonical"
+      href={canonicalUrl}
+    />
 
+    <!-- Open Graph -->
+    <meta
+      property="og:type"
+      content="website"
+    />
+
+    <meta
+      property="og:site_name"
+      content="Cruzando Meridianos"
+    />
+
+    <meta
+      property="og:title"
+      content={title}
+    />
+
+    <meta
+      property="og:description"
+      content={description}
+    />
+
+    <meta
+      property="og:url"
+      content={canonicalUrl}
+    />
+
+    <meta
+      property="og:image"
+      content={ogImageUrl}
+    />
+
+    <meta
+      property="og:image:alt"
+      content="Cruzando Meridianos"
+    />
+
+    <!-- Twitter / X -->
+    <meta
+      name="twitter:card"
+      content="summary_large_image"
+    />
+
+    <meta
+      name="twitter:title"
+      content={title}
+    />
+
+    <meta
+      name="twitter:description"
+      content={description}
+    />
+
+    <meta
+      name="twitter:image"
+      content={ogImageUrl}
+    />
+
+    <!-- Icons -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="/brujula.png"
+    />
+
+    <link
+      rel="apple-touch-icon"
+      href="/brujula.png"
+    />
+
+    <!-- Fonts -->
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body>

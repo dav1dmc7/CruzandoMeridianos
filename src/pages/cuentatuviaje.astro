@@ -1,0 +1,2603 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+---
+
+<Layout
+  title="Cuéntanos tu viaje | Cruzando Meridianos"
+  description="Cuéntanos qué tienes en mente, qué os gustaría vivir y qué preferís evitar. Diseñaremos una propuesta de viaje a vuestra medida."
+>
+  <Header />
+
+  <main class="journey-page">
+
+    <!-- =====================================================
+         INTRO
+    ====================================================== -->
+
+    <section class="journey-intro">
+      <div class="intro-inner">
+
+        <p class="eyebrow">CUÉNTANOS TU VIAJE</p>
+
+        <h1>
+          No hace falta que tengas
+          <em>el viaje pensado.</em>
+        </h1>
+
+        <p class="intro-text">
+          Cuéntanos qué tienes en mente, qué os gustaría vivir
+          y qué preferís evitar. Nosotros iremos entendiendo
+          cómo viajáis para dar forma al viaje.
+        </p>
+
+        <p class="intro-note">
+          No buscamos respuestas perfectas.
+          Queremos conoceros.
+        </p>
+
+      </div>
+    </section>
+
+
+    <!-- =====================================================
+         CONVERSACIÓN
+    ====================================================== -->
+
+    <section
+      class="conversation"
+      aria-label="Cuéntanos tu viaje"
+    >
+
+      <div class="conversation-inner">
+
+        <!-- PROGRESO -->
+
+        <div
+          class="journey-progress"
+          aria-label="Progreso del formulario"
+        >
+
+          <div class="progress-top">
+
+            <span
+              class="progress-message"
+              aria-live="polite"
+              id="progress-message"
+            >
+              Empezamos a imaginarlo
+            </span>
+
+            <span class="progress-count">
+              <span id="current-step">1</span>
+              <span aria-hidden="true"> / </span>
+              <span id="total-steps">9</span>
+            </span>
+
+          </div>
+
+          <div
+            class="route"
+            aria-hidden="true"
+          >
+
+            <div class="route-line">
+              <div
+                class="route-progress"
+                id="route-progress"
+              ></div>
+            </div>
+
+            <div
+              class="route-plane"
+              id="route-plane"
+            >
+              <span class="plane">✈</span>
+            </div>
+
+            <div class="route-destination">
+              <span class="destination-dot"></span>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FORMULARIO
+        ================================================== -->
+
+        <form
+          id="journey-form"
+          novalidate
+        >
+
+          <!-- =================================================
+               01 · EL VIAJE
+          ================================================== -->
+
+          <div
+            class="question-block active"
+            data-step="1"
+            data-message="Empezamos a imaginarlo"
+          >
+
+            <span class="question-number">01</span>
+
+            <label for="trip">
+              ¿Qué viaje tienes en mente?
+            </label>
+
+            <p class="question-help">
+              Puede ser algo muy concreto o simplemente una idea.
+              Y si todavía no sabéis dónde, también podemos empezar desde ahí.
+            </p>
+
+            <div class="examples">
+
+              <button type="button" class="example">
+                Queremos ir a Costa Rica 10 días en noviembre.
+              </button>
+
+              <button type="button" class="example">
+                Queremos hacer un viaje especial, pero todavía no sabemos dónde.
+              </button>
+
+              <button type="button" class="example">
+                Nos gustaría conocer Japón, pero no sabemos por dónde empezar.
+              </button>
+
+              <button type="button" class="example">
+                Todavía no lo tenemos claro. Nos gustaría que nos orientaseis.
+              </button>
+
+            </div>
+
+            <textarea
+              id="trip"
+              name="trip"
+              rows="4"
+              placeholder="Cuéntanos lo que tengas en mente..."
+              required
+              aria-describedby="trip-error"
+            ></textarea>
+
+            <p
+              class="field-error"
+              id="trip-error"
+              role="alert"
+              hidden
+            >
+              Cuéntanos un poco qué viaje tenéis en mente.
+            </p>
+
+            <button
+              type="button"
+              class="next-button"
+            >
+              Continuar
+              <span aria-hidden="true">→</span>
+            </button>
+
+          </div>
+
+
+          <!-- =================================================
+               02 · VIAJEROS
+          ================================================== -->
+
+          <div
+            class="question-block"
+            data-step="2"
+            data-message="Vamos conociendo vuestro viaje"
+          >
+
+            <span class="question-number">02</span>
+
+            <label for="travellers">
+              ¿Quién va a viajar?
+            </label>
+
+            <p class="question-help">
+              Cuéntanos quiénes sois y cualquier circunstancia
+              que debamos tener especialmente en cuenta.
+            </p>
+
+            <div class="examples">
+
+              <button type="button" class="example">
+                Somos una pareja.
+              </button>
+
+              <button type="button" class="example">
+                Somos una familia con dos niños.
+              </button>
+
+              <button type="button" class="example">
+                Vamos cuatro amigos.
+              </button>
+
+              <button type="button" class="example">
+                Somos dos adultos y viajamos con un niño de 8 años.
+              </button>
+
+            </div>
+
+            <textarea
+              id="travellers"
+              name="travellers"
+              rows="4"
+              placeholder="¿Quiénes vais a viajar?"
+              required
+              aria-describedby="travellers-error"
+            ></textarea>
+
+            <p
+              class="field-error"
+              id="travellers-error"
+              role="alert"
+              hidden
+            >
+              Cuéntanos quiénes vais a viajar.
+            </p>
+
+            <div class="question-actions">
+
+              <button
+                type="button"
+                class="back-button"
+              >
+                ← Atrás
+              </button>
+
+              <button
+                type="button"
+                class="next-button"
+              >
+                Continuar
+                <span aria-hidden="true">→</span>
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               03 · FECHAS
+          ================================================== -->
+
+          <div
+            class="question-block"
+            data-step="3"
+            data-message="Ya tenemos el rumbo"
+          >
+
+            <span class="question-number">03</span>
+
+            <label for="dates">
+              ¿Cuándo queréis viajar?
+            </label>
+
+            <p class="question-help">
+              Contadnos las fechas que tenéis en mente, cuánto tiempo
+              queréis viajar y si tenéis flexibilidad.
+            </p>
+
+            <div class="examples">
+
+              <button type="button" class="example">
+                Tenemos unos 10 días en noviembre.
+              </button>
+
+              <button type="button" class="example">
+                Tenemos las fechas bastante cerradas.
+              </button>
+
+              <button type="button" class="example">
+                Tenemos flexibilidad y podemos adaptar las fechas.
+              </button>
+
+              <button type="button" class="example">
+                Sabemos el mes, pero todavía no los días exactos.
+              </button>
+
+            </div>
+
+            <textarea
+              id="dates"
+              name="dates"
+              rows="4"
+              placeholder="Fechas, duración o flexibilidad..."
+              required
+              aria-describedby="dates-error"
+            ></textarea>
+
+            <p
+              class="field-error"
+              id="dates-error"
+              role="alert"
+              hidden
+            >
+              Cuéntanos cuándo os gustaría viajar o qué flexibilidad tenéis.
+            </p>
+
+            <div class="question-actions">
+
+              <button
+                type="button"
+                class="back-button"
+              >
+                ← Atrás
+              </button>
+
+              <button
+                type="button"
+                class="next-button"
+              >
+                Continuar
+                <span aria-hidden="true">→</span>
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               04 · PRESUPUESTO
+          ================================================== -->
+
+          <div
+            class="question-block"
+            data-step="4"
+            data-message="Esto empieza a tomar forma"
+          >
+
+            <span class="question-number">04</span>
+
+            <fieldset class="choice-fieldset">
+
+              <legend>
+                ¿Qué presupuesto aproximado tenéis pensado?
+              </legend>
+
+              <p class="question-help">
+                Es una referencia aproximada por persona para todo el viaje.
+                Si todavía no lo tenéis claro, no pasa nada.
+              </p>
+
+              <div
+                class="budget-options"
+                role="radiogroup"
+                aria-label="Presupuesto aproximado por persona"
+              >
+
+                <label class="choice-card">
+                  <input
+                    type="radio"
+                    name="budget"
+                    value="less-2000"
+                    required
+                  />
+                  <span>Menos de 2.000 €</span>
+                </label>
+
+                <label class="choice-card">
+                  <input
+                    type="radio"
+                    name="budget"
+                    value="2000-3000"
+                  />
+                  <span>2.000 – 3.000 €</span>
+                </label>
+
+                <label class="choice-card">
+                  <input
+                    type="radio"
+                    name="budget"
+                    value="3000-4500"
+                  />
+                  <span>3.000 – 4.500 €</span>
+                </label>
+
+                <label class="choice-card">
+                  <input
+                    type="radio"
+                    name="budget"
+                    value="4500-6000"
+                  />
+                  <span>4.500 – 6.000 €</span>
+                </label>
+
+                <label class="choice-card">
+                  <input
+                    type="radio"
+                    name="budget"
+                    value="more-6000"
+                  />
+                  <span>Más de 6.000 €</span>
+                </label>
+
+                <label class="choice-card">
+                  <input
+                    type="radio"
+                    name="budget"
+                    value="unknown"
+                  />
+                  <span>Todavía no lo tenemos claro</span>
+                </label>
+
+              </div>
+
+            </fieldset>
+
+            <p
+              class="field-error"
+              id="budget-error"
+              role="alert"
+              hidden
+            >
+              Elige una opción para que podamos orientarnos.
+            </p>
+
+
+            <fieldset class="sub-question">
+
+              <legend>
+                ¿El presupuesto incluye los vuelos?
+                <span>Opcional</span>
+              </legend>
+
+              <div
+                class="small-choice-group"
+                role="radiogroup"
+                aria-label="Vuelos incluidos en el presupuesto"
+              >
+
+                <label class="small-choice">
+                  <input
+                    type="radio"
+                    name="budget_flights"
+                    value="included"
+                  />
+                  <span>Sí, incluidos</span>
+                </label>
+
+                <label class="small-choice">
+                  <input
+                    type="radio"
+                    name="budget_flights"
+                    value="separate"
+                  />
+                  <span>No, aparte</span>
+                </label>
+
+                <label class="small-choice">
+                  <input
+                    type="radio"
+                    name="budget_flights"
+                    value="unknown"
+                  />
+                  <span>No lo tenemos claro</span>
+                </label>
+
+              </div>
+
+            </fieldset>
+
+            <p class="field-note">
+              Si tenéis flexibilidad, también podemos estudiar distintas
+              combinaciones de fechas y vuelos.
+            </p>
+
+            <div class="question-actions">
+
+              <button
+                type="button"
+                class="back-button"
+              >
+                ← Atrás
+              </button>
+
+              <button
+                type="button"
+                class="next-button"
+              >
+                Continuar
+                <span aria-hidden="true">→</span>
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               05 · EXPERIENCIA
+          ================================================== -->
+
+          <div
+            class="question-block"
+            data-step="5"
+            data-message="Cada vez conocemos mejor el viaje"
+          >
+
+            <span class="question-number">05</span>
+
+            <label for="experience">
+              ¿Qué os gustaría vivir?
+            </label>
+
+            <p class="question-help">
+              Cuéntanoslo como se lo contarías a un amigo.
+              No hace falta elegir categorías.
+            </p>
+
+            <div class="examples">
+
+              <button type="button" class="example">
+                Queremos ver animales, pero no estar cinco horas al día en un coche.
+              </button>
+
+              <button type="button" class="example">
+                Nos gusta madrugar para aprovechar el día.
+              </button>
+
+              <button type="button" class="example">
+                Queremos comer bien y conocer sitios locales.
+              </button>
+
+              <button type="button" class="example">
+                Preferimos hacer menos cosas y disfrutarlas tranquilamente.
+              </button>
+
+            </div>
+
+            <textarea
+              id="experience"
+              name="experience"
+              rows="5"
+              placeholder="¿Qué os gustaría vivir durante el viaje?"
+              required
+              aria-describedby="experience-error"
+            ></textarea>
+
+            <p
+              class="field-error"
+              id="experience-error"
+              role="alert"
+              hidden
+            >
+              Cuéntanos un poco qué os gustaría vivir.
+            </p>
+
+            <div class="question-actions">
+
+              <button
+                type="button"
+                class="back-button"
+              >
+                ← Atrás
+              </button>
+
+              <button
+                type="button"
+                class="next-button"
+              >
+                Continuar
+                <span aria-hidden="true">→</span>
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               06 · MOVILIDAD Y SERVICIOS
+          ================================================== -->
+
+          <div
+            class="question-block"
+            data-step="6"
+            data-message="Ahora entendemos cómo queréis moveros"
+          >
+
+            <span class="question-number">06</span>
+
+            <label>
+              ¿Cómo os gusta moveros y descubrir un destino?
+            </label>
+
+            <p class="question-help">
+              Podéis elegir varias. Y si depende del destino,
+              también podéis dejar que os recomendemos nosotros.
+            </p>
+
+            <div
+              class="transport-options"
+              role="group"
+              aria-label="Preferencias de movilidad y servicios"
+            >
+
+              <label class="choice-card checkbox-card">
+                <input
+                  type="checkbox"
+                  name="transport"
+                  value="drive"
+                />
+                <span>Nos gusta conducir y tener libertad</span>
+              </label>
+
+              <label class="choice-card checkbox-card">
+                <input
+                  type="checkbox"
+                  name="transport"
+                  value="public-transport"
+                />
+                <span>Preferimos trenes y transporte público</span>
+              </label>
+
+              <label class="choice-card checkbox-card">
+                <input
+                  type="checkbox"
+                  name="transport"
+                  value="private-transfers"
+                />
+                <span>Preferimos transfers privados</span>
+              </label>
+
+              <label class="choice-card checkbox-card">
+                <input
+                  type="checkbox"
+                  name="transport"
+                  value="private-guide"
+                />
+                <span>Nos gustan las visitas con guía privado</span>
+              </label>
+
+              <label class="choice-card checkbox-card">
+                <input
+                  type="checkbox"
+                  name="transport"
+                  value="small-group"
+                />
+                <span>Nos gustan las experiencias en grupos pequeños</span>
+              </label>
+
+              <label class="choice-card checkbox-card">
+                <input
+                  type="checkbox"
+                  name="transport"
+                  value="destination-dependent"
+                />
+                <span>Una combinación según el destino</span>
+              </label>
+
+              <label class="choice-card checkbox-card featured-choice">
+                <input
+                  type="checkbox"
+                  name="transport"
+                  value="recommend"
+                />
+                <span>Preferimos que nos recomendéis vosotros</span>
+              </label>
+
+            </div>
+
+            <p class="field-note">
+              No hay una respuesta correcta. Quizá prefiráis transporte
+              público en una ciudad y coche en un destino de naturaleza.
+            </p>
+
+            <div class="question-actions">
+
+              <button
+                type="button"
+                class="back-button"
+              >
+                ← Atrás
+              </button>
+
+              <button
+                type="button"
+                class="next-button"
+              >
+                Continuar
+                <span aria-hidden="true">→</span>
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               07 · EVITAR
+          ================================================== -->
+
+          <div
+            class="question-block"
+            data-step="7"
+            data-message="También importa saber qué queréis evitar"
+          >
+
+            <span class="question-number">07</span>
+
+            <label for="avoid">
+              ¿Hay algo que NO queráis en vuestro viaje?
+            </label>
+
+            <p class="question-help">
+              A veces saber lo que no quieres es incluso más importante
+              que saber lo que quieres.
+            </p>
+
+            <div class="examples">
+
+              <button type="button" class="example">
+                No queremos ir corriendo de un sitio a otro.
+              </button>
+
+              <button type="button" class="example">
+                Queremos evitar lugares demasiado turísticos.
+              </button>
+
+              <button type="button" class="example">
+                No nos gusta cambiar de hotel cada noche.
+              </button>
+
+              <button type="button" class="example">
+                No queremos conducir demasiado.
+              </button>
+
+            </div>
+
+            <textarea
+              id="avoid"
+              name="avoid"
+              rows="5"
+              placeholder="Cuéntanos qué preferís evitar..."
+              required
+              aria-describedby="avoid-error"
+            ></textarea>
+
+            <p
+              class="field-error"
+              id="avoid-error"
+              role="alert"
+              hidden
+            >
+              Cuéntanos al menos algo que queráis evitar,
+              o escribid "ninguna preferencia".
+            </p>
+
+            <div class="question-actions">
+
+              <button
+                type="button"
+                class="back-button"
+              >
+                ← Atrás
+              </button>
+
+              <button
+                type="button"
+                class="next-button"
+              >
+                Continuar
+                <span aria-hidden="true">→</span>
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               08 · ESTILO Y RITMO
+          ================================================== -->
+
+          <div
+            class="question-block"
+            data-step="8"
+            data-message="Últimos detalles sobre vuestra manera de viajar"
+          >
+
+            <span class="question-number">08</span>
+
+            <label for="style">
+              ¿Cómo os gusta viajar?
+            </label>
+
+            <p class="question-help">
+              No hay una respuesta correcta. Queremos entender
+              vuestro ritmo y cuánto os gusta tener previsto.
+            </p>
+
+            <div class="examples">
+
+              <button type="button" class="example">
+                Preferimos una estructura clara y espacio para improvisar.
+              </button>
+
+              <button type="button" class="example">
+                Queremos que esté prácticamente todo pensado.
+              </button>
+
+              <button type="button" class="example">
+                Preferimos descubrir las cosas sobre la marcha.
+              </button>
+
+            </div>
+
+            <textarea
+              id="style"
+              name="style"
+              rows="4"
+              placeholder="¿Cómo os gusta organizar y vivir el viaje?"
+              required
+              aria-describedby="style-error"
+            ></textarea>
+
+            <p
+              class="field-error"
+              id="style-error"
+              role="alert"
+              hidden
+            >
+              Cuéntanos un poco cómo os gusta viajar.
+            </p>
+
+
+            <fieldset class="sub-question">
+
+              <legend>
+                ¿Qué ritmo os apetece?
+                <span>Opcional</span>
+              </legend>
+
+              <div
+                class="pace-options"
+                role="radiogroup"
+                aria-label="Ritmo del viaje"
+              >
+
+                <label class="choice-card">
+                  <input
+                    type="radio"
+                    name="pace"
+                    value="slow"
+                  />
+                  <span>
+                    <strong>Tranquilo</strong>
+                    <small>Queremos disfrutar sin prisas.</small>
+                  </span>
+                </label>
+
+                <label class="choice-card">
+                  <input
+                    type="radio"
+                    name="pace"
+                    value="balanced"
+                  />
+                  <span>
+                    <strong>Equilibrado</strong>
+                    <small>Queremos aprovechar, pero sin correr.</small>
+                  </span>
+                </label>
+
+                <label class="choice-card">
+                  <input
+                    type="radio"
+                    name="pace"
+                    value="intense"
+                  />
+                  <span>
+                    <strong>Intenso</strong>
+                    <small>Nos gusta hacer mucho y aprovechar el tiempo.</small>
+                  </span>
+                </label>
+
+                <label class="choice-card">
+                  <input
+                    type="radio"
+                    name="pace"
+                    value="destination-dependent"
+                  />
+                  <span>
+                    <strong>Depende del destino</strong>
+                    <small>Preferimos decidirlo según el viaje.</small>
+                  </span>
+                </label>
+
+              </div>
+
+            </fieldset>
+
+            <div class="question-actions">
+
+              <button
+                type="button"
+                class="back-button"
+              >
+                ← Atrás
+              </button>
+
+              <button
+                type="button"
+                class="next-button"
+              >
+                Últimos detalles
+                <span aria-hidden="true">→</span>
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               09 · CONTACTO
+          ================================================== -->
+
+          <div
+            class="question-block final-question"
+            data-step="9"
+            data-message="Ya casi hemos llegado"
+          >
+
+            <span class="question-number">09</span>
+
+            <label for="name">
+              Ya tenemos una primera idea de vuestro viaje.
+            </label>
+
+            <p class="question-help">
+              Solo nos queda saber cómo podemos ponernos en contacto contigo.
+            </p>
+
+
+            <div class="sub-question">
+
+              <label for="anything">
+                ¿Hay algo más que debamos saber?
+                <span>Opcional</span>
+              </label>
+
+              <textarea
+                id="anything"
+                name="anything"
+                rows="5"
+                placeholder="Cualquier detalle que quieras contarnos..."
+              ></textarea>
+
+            </div>
+
+
+            <div class="contact-fields">
+
+              <div class="field">
+
+                <label for="name">
+                  Nombre
+                </label>
+
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  autocomplete="name"
+                  placeholder="Tu nombre"
+                  required
+                  aria-describedby="name-error"
+                />
+
+                <p
+                  class="field-error"
+                  id="name-error"
+                  role="alert"
+                  hidden
+                >
+                  Dinos cómo podemos llamarte.
+                </p>
+
+              </div>
+
+              <div class="field">
+
+                <label for="email">
+                  Email
+                </label>
+
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  autocomplete="email"
+                  placeholder="tu@email.com"
+                  required
+                  aria-describedby="email-error"
+                />
+
+                <p
+                  class="field-error"
+                  id="email-error"
+                  role="alert"
+                  hidden
+                >
+                  Introduce un email válido.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <p class="privacy-note">
+              Utilizaremos estos datos para responder a tu solicitud
+              y hablar contigo sobre tu viaje.
+            </p>
+
+
+            <div class="question-actions">
+
+              <button
+                type="button"
+                class="back-button"
+              >
+                ← Atrás
+              </button>
+
+              <button
+                type="submit"
+                class="submit-button"
+              >
+                Enviar mi viaje
+                <span aria-hidden="true">→</span>
+              </button>
+
+            </div>
+
+          </div>
+
+        </form>
+
+
+        <!-- =====================================================
+             LLEGADA
+        ====================================================== -->
+
+        <div
+          class="arrival"
+          id="arrival"
+          aria-live="polite"
+          aria-hidden="true"
+        >
+
+          <div
+            class="arrival-route"
+            aria-hidden="true"
+          >
+
+            <div class="arrival-plane">
+              ✈
+            </div>
+
+            <div class="arrival-line"></div>
+
+            <div class="arrival-dot"></div>
+
+          </div>
+
+          <p class="eyebrow">
+            LLEGADA
+          </p>
+
+          <h2>
+            Gracias por contárnoslo.
+          </h2>
+
+          <p>
+            Ya tenemos una primera idea de cómo os gusta viajar.
+            Ahora nos toca a nosotros empezar a pensar el viaje.
+          </p>
+
+          <a
+            href="/"
+            class="success-link"
+          >
+            Volver al inicio
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <Footer />
+</Layout>
+
+
+<style>
+
+  /* =========================================================
+     BASE
+  ========================================================== */
+
+  .journey-page {
+    background: var(--color-papel);
+  }
+
+
+  /* =========================================================
+     INTRO
+  ========================================================== */
+
+  .journey-intro {
+    padding: 8rem 2rem 6rem;
+  }
+
+  .intro-inner {
+    width: min(900px, 100%);
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    margin: 0 0 1.5rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: .78rem;
+    color: var(--color-cobre);
+  }
+
+  .journey-intro h1 {
+    max-width: 850px;
+    margin: 0;
+    font-size: clamp(3.5rem, 7vw, 6.5rem);
+    line-height: .98;
+    font-weight: 400;
+  }
+
+  .journey-intro h1 em {
+    font-style: italic;
+    color: var(--color-cobre);
+  }
+
+  .intro-text {
+    max-width: 680px;
+    margin-top: 2.5rem;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #555;
+  }
+
+  .intro-note {
+    margin-top: 2rem;
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--color-bosque);
+  }
+
+
+  /* =========================================================
+     CONVERSATION
+  ========================================================== */
+
+  .conversation {
+    padding: 2rem 2rem 9rem;
+    background: var(--color-arena);
+  }
+
+  .conversation-inner {
+    width: min(850px, 100%);
+    margin: 0 auto;
+  }
+
+
+  /* =========================================================
+     PROGRESS
+  ========================================================== */
+
+  .journey-progress {
+    padding: 0 0 2rem;
+  }
+
+  .progress-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .progress-message {
+    font-family: var(--font-serif);
+    font-size: .95rem;
+    color: var(--color-bosque);
+  }
+
+  .progress-count {
+    flex-shrink: 0;
+    font-size: .75rem;
+    letter-spacing: 1px;
+    color: #777;
+  }
+
+  .route {
+    position: relative;
+    height: 28px;
+  }
+
+  .route-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(28, 48, 38, .18);
+    transform: translateY(-50%);
+  }
+
+  .route-progress {
+    width: 0;
+    height: 100%;
+    background: var(--color-cobre);
+    transition: width .45s ease;
+  }
+
+  .route-plane {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background: var(--color-arena);
+    color: var(--color-cobre);
+    transform: translate(-50%, -50%);
+    transition: left .45s ease;
+  }
+
+  .plane {
+    display: block;
+    font-size: 1.05rem;
+    transform: rotate(0deg);
+  }
+
+  .route-destination {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--color-bosque);
+    border-radius: 50%;
+    background: var(--color-arena);
+    transform: translate(0, -50%);
+  }
+
+  .destination-dot {
+    display: block;
+    width: 4px;
+    height: 4px;
+    margin: 1px;
+    border-radius: 50%;
+    background: var(--color-cobre);
+  }
+
+
+  /* =========================================================
+     QUESTIONS
+  ========================================================== */
+
+  .question-block {
+    display: none;
+    padding: 4rem 0;
+  }
+
+  .question-block.active {
+    display: block;
+    animation: questionIn .45s ease both;
+  }
+
+  @keyframes questionIn {
+
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+  }
+
+  .question-number {
+    display: block;
+    margin-bottom: 2rem;
+    font-size: .75rem;
+    letter-spacing: 3px;
+    color: var(--color-cobre);
+  }
+
+  .question-block > label,
+  .choice-fieldset > legend {
+    display: block;
+    max-width: 760px;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 5vw, 4.2rem);
+    line-height: 1.05;
+    font-weight: 400;
+  }
+
+  .choice-fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .question-help {
+    max-width: 650px;
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #666;
+  }
+
+
+  /* =========================================================
+     EXAMPLES
+  ========================================================== */
+
+  .examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .65rem;
+    margin-top: 2rem;
+  }
+
+  .example {
+    appearance: none;
+    border: 1px solid rgba(28, 48, 38, .18);
+    border-radius: 999px;
+    padding: .75rem 1rem;
+    background: transparent;
+    color: var(--color-bosque);
+    font-family: var(--font-sans);
+    font-size: .84rem;
+    text-align: left;
+    cursor: pointer;
+    transition:
+      background .2s ease,
+      border-color .2s ease,
+      transform .2s ease;
+  }
+
+  .example:hover {
+    background: rgba(28, 48, 38, .06);
+    border-color: rgba(28, 48, 38, .35);
+    transform: translateY(-1px);
+  }
+
+  .example:focus-visible {
+    outline: 2px solid var(--color-cobre);
+    outline-offset: 3px;
+  }
+
+
+  /* =========================================================
+     TEXTAREA / INPUT
+  ========================================================== */
+
+  textarea,
+  .field input {
+    display: block;
+    width: 100%;
+    border: 1px solid rgba(28, 48, 38, .22);
+    background: var(--color-papel);
+    color: var(--color-grafito);
+    font-family: var(--font-sans);
+    outline: none;
+    transition:
+      border-color .2s ease,
+      box-shadow .2s ease;
+  }
+
+  textarea {
+    margin-top: 2rem;
+    padding: 1.3rem 1.4rem;
+    border-radius: 14px;
+    font-size: 1rem;
+    line-height: 1.6;
+    resize: vertical;
+  }
+
+  .field input {
+    padding: 1rem 1.1rem;
+    border-radius: 12px;
+    font-size: 1rem;
+  }
+
+  textarea:focus,
+  .field input:focus {
+    border-color: var(--color-cobre);
+    box-shadow: 0 0 0 3px rgba(194, 125, 56, .10);
+  }
+
+  textarea::placeholder,
+  .field input::placeholder {
+    color: #999;
+  }
+
+  .has-error textarea,
+  .has-error input {
+    border-color: #a34c42;
+  }
+
+
+  /* =========================================================
+     CHOICE CARDS
+  ========================================================== */
+
+  .budget-options,
+  .transport-options,
+  .pace-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .8rem;
+    margin-top: 2.5rem;
+  }
+
+  .choice-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 64px;
+    border: 1px solid rgba(28, 48, 38, .18);
+    border-radius: 14px;
+    padding: 1rem 1.15rem;
+    background: transparent;
+    color: var(--color-bosque);
+    cursor: pointer;
+    transition:
+      background .2s ease,
+      border-color .2s ease,
+      transform .2s ease;
+  }
+
+  .choice-card:hover {
+    border-color: rgba(28, 48, 38, .38);
+    background: rgba(28, 48, 38, .04);
+    transform: translateY(-1px);
+  }
+
+  .choice-card:has(input:checked) {
+    border-color: var(--color-bosque);
+    background: rgba(28, 48, 38, .08);
+  }
+
+  .choice-card input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .choice-card > span {
+    display: block;
+    width: 100%;
+    font-size: .92rem;
+    line-height: 1.4;
+  }
+
+  .choice-card strong {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    font-weight: 400;
+  }
+
+  .choice-card small {
+    display: block;
+    margin-top: .2rem;
+    font-size: .78rem;
+    line-height: 1.45;
+    color: #777;
+  }
+
+  .choice-card:has(input:focus-visible) {
+    outline: 2px solid var(--color-cobre);
+    outline-offset: 3px;
+  }
+
+  .featured-choice {
+    border-color: rgba(194, 125, 56, .45);
+  }
+
+
+  /* =========================================================
+     SUB QUESTIONS
+  ========================================================== */
+
+  .sub-question {
+    margin-top: 2.5rem;
+    padding: 0;
+    border: 0;
+  }
+
+  .sub-question > label,
+  .sub-question > legend {
+    display: block;
+    margin: 0 0 .8rem;
+    padding: 0;
+    font-size: .82rem;
+    font-weight: 500;
+    color: var(--color-bosque);
+  }
+
+  .sub-question > label span,
+  .sub-question > legend span {
+    margin-left: .35rem;
+    font-weight: 400;
+    color: #888;
+  }
+
+  .small-choice-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+  }
+
+  .small-choice {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .small-choice input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .small-choice span {
+    display: block;
+    border: 1px solid rgba(28, 48, 38, .18);
+    border-radius: 999px;
+    padding: .7rem .95rem;
+    color: var(--color-bosque);
+    font-size: .82rem;
+    transition:
+      background .2s ease,
+      border-color .2s ease;
+  }
+
+  .small-choice:hover span {
+    border-color: rgba(28, 48, 38, .35);
+  }
+
+  .small-choice input:checked + span {
+    border-color: var(--color-bosque);
+    background: rgba(28, 48, 38, .08);
+  }
+
+  .small-choice input:focus-visible + span {
+    outline: 2px solid var(--color-cobre);
+    outline-offset: 3px;
+  }
+
+
+  /* =========================================================
+     NOTES / ERRORS
+  ========================================================== */
+
+  .field-note {
+    max-width: 650px;
+    margin-top: 1.2rem;
+    font-size: .78rem;
+    line-height: 1.6;
+    color: #777;
+  }
+
+  .field-error {
+    margin-top: .65rem;
+    font-size: .78rem;
+    line-height: 1.5;
+    color: #8b4139;
+  }
+
+
+  /* =========================================================
+     BUTTONS
+  ========================================================== */
+
+  .next-button,
+  .submit-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .8rem;
+    margin-top: 2rem;
+    padding: 1rem 1.5rem;
+    border: 1px solid var(--color-bosque);
+    border-radius: 999px;
+    background: var(--color-bosque);
+    color: var(--color-papel);
+    font-family: var(--font-sans);
+    font-size: .9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      transform .2s ease,
+      background .2s ease,
+      color .2s ease;
+  }
+
+  .next-button:hover,
+  .submit-button:hover {
+    transform: translateY(-2px);
+    background: transparent;
+    color: var(--color-bosque);
+  }
+
+  .next-button:focus-visible,
+  .submit-button:focus-visible,
+  .back-button:focus-visible {
+    outline: 2px solid var(--color-cobre);
+    outline-offset: 4px;
+  }
+
+  .next-button span,
+  .submit-button span {
+    transition: transform .2s ease;
+  }
+
+  .next-button:hover span,
+  .submit-button:hover span {
+    transform: translateX(3px);
+  }
+
+  .question-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-top: 1rem;
+  }
+
+  .question-actions .next-button,
+  .question-actions .submit-button {
+    margin-top: 0;
+  }
+
+  .back-button {
+    border: 0;
+    background: transparent;
+    color: #666;
+    font-family: var(--font-sans);
+    font-size: .85rem;
+    cursor: pointer;
+  }
+
+  .back-button:hover {
+    color: var(--color-bosque);
+  }
+
+
+  /* =========================================================
+     CONTACT
+  ========================================================== */
+
+  .contact-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+
+  .field label {
+    display: block;
+    margin-bottom: .6rem;
+    font-size: .8rem;
+    font-weight: 500;
+    color: var(--color-bosque);
+  }
+
+  .privacy-note {
+    max-width: 600px;
+    margin-top: 1.5rem;
+    font-size: .75rem;
+    line-height: 1.6;
+    color: #777;
+  }
+
+
+  /* =========================================================
+     ARRIVAL
+  ========================================================== */
+
+  .arrival {
+    display: none;
+    padding: 6rem 0;
+  }
+
+  .arrival.visible {
+    display: block;
+    animation: questionIn .5s ease both;
+  }
+
+  .arrival-route {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    margin-bottom: 4rem;
+  }
+
+  .arrival-plane {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: var(--color-arena);
+    color: var(--color-cobre);
+    font-size: 1.15rem;
+  }
+
+  .arrival-line {
+    flex: 1;
+    height: 1px;
+    background: var(--color-cobre);
+  }
+
+  .arrival-dot {
+    width: 12px;
+    height: 12px;
+    margin-left: 1rem;
+    border: 2px solid var(--color-bosque);
+    border-radius: 50%;
+  }
+
+  .arrival h2 {
+    max-width: 750px;
+    margin: 0;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    line-height: 1.05;
+    font-weight: 400;
+  }
+
+  .arrival > p:not(.eyebrow) {
+    max-width: 600px;
+    margin-top: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+  }
+
+  .success-link {
+    display: inline-block;
+    margin-top: 2.5rem;
+    color: var(--color-bosque);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-cobre);
+    padding-bottom: .25rem;
+  }
+
+
+  /* =========================================================
+     MOBILE
+  ========================================================== */
+
+  @media (max-width: 700px) {
+
+    .journey-intro {
+      padding: 6rem 1.5rem 4rem;
+    }
+
+    .conversation {
+      padding: 1rem 1.5rem 6rem;
+    }
+
+    .journey-progress {
+      padding-bottom: 1rem;
+    }
+
+    .question-block {
+      padding: 3rem 0;
+    }
+
+    .examples {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .example {
+      border-radius: 12px;
+    }
+
+    .budget-options,
+    .transport-options,
+    .pace-options {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-fields {
+      grid-template-columns: 1fr;
+    }
+
+    .question-actions {
+      flex-wrap: wrap;
+    }
+
+    .next-button,
+    .submit-button {
+      width: 100%;
+    }
+
+    .question-actions .back-button {
+      order: 2;
+      width: 100%;
+      padding-top: .6rem;
+    }
+
+    .question-actions .next-button,
+    .question-actions .submit-button {
+      order: 1;
+    }
+
+    .progress-message {
+      font-size: .88rem;
+    }
+
+  }
+
+
+  /* =========================================================
+     REDUCE MOTION
+  ========================================================== */
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .question-block.active,
+    .arrival.visible {
+      animation: none;
+    }
+
+    .route-progress,
+    .route-plane,
+    .example,
+    .choice-card,
+    .next-button,
+    .submit-button {
+      transition: none;
+    }
+
+    html {
+      scroll-behavior: auto;
+    }
+
+  }
+
+</style>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+    const form =
+      document.querySelector<HTMLFormElement>("#journey-form");
+
+    const questions =
+      Array.from(
+        document.querySelectorAll<HTMLElement>(".question-block")
+      );
+
+    const arrival =
+      document.querySelector<HTMLElement>("#arrival");
+
+    const progressMessage =
+      document.querySelector<HTMLElement>("#progress-message");
+
+    const currentStep =
+      document.querySelector<HTMLElement>("#current-step");
+
+    const totalSteps =
+      document.querySelector<HTMLElement>("#total-steps");
+
+    const routeProgress =
+      document.querySelector<HTMLElement>("#route-progress");
+
+    const routePlane =
+      document.querySelector<HTMLElement>("#route-plane");
+
+    if (
+      !form ||
+      questions.length === 0 ||
+      !arrival ||
+      !progressMessage ||
+      !currentStep ||
+      !totalSteps ||
+      !routeProgress ||
+      !routePlane
+    ) {
+      return;
+    }
+
+
+    /* =======================================================
+       ESTADO
+    ======================================================== */
+
+    let currentIndex = 0;
+
+    totalSteps.textContent =
+      String(questions.length);
+
+
+    /* =======================================================
+       PROGRESO
+    ======================================================== */
+
+    const updateProgress = (index: number) => {
+
+      const step =
+        index + 1;
+
+      const total =
+        questions.length;
+
+      currentStep.textContent =
+        String(step);
+
+      progressMessage.textContent =
+        questions[index]?.dataset.message ||
+        "Seguimos avanzando";
+
+      /*
+       * Dejamos un pequeño margen visual al principio
+       * y al final para que el avión llegue realmente
+       * al destino.
+       */
+
+      const percentage =
+        total <= 1
+          ? 100
+          : ((index) / (total - 1)) * 100;
+
+      routeProgress.style.width =
+        `${percentage}%`;
+
+      routePlane.style.left =
+        `${percentage}%`;
+
+    };
+
+
+    /* =======================================================
+       MOSTRAR PREGUNTA
+    ======================================================== */
+
+    const showQuestion = (
+      index: number,
+      shouldScroll = true
+    ) => {
+
+      if (
+        index < 0 ||
+        index >= questions.length
+      ) {
+        return;
+      }
+
+      questions.forEach(
+        (question, questionIndex) => {
+
+          question.classList.toggle(
+            "active",
+            questionIndex === index
+          );
+
+        }
+      );
+
+      currentIndex = index;
+
+      updateProgress(index);
+
+      if (shouldScroll) {
+
+        window.scrollTo({
+          top:
+            questions[index].getBoundingClientRect().top +
+            window.scrollY -
+            100,
+          behavior: "smooth",
+        });
+
+      }
+
+    };
+
+
+    /* =======================================================
+       LIMPIAR ERROR
+    ======================================================== */
+
+    const clearError = (
+      field: HTMLInputElement | HTMLTextAreaElement
+    ) => {
+
+      field.removeAttribute("aria-invalid");
+
+      const container =
+        field.closest<HTMLElement>(".question-block, .field");
+
+      if (container) {
+        container.classList.remove("has-error");
+      }
+
+      const errorId =
+        field.getAttribute("aria-describedby");
+
+      if (errorId) {
+
+        const error =
+          document.getElementById(errorId);
+
+        if (error) {
+          error.setAttribute("hidden", "");
+        }
+
+      }
+
+    };
+
+
+    /* =======================================================
+       VALIDAR EMAIL
+    ======================================================== */
+
+    const isValidEmail = (
+      value: string
+    ) => {
+
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+        value.trim()
+      );
+
+    };
+
+
+    /* =======================================================
+       VALIDAR PREGUNTA
+    ======================================================== */
+
+    const validateQuestion = (
+      index: number
+    ) => {
+
+      const question =
+        questions[index];
+
+      if (!question) {
+        return false;
+      }
+
+
+      /*
+       * Limpiamos errores anteriores.
+       */
+
+      question
+        .querySelectorAll<
+          HTMLInputElement | HTMLTextAreaElement
+        >(
+          "input, textarea"
+        )
+        .forEach(
+          (field) => clearError(field)
+        );
+
+
+      /*
+       * Presupuesto.
+       */
+
+      if (
+        question.dataset.step === "4"
+      ) {
+
+        const selectedBudget =
+          question.querySelector<HTMLInputElement>(
+            "input[name='budget']:checked"
+          );
+
+        if (!selectedBudget) {
+
+          const error =
+            document.getElementById("budget-error");
+
+          if (error) {
+            error.removeAttribute("hidden");
+          }
+
+          return false;
+
+        }
+
+      }
+
+
+      /*
+       * Campos required.
+       */
+
+      const requiredFields =
+        Array.from(
+          question.querySelectorAll<
+            HTMLInputElement | HTMLTextAreaElement
+          >(
+            "input[required], textarea[required]"
+          )
+        );
+
+
+      for (
+        const field of requiredFields
+      ) {
+
+        /*
+         * Radio buttons:
+         * se validan por grupo más arriba.
+         */
+
+        if (
+          field.type === "radio"
+        ) {
+          continue;
+        }
+
+
+        if (
+          !field.value.trim()
+        ) {
+
+          field.setAttribute(
+            "aria-invalid",
+            "true"
+          );
+
+          const container =
+            field.closest<HTMLElement>(
+              ".question-block, .field"
+            );
+
+          if (container) {
+            container.classList.add("has-error");
+          }
+
+          const errorId =
+            field.getAttribute(
+              "aria-describedby"
+            );
+
+          if (errorId) {
+
+            const error =
+              document.getElementById(
+                errorId
+              );
+
+            if (error) {
+              error.removeAttribute("hidden");
+            }
+
+          }
+
+          field.focus();
+
+          return false;
+
+        }
+
+      }
+
+
+      /*
+       * Email.
+       */
+
+      const email =
+        question.querySelector<HTMLInputElement>(
+          "input[type='email']"
+        );
+
+      if (
+        email &&
+        email.value.trim() &&
+        !isValidEmail(email.value)
+      ) {
+
+        email.setAttribute(
+          "aria-invalid",
+          "true"
+        );
+
+        const error =
+          document.getElementById(
+            "email-error"
+          );
+
+        if (error) {
+          error.removeAttribute("hidden");
+        }
+
+        email.focus();
+
+        return false;
+
+      }
+
+
+      return true;
+
+    };
+
+
+    /* =======================================================
+       EJEMPLOS
+    ======================================================== */
+
+    const exampleButtons =
+      Array.from(
+        document.querySelectorAll<HTMLButtonElement>(
+          ".example"
+        )
+      );
+
+
+    exampleButtons.forEach(
+      (button) => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            const questionBlock =
+              button.closest<HTMLElement>(
+                ".question-block"
+              );
+
+            if (!questionBlock) {
+              return;
+            }
+
+            const textarea =
+              questionBlock.querySelector<HTMLTextAreaElement>(
+                "textarea"
+              );
+
+            if (!textarea) {
+              return;
+            }
+
+            const exampleText =
+              button.textContent?.trim();
+
+            if (!exampleText) {
+              return;
+            }
+
+
+            /*
+             * Los ejemplos sustituyen la respuesta
+             * en lugar de acumular frases absurdas.
+             */
+
+            textarea.value =
+              exampleText;
+
+            clearError(textarea);
+
+            textarea.focus();
+
+            textarea.dispatchEvent(
+              new Event(
+                "input",
+                {
+                  bubbles: true,
+                }
+              )
+            );
+
+          }
+        );
+
+      }
+    );
+
+
+    /* =======================================================
+       LIMPIAR ERRORES AL ESCRIBIR
+    ======================================================== */
+
+    form
+      .querySelectorAll<
+        HTMLInputElement | HTMLTextAreaElement
+      >(
+        "input, textarea"
+      )
+      .forEach(
+        (field) => {
+
+          field.addEventListener(
+            "input",
+            () => {
+
+              if (
+                field.value.trim()
+              ) {
+                clearError(field);
+              }
+
+            }
+          );
+
+        }
+      );
+
+
+    /* =======================================================
+       CONTINUAR
+    ======================================================== */
+
+    const nextButtons =
+      Array.from(
+        document.querySelectorAll<HTMLButtonElement>(
+          ".next-button"
+        )
+      );
+
+
+    nextButtons.forEach(
+      (button) => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            if (
+              validateQuestion(
+                currentIndex
+              )
+            ) {
+
+              showQuestion(
+                currentIndex + 1
+              );
+
+            }
+
+          }
+        );
+
+      }
+    );
+
+
+    /* =======================================================
+       ATRÁS
+    ======================================================== */
+
+    const backButtons =
+      Array.from(
+        document.querySelectorAll<HTMLButtonElement>(
+          ".back-button"
+        )
+      );
+
+
+    backButtons.forEach(
+      (button) => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            showQuestion(
+              currentIndex - 1
+            );
+
+          }
+        );
+
+      }
+    );
+
+
+    /* =======================================================
+       ENVÍO
+    ======================================================== */
+
+    form.addEventListener(
+      "submit",
+      (event) => {
+
+        event.preventDefault();
+
+
+        if (
+          !validateQuestion(
+            currentIndex
+          )
+        ) {
+          return;
+        }
+
+
+        /*
+         * Por ahora no enviamos nada.
+         *
+         * Este objeto es deliberadamente el contrato
+         * que posteriormente conectaremos con:
+         *
+         * POST /api/travel-request
+         *
+         * y D1.
+         */
+
+        const formData =
+          new FormData(form);
+
+        const data = {
+          trip:
+            String(
+              formData.get("trip") || ""
+            ).trim(),
+
+          travellers:
+            String(
+              formData.get("travellers") || ""
+            ).trim(),
+
+          dates:
+            String(
+              formData.get("dates") || ""
+            ).trim(),
+
+          budget:
+            String(
+              formData.get("budget") || ""
+            ),
+
+          budget_flights:
+            String(
+              formData.get("budget_flights") || ""
+            ),
+
+          experience:
+            String(
+              formData.get("experience") || ""
+            ).trim(),
+
+          transport:
+            Array.from(
+              form.querySelectorAll<HTMLInputElement>(
+                "input[name='transport']:checked"
+              )
+            ).map(
+              (input) => input.value
+            ),
+
+          avoid:
+            String(
+              formData.get("avoid") || ""
+            ).trim(),
+
+          style:
+            String(
+              formData.get("style") || ""
+            ).trim(),
+
+          pace:
+            String(
+              formData.get("pace") || ""
+            ),
+
+          anything:
+            String(
+              formData.get("anything") || ""
+            ).trim(),
+
+          name:
+            String(
+              formData.get("name") || ""
+            ).trim(),
+
+          email:
+            String(
+              formData.get("email") || ""
+            ).trim(),
+
+        };
+
+
+        /*
+         * Mientras no exista la API,
+         * mostramos los datos únicamente en consola.
+         */
+
+        console.log(
+          "Datos del viaje:",
+          data
+        );
+
+
+        /*
+         * Ocultamos formulario y progreso.
+         */
+
+        form.style.display =
+          "none";
+
+        const progress =
+          document.querySelector<HTMLElement>(
+            ".journey-progress"
+          );
+
+        if (progress) {
+          progress.style.display =
+            "none";
+        }
+
+
+        /*
+         * Mostramos llegada.
+         */
+
+        arrival.classList.add(
+          "visible"
+        );
+
+        arrival.setAttribute(
+          "aria-hidden",
+          "false"
+        );
+
+
+        window.scrollTo({
+          top:
+            arrival.getBoundingClientRect().top +
+            window.scrollY -
+            80,
+          behavior: "smooth",
+        });
+
+      }
+    );
+
+
+    /* =======================================================
+       INICIALIZACIÓN
+    ======================================================== */
+
+    updateProgress(0);
+
+  });
+</script>
