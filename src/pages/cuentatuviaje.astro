@@ -52,7 +52,9 @@ import Footer from "../components/layout/Footer.astro";
 
       <div class="conversation-inner">
 
-        <!-- PROGRESO -->
+        <!-- =================================================
+             PROGRESO
+        ================================================== -->
 
         <div
           class="journey-progress"
@@ -952,9 +954,9 @@ import Footer from "../components/layout/Footer.astro";
 
             <span class="question-number">09</span>
 
-            <label for="name">
+            <p class="final-question-title">
               Ya tenemos una primera idea de vuestro viaje.
-            </label>
+            </p>
 
             <p class="question-help">
               Solo nos queda saber cómo podemos ponernos en contacto contigo.
@@ -1055,8 +1057,9 @@ import Footer from "../components/layout/Footer.astro";
               <button
                 type="submit"
                 class="submit-button"
+                id="submit-button"
               >
-                Enviar mi viaje
+                <span class="submit-label">Enviar mi viaje</span>
                 <span aria-hidden="true">→</span>
               </button>
 
@@ -1068,10 +1071,10 @@ import Footer from "../components/layout/Footer.astro";
 
 
         <!-- =====================================================
-             LLEGADA
+             TRANSICIÓN / LLEGADA
         ====================================================== -->
 
-        <div
+        <section
           class="arrival"
           id="arrival"
           aria-live="polite"
@@ -1079,41 +1082,85 @@ import Footer from "../components/layout/Footer.astro";
         >
 
           <div
-            class="arrival-route"
+            class="arrival-planet"
             aria-hidden="true"
           >
 
-            <div class="arrival-plane">
-              ✈
+            <div class="planet">
+
+              <div class="planet-glow"></div>
+
+              <div class="planet-sphere">
+
+                <div class="meridian meridian-1"></div>
+                <div class="meridian meridian-2"></div>
+                <div class="meridian meridian-3"></div>
+                <div class="meridian meridian-4"></div>
+
+                <div class="latitude latitude-1"></div>
+                <div class="latitude latitude-2"></div>
+                <div class="latitude latitude-3"></div>
+
+              </div>
+
+              <div class="planet-shadow"></div>
+
             </div>
-
-            <div class="arrival-line"></div>
-
-            <div class="arrival-dot"></div>
 
           </div>
 
-          <p class="eyebrow">
-            LLEGADA
-          </p>
 
-          <h2>
-            Gracias por contárnoslo.
-          </h2>
+          <div class="arrival-copy">
 
-          <p>
-            Ya tenemos una primera idea de cómo os gusta viajar.
-            Ahora nos toca a nosotros empezar a pensar el viaje.
-          </p>
+            <p
+              class="eyebrow"
+              id="arrival-eyebrow"
+            >
+              TRAZANDO TU VIAJE
+            </p>
 
-          <a
-            href="/"
-            class="success-link"
+            <h2 id="arrival-title">
+              Trazando tu viaje…
+            </h2>
+
+            <p id="arrival-text">
+              Estamos cruzando tus ideas, tus preferencias
+              y tu forma de viajar.
+            </p>
+
+          </div>
+
+
+          <div
+            class="arrival-final"
+            id="arrival-final"
+            aria-hidden="true"
           >
-            Volver al inicio
-          </a>
 
-        </div>
+            <p class="eyebrow">
+              ¡LISTO!
+            </p>
+
+            <h2>
+              Hemos recibido toda la información.
+            </h2>
+
+            <p>
+              Ahora empieza nuestra parte: entender qué viaje
+              puede tener sentido para ti.
+            </p>
+
+            <a
+              href="/"
+              class="success-link"
+            >
+              Volver a Cruzando Meridianos
+              <span aria-hidden="true">→</span>
+            </a>
+
+          </div>
+
+        </section>
 
       </div>
 
@@ -1202,7 +1249,7 @@ import Footer from "../components/layout/Footer.astro";
 
 
   /* =========================================================
-     PROGRESS
+     PROGRESO
   ========================================================== */
 
   .journey-progress {
@@ -1221,6 +1268,7 @@ import Footer from "../components/layout/Footer.astro";
     font-family: var(--font-serif);
     font-size: .95rem;
     color: var(--color-bosque);
+    transition: opacity .2s ease;
   }
 
   .progress-count {
@@ -1243,13 +1291,14 @@ import Footer from "../components/layout/Footer.astro";
     height: 1px;
     background: rgba(28, 48, 38, .18);
     transform: translateY(-50%);
+    overflow: hidden;
   }
 
   .route-progress {
     width: 0;
     height: 100%;
     background: var(--color-cobre);
-    transition: width .45s ease;
+    transition: width .7s cubic-bezier(.22, .61, .36, 1);
   }
 
   .route-plane {
@@ -1264,13 +1313,17 @@ import Footer from "../components/layout/Footer.astro";
     background: var(--color-arena);
     color: var(--color-cobre);
     transform: translate(-50%, -50%);
-    transition: left .45s ease;
+    transition: left .7s cubic-bezier(.22, .61, .36, 1);
   }
 
   .plane {
     display: block;
     font-size: 1.05rem;
-    transform: rotate(0deg);
+    transition: transform .3s ease;
+  }
+
+  .route-plane.is-moving .plane {
+    transform: rotate(-8deg) translateX(2px);
   }
 
   .route-destination {
@@ -1306,21 +1359,19 @@ import Footer from "../components/layout/Footer.astro";
 
   .question-block.active {
     display: block;
-    animation: questionIn .45s ease both;
+    animation: questionIn .55s cubic-bezier(.22, .61, .36, 1) both;
   }
 
   @keyframes questionIn {
-
     from {
       opacity: 0;
-      transform: translateY(18px);
+      transform: translate3d(22px, 14px, 0);
     }
 
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translate3d(0, 0, 0);
     }
-
   }
 
   .question-number {
@@ -1332,6 +1383,7 @@ import Footer from "../components/layout/Footer.astro";
   }
 
   .question-block > label,
+  .question-block > .final-question-title,
   .choice-fieldset > legend {
     display: block;
     max-width: 760px;
@@ -1381,14 +1433,20 @@ import Footer from "../components/layout/Footer.astro";
     text-align: left;
     cursor: pointer;
     transition:
-      background .2s ease,
-      border-color .2s ease,
-      transform .2s ease;
+      background .25s ease,
+      border-color .25s ease,
+      transform .25s ease;
   }
 
   .example:hover {
     background: rgba(28, 48, 38, .06);
     border-color: rgba(28, 48, 38, .35);
+    transform: translateY(-2px);
+  }
+
+  .example.is-selected {
+    border-color: var(--color-cobre);
+    background: rgba(194, 125, 56, .08);
     transform: translateY(-1px);
   }
 
@@ -1412,8 +1470,9 @@ import Footer from "../components/layout/Footer.astro";
     font-family: var(--font-sans);
     outline: none;
     transition:
-      border-color .2s ease,
-      box-shadow .2s ease;
+      border-color .25s ease,
+      box-shadow .25s ease,
+      transform .25s ease;
   }
 
   textarea {
@@ -1473,20 +1532,22 @@ import Footer from "../components/layout/Footer.astro";
     color: var(--color-bosque);
     cursor: pointer;
     transition:
-      background .2s ease,
-      border-color .2s ease,
-      transform .2s ease;
+      background .25s ease,
+      border-color .25s ease,
+      transform .25s ease,
+      box-shadow .25s ease;
   }
 
   .choice-card:hover {
     border-color: rgba(28, 48, 38, .38);
     background: rgba(28, 48, 38, .04);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
 
   .choice-card:has(input:checked) {
     border-color: var(--color-bosque);
     background: rgba(28, 48, 38, .08);
+    box-shadow: 0 5px 18px rgba(28, 48, 38, .05);
   }
 
   .choice-card input {
@@ -1581,12 +1642,14 @@ import Footer from "../components/layout/Footer.astro";
     color: var(--color-bosque);
     font-size: .82rem;
     transition:
-      background .2s ease,
-      border-color .2s ease;
+      background .25s ease,
+      border-color .25s ease,
+      transform .25s ease;
   }
 
   .small-choice:hover span {
     border-color: rgba(28, 48, 38, .35);
+    transform: translateY(-1px);
   }
 
   .small-choice input:checked + span {
@@ -1641,9 +1704,10 @@ import Footer from "../components/layout/Footer.astro";
     font-weight: 500;
     cursor: pointer;
     transition:
-      transform .2s ease,
-      background .2s ease,
-      color .2s ease;
+      transform .25s ease,
+      background .25s ease,
+      color .25s ease,
+      opacity .25s ease;
   }
 
   .next-button:hover,
@@ -1651,6 +1715,18 @@ import Footer from "../components/layout/Footer.astro";
     transform: translateY(-2px);
     background: transparent;
     color: var(--color-bosque);
+  }
+
+  .next-button:active,
+  .submit-button:active {
+    transform: translateY(0);
+  }
+
+  .next-button:disabled,
+  .submit-button:disabled {
+    cursor: wait;
+    opacity: .65;
+    transform: none;
   }
 
   .next-button:focus-visible,
@@ -1661,13 +1737,13 @@ import Footer from "../components/layout/Footer.astro";
   }
 
   .next-button span,
-  .submit-button span {
-    transition: transform .2s ease;
+  .submit-button > span:last-child {
+    transition: transform .25s ease;
   }
 
   .next-button:hover span,
-  .submit-button:hover span {
-    transform: translateX(3px);
+  .submit-button:hover > span:last-child {
+    transform: translateX(4px);
   }
 
   .question-actions {
@@ -1689,6 +1765,7 @@ import Footer from "../components/layout/Footer.astro";
     font-family: var(--font-sans);
     font-size: .85rem;
     cursor: pointer;
+    transition: color .2s ease;
   }
 
   .back-button:hover {
@@ -1730,73 +1807,281 @@ import Footer from "../components/layout/Footer.astro";
 
   .arrival {
     display: none;
+    min-height: 650px;
     padding: 6rem 0;
+    text-align: center;
   }
 
   .arrival.visible {
-    display: block;
-    animation: questionIn .5s ease both;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: arrivalIn .8s cubic-bezier(.22, .61, .36, 1) both;
   }
 
-  .arrival-route {
+  @keyframes arrivalIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+
+  /* =========================================================
+     PLANETA / MERIDIANOS
+  ========================================================== */
+
+  .arrival-planet {
     position: relative;
-    display: flex;
-    align-items: center;
-    height: 50px;
+    width: 220px;
+    height: 220px;
     margin-bottom: 4rem;
   }
 
-  .arrival-plane {
+  .planet {
     position: relative;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    background: var(--color-arena);
-    color: var(--color-cobre);
-    font-size: 1.15rem;
+    width: 100%;
+    height: 100%;
   }
 
-  .arrival-line {
-    flex: 1;
-    height: 1px;
-    background: var(--color-cobre);
-  }
-
-  .arrival-dot {
-    width: 12px;
-    height: 12px;
-    margin-left: 1rem;
-    border: 2px solid var(--color-bosque);
+  .planet-glow {
+    position: absolute;
+    inset: -20px;
     border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(194, 125, 56, .12) 0%,
+      rgba(194, 125, 56, 0) 68%
+    );
+    animation: planetGlow 4s ease-in-out infinite;
+  }
+
+  @keyframes planetGlow {
+    0%,
+    100% {
+      transform: scale(.96);
+      opacity: .7;
+    }
+
+    50% {
+      transform: scale(1.04);
+      opacity: 1;
+    }
+  }
+
+  .planet-sphere {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border: 1px solid rgba(28, 48, 38, .5);
+    border-radius: 50%;
+    background:
+      radial-gradient(
+        circle at 32% 28%,
+        rgba(255,255,255,.45),
+        transparent 28%
+      ),
+      var(--color-papel);
+    box-shadow:
+      inset -25px -15px 45px rgba(28, 48, 38, .10),
+      inset 10px 10px 25px rgba(255,255,255,.4),
+      0 12px 50px rgba(28, 48, 38, .08);
+  }
+
+  .planet-shadow {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(
+      100deg,
+      transparent 35%,
+      rgba(28, 48, 38, .08) 65%,
+      rgba(28, 48, 38, .16) 100%
+    );
+    pointer-events: none;
+  }
+
+  .meridian,
+  .latitude {
+    position: absolute;
+    border: 1px solid rgba(194, 125, 56, .52);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .meridian {
+    top: -12%;
+    bottom: -12%;
+    left: 50%;
+    width: 42%;
+    transform: translateX(-50%);
+    transform-origin: center;
+    animation: meridianSpin 5s ease-in-out infinite;
+  }
+
+  .meridian-1 {
+    animation-delay: 0s;
+  }
+
+  .meridian-2 {
+    width: 68%;
+    animation-delay: -.8s;
+  }
+
+  .meridian-3 {
+    width: 92%;
+    animation-delay: -1.6s;
+  }
+
+  .meridian-4 {
+    width: 22%;
+    animation-delay: -2.4s;
+  }
+
+  @keyframes meridianSpin {
+    0%,
+    100% {
+      transform: translateX(-50%) scaleX(.35);
+      opacity: .45;
+    }
+
+    50% {
+      transform: translateX(-50%) scaleX(1);
+      opacity: .85;
+    }
+  }
+
+  .latitude {
+    left: -12%;
+    right: -12%;
+    top: 50%;
+    height: 28%;
+    transform: translateY(-50%);
+  }
+
+  .latitude-1 {
+    transform:
+      translateY(-50%)
+      rotate(0deg)
+      scaleY(.65);
+  }
+
+  .latitude-2 {
+    height: 58%;
+    transform:
+      translateY(-50%)
+      rotate(0deg)
+      scaleY(.45);
+  }
+
+  .latitude-3 {
+    height: 78%;
+    transform:
+      translateY(-50%)
+      rotate(0deg)
+      scaleY(.25);
+  }
+
+
+  /* =========================================================
+     ARRIVAL COPY
+  ========================================================== */
+
+  .arrival-copy {
+    transition:
+      opacity .5s ease,
+      transform .5s ease;
+  }
+
+  .arrival-copy.fade-out {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+
+  .arrival-copy .eyebrow {
+    margin-bottom: 1rem;
   }
 
   .arrival h2 {
-    max-width: 750px;
+    max-width: 800px;
     margin: 0;
+    font-family: var(--font-serif);
     font-size: clamp(2.8rem, 6vw, 5rem);
     line-height: 1.05;
     font-weight: 400;
   }
 
-  .arrival > p:not(.eyebrow) {
+  .arrival-copy > p:not(.eyebrow) {
     max-width: 600px;
-    margin-top: 2rem;
+    margin: 2rem auto 0;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+  }
+
+
+  /* =========================================================
+     ARRIVAL FINAL
+  ========================================================== */
+
+  .arrival-final {
+    display: none;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .arrival-final.visible {
+    display: block;
+    animation: finalArrival .8s cubic-bezier(.22, .61, .36, 1) forwards;
+  }
+
+  @keyframes finalArrival {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .arrival-final h2 {
+    max-width: 850px;
+    margin: 0 auto;
+  }
+
+  .arrival-final > p:not(.eyebrow) {
+    max-width: 650px;
+    margin: 2rem auto 0;
     font-size: 1.1rem;
     line-height: 1.8;
     color: #555;
   }
 
   .success-link {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: .65rem;
     margin-top: 2.5rem;
     color: var(--color-bosque);
     font-weight: 600;
     text-decoration: none;
     border-bottom: 1px solid var(--color-cobre);
-    padding-bottom: .25rem;
+    padding-bottom: .35rem;
+    transition:
+      gap .25s ease,
+      color .25s ease;
+  }
+
+  .success-link:hover {
+    gap: .9rem;
+    color: var(--color-cobre);
   }
 
 
@@ -1865,6 +2150,17 @@ import Footer from "../components/layout/Footer.astro";
       font-size: .88rem;
     }
 
+    .arrival {
+      min-height: 560px;
+      padding: 4rem 0;
+    }
+
+    .arrival-planet {
+      width: 170px;
+      height: 170px;
+      margin-bottom: 3rem;
+    }
+
   }
 
 
@@ -1875,7 +2171,13 @@ import Footer from "../components/layout/Footer.astro";
   @media (prefers-reduced-motion: reduce) {
 
     .question-block.active,
-    .arrival.visible {
+    .arrival.visible,
+    .arrival-final.visible {
+      animation: none;
+    }
+
+    .planet-glow,
+    .meridian {
       animation: none;
     }
 
@@ -1884,7 +2186,9 @@ import Footer from "../components/layout/Footer.astro";
     .example,
     .choice-card,
     .next-button,
-    .submit-button {
+    .submit-button,
+    .arrival-copy,
+    .success-link {
       transition: none;
     }
 
@@ -1900,31 +2204,82 @@ import Footer from "../components/layout/Footer.astro";
 <script>
   document.addEventListener("DOMContentLoaded", () => {
 
+    /* =======================================================
+       ELEMENTOS PRINCIPALES
+    ======================================================== */
+
     const form =
-      document.querySelector<HTMLFormElement>("#journey-form");
+      document.querySelector<HTMLFormElement>(
+        "#journey-form"
+      );
 
     const questions =
       Array.from(
-        document.querySelectorAll<HTMLElement>(".question-block")
+        document.querySelectorAll<HTMLElement>(
+          ".question-block"
+        )
       );
 
     const arrival =
-      document.querySelector<HTMLElement>("#arrival");
+      document.querySelector<HTMLElement>(
+        "#arrival"
+      );
 
     const progressMessage =
-      document.querySelector<HTMLElement>("#progress-message");
+      document.querySelector<HTMLElement>(
+        "#progress-message"
+      );
 
     const currentStep =
-      document.querySelector<HTMLElement>("#current-step");
+      document.querySelector<HTMLElement>(
+        "#current-step"
+      );
 
     const totalSteps =
-      document.querySelector<HTMLElement>("#total-steps");
+      document.querySelector<HTMLElement>(
+        "#total-steps"
+      );
 
     const routeProgress =
-      document.querySelector<HTMLElement>("#route-progress");
+      document.querySelector<HTMLElement>(
+        "#route-progress"
+      );
 
     const routePlane =
-      document.querySelector<HTMLElement>("#route-plane");
+      document.querySelector<HTMLElement>(
+        "#route-plane"
+      );
+
+    const submitButton =
+      document.querySelector<HTMLButtonElement>(
+        "#submit-button"
+      );
+
+    const arrivalEyebrow =
+      document.querySelector<HTMLElement>(
+        "#arrival-eyebrow"
+      );
+
+    const arrivalTitle =
+      document.querySelector<HTMLElement>(
+        "#arrival-title"
+      );
+
+    const arrivalText =
+      document.querySelector<HTMLElement>(
+        "#arrival-text"
+      );
+
+    const arrivalCopy =
+      document.querySelector<HTMLElement>(
+        ".arrival-copy"
+      );
+
+    const arrivalFinal =
+      document.querySelector<HTMLElement>(
+        "#arrival-final"
+      );
+
 
     if (
       !form ||
@@ -1934,7 +2289,13 @@ import Footer from "../components/layout/Footer.astro";
       !currentStep ||
       !totalSteps ||
       !routeProgress ||
-      !routePlane
+      !routePlane ||
+      !submitButton ||
+      !arrivalEyebrow ||
+      !arrivalTitle ||
+      !arrivalText ||
+      !arrivalCopy ||
+      !arrivalFinal
     ) {
       return;
     }
@@ -1945,6 +2306,7 @@ import Footer from "../components/layout/Footer.astro";
     ======================================================== */
 
     let currentIndex = 0;
+    let isSubmitting = false;
 
     totalSteps.textContent =
       String(questions.length);
@@ -1954,7 +2316,9 @@ import Footer from "../components/layout/Footer.astro";
        PROGRESO
     ======================================================== */
 
-    const updateProgress = (index: number) => {
+    const updateProgress = (
+      index: number
+    ): void => {
 
       const step =
         index + 1;
@@ -1969,16 +2333,10 @@ import Footer from "../components/layout/Footer.astro";
         questions[index]?.dataset.message ||
         "Seguimos avanzando";
 
-      /*
-       * Dejamos un pequeño margen visual al principio
-       * y al final para que el avión llegue realmente
-       * al destino.
-       */
-
       const percentage =
         total <= 1
           ? 100
-          : ((index) / (total - 1)) * 100;
+          : (index / (total - 1)) * 100;
 
       routeProgress.style.width =
         `${percentage}%`;
@@ -1995,8 +2353,8 @@ import Footer from "../components/layout/Footer.astro";
 
     const showQuestion = (
       index: number,
-      shouldScroll = true
-    ) => {
+      shouldScroll: boolean = true
+    ): void => {
 
       if (
         index < 0 ||
@@ -2005,8 +2363,14 @@ import Footer from "../components/layout/Footer.astro";
         return;
       }
 
+      const previousIndex =
+        currentIndex;
+
       questions.forEach(
-        (question, questionIndex) => {
+        (
+          question: HTMLElement,
+          questionIndex: number
+        ) => {
 
           question.classList.toggle(
             "active",
@@ -2016,18 +2380,44 @@ import Footer from "../components/layout/Footer.astro";
         }
       );
 
-      currentIndex = index;
+      currentIndex =
+        index;
 
       updateProgress(index);
+
+      if (
+        previousIndex !== index
+      ) {
+
+        routePlane.classList.add(
+          "is-moving"
+        );
+
+        window.setTimeout(
+          () => {
+
+            routePlane.classList.remove(
+              "is-moving"
+            );
+
+          },
+          700
+        );
+
+      }
 
       if (shouldScroll) {
 
         window.scrollTo({
+
           top:
             questions[index].getBoundingClientRect().top +
             window.scrollY -
             100,
-          behavior: "smooth",
+
+          behavior:
+            "smooth",
+
         });
 
       }
@@ -2041,28 +2431,96 @@ import Footer from "../components/layout/Footer.astro";
 
     const clearError = (
       field: HTMLInputElement | HTMLTextAreaElement
-    ) => {
+    ): void => {
 
-      field.removeAttribute("aria-invalid");
+      field.removeAttribute(
+        "aria-invalid"
+      );
 
       const container =
-        field.closest<HTMLElement>(".question-block, .field");
+        field.closest<HTMLElement>(
+          ".question-block, .field"
+        );
 
       if (container) {
-        container.classList.remove("has-error");
+
+        container.classList.remove(
+          "has-error"
+        );
+
       }
 
       const errorId =
-        field.getAttribute("aria-describedby");
+        field.getAttribute(
+          "aria-describedby"
+        );
 
-      if (errorId) {
+      if (!errorId) {
+        return;
+      }
 
-        const error =
-          document.getElementById(errorId);
+      const error =
+        document.getElementById(
+          errorId
+        );
 
-        if (error) {
-          error.setAttribute("hidden", "");
-        }
+      if (error) {
+
+        error.setAttribute(
+          "hidden",
+          ""
+        );
+
+      }
+
+    };
+
+
+    /* =======================================================
+       MOSTRAR ERROR
+    ======================================================== */
+
+    const showFieldError = (
+      field: HTMLInputElement | HTMLTextAreaElement
+    ): void => {
+
+      field.setAttribute(
+        "aria-invalid",
+        "true"
+      );
+
+      const container =
+        field.closest<HTMLElement>(
+          ".question-block, .field"
+        );
+
+      if (container) {
+
+        container.classList.add(
+          "has-error"
+        );
+
+      }
+
+      const errorId =
+        field.getAttribute(
+          "aria-describedby"
+        );
+
+      if (!errorId) {
+        return;
+      }
+
+      const error =
+        document.getElementById(
+          errorId
+        );
+
+      if (error) {
+
+        error.removeAttribute(
+          "hidden"
+        );
 
       }
 
@@ -2075,7 +2533,7 @@ import Footer from "../components/layout/Footer.astro";
 
     const isValidEmail = (
       value: string
-    ) => {
+    ): boolean => {
 
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
         value.trim()
@@ -2090,7 +2548,7 @@ import Footer from "../components/layout/Footer.astro";
 
     const validateQuestion = (
       index: number
-    ) => {
+    ): boolean => {
 
       const question =
         questions[index];
@@ -2100,24 +2558,35 @@ import Footer from "../components/layout/Footer.astro";
       }
 
 
-      /*
-       * Limpiamos errores anteriores.
-       */
+      /* -------------------------------------------------------
+         LIMPIAR ERRORES PREVIOS
+      ------------------------------------------------------ */
 
-      question
-        .querySelectorAll<
-          HTMLInputElement | HTMLTextAreaElement
-        >(
-          "input, textarea"
-        )
-        .forEach(
-          (field) => clearError(field)
+      const fields =
+        Array.from(
+          question.querySelectorAll<
+            HTMLInputElement | HTMLTextAreaElement
+          >(
+            "input, textarea"
+          )
         );
 
+      fields.forEach(
+        (
+          field
+        ) => {
 
-      /*
-       * Presupuesto.
-       */
+          clearError(
+            field
+          );
+
+        }
+      );
+
+
+      /* -------------------------------------------------------
+         PRESUPUESTO
+      ------------------------------------------------------ */
 
       if (
         question.dataset.step === "4"
@@ -2128,25 +2597,40 @@ import Footer from "../components/layout/Footer.astro";
             "input[name='budget']:checked"
           );
 
+        const budgetError =
+          document.getElementById(
+            "budget-error"
+          );
+
         if (!selectedBudget) {
 
-          const error =
-            document.getElementById("budget-error");
+          if (budgetError) {
 
-          if (error) {
-            error.removeAttribute("hidden");
+            budgetError.removeAttribute(
+              "hidden"
+            );
+
           }
 
           return false;
 
         }
 
+        if (budgetError) {
+
+          budgetError.setAttribute(
+            "hidden",
+            ""
+          );
+
+        }
+
       }
 
 
-      /*
-       * Campos required.
-       */
+      /* -------------------------------------------------------
+         CAMPOS REQUIRED
+      ------------------------------------------------------ */
 
       const requiredFields =
         Array.from(
@@ -2163,14 +2647,17 @@ import Footer from "../components/layout/Footer.astro";
       ) {
 
         /*
-         * Radio buttons:
-         * se validan por grupo más arriba.
+         * Los radios se validan por grupo.
+         * El presupuesto ya se ha tratado arriba.
          */
 
         if (
+          field instanceof HTMLInputElement &&
           field.type === "radio"
         ) {
+
           continue;
+
         }
 
 
@@ -2178,37 +2665,9 @@ import Footer from "../components/layout/Footer.astro";
           !field.value.trim()
         ) {
 
-          field.setAttribute(
-            "aria-invalid",
-            "true"
+          showFieldError(
+            field
           );
-
-          const container =
-            field.closest<HTMLElement>(
-              ".question-block, .field"
-            );
-
-          if (container) {
-            container.classList.add("has-error");
-          }
-
-          const errorId =
-            field.getAttribute(
-              "aria-describedby"
-            );
-
-          if (errorId) {
-
-            const error =
-              document.getElementById(
-                errorId
-              );
-
-            if (error) {
-              error.removeAttribute("hidden");
-            }
-
-          }
 
           field.focus();
 
@@ -2219,9 +2678,9 @@ import Footer from "../components/layout/Footer.astro";
       }
 
 
-      /*
-       * Email.
-       */
+      /* -------------------------------------------------------
+         EMAIL
+      ------------------------------------------------------ */
 
       const email =
         question.querySelector<HTMLInputElement>(
@@ -2231,22 +2690,14 @@ import Footer from "../components/layout/Footer.astro";
       if (
         email &&
         email.value.trim() &&
-        !isValidEmail(email.value)
+        !isValidEmail(
+          email.value
+        )
       ) {
 
-        email.setAttribute(
-          "aria-invalid",
-          "true"
+        showFieldError(
+          email
         );
-
-        const error =
-          document.getElementById(
-            "email-error"
-          );
-
-        if (error) {
-          error.removeAttribute("hidden");
-        }
 
         email.focus();
 
@@ -2273,7 +2724,9 @@ import Footer from "../components/layout/Footer.astro";
 
 
     exampleButtons.forEach(
-      (button) => {
+      (
+        button: HTMLButtonElement
+      ) => {
 
         button.addEventListener(
           "click",
@@ -2304,16 +2757,34 @@ import Footer from "../components/layout/Footer.astro";
               return;
             }
 
-
-            /*
-             * Los ejemplos sustituyen la respuesta
-             * en lugar de acumular frases absurdas.
-             */
-
             textarea.value =
               exampleText;
 
-            clearError(textarea);
+            clearError(
+              textarea
+            );
+
+
+            questionBlock
+              .querySelectorAll<HTMLButtonElement>(
+                ".example"
+              )
+              .forEach(
+                (
+                  otherButton
+                ) => {
+
+                  otherButton.classList.remove(
+                    "is-selected"
+                  );
+
+                }
+              );
+
+
+            button.classList.add(
+              "is-selected"
+            );
 
             textarea.focus();
 
@@ -2337,30 +2808,87 @@ import Footer from "../components/layout/Footer.astro";
        LIMPIAR ERRORES AL ESCRIBIR
     ======================================================== */
 
-    form
-      .querySelectorAll<
-        HTMLInputElement | HTMLTextAreaElement
-      >(
-        "input, textarea"
-      )
-      .forEach(
-        (field) => {
+    const formFields =
+      Array.from(
+        form.querySelectorAll<
+          HTMLInputElement | HTMLTextAreaElement
+        >(
+          "input, textarea"
+        )
+      );
 
-          field.addEventListener(
-            "input",
-            () => {
+
+    formFields.forEach(
+      (
+        field
+      ) => {
+
+        field.addEventListener(
+          "input",
+          () => {
+
+            if (
+              field.value.trim()
+            ) {
+
+              clearError(
+                field
+              );
+
+            }
+
+          }
+        );
+
+        field.addEventListener(
+          "change",
+          () => {
+
+            if (
+              field instanceof HTMLInputElement &&
+              field.type === "radio"
+            ) {
+
+              const question =
+                field.closest<HTMLElement>(
+                  ".question-block"
+                );
+
+              if (question) {
+
+                question.classList.remove(
+                  "has-error"
+                );
+
+              }
 
               if (
-                field.value.trim()
+                field.name === "budget"
               ) {
-                clearError(field);
+
+                const error =
+                  document.getElementById(
+                    "budget-error"
+                  );
+
+                if (error) {
+
+                  error.setAttribute(
+                    "hidden",
+                    ""
+                  );
+
+                }
+
               }
 
             }
-          );
 
-        }
-      );
+          }
+        );
+
+      }
+    );
 
 
     /* =======================================================
@@ -2376,16 +2904,26 @@ import Footer from "../components/layout/Footer.astro";
 
 
     nextButtons.forEach(
-      (button) => {
+      (
+        button: HTMLButtonElement
+      ) => {
 
         button.addEventListener(
           "click",
           () => {
 
-            if (
+            const valid =
               validateQuestion(
                 currentIndex
-              )
+              );
+
+            if (!valid) {
+              return;
+            }
+
+            if (
+              currentIndex <
+              questions.length - 1
             ) {
 
               showQuestion(
@@ -2414,11 +2952,19 @@ import Footer from "../components/layout/Footer.astro";
 
 
     backButtons.forEach(
-      (button) => {
+      (
+        button: HTMLButtonElement
+      ) => {
 
         button.addEventListener(
           "click",
           () => {
+
+            if (
+              currentIndex <= 0
+            ) {
+              return;
+            }
 
             showQuestion(
               currentIndex - 1
@@ -2432,40 +2978,17 @@ import Footer from "../components/layout/Footer.astro";
 
 
     /* =======================================================
-       ENVÍO
+       OBTENER DATOS
     ======================================================== */
 
-    form.addEventListener(
-      "submit",
-      (event) => {
-
-        event.preventDefault();
-
-
-        if (
-          !validateQuestion(
-            currentIndex
-          )
-        ) {
-          return;
-        }
-
-
-        /*
-         * Por ahora no enviamos nada.
-         *
-         * Este objeto es deliberadamente el contrato
-         * que posteriormente conectaremos con:
-         *
-         * POST /api/travel-request
-         *
-         * y D1.
-         */
+    const collectFormData =
+      (): Record<string, unknown> => {
 
         const formData =
           new FormData(form);
 
-        const data = {
+        return {
+
           trip:
             String(
               formData.get("trip") || ""
@@ -2502,7 +3025,9 @@ import Footer from "../components/layout/Footer.astro";
                 "input[name='transport']:checked"
               )
             ).map(
-              (input) => input.value
+              (
+                input: HTMLInputElement
+              ) => input.value
             ),
 
           avoid:
@@ -2535,41 +3060,30 @@ import Footer from "../components/layout/Footer.astro";
               formData.get("email") || ""
             ).trim(),
 
+          metadata: {
+
+            referrer:
+              document.referrer || "",
+
+            landing_page:
+              window.location.href,
+
+            user_agent:
+              navigator.userAgent,
+
+          },
+
         };
 
-
-        /*
-         * Mientras no exista la API,
-         * mostramos los datos únicamente en consola.
-         */
-
-        console.log(
-          "Datos del viaje:",
-          data
-        );
+      };
 
 
-        /*
-         * Ocultamos formulario y progreso.
-         */
+    /* =======================================================
+       TRANSICIÓN FINAL
+    ======================================================== */
 
-        form.style.display =
-          "none";
-
-        const progress =
-          document.querySelector<HTMLElement>(
-            ".journey-progress"
-          );
-
-        if (progress) {
-          progress.style.display =
-            "none";
-        }
-
-
-        /*
-         * Mostramos llegada.
-         */
+    const playArrivalSequence =
+      (): void => {
 
         arrival.classList.add(
           "visible"
@@ -2582,12 +3096,322 @@ import Footer from "../components/layout/Footer.astro";
 
 
         window.scrollTo({
+
           top:
             arrival.getBoundingClientRect().top +
             window.scrollY -
             80,
-          behavior: "smooth",
+
+          behavior:
+            "smooth",
+
         });
+
+
+        /* -----------------------------------------------------
+           FASE 1
+        ------------------------------------------------------ */
+
+        arrivalEyebrow.textContent =
+          "TRAZANDO TU VIAJE";
+
+        arrivalTitle.textContent =
+          "Trazando tu viaje…";
+
+        arrivalText.textContent =
+          "Estamos cruzando tus ideas, tus preferencias y tu forma de viajar.";
+
+
+        /* -----------------------------------------------------
+           FASE 2
+        ------------------------------------------------------ */
+
+        window.setTimeout(
+          () => {
+
+            arrivalCopy.classList.add(
+              "fade-out"
+            );
+
+            window.setTimeout(
+              () => {
+
+                arrivalEyebrow.textContent =
+                  "EN CAMINO";
+
+                arrivalTitle.textContent =
+                  "Tu solicitud está en camino.";
+
+                arrivalText.textContent =
+                  "Hemos recibido tus respuestas y ya forman parte de nuestro mapa.";
+
+                arrivalCopy.classList.remove(
+                  "fade-out"
+                );
+
+              },
+              500
+            );
+
+          },
+          1700
+        );
+
+
+        /* -----------------------------------------------------
+           FASE 3
+        ------------------------------------------------------ */
+
+        window.setTimeout(
+          () => {
+
+            arrivalCopy.classList.add(
+              "fade-out"
+            );
+
+            window.setTimeout(
+              () => {
+
+                arrivalCopy.style.display =
+                  "none";
+
+                arrivalFinal.classList.add(
+                  "visible"
+                );
+
+                arrivalFinal.setAttribute(
+                  "aria-hidden",
+                  "false"
+                );
+
+              },
+              500
+            );
+
+          },
+          3500
+        );
+
+      };
+
+
+    /* =======================================================
+       ENVÍO REAL
+    ======================================================== */
+
+    form.addEventListener(
+      "submit",
+      async (
+        event: SubmitEvent
+      ) => {
+
+        event.preventDefault();
+
+
+        if (
+          isSubmitting
+        ) {
+          return;
+        }
+
+
+        /* -----------------------------------------------------
+           VALIDAR
+        ------------------------------------------------------ */
+
+        if (
+          !validateQuestion(
+            currentIndex
+          )
+        ) {
+          return;
+        }
+
+
+        isSubmitting =
+          true;
+
+        submitButton.disabled =
+          true;
+
+        submitButton.setAttribute(
+          "aria-busy",
+          "true"
+        );
+
+
+        const submitLabel =
+          submitButton.querySelector<HTMLElement>(
+            ".submit-label"
+          );
+
+
+        if (submitLabel) {
+
+          submitLabel.textContent =
+            "Enviando…";
+
+        }
+
+
+        /* -----------------------------------------------------
+           RECOPILAR DATOS
+        ------------------------------------------------------ */
+
+        const data =
+          collectFormData();
+
+
+        /* -----------------------------------------------------
+           ENVIAR
+        ------------------------------------------------------ */
+
+        try {
+
+          const response =
+            await fetch(
+              "/api/travel-request",
+              {
+
+                method:
+                  "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json",
+                },
+
+                body:
+                  JSON.stringify(data),
+
+              }
+            );
+
+
+          let result: {
+            success?: boolean;
+            error?: string;
+          };
+
+
+          try {
+
+            result =
+              await response.json() as {
+                success?: boolean;
+                error?: string;
+              };
+
+          } catch {
+
+            result = {
+
+              success:
+                false,
+
+              error:
+                "El servidor devolvió una respuesta no válida.",
+
+            };
+
+          }
+
+
+          if (
+            !response.ok ||
+            !result.success
+          ) {
+
+            throw new Error(
+              result.error ||
+              "No se pudo guardar la solicitud."
+            );
+
+          }
+
+
+          console.log(
+            "Solicitud guardada correctamente:",
+            result
+          );
+
+
+          /* ---------------------------------------------------
+             OCULTAR FORMULARIO
+          ---------------------------------------------------- */
+
+          form.style.display =
+            "none";
+
+
+          const progress =
+            document.querySelector<HTMLElement>(
+              ".journey-progress"
+            );
+
+
+          if (progress) {
+
+            progress.style.display =
+              "none";
+
+          }
+
+
+          /* ---------------------------------------------------
+             ARRANCAR EXPERIENCIA
+          ---------------------------------------------------- */
+
+          playArrivalSequence();
+
+
+        } catch (
+          error: unknown
+        ) {
+
+          console.error(
+            "Error enviando solicitud:",
+            error
+          );
+
+
+          const message =
+            error instanceof Error
+              ? error.message
+              : "Error desconocido";
+
+
+          console.error(
+            "Detalle:",
+            message
+          );
+
+
+          alert(
+            "No hemos podido enviar tu solicitud. " +
+            "Por favor, inténtalo de nuevo."
+          );
+
+
+          isSubmitting =
+            false;
+
+          submitButton.disabled =
+            false;
+
+          submitButton.removeAttribute(
+            "aria-busy"
+          );
+
+
+          if (submitLabel) {
+
+            submitLabel.textContent =
+              "Enviar mi viaje";
+
+          }
+
+        }
 
       }
     );
@@ -2597,7 +3421,9 @@ import Footer from "../components/layout/Footer.astro";
        INICIALIZACIÓN
     ======================================================== */
 
-    updateProgress(0);
+    updateProgress(
+      currentIndex
+    );
 
   });
 </script>

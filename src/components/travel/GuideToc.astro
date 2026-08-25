@@ -1,0 +1,209 @@
+---
+interface TocItem {
+  id: string;
+  number: string;
+  title: string;
+}
+
+interface Props {
+  items: TocItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="guide-toc" aria-label="Índice de la guía">
+  <div class="guide-toc__inner">
+    <details class="guide-toc__mobile">
+      <summary>
+        <span>En esta guía</span>
+        <span class="guide-toc__mobile-icon" aria-hidden="true">+</span>
+      </summary>
+
+      <ol class="guide-toc__mobile-list">
+        {
+          items.map((item) => (
+            <li>
+              <a href={`#${item.id}`}>
+                <span class="guide-toc__number">{item.number}</span>
+                <span>{item.title}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </details>
+
+    <div class="guide-toc__desktop">
+      <div class="guide-toc__label">En esta guía</div>
+
+      <ol class="guide-toc__list">
+        {
+          items.map((item) => (
+            <li>
+              <a href={`#${item.id}`}>
+                <span class="guide-toc__number">{item.number}</span>
+                <span>{item.title}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .guide-toc {
+    width: 100%;
+    border-top: 1px solid var(--color-border, #dedbd4);
+    border-bottom: 1px solid var(--color-border, #dedbd4);
+    background: var(--color-background, #f7f5f0);
+  }
+
+  .guide-toc__inner {
+    width: min(100%, 1100px);
+    margin: 0 auto;
+  }
+
+  .guide-toc__desktop {
+    display: block;
+    padding: 2rem 0;
+  }
+
+  .guide-toc__label {
+    margin-bottom: 1.25rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: var(--color-muted, #777);
+  }
+
+  .guide-toc__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.35rem 3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .guide-toc__list li {
+    min-width: 0;
+  }
+
+  .guide-toc__list a {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    gap: 0.5rem;
+    align-items: baseline;
+    padding: 0.55rem 0;
+    color: var(--color-text, #171717);
+    text-decoration: none;
+    transition:
+      color 160ms ease,
+      opacity 160ms ease;
+  }
+
+  .guide-toc__list a:hover {
+    color: var(--color-muted, #666);
+  }
+
+  .guide-toc__number {
+    font-size: 0.7rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted, #888);
+  }
+
+  .guide-toc__list a span:last-child {
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+
+  .guide-toc__mobile {
+    display: none;
+  }
+
+  @media (max-width: 700px) {
+    .guide-toc__inner {
+      width: 100%;
+    }
+
+    .guide-toc__desktop {
+      display: none;
+    }
+
+    .guide-toc__mobile {
+      display: block;
+    }
+
+    .guide-toc__mobile summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 3.75rem;
+      padding: 0 1.25rem;
+      cursor: pointer;
+      list-style: none;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      line-height: 1.4;
+      text-transform: uppercase;
+      color: var(--color-text, #171717);
+    }
+
+    .guide-toc__mobile summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .guide-toc__mobile-icon {
+      font-size: 1.2rem;
+      font-weight: 400;
+      line-height: 1;
+      transition: transform 160ms ease;
+    }
+
+    .guide-toc__mobile[open] .guide-toc__mobile-icon {
+      transform: rotate(45deg);
+    }
+
+    .guide-toc__mobile-list {
+      margin: 0;
+      padding: 0.5rem 1.25rem 1.25rem;
+      list-style: none;
+      border-top: 1px solid var(--color-border, #dedbd4);
+    }
+
+    .guide-toc__mobile-list li {
+      border-bottom: 1px solid var(--color-border, #dedbd4);
+    }
+
+    .guide-toc__mobile-list li:last-child {
+      border-bottom: 0;
+    }
+
+    .guide-toc__mobile-list a {
+      display: grid;
+      grid-template-columns: 2.25rem 1fr;
+      gap: 0.5rem;
+      padding: 0.8rem 0;
+      color: var(--color-text, #171717);
+      text-decoration: none;
+    }
+
+    .guide-toc__mobile-list a span:last-child {
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+  }
+
+  @media (min-width: 701px) and (max-width: 1100px) {
+    .guide-toc__inner {
+      padding-right: 2rem;
+      padding-left: 2rem;
+    }
+  }
+</style>

@@ -1,0 +1,1740 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/layout/Header.astro";
+import Footer from "../../components/layout/Footer.astro";
+
+import { destinations } from "../../data/destinations";
+
+const slug = Astro.params.slug;
+
+const destination = destinations.find(
+  (item) => item.slug === slug
+);
+
+if (!destination || destination.status !== "ready") {
+  return Astro.redirect("/viajes");
+}
+---
+
+<Layout
+  title={`${destination.name} | Cruzando Meridianos`}
+  description={destination.description}
+  canonical={`/viajes/${destination.slug}`}
+>
+
+  <Header />
+
+  <main>
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="destination-hero">
+
+      <div class="destination-hero-image">
+
+        <img
+          src={destination.image.src}
+          alt={destination.imageAlt}
+        />
+
+      </div>
+
+      <div class="destination-hero-overlay"></div>
+
+      <div class="destination-hero-content">
+
+        <span class="destination-number">
+          {destination.number}
+        </span>
+
+        <p class="eyebrow">
+          DESTINO
+        </p>
+
+        <h1>
+          {destination.name}
+        </h1>
+
+        <p class="destination-hero-description">
+          {destination.description}
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         INTRODUCCIÓN
+    ====================================================== -->
+
+    <section class="destination-intro">
+
+      <div class="destination-intro-inner">
+
+        <div class="destination-intro-label">
+
+          <span>
+            Antes de viajar
+          </span>
+
+        </div>
+
+
+        <div class="destination-intro-copy">
+
+          <h2>
+            Entender el destino
+            antes de recorrerlo.
+          </h2>
+
+          <p>
+            Viajar bien no consiste únicamente en decidir qué lugares
+            visitar. También implica entender cómo funciona el destino,
+            cuánto tiempo necesita, cómo desplazarse y qué decisiones
+            merece la pena tomar antes de llegar.
+          </p>
+
+          <p>
+            En esta guía reunimos nuestra investigación para ayudarte
+            a entender las posibilidades del destino y decidir qué
+            tiene sentido para tu propio viaje.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         INFORMACIÓN ESENCIAL
+    ====================================================== -->
+
+    <section class="essential">
+
+      <div class="essential-inner">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            INFORMACIÓN ESENCIAL
+          </p>
+
+          <h2>
+            Lo que conviene saber
+            antes de empezar.
+          </h2>
+
+        </div>
+
+
+        <div class="essential-grid">
+
+          <article>
+
+            <span>01</span>
+
+            <h3>
+              Cuándo ir
+            </h3>
+
+            <p>
+              Clima, temporadas, condiciones del destino y qué tipo
+              de experiencias funcionan mejor en cada época del año.
+            </p>
+
+          </article>
+
+
+          <article>
+
+            <span>02</span>
+
+            <h3>
+              Cuánto tiempo
+            </h3>
+
+            <p>
+              Qué puedes hacer con diferentes duraciones y qué
+              implica realmente disponer de más o menos días.
+            </p>
+
+          </article>
+
+
+          <article>
+
+            <span>03</span>
+
+            <h3>
+              Cómo moverse
+            </h3>
+
+            <p>
+              Coche, transporte público, vuelos internos o combinaciones.
+              Analizamos qué opción tiene sentido según el viaje.
+            </p>
+
+          </article>
+
+
+          <article>
+
+            <span>04</span>
+
+            <h3>
+              Presupuesto
+            </h3>
+
+            <p>
+              Una referencia realista de cuánto puede costar el viaje
+              y dónde merece la pena invertir el presupuesto.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ACTUALIDAD
+    ====================================================== -->
+
+    <section class="updates">
+
+      <div class="updates-inner">
+
+        <div class="updates-heading">
+
+          <p class="eyebrow">
+            ACTUALIDAD DEL DESTINO
+          </p>
+
+          <h2>
+            Lo que está pasando
+            ahora mismo.
+          </h2>
+
+          <p>
+            Un destino no es estático. Condiciones meteorológicas,
+            carreteras, obras, fenómenos naturales, restricciones
+            o cambios locales pueden afectar a un viaje.
+          </p>
+
+        </div>
+
+
+        <div class="updates-content">
+
+          <article class="update-card">
+
+            <div class="update-status">
+              ACTUALIZACIÓN
+            </div>
+
+            <h3>
+              Información del destino
+            </h3>
+
+            <p>
+              Este espacio estará dedicado a las noticias e incidencias
+              que puedan afectar de forma relevante a quienes estén
+              preparando o realizando un viaje.
+            </p>
+
+            <span class="update-date">
+              Próximamente
+            </span>
+
+          </article>
+
+
+          <div class="updates-note">
+
+            <span>
+              ¿Por qué lo hacemos?
+            </span>
+
+            <p>
+              Porque una buena planificación no termina cuando compras
+              los vuelos. Si una carretera se cierra, un río se desborda
+              o una zona deja temporalmente de ser accesible, queremos
+              que esa información forme parte de la decisión.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         QUÉ VER
+    ====================================================== -->
+
+    <section class="places">
+
+      <div class="places-inner">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            QUÉ VER Y HACER
+          </p>
+
+          <h2>
+            Todas las posibilidades.
+          </h2>
+
+          <p>
+            No queremos darte una única ruta y decirte qué hacer.
+            Queremos enseñarte qué ofrece realmente el destino para
+            que puedas decidir qué encaja contigo.
+          </p>
+
+        </div>
+
+
+        <div class="places-placeholder">
+
+          <span>
+            Próximamente
+          </span>
+
+          <p>
+            Aquí reuniremos regiones, lugares, experiencias,
+            actividades y otros puntos de interés, explicando
+            qué aporta cada uno, cuánto tiempo necesita y para
+            qué tipo de viajero puede tener más sentido.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         DURACIÓN DEL VIAJE
+    ====================================================== -->
+
+    <section class="routes">
+
+      <div class="routes-inner">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            CUÁNTOS DÍAS
+          </p>
+
+          <h2>
+            El tiempo cambia
+            el viaje.
+          </h2>
+
+          <p>
+            No hay una duración perfecta. Cuantos más días tengas,
+            más posibilidades podrás combinar. La cuestión es saber
+            qué merece la pena priorizar en cada caso.
+          </p>
+
+        </div>
+
+
+        <div class="route-cards">
+
+          <article>
+
+            <span>
+              7 DÍAS
+            </span>
+
+            <h3>
+              Una primera aproximación
+            </h3>
+
+            <p>
+              Para concentrarse en algunas de las experiencias
+              principales y entender el destino sin intentar abarcarlo todo.
+            </p>
+
+          </article>
+
+
+          <article>
+
+            <span>
+              10 DÍAS
+            </span>
+
+            <h3>
+              El viaje equilibrado
+            </h3>
+
+            <p>
+              Más margen para combinar diferentes zonas y experiencias
+              manteniendo un ritmo razonable.
+            </p>
+
+          </article>
+
+
+          <article>
+
+            <span>
+              14 DÍAS
+            </span>
+
+            <h3>
+              La opción más completa
+            </h3>
+
+            <p>
+              Una duración que permite plantear combinaciones mucho
+              más interesantes sin convertir el viaje en una carrera.
+            </p>
+
+          </article>
+
+
+          <article>
+
+            <span>
+              21 DÍAS
+            </span>
+
+            <h3>
+              Viajar con tiempo
+            </h3>
+
+            <p>
+              Más profundidad, más flexibilidad y menos necesidad
+              de decidir constantemente qué dejar fuera.
+            </p>
+
+          </article>
+
+        </div>
+
+
+        <div class="routes-closing">
+
+          <p>
+            Estas duraciones no son itinerarios cerrados.
+            Son diferentes puntos de partida para entender
+            cuánto puede ofrecer el destino.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         INFORMACIÓN PRÁCTICA
+    ====================================================== -->
+
+    <section class="practical">
+
+      <div class="practical-inner">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            INFORMACIÓN PRÁCTICA
+          </p>
+
+          <h2>
+            Antes de comprar
+            el billete.
+          </h2>
+
+        </div>
+
+
+        <div class="practical-list">
+
+          <article>
+
+            <div class="practical-number">
+              01
+            </div>
+
+            <div>
+
+              <h3>
+                Documentación y entrada
+              </h3>
+
+              <p>
+                Qué documentación necesitas, qué trámites debes realizar
+                y dónde consultar siempre la información oficial.
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article>
+
+            <div class="practical-number">
+              02
+            </div>
+
+            <div>
+
+              <h3>
+                Dinero y pagos
+              </h3>
+
+              <p>
+                Moneda, tarjetas, efectivo, cajeros y otros aspectos
+                que conviene tener preparados.
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article>
+
+            <div class="practical-number">
+              03
+            </div>
+
+            <div>
+
+              <h3>
+                Internet y comunicación
+              </h3>
+
+              <p>
+                Opciones de conexión y recomendaciones para tener
+                internet durante el viaje.
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article>
+
+            <div class="practical-number">
+              04
+            </div>
+
+            <div>
+
+              <h3>
+                Seguro de viaje
+              </h3>
+
+              <p>
+                Qué aspectos conviene valorar antes de contratar
+                un seguro para este tipo de viaje.
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article>
+
+            <div class="practical-number">
+              05
+            </div>
+
+            <div>
+
+              <h3>
+                Reservas y alojamientos
+              </h3>
+
+              <p>
+                Qué conviene reservar con antelación y en qué partes
+                del viaje puede ser mejor mantener cierta flexibilidad.
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article>
+
+            <div class="practical-number">
+              06
+            </div>
+
+            <div>
+
+              <h3>
+                Seguridad y precauciones
+              </h3>
+
+              <p>
+                Aspectos concretos del destino que conviene conocer
+                antes de viajar y durante el recorrido.
+              </p>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         NUESTRA EXPERIENCIA
+    ====================================================== -->
+
+    <section class="experience">
+
+      <div class="experience-inner">
+
+        <div class="experience-copy">
+
+          <p class="eyebrow">
+            NUESTRA EXPERIENCIA
+          </p>
+
+          <h2>
+            Lo que aprendimos
+            viajando.
+          </h2>
+
+          <p>
+            La información objetiva es una parte de la guía.
+            La experiencia propia es otra.
+          </p>
+
+          <p>
+            Aquí contaremos qué hicimos nosotros, qué decisiones
+            tomamos, qué repetiríamos, qué evitaríamos y qué
+            haríamos de otra manera.
+          </p>
+
+        </div>
+
+
+        <div class="experience-note">
+
+          <span>
+            Próximamente
+          </span>
+
+          <p>
+            Nuestra ruta real, kilómetros recorridos, alojamientos,
+            gastos, decisiones y aprendizajes.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SERVICIO PERSONALIZADO
+    ====================================================== -->
+
+    <section class="personalized">
+
+      <div class="personalized-inner">
+
+        <div class="personalized-copy">
+
+          <p class="eyebrow">
+            ¿QUIERES QUE LO HAGAMOS NOSOTROS?
+          </p>
+
+          <h2>
+            Tú decides qué quieres vivir.
+            Nosotros construimos el viaje.
+          </h2>
+
+          <p>
+            Esta guía está pensada para que puedas investigar,
+            comparar posibilidades y tomar tus propias decisiones.
+          </p>
+
+          <p>
+            Pero si prefieres no dedicar horas a hacerlo,
+            podemos convertir toda esta información en un viaje
+            diseñado específicamente para ti.
+          </p>
+
+          <a
+            href="/cuentatuviaje"
+            class="button-primary"
+          >
+            Cuéntanos tu viaje
+            <span aria-hidden="true">↗</span>
+          </a>
+
+        </div>
+
+
+        <div class="personalized-note">
+
+          <span>
+            Nuestro trabajo
+          </span>
+
+          <p>
+            Investigar, filtrar, conectar las piezas y tomar
+            contigo las decisiones que hagan que el viaje tenga sentido.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CTA FINAL
+    ====================================================== -->
+
+    <section class="destination-cta">
+
+      <div class="destination-cta-inner">
+
+        <p class="eyebrow">
+          ¿TIENES ESTE DESTINO EN MENTE?
+        </p>
+
+        <h2>
+          Podemos ayudarte
+          a darle forma.
+        </h2>
+
+        <p>
+          Cuéntanos qué quieres vivir, cuánto tiempo tienes
+          y cómo te gustaría viajar. Nosotros empezamos a investigar.
+        </p>
+
+        <a
+          href="/cuentatuviaje"
+          class="button-primary"
+        >
+          Cuéntanos tu viaje
+          <span aria-hidden="true">↗</span>
+        </a>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <Footer />
+
+</Layout>
+
+
+<style>
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.destination-hero {
+  position: relative;
+
+  min-height: 720px;
+
+  display: flex;
+  align-items: flex-end;
+
+  overflow: hidden;
+
+  background: var(--color-bosque);
+}
+
+.destination-hero-image {
+  position: absolute;
+
+  inset: 0;
+}
+
+.destination-hero-image img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+.destination-hero-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      to top,
+      rgba(15, 27, 21, .82),
+      rgba(15, 27, 21, .25) 55%,
+      rgba(15, 27, 21, .08)
+    );
+}
+
+.destination-hero-content {
+  position: relative;
+  z-index: 1;
+
+  width: min(
+    var(--content-width),
+    calc(100% - 4rem)
+  );
+
+  margin: 0 auto;
+
+  padding: 8rem 0 6rem;
+
+  color: var(--color-papel);
+}
+
+.destination-number {
+  display: block;
+
+  margin-bottom: 1.5rem;
+
+  color: var(--color-cobre);
+
+  font-size: .8rem;
+  letter-spacing: 3px;
+}
+
+.destination-hero .eyebrow {
+  margin-bottom: 1rem;
+}
+
+.destination-hero h1 {
+  max-width: 900px;
+
+  font-size: clamp(
+    5rem,
+    11vw,
+    9rem
+  );
+
+  letter-spacing: -.04em;
+}
+
+.destination-hero-description {
+  max-width: 650px;
+
+  margin-top: 2rem;
+
+  color: rgba(251, 249, 245, .82);
+
+  font-size: 1.15rem;
+  line-height: 1.8;
+}
+
+
+/* =========================================================
+   INTRO
+========================================================= */
+
+.destination-intro {
+  padding: 9rem 2rem;
+
+  background: var(--color-papel);
+}
+
+.destination-intro-inner {
+  width: min(
+    var(--content-width),
+    100%
+  );
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: .5fr 1.5fr;
+
+  gap: 6rem;
+}
+
+.destination-intro-label {
+  padding-top: .5rem;
+
+  border-top:
+    1px solid rgba(28, 48, 38, .2);
+}
+
+.destination-intro-label span {
+  color: var(--color-cobre);
+
+  font-size: .7rem;
+  font-weight: 500;
+
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.destination-intro-copy {
+  max-width: 760px;
+}
+
+.destination-intro-copy h2 {
+  font-size: clamp(
+    3rem,
+    5vw,
+    4.8rem
+  );
+
+  letter-spacing: -.025em;
+}
+
+.destination-intro-copy p {
+  max-width: 650px;
+
+  margin-top: 2rem;
+
+  color: #555;
+
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+
+/* =========================================================
+   ESSENTIAL
+========================================================= */
+
+.essential {
+  padding: 9rem 2rem;
+
+  background: var(--color-arena);
+}
+
+.essential-inner {
+  width: min(
+    var(--content-width),
+    100%
+  );
+
+  margin: 0 auto;
+}
+
+.section-heading {
+  max-width: 760px;
+}
+
+.section-heading h2 {
+  font-size: clamp(
+    3rem,
+    5vw,
+    4.5rem
+  );
+
+  letter-spacing: -.025em;
+}
+
+.section-heading > p:last-child {
+  max-width: 620px;
+
+  margin-top: 2rem;
+
+  color: #555;
+
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.essential-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 2rem;
+
+  margin-top: 5rem;
+}
+
+.essential-grid article {
+  padding-top: 1.5rem;
+
+  border-top:
+    1px solid rgba(28, 48, 38, .2);
+}
+
+.essential-grid span {
+  display: block;
+
+  margin-bottom: 1.2rem;
+
+  color: var(--color-cobre);
+
+  font-size: .75rem;
+  letter-spacing: 2px;
+}
+
+.essential-grid h3 {
+  margin: 0 0 .8rem;
+
+  font-size: 1.7rem;
+}
+
+.essential-grid p {
+  color: #555;
+
+  font-size: .92rem;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   ACTUALIDAD
+========================================================= */
+
+.updates {
+  padding: 9rem 2rem;
+
+  background: var(--color-papel);
+}
+
+.updates-inner {
+  width: min(
+    var(--content-width),
+    100%
+  );
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: .8fr 1.2fr;
+
+  gap: 7rem;
+}
+
+.updates-heading {
+  max-width: 560px;
+}
+
+.updates-heading h2 {
+  font-size: clamp(
+    3rem,
+    5vw,
+    4.5rem
+  );
+
+  letter-spacing: -.025em;
+}
+
+.updates-heading > p:last-child {
+  margin-top: 2rem;
+
+  color: #555;
+
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.updates-content {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2rem;
+}
+
+.update-card {
+  padding: 2.5rem;
+
+  border:
+    1px solid rgba(28, 48, 38, .15);
+
+  border-radius: 20px;
+
+  background: #f7f4ef;
+}
+
+.update-status {
+  margin-bottom: 1.2rem;
+
+  color: var(--color-cobre);
+
+  font-size: .7rem;
+  font-weight: 500;
+
+  letter-spacing: 2px;
+}
+
+.update-card h3 {
+  margin: 0 0 1rem;
+
+  font-size: 1.8rem;
+}
+
+.update-card p {
+  max-width: 600px;
+
+  color: #555;
+
+  font-size: .95rem;
+  line-height: 1.7;
+}
+
+.update-date {
+  display: block;
+
+  margin-top: 1.5rem;
+
+  color: #777;
+
+  font-size: .75rem;
+}
+
+.updates-note {
+  padding: 2rem 0 0;
+
+  border-top:
+    1px solid rgba(28, 48, 38, .15);
+}
+
+.updates-note span {
+  display: block;
+
+  margin-bottom: .8rem;
+
+  color: var(--color-cobre);
+
+  font-size: .7rem;
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+}
+
+.updates-note p {
+  max-width: 620px;
+
+  color: #555;
+
+  font-family: var(--font-serif);
+
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   PLACES
+========================================================= */
+
+.places {
+  padding: 9rem 2rem;
+
+  background: #f7f4ef;
+}
+
+.places-inner {
+  width: min(
+    var(--content-width),
+    100%
+  );
+
+  margin: 0 auto;
+}
+
+.places-placeholder {
+  margin-top: 5rem;
+
+  padding: 4rem;
+
+  border:
+    1px solid rgba(28, 48, 38, .15);
+
+  border-radius: 24px;
+
+  background: var(--color-papel);
+}
+
+.places-placeholder span {
+  display: block;
+
+  margin-bottom: 1rem;
+
+  color: var(--color-cobre);
+
+  font-size: .7rem;
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+}
+
+.places-placeholder p {
+  max-width: 650px;
+
+  color: #555;
+
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   ROUTES / DURACIÓN
+========================================================= */
+
+.routes {
+  padding: 9rem 2rem;
+
+  background: var(--color-bosque);
+
+  color: var(--color-papel);
+}
+
+.routes-inner {
+  width: min(
+    var(--content-width),
+    100%
+  );
+
+  margin: 0 auto;
+}
+
+.routes .section-heading {
+  max-width: 700px;
+}
+
+.routes .section-heading h2 {
+  color: var(--color-papel);
+}
+
+.routes .section-heading > p:last-child {
+  color: rgba(251, 249, 245, .65);
+}
+
+.route-cards {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 1.5rem;
+
+  margin-top: 5rem;
+}
+
+.route-cards article {
+  padding: 2rem;
+
+  border:
+    1px solid rgba(251, 249, 245, .15);
+
+  border-radius: 20px;
+}
+
+.route-cards article > span {
+  color: var(--color-cobre);
+
+  font-size: .7rem;
+  font-weight: 500;
+
+  letter-spacing: 2px;
+}
+
+.route-cards h3 {
+  margin: 2rem 0 1rem;
+
+  font-size: 1.7rem;
+}
+
+.route-cards p {
+  color: rgba(251, 249, 245, .65);
+
+  font-size: .92rem;
+  line-height: 1.7;
+}
+
+.routes-closing {
+  margin-top: 3rem;
+
+  padding-top: 2rem;
+
+  border-top:
+    1px solid rgba(251, 249, 245, .15);
+}
+
+.routes-closing p {
+  max-width: 700px;
+
+  color: rgba(251, 249, 245, .65);
+
+  font-family: var(--font-serif);
+
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   PRACTICAL
+========================================================= */
+
+.practical {
+  padding: 9rem 2rem;
+
+  background: var(--color-arena);
+}
+
+.practical-inner {
+  width: min(
+    var(--content-width),
+    100%
+  );
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: .8fr 1.2fr;
+
+  gap: 7rem;
+}
+
+.practical-list {
+  border-top:
+    1px solid rgba(28, 48, 38, .18);
+}
+
+.practical-list article {
+  display: grid;
+
+  grid-template-columns: 70px 1fr;
+
+  gap: 2rem;
+
+  padding: 2rem 0;
+
+  border-bottom:
+    1px solid rgba(28, 48, 38, .18);
+}
+
+.practical-number {
+  color: var(--color-cobre);
+
+  font-size: .75rem;
+  letter-spacing: 2px;
+}
+
+.practical-list h3 {
+  margin: 0 0 .7rem;
+
+  font-size: 1.6rem;
+}
+
+.practical-list p {
+  max-width: 600px;
+
+  color: #555;
+
+  font-size: .92rem;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   EXPERIENCE
+========================================================= */
+
+.experience {
+  padding: 9rem 2rem;
+
+  background: var(--color-papel);
+}
+
+.experience-inner {
+  width: min(
+    var(--content-width),
+    100%
+  );
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 1.2fr .8fr;
+
+  gap: 8rem;
+
+  align-items: center;
+}
+
+.experience-copy {
+  max-width: 700px;
+}
+
+.experience-copy h2 {
+  font-size: clamp(
+    3rem,
+    5vw,
+    4.5rem
+  );
+}
+
+.experience-copy > p {
+  max-width: 600px;
+
+  margin-top: 2rem;
+
+  color: #555;
+
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.experience-note {
+  padding: 2.5rem;
+
+  border-left:
+    2px solid var(--color-cobre);
+
+  background: #f7f4ef;
+}
+
+.experience-note span {
+  display: block;
+
+  margin-bottom: 1rem;
+
+  color: var(--color-cobre);
+
+  font-size: .7rem;
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+}
+
+.experience-note p {
+  color: #555;
+
+  font-family: var(--font-serif);
+
+  font-size: 1.3rem;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   SERVICIO PERSONALIZADO
+========================================================= */
+
+.personalized {
+  padding: 9rem 2rem;
+
+  background: #f7f4ef;
+}
+
+.personalized-inner {
+  width: min(
+    var(--content-width),
+    100%
+  );
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 1.2fr .8fr;
+
+  gap: 8rem;
+
+  align-items: center;
+}
+
+.personalized-copy {
+  max-width: 750px;
+}
+
+.personalized-copy h2 {
+  font-size: clamp(
+    3rem,
+    5vw,
+    4.8rem
+  );
+
+  letter-spacing: -.025em;
+}
+
+.personalized-copy p:not(.eyebrow) {
+  max-width: 650px;
+
+  margin-top: 1.5rem;
+
+  color: #555;
+
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.personalized-copy .button-primary {
+  display: inline-flex;
+
+  margin-top: 2.5rem;
+
+  gap: .6rem;
+}
+
+.personalized-copy .button-primary span {
+  transition:
+    transform .2s ease;
+}
+
+.personalized-copy .button-primary:hover span {
+  transform: translate(3px, -3px);
+}
+
+.personalized-note {
+  padding: 2.5rem;
+
+  border-left:
+    2px solid var(--color-cobre);
+
+  background: var(--color-papel);
+}
+
+.personalized-note span {
+  display: block;
+
+  margin-bottom: 1rem;
+
+  color: var(--color-cobre);
+
+  font-size: .7rem;
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+}
+
+.personalized-note p {
+  color: #555;
+
+  font-family: var(--font-serif);
+
+  font-size: 1.3rem;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   CTA
+========================================================= */
+
+.destination-cta {
+  padding: 9rem 2rem;
+
+  background: var(--color-arena);
+
+  text-align: center;
+}
+
+.destination-cta-inner {
+  width: min(
+    800px,
+    100%
+  );
+
+  margin: 0 auto;
+}
+
+.destination-cta h2 {
+  font-size: clamp(
+    3rem,
+    6vw,
+    5rem
+  );
+
+  letter-spacing: -.025em;
+}
+
+.destination-cta p:not(.eyebrow) {
+  max-width: 560px;
+
+  margin: 2rem auto 2.5rem;
+
+  color: #555;
+
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.destination-cta .button-primary {
+  gap: .6rem;
+}
+
+.destination-cta .button-primary span {
+  transition:
+    transform .2s ease;
+}
+
+.destination-cta .button-primary:hover span {
+  transform: translate(3px, -3px);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .route-cards {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+@media (max-width: 900px) {
+
+  .destination-hero {
+    min-height: 620px;
+  }
+
+  .destination-hero-content {
+    width: min(
+      100% - 3rem,
+      var(--content-width)
+    );
+
+    padding-bottom: 4rem;
+  }
+
+  .destination-intro,
+  .essential,
+  .updates,
+  .places,
+  .routes,
+  .practical,
+  .experience,
+  .personalized,
+  .destination-cta {
+    padding:
+      6rem 1.5rem;
+  }
+
+  .destination-intro-inner {
+    grid-template-columns: 1fr;
+
+    gap: 3rem;
+  }
+
+  .essential-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 3rem 2rem;
+  }
+
+  .updates-inner {
+    grid-template-columns: 1fr;
+
+    gap: 4rem;
+  }
+
+  .route-cards {
+    grid-template-columns: 1fr;
+
+    margin-top: 4rem;
+  }
+
+  .practical-inner {
+    grid-template-columns: 1fr;
+
+    gap: 4rem;
+  }
+
+  .experience-inner {
+    grid-template-columns: 1fr;
+
+    gap: 4rem;
+  }
+
+  .personalized-inner {
+    grid-template-columns: 1fr;
+
+    gap: 4rem;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .destination-hero {
+    min-height: 560px;
+  }
+
+  .destination-hero-content {
+    width: calc(100% - 3rem);
+  }
+
+  .destination-hero h1 {
+    font-size: 4rem;
+  }
+
+  .destination-hero-description {
+    font-size: 1rem;
+  }
+
+  .essential-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .places-placeholder {
+    padding: 2rem;
+  }
+
+  .update-card {
+    padding: 2rem;
+  }
+
+  .practical-list article {
+    grid-template-columns: 45px 1fr;
+
+    gap: 1rem;
+  }
+
+  .personalized-note {
+    padding: 2rem;
+  }
+
+}
+
+</style>

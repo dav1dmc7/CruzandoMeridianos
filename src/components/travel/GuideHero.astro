@@ -1,0 +1,77 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  description: string;
+}
+
+const { eyebrow, title, description } = Astro.props;
+---
+
+<section class="guide-hero">
+  <div class="guide-hero__inner">
+    <p class="guide-hero__eyebrow">{eyebrow}</p>
+
+    <h1>{title}</h1>
+
+    <p class="guide-hero__description">
+      {description}
+    </p>
+  </div>
+</section>
+
+<style>
+  .guide-hero {
+    width: 100%;
+    padding: 7rem 1.5rem 5rem;
+    background: var(--color-background, #f7f5f0);
+  }
+
+  .guide-hero__inner {
+    width: min(100%, 1100px);
+    margin: 0 auto;
+  }
+
+  .guide-hero__eyebrow {
+    margin: 0 0 1.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: var(--color-muted, #777);
+  }
+
+  .guide-hero h1 {
+    max-width: 900px;
+    margin: 0;
+    font-size: clamp(2.8rem, 7vw, 6.5rem);
+    font-weight: 500;
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    color: var(--color-text, #171717);
+  }
+
+  .guide-hero__description {
+    max-width: 680px;
+    margin: 2rem 0 0;
+    font-size: clamp(1.05rem, 2vw, 1.3rem);
+    line-height: 1.65;
+    color: var(--color-muted, #666);
+  }
+
+  @media (max-width: 700px) {
+    .guide-hero {
+      padding: 5rem 1.25rem 3.5rem;
+    }
+
+    .guide-hero h1 {
+      font-size: clamp(2.7rem, 13vw, 4.5rem);
+    }
+
+    .guide-hero__description {
+      margin-top: 1.5rem;
+      font-size: 1rem;
+    }
+  }
+</style>
