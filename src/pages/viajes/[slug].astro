@@ -6,8 +6,7 @@ import Header from "../../components/layout/Header.astro";
 import Footer from "../../components/layout/Footer.astro";
 
 import { destinations } from "../../data/destinations";
-
-import { costaRicaGuide } from "../../data/guides/costa-rica";
+import { getGuideBySlug } from "../../data/guides";
 
 import type {
   DestinationGuide,
@@ -15,292 +14,310 @@ import type {
   GuideHighlight,
   GuideSection,
   TravelAlert,
-  FAQItem,
   TravelerRequirement,
+  FAQItem,
 } from "../../data/guides/types";
+
 
 /* =========================================================
    ROUTE
    ========================================================= */
 
-const slug = Astro.params.slug;
+const slug =
+  Astro.params.slug;
 
 if (!slug) {
   return Astro.redirect("/viajes");
 }
 
+
 /* =========================================================
    DESTINATION
    ========================================================= */
 
-const destination = destinations.find(
-  (item) => item.slug === slug
-);
+const destination =
+  destinations.find(
+    (item) =>
+      item.slug === slug
+  );
 
-if (!destination || destination.status !== "ready") {
+if (
+  !destination ||
+  destination.status !== "ready"
+) {
   return Astro.redirect("/viajes");
 }
 
-/* =========================================================
-   GUIDE REGISTRY
-   =========================================================
-   Esta es la única capa que crecerá al añadir destinos.
-
-   Futuro:
-   sudafrica
-   jordania
-   grecia
-   auroras
-   etc.
-
-   La plantilla permanece intacta.
-   ========================================================= */
-
-const guides: Record<string, DestinationGuide> = {
-  "costa-rica": costaRicaGuide,
-};
 
 /* =========================================================
-   CURRENT GUIDE
+   GUIDE
    ========================================================= */
 
-const guide = guides[slug];
+const guide:
+  DestinationGuide | undefined =
+    getGuideBySlug(slug);
 
 if (!guide) {
   return Astro.redirect("/viajes");
 }
 
-/* =========================================================
-   DERIVED DATA
-   ========================================================= */
-
-const activeAlerts: TravelAlert[] = [...guide.alerts]
-  .filter((alert) => alert.active)
-  .sort(
-    (a, b) =>
-      new Date(b.date).getTime() -
-      new Date(a.date).getTime()
-  );
-
-const hasAlerts = activeAlerts.length > 0;
-const hasFaq = guide.faq.length > 0;
-
-const entryRequirements = guide.entryRequirements;
-const travelerOptions: TravelerRequirement[] =
-  entryRequirements?.travelers ?? [];
-
-const defaultTraveler =
-  entryRequirements
-    ? travelerOptions.find(
-        (traveler) =>
-          traveler.countryCode ===
-          entryRequirements.defaultCountryCode
-      ) ?? travelerOptions[0]
-    : undefined;
 
 /* =========================================================
-   EDITORIAL GROUPS
+   CURRENT DATE
    ========================================================= */
 
-const planningIds = new Set<string>([
-  "cuando-viajar",
-  "cuantos-dias",
-  "regiones-y-zonas",
-  "como-moverse",
-  "hace-falta-coche",
-  "desplazamientos-y-tiempos",
-]);
+const now =
+  new Date();
 
-const experienceIds = new Set<string>([
-  "que-ver-y-hacer",
-  "fauna-y-naturaleza",
-  "parques-nacionales",
-  "playas",
-  "comida",
-]);
 
-const practicalIds = new Set<string>([
-  "documentacion-y-entrada",
-  "seguro",
-  "salud",
-  "dinero-y-tarjetas",
-  "internet-y-conectividad",
-  "seguridad",
-  "equipaje",
-  "consejos-practicos",
-]);
+/* =========================================================
+   ACTIVE ALERTS
+   ========================================================= */
 
-const isPlanningSection = (
-  section: GuideSection
-): boolean => planningIds.has(section.id);
+const activeAlerts:
+  TravelAlert[] =
+    [...guide.alerts]
+      .filter(
+        (alert) => {
 
-const isExperienceSection = (
-  section: GuideSection
-): boolean => experienceIds.has(section.id);
+          if (!alert.active) {
+            return false;
+          }
 
-const isPracticalSection = (
-  section: GuideSection
-): boolean => practicalIds.has(section.id);
+          if (!alert.expiresAt) {
+            return true;
+          }
 
-const getSectionCategory = (
-  section: GuideSection
-): string => {
-  if (isPlanningSection(section)) {
-    return "Planificación";
-  }
+          return (
+            new Date(
+              `${alert.expiresAt}T23:59:59`
+            ).getTime()
+            >=
+            now.getTime()
+          );
+        }
+      )
+      .sort(
+        (a, b) =>
+          new Date(b.date).getTime()
+          -
+          new Date(a.date).getTime()
+      );
 
-  if (isExperienceSection(section)) {
-    return "Experiencias";
-  }
+const hasAlerts =
+  activeAlerts.length > 0;
 
-  if (isPracticalSection(section)) {
-    return "Información práctica";
-  }
+const hasFaq =
+  guide.faq.length > 0;
 
-  return "Guía del destino";
-};
+
+/* =========================================================
+   ENTRY REQUIREMENTS
+   ========================================================= */
+
+const entryRequirements =
+  guide.entryRequirements;
+
+const travelerOptions:
+  TravelerRequirement[] =
+    entryRequirements?.travelers ?? [];
+
+const defaultTraveler:
+  TravelerRequirement | undefined =
+    entryRequirements
+      ? travelerOptions.find(
+          (traveler) =>
+            traveler.countryCode ===
+            entryRequirements.defaultCountryCode
+        ) ?? travelerOptions[0]
+      : undefined;
+
+
+/* =========================================================
+   SECTION HELPERS
+   ========================================================= */
+
+const getSectionCategory =
+  (
+    section: GuideSection
+  ): string => {
+
+    switch (section.category) {
+      case "overview":
+        return "Guía del destino";
+
+      case "planning":
+        return "Planificación";
+
+      case "experience":
+        return "Experiencias";
+
+      case "practical":
+        return "Información práctica";
+
+      case "updates":
+        return "Actualidad";
+
+      default:
+        return "Guía del destino";
+    }
+  };
+
 
 /* =========================================================
    BLOCK HELPERS
    ========================================================= */
 
-const getBlockClass = (
-  block: GuideBlock
-): string => {
-  switch (block.type) {
-    case "warning":
-      return "guide-block--warning";
+const getBlockClass =
+  (
+    block: GuideBlock
+  ): string =>
+    `guide-block guide-block--${block.type}`;
 
-    case "tip":
-      return "guide-block--tip";
-
-    case "important":
-      return "guide-block--important";
-
-    case "highlight":
-      return "guide-block--highlight";
-
-    case "quote":
-      return "guide-block--quote";
-
-    case "comparison":
-      return "guide-block--comparison";
-
-    case "source":
-      return "guide-block--source";
-
-    case "table":
-      return "guide-block--table";
-
-    case "place":
-      return "guide-block--place";
-
-    case "region":
-      return "guide-block--region";
-
-    case "experience":
-      return "guide-block--experience";
-
-    case "list":
-      return "guide-block--list";
-
-    default:
-      return "guide-block--text";
-  }
-};
 
 /* =========================================================
    HIGHLIGHT LABELS
    ========================================================= */
 
-const getHighlightLabel = (
-  highlight: GuideHighlight
-): string => {
-  switch (highlight.type) {
-    case "decision":
-      return "Decisión";
+const getHighlightLabel =
+  (
+    highlight: GuideHighlight
+  ): string => {
 
-    case "warning":
-      return "Importante";
+    switch (highlight.type) {
+      case "decision":
+        return "Decisión";
 
-    case "experience":
-      return "Experiencia";
+      case "warning":
+        return "Importante";
 
-    case "important":
-      return "A tener en cuenta";
+      case "experience":
+        return "Experiencia";
 
-    case "tip":
-      return "Consejo";
+      case "important":
+        return "A tener en cuenta";
 
-    default:
-      return "A tener en cuenta";
-  }
-};
+      case "tip":
+        return "Consejo";
+
+      default:
+        return "A tener en cuenta";
+    }
+  };
+
 
 /* =========================================================
    ALERT LABELS
    ========================================================= */
 
-const getAlertLabel = (
-  type: TravelAlert["type"]
-): string => {
-  const labels: Record<
-    TravelAlert["type"],
-    string
-  > = {
-    carretera: "Carretera",
-    clima: "Clima",
-    parque: "Parque",
-    transporte: "Transporte",
-    entrada: "Entrada",
-    seguridad: "Seguridad",
-    salud: "Salud",
-    volcan: "Volcán",
-    otro: "Información",
+const getAlertLabel =
+  (
+    type: TravelAlert["type"]
+  ): string => {
+
+    const labels:
+      Record<
+        TravelAlert["type"],
+        string
+      > = {
+
+      carretera:
+        "Carretera",
+
+      clima:
+        "Clima",
+
+      parque:
+        "Parque",
+
+      transporte:
+        "Transporte",
+
+      entrada:
+        "Entrada",
+
+      seguridad:
+        "Seguridad",
+
+      salud:
+        "Salud",
+
+      volcan:
+        "Volcán",
+
+      otro:
+        "Información",
+    };
+
+    return labels[type];
   };
 
-  return labels[type];
-};
 
 /* =========================================================
    ALERT SEVERITY
    ========================================================= */
 
-const getAlertSeverityLabel = (
-  severity: TravelAlert["severity"]
-): string => {
-  const labels: Record<
-    TravelAlert["severity"],
-    string
-  > = {
-    critical: "Crítico",
-    high: "Importante",
-    medium: "Atención",
-    low: "Información",
+const getAlertSeverityLabel =
+  (
+    severity:
+      TravelAlert["severity"]
+  ): string => {
+
+    const labels:
+      Record<
+        TravelAlert["severity"],
+        string
+      > = {
+
+      critical:
+        "Crítico",
+
+      high:
+        "Importante",
+
+      medium:
+        "Atención",
+
+      low:
+        "Información",
+    };
+
+    return labels[severity];
   };
 
-  return labels[severity];
-};
 
 /* =========================================================
    VISA LABEL
    ========================================================= */
 
-const formatVisaRequirement = (
-  requirement: TravelerRequirement["visaRequirement"]
-): string => {
-  const labels: Record<
-    TravelerRequirement["visaRequirement"],
-    string
-  > = {
-    none: "Sin visado",
-    consular: "Visado consular",
-    restricted: "Visado restringido",
-    special: "Condiciones especiales",
+const formatVisaRequirement =
+  (
+    requirement:
+      TravelerRequirement["visaRequirement"]
+  ): string => {
+
+    const labels:
+      Record<
+        TravelerRequirement["visaRequirement"],
+        string
+      > = {
+
+      none:
+        "Sin visado",
+
+      consular:
+        "Visado consular",
+
+      restricted:
+        "Visado restringido",
+
+      special:
+        "Condiciones especiales",
+    };
+
+    return labels[requirement];
   };
 
-  return labels[requirement];
-};
 
 /* =========================================================
    SPECIAL IDS
@@ -321,6 +338,31 @@ const faqSectionId =
 const errorsSectionId =
   "errores-habituales";
 
+
+/* =========================================================
+   EDITORIAL STATUS
+   ========================================================= */
+
+const getEditorialStatus =
+  (
+    status:
+      NonNullable<DestinationGuide["editorial"]>["status"]
+  ): string => {
+
+    switch (status) {
+      case "published":
+        return "Publicada";
+
+      case "in-review":
+        return "En revisión";
+
+      case "draft":
+      default:
+        return "En investigación";
+    }
+  };
+
+
 /* =========================================================
    SEO
    ========================================================= */
@@ -334,77 +376,142 @@ const pageDescription =
 const canonicalUrl =
   `https://www.cruzandomeridianos.com/viajes/${destination.slug}`;
 
+
 /* =========================================================
    JSON-LD
    ========================================================= */
 
 const guideSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
+  "@context":
+    "https://schema.org",
 
-  headline: guide.title,
+  "@type":
+    "Article",
 
-  description: guide.subtitle,
+  headline:
+    guide.title,
 
-  url: canonicalUrl,
+  description:
+    guide.subtitle,
 
-  inLanguage: "es",
+  url:
+    canonicalUrl,
 
-  dateModified:
-    guide.editorial?.updatedAt,
+  inLanguage:
+    "es",
+
+  ...(guide.editorial?.updatedAt
+    ? {
+        dateModified:
+          guide.editorial.updatedAt,
+      }
+    : {}),
 
   author: {
-    "@type": "Organization",
-    name: "Cruzando Meridianos",
-    url: "https://www.cruzandomeridianos.com",
+    "@type":
+      "Organization",
+
+    name:
+      "Cruzando Meridianos",
+
+    url:
+      "https://www.cruzandomeridianos.com",
   },
 
   publisher: {
-    "@type": "Organization",
-    name: "Cruzando Meridianos",
-    url: "https://www.cruzandomeridianos.com",
+    "@type":
+      "Organization",
+
+    name:
+      "Cruzando Meridianos",
+
+    url:
+      "https://www.cruzandomeridianos.com",
   },
 
+  image:
+    destination.image.src,
+
   about: {
-    "@type": "Place",
-    name: destination.name,
+    "@type":
+      "Place",
+
+    name:
+      destination.name,
   },
 
   mainEntityOfPage: {
-    "@type": "WebPage",
-    "@id": canonicalUrl,
+    "@type":
+      "WebPage",
+
+    "@id":
+      canonicalUrl,
   },
 };
 
+
 /* =========================================================
-   TRAVELER DATA FOR CLIENT INTERACTION
+   TRAVELER DATA
    ========================================================= */
 
-   const travelerData = travelerOptions.map(
-  (traveler) => ({
-    countryCode: traveler.countryCode,
-    countryName: traveler.countryName,
-    visaRequirement: traveler.visaRequirement,
-    maximumStay:
-      traveler.maximumStay ?? null,
-    passportRequirement:
-      traveler.passportRequirement ?? null,
-    returnTicketRequired:
-      traveler.returnTicketRequired ?? false,
-    entryFee:
-      traveler.entryFee ?? null,
-    onwardTravelRequired:
-      traveler.onwardTravelRequired ?? false,
-    notes:
-      traveler.notes ?? [],
-    sourceUrl:
-      traveler.source?.url ?? null,
-    sourceLabel:
-      traveler.source?.label ?? null,
-    reviewedAt:
-      entryRequirements?.lastReviewed ?? null,
-  })
-);
+const travelerData =
+  travelerOptions.map(
+    (traveler) => ({
+      countryCode:
+        traveler.countryCode,
+
+      countryName:
+        traveler.countryName,
+
+      visaRequirement:
+        traveler.visaRequirement,
+
+      maximumStay:
+        traveler.maximumStay ??
+        null,
+
+      passportRequirement:
+        traveler.passportRequirement ??
+        null,
+
+      returnTicketRequired:
+        traveler.returnTicketRequired ??
+        false,
+
+      proofOfMeansRequired:
+        traveler.proofOfMeansRequired ??
+        false,
+
+      entryFee:
+        traveler.entryFee ??
+        null,
+
+      onwardTravelRequired:
+        traveler.onwardTravelRequired ??
+        false,
+
+      yellowFeverRelevant:
+        traveler.yellowFeverRelevant ??
+        false,
+
+      notes:
+        traveler.notes ??
+        [],
+
+      sourceUrl:
+        traveler.source?.url ??
+        null,
+
+      sourceLabel:
+        traveler.source?.label ??
+        null,
+
+      reviewedAt:
+        traveler.lastReviewed ??
+        entryRequirements?.lastReviewed ??
+        null,
+    })
+  );
 ---
 
 <Layout
@@ -415,27 +522,42 @@ const guideSchema = {
 >
 
   <script
-    type="application/ld+json"
     is:inline
+    type="application/ld+json"
     set:html={JSON.stringify(guideSchema)}
-  ></script>
+  />
+
 
   <Header />
 
-  <main class="guide-page">
+
+  <main
+    class="guide-page"
+    data-guide-slug={guide.slug}
+  >
 
     <!-- =====================================================
          HERO
     ====================================================== -->
 
-    <section class="guide-hero">
+    <section
+      class="guide-hero"
+    >
 
-      <div class="guide-hero__media">
+      <div
+        class="guide-hero__media"
+        aria-hidden="true"
+      >
 
         <Image
           src={destination.image}
           alt={destination.imageAlt}
-          widths={[900, 1400, 1800, 2200]}
+          widths={[
+            900,
+            1400,
+            1800,
+            2200,
+          ]}
           sizes="100vw"
           loading="eager"
           decoding="async"
@@ -443,65 +565,101 @@ const guideSchema = {
 
       </div>
 
-      <div class="guide-hero__overlay"></div>
 
-      <div class="guide-hero__content">
+      <div
+        class="guide-hero__overlay"
+        aria-hidden="true"
+      ></div>
 
-        <div class="guide-hero__meta">
 
-          <span class="guide-hero__number">
+      <div
+        class="guide-hero__content"
+      >
+
+        <div
+          class="guide-hero__meta"
+        >
+
+          <span
+            class="guide-hero__number"
+          >
             {destination.number}
           </span>
 
-          <span class="guide-hero__label">
+          <span
+            class="guide-hero__label"
+          >
             Guía de viaje
           </span>
 
         </div>
 
+
         <h1>
           {guide.title}
         </h1>
 
-        <p class="guide-hero__subtitle">
+
+        <p
+          class="guide-hero__subtitle"
+        >
           {guide.subtitle}
         </p>
 
-        <div class="guide-hero__status">
+
+        <div
+          class="guide-hero__status"
+        >
 
           <span>
             Estado editorial
           </span>
 
           <strong>
-            {guide.editorial?.status === "published"
-              ? "Publicada"
-              : guide.editorial?.status === "in-review"
-              ? "En revisión"
-              : "En investigación"}
+            {
+              guide.editorial
+                ? getEditorialStatus(
+                    guide.editorial.status
+                  )
+                : "En investigación"
+            }
           </strong>
 
         </div>
 
+
         {
           guide.editorial?.updatedAt && (
-            <div class="guide-hero__updated">
+
+            <div
+              class="guide-hero__updated"
+            >
+
               Última revisión:
+
               <strong>
                 {guide.editorial.updatedAt}
               </strong>
+
             </div>
+
           )
         }
+
 
         <a
           href="#en-esta-guia"
           class="guide-hero__scroll"
         >
+
           Explorar la guía
-          <span aria-hidden="true">
+
+          <span
+            aria-hidden="true"
+          >
             ↓
           </span>
+
         </a>
 
       </div>
@@ -518,9 +676,16 @@ const guideSchema = {
       class="guide-introduction"
     >
 
-      <div class="guide-shell guide-introduction__grid">
+      <div
+        class="
+          guide-shell
+          guide-introduction__grid
+        "
+      >
 
-        <div class="guide-introduction__label">
+        <div
+          class="guide-introduction__label"
+        >
 
           <p class="eyebrow">
             Antes de empezar
@@ -533,25 +698,38 @@ const guideSchema = {
 
           {
             guide.editorial?.factsCheckedAt && (
-              <span class="guide-introduction__checked">
+
+              <span
+                class="guide-introduction__checked"
+              >
                 Datos sensibles comprobados:
                 {guide.editorial.factsCheckedAt}
               </span>
+
             )
           }
 
         </div>
 
-        <div class="guide-introduction__content">
+
+        <div
+          class="
+            guide-introduction__content
+          "
+        >
 
           <h2>
             Entender el destino
             antes de decidir el viaje.
           </h2>
 
-          <p class="guide-introduction__lead">
+
+          <p
+            class="guide-introduction__lead"
+          >
             {guide.intro}
           </p>
+
 
           <p>
             No queremos convertir esta guía
@@ -559,11 +737,12 @@ const guideSchema = {
             que tachar.
           </p>
 
+
           <p>
             Queremos reunir investigación,
             información práctica y criterio
-            para ayudarte a decidir qué viaje
-            tiene sentido para ti.
+            para ayudarte a tomar mejores
+            decisiones antes de viajar.
           </p>
 
         </div>
@@ -579,11 +758,18 @@ const guideSchema = {
 
     {
       guide.snapshot && (
-        <section class="guide-snapshot">
+
+        <section
+          class="guide-snapshot"
+        >
 
           <div class="guide-shell">
 
-            <div class="guide-snapshot__header">
+            <div
+              class="
+                guide-snapshot__header
+              "
+            >
 
               <div>
 
@@ -599,29 +785,46 @@ const guideSchema = {
 
               </div>
 
+
               {
-                guide.snapshot.climateSummary && (
-                  <div class="guide-snapshot__climate">
+                guide.snapshot
+                  .climateSummary && (
+
+                  <div
+                    class="
+                      guide-snapshot__climate
+                    "
+                  >
 
                     <span>
                       Clima
                     </span>
 
                     <p>
-                      {guide.snapshot.climateSummary}
+                      {
+                        guide.snapshot
+                          .climateSummary
+                      }
                     </p>
 
                   </div>
+
                 )
               }
 
             </div>
 
 
-            <div class="guide-snapshot__grid">
+            <div
+              class="
+                guide-snapshot__grid
+              "
+            >
 
               {
-                guide.snapshot.travelStyle && (
+                guide.snapshot
+                  .travelStyle && (
+
                   <article>
 
                     <span>
@@ -629,17 +832,24 @@ const guideSchema = {
                     </span>
 
                     <p>
-                      {guide.snapshot.travelStyle}
+                      {
+                        guide.snapshot
+                          .travelStyle
+                      }
                     </p>
 
                   </article>
+
                 )
               }
 
 
               {
-                guide.snapshot.mainStrengths &&
-                guide.snapshot.mainStrengths.length > 0 && (
+                guide.snapshot
+                  .mainStrengths &&
+                guide.snapshot
+                  .mainStrengths.length > 0 && (
+
                   <article>
 
                     <span>
@@ -647,25 +857,37 @@ const guideSchema = {
                     </span>
 
                     <ul>
+
                       {
-                        guide.snapshot.mainStrengths.map(
-                          (item: string) => (
-                            <li>
-                              {item}
-                            </li>
+                        guide.snapshot
+                          .mainStrengths
+                          .map(
+                            (
+                              item: string
+                            ) => (
+
+                              <li>
+                                {item}
+                              </li>
+
+                            )
                           )
-                        )
                       }
+
                     </ul>
 
                   </article>
+
                 )
               }
 
 
               {
-                guide.snapshot.mainConsiderations &&
-                guide.snapshot.mainConsiderations.length > 0 && (
+                guide.snapshot
+                  .mainConsiderations &&
+                guide.snapshot
+                  .mainConsiderations.length > 0 && (
+
                   <article>
 
                     <span>
@@ -673,70 +895,27 @@ const guideSchema = {
                     </span>
 
                     <ul>
+
                       {
-                        guide.snapshot.mainConsiderations.map(
-                          (item: string) => (
-                            <li>
-                              {item}
-                            </li>
+                        guide.snapshot
+                          .mainConsiderations
+                          .map(
+                            (
+                              item: string
+                            ) => (
+
+                              <li>
+                                {item}
+                              </li>
+
+                            )
                           )
-                        )
                       }
+
                     </ul>
 
                   </article>
-                )
-              }
 
-
-              {
-                guide.snapshot.idealFor &&
-                guide.snapshot.idealFor.length > 0 && (
-                  <article>
-
-                    <span>
-                      Especialmente interesante para
-                    </span>
-
-                    <ul>
-                      {
-                        guide.snapshot.idealFor.map(
-                          (item: string) => (
-                            <li>
-                              {item}
-                            </li>
-                          )
-                        )
-                      }
-                    </ul>
-
-                  </article>
-                )
-              }
-
-
-              {
-                guide.snapshot.notIdealFor &&
-                guide.snapshot.notIdealFor.length > 0 && (
-                  <article>
-
-                    <span>
-                      Quizá no sea para ti si...
-                    </span>
-
-                    <ul>
-                      {
-                        guide.snapshot.notIdealFor.map(
-                          (item: string) => (
-                            <li>
-                              {item}
-                            </li>
-                          )
-                        )
-                      }
-                    </ul>
-
-                  </article>
                 )
               }
 
@@ -745,6 +924,7 @@ const guideSchema = {
           </div>
 
         </section>
+
       )
     }
 
@@ -753,11 +933,15 @@ const guideSchema = {
          TOC
     ====================================================== -->
 
-    <section class="guide-toc-section">
+    <section
+      class="guide-toc-section"
+    >
 
       <div class="guide-shell">
 
-        <div class="guide-toc-header">
+        <div
+          class="guide-toc-header"
+        >
 
           <div>
 
@@ -771,6 +955,7 @@ const guideSchema = {
             </h2>
 
           </div>
+
 
           <p>
             Puedes recorrerla de principio a fin
@@ -788,39 +973,54 @@ const guideSchema = {
 
           {
             guide.sections.map(
-              (section: GuideSection) => (
+              (
+                section: GuideSection
+              ) => (
 
                 <a
                   href={`#${section.id}`}
                   class:list={[
                     "guide-toc__item",
-                    {
-                      "guide-toc__item--planning":
-                        isPlanningSection(section),
-
-                      "guide-toc__item--experience":
-                        isExperienceSection(section),
-
-                      "guide-toc__item--practical":
-                        isPracticalSection(section),
-                    },
+                    `guide-toc__item--${
+                      section.category ??
+                      "overview"
+                    }`,
                   ]}
                 >
 
-                  <span class="guide-toc__number">
+                  <span
+                    class="
+                      guide-toc__number
+                    "
+                  >
                     {section.number}
                   </span>
 
-                  <span class="guide-toc__title">
+
+                  <span
+                    class="
+                      guide-toc__title
+                    "
+                  >
                     {section.title}
                   </span>
 
-                  <span class="guide-toc__category">
-                    {getSectionCategory(section)}
-                  </span>
 
                   <span
-                    class="guide-toc__arrow"
+                    class="
+                      guide-toc__category
+                    "
+                  >
+                    {getSectionCategory(
+                      section
+                    )}
+                  </span>
+
+
+                  <span
+                    class="
+                      guide-toc__arrow
+                    "
                     aria-hidden="true"
                   >
                     ↗
@@ -843,13 +1043,24 @@ const guideSchema = {
          CONTEXT STRIP
     ====================================================== -->
 
-    <section class="guide-context">
+    <section
+      class="guide-context"
+    >
 
-      <div class="guide-shell guide-context__grid">
+      <div
+        class="
+          guide-shell
+          guide-context__grid
+        "
+      >
 
         <article>
           <span>01</span>
-          <strong>Entender</strong>
+
+          <strong>
+            Entender
+          </strong>
+
           <p>
             Geografía, regiones,
             clima y características
@@ -857,27 +1068,42 @@ const guideSchema = {
           </p>
         </article>
 
+
         <article>
           <span>02</span>
-          <strong>Elegir</strong>
+
+          <strong>
+            Elegir
+          </strong>
+
           <p>
             Tiempo, zonas,
             experiencias y transporte.
           </p>
         </article>
 
+
         <article>
           <span>03</span>
-          <strong>Preparar</strong>
+
+          <strong>
+            Preparar
+          </strong>
+
           <p>
             Documentación, salud,
             dinero y conectividad.
           </p>
         </article>
 
+
         <article>
           <span>04</span>
-          <strong>Decidir</strong>
+
+          <strong>
+            Decidir
+          </strong>
+
           <p>
             Convertir información
             en un viaje coherente.
@@ -890,16 +1116,28 @@ const guideSchema = {
 
 
     <!-- =====================================================
-         LIVE ALERT STRIP
+         LIVE ALERT
     ====================================================== -->
 
     {
       hasAlerts && (
-        <section class="guide-live">
 
-          <div class="guide-shell guide-live__inner">
+        <section
+          class="guide-live"
+        >
 
-            <div class="guide-live__heading">
+          <div
+            class="
+              guide-shell
+              guide-live__inner
+            "
+          >
+
+            <div
+              class="
+                guide-live__heading
+              "
+            >
 
               <span>
                 Seguimiento activo
@@ -907,37 +1145,48 @@ const guideSchema = {
 
               <strong>
                 {activeAlerts.length}
+
                 {
                   activeAlerts.length === 1
                     ? " aviso relevante"
                     : " avisos relevantes"
                 }
+
               </strong>
 
             </div>
+
 
             <a
               href={`#${alertsSectionId}`}
               class="guide-live__link"
             >
+
               Ver actualidad
-              <span aria-hidden="true">
+
+              <span
+                aria-hidden="true"
+              >
                 ↓
               </span>
+
             </a>
 
           </div>
 
         </section>
+
       )
     }
 
 
     <!-- =====================================================
-         GUIDE CONTENT
+         CONTENT
     ====================================================== -->
 
-    <div class="guide-content">
+    <div
+      class="guide-content"
+    >
 
       {
         guide.sections.map(
@@ -950,25 +1199,37 @@ const guideSchema = {
               index === 0;
 
             const darkSection =
-              section.id === errorsSectionId;
+              section.id ===
+              errorsSectionId;
 
             return (
+
               <section
                 id={section.id}
+                data-section-category={section.category ?? "overview"}
+                data-section-status={section.status ?? "draft"}
                 class:list={[
                   "guide-section",
+
                   {
                     "guide-section--featured":
                       firstSection,
 
                     "guide-section--planning":
-                      isPlanningSection(section),
+                      section.category ===
+                      "planning",
 
                     "guide-section--experience":
-                      isExperienceSection(section),
+                      section.category ===
+                      "experience",
 
                     "guide-section--practical":
-                      isPracticalSection(section),
+                      section.category ===
+                      "practical",
+
+                    "guide-section--updates":
+                      section.category ===
+                      "updates",
 
                     "guide-section--dark":
                       darkSection,
@@ -976,19 +1237,39 @@ const guideSchema = {
                 ]}
               >
 
-                <div class="guide-shell">
+                <div
+                  class="guide-shell"
+                >
 
-                  <div class="guide-section__header">
+                  <div
+                    class="
+                      guide-section__header
+                    "
+                  >
 
-                    <div class="guide-section__number">
+                    <div
+                      class="
+                        guide-section__number
+                      "
+                    >
                       {section.number}
                     </div>
 
+
                     <div>
 
-                      <p class="guide-section__category">
-                        {getSectionCategory(section)}
+                      <p
+                        class="
+                          guide-section__category
+                        "
+                      >
+                        {
+                          getSectionCategory(
+                            section
+                          )
+                        }
                       </p>
+
 
                       <h2>
                         {section.title}
@@ -999,34 +1280,36 @@ const guideSchema = {
                   </div>
 
 
-                  <div class="guide-section__body">
+                  <div
+                    class="
+                      guide-section__body
+                    "
+                  >
 
                     <div>
 
                       {
                         section.intro && (
-                          <p class="guide-section__intro">
+
+                          <p
+                            class="
+                              guide-section__intro
+                            "
+                          >
                             {section.intro}
                           </p>
+
                         )
                       }
 
                       {
-                        section.status && (
-                          <div class="guide-section__status">
-
-                            <span>
-                              Estado
-                            </span>
-
-                            <strong>
-                              {section.status === "published"
-                                ? "Publicado"
-                                : section.status === "reviewed"
-                                ? "Revisado"
-                                : "En investigación"}
-                            </strong>
-
+                        section.status === "reviewed" && (
+                          <div
+                            class="guide-section__verified"
+                            aria-label="Contenido revisado"
+                          >
+                            <span aria-hidden="true">✓</span>
+                            Información revisada
                           </div>
                         )
                       }
@@ -1034,14 +1317,22 @@ const guideSchema = {
                     </div>
 
 
-                    <div class="guide-section__copy">
+                    <div
+                      class="
+                        guide-section__copy
+                      "
+                    >
 
                       {
                         section.paragraphs?.map(
-                          (paragraph: string) => (
+                          (
+                            paragraph: string
+                          ) => (
+
                             <p>
                               {paragraph}
                             </p>
+
                           )
                         )
                       }
@@ -1055,35 +1346,47 @@ const guideSchema = {
                         section.highlights &&
                         section.highlights.length > 0 && (
 
-                          <div class="guide-highlights">
+                          <div
+                            class="
+                              guide-highlights
+                            "
+                          >
 
                             {
                               section.highlights.map(
                                 (
-                                  highlight: GuideHighlight
+                                  highlight:
+                                    GuideHighlight
                                 ) => (
 
                                   <article
                                     class:list={[
                                       "guide-highlight",
                                       `guide-highlight--${
-                                        highlight.type ?? "tip"
+                                        highlight.type ??
+                                        "tip"
                                       }`,
                                     ]}
                                   >
 
                                     <span>
-                                      {getHighlightLabel(
-                                        highlight
-                                      )}
+                                      {
+                                        getHighlightLabel(
+                                          highlight
+                                        )
+                                      }
                                     </span>
 
                                     <h3>
-                                      {highlight.title}
+                                      {
+                                        highlight.title
+                                      }
                                     </h3>
 
                                     <p>
-                                      {highlight.description}
+                                      {
+                                        highlight.description
+                                      }
                                     </p>
 
                                   </article>
@@ -1093,6 +1396,7 @@ const guideSchema = {
                             }
 
                           </div>
+
                         )
                       }
 
@@ -1105,42 +1409,65 @@ const guideSchema = {
                         section.blocks &&
                         section.blocks.length > 0 && (
 
-                          <div class="guide-blocks">
+                          <div
+                            class="
+                              guide-blocks
+                            "
+                          >
 
                             {
                               section.blocks.map(
-                                (block: GuideBlock) => (
+                                (
+                                  block:
+                                    GuideBlock
+                                ) => (
 
                                   <article
-                                    class:list={[
-                                      "guide-block",
-                                      getBlockClass(block),
-                                    ]}
+                                    class={
+                                      getBlockClass(
+                                        block
+                                      )
+                                    }
                                   >
 
                                     {
                                       block.label && (
-                                        <span class="guide-block__label">
+
+                                        <span
+                                          class="
+                                            guide-block__label
+                                          "
+                                        >
                                           {block.label}
                                         </span>
+
                                       )
                                     }
+
 
                                     {
                                       block.title && (
+
                                         <h3>
                                           {block.title}
                                         </h3>
+
                                       )
                                     }
 
+
                                     {
                                       block.content && (
+
                                         <p>
-                                          {block.content}
+                                          {
+                                            block.content
+                                          }
                                         </p>
+
                                       )
                                     }
+
 
                                     {
                                       block.items &&
@@ -1150,10 +1477,15 @@ const guideSchema = {
 
                                           {
                                             block.items.map(
-                                              (item: string) => (
+                                              (
+                                                item:
+                                                  string
+                                              ) => (
+
                                                 <li>
                                                   {item}
                                                 </li>
+
                                               )
                                             )
                                           }
@@ -1163,18 +1495,30 @@ const guideSchema = {
                                       )
                                     }
 
+
                                     {
                                       block.source && (
+
                                         <a
                                           href={
-                                            block.source.url
+                                            block
+                                              .source
+                                              .url
                                           }
                                           target="_blank"
                                           rel="noopener noreferrer"
                                         >
-                                          {block.source.label}
+
+                                          {
+                                            block
+                                              .source
+                                              .label
+                                          }
+
                                           {" "}↗
+
                                         </a>
+
                                       )
                                     }
 
@@ -1191,77 +1535,57 @@ const guideSchema = {
 
 
                       <!-- ===================================
-                           DURATION
+                           DURACIÓN
                       ==================================== -->
 
                       {
-                        section.id === durationSectionId && (
+                        section.id ===
+                        durationSectionId &&
+                        guide.durationOptions &&
+                        guide.durationOptions.length > 0 && (
 
-                          <div class="guide-duration-grid">
+                          <div
+                            class="
+                              guide-duration-grid
+                            "
+                          >
 
-                            <article>
+                            {
+                              guide.durationOptions.map(
+                                (
+                                  option
+                                ) => (
 
-                              <span>7 días</span>
+                                  <article
+                                    class:list={[
+                                      {
+                                        "guide-duration-grid__featured":
+                                          option.featured,
+                                      },
+                                    ]}
+                                  >
 
-                              <strong>
-                                Priorizar
-                              </strong>
+                                    <span>
+                                      {option.days}
+                                      {" "}
+                                      días
+                                    </span>
 
-                              <p>
-                                Pocas zonas y prioridades muy
-                                claras. El coste de añadir
-                                desplazamientos pesa mucho.
-                              </p>
+                                    <strong>
+                                      {option.title}
+                                    </strong>
 
-                            </article>
+                                    <p>
+                                      {
+                                        option.description
+                                      }
+                                    </p>
 
-                            <article>
+                                  </article>
 
-                              <span>10 días</span>
-
-                              <strong>
-                                Equilibrar
-                              </strong>
-
-                              <p>
-                                Más margen para combinar
-                                naturaleza, costa y diferentes
-                                experiencias.
-                              </p>
-
-                            </article>
-
-                            <article
-                              class="guide-duration-grid__featured"
-                            >
-
-                              <span>14 días</span>
-
-                              <strong>
-                                Profundizar
-                              </strong>
-
-                              <p>
-                                Permite plantear una ruta
-                                considerablemente más variada.
-                              </p>
-
-                            </article>
-
-                            <article>
-
-                              <span>21 días</span>
-
-                              <strong>
-                                Explorar
-                              </strong>
-
-                              <p>
-                                Más profundidad y mucha más
-                                libertad para reducir sacrificios.
-                              </p>
-
-                            </article>
+                                )
+                              )
+                            }
 
                           </div>
 
@@ -1274,19 +1598,23 @@ const guideSchema = {
                       ==================================== -->
 
                       {
-                        section.id === entrySectionId &&
+                        section.id ===
+                        entrySectionId &&
                         entryRequirements &&
                         defaultTraveler && (
 
                           <div
-                            class="entry-requirements"
+                            class="
+                              entry-requirements
+                            "
                             data-entry-requirements
-                            data-default-country={
-                              entryRequirements.defaultCountryCode
-                            }
                           >
 
-                            <div class="entry-requirements__header">
+                            <div
+                              class="
+                                entry-requirements__header
+                              "
+                            >
 
                               <div>
 
@@ -1295,19 +1623,28 @@ const guideSchema = {
                                 </span>
 
                                 <h3>
-                                  Tu viaje empieza por la entrada.
+                                  Comprueba tu entrada antes de viajar.
                                 </h3>
 
                               </div>
 
-                              <span class="entry-requirements__badge">
+
+                              <span
+                                class="
+                                  entry-requirements__badge
+                                "
+                              >
                                 España por defecto
                               </span>
 
                             </div>
 
 
-                            <div class="entry-requirements__selector">
+                            <div
+                              class="
+                                entry-requirements__selector
+                              "
+                            >
 
                               <label
                                 for="traveler-country"
@@ -1315,27 +1652,38 @@ const guideSchema = {
                                 Nacionalidad
                               </label>
 
+
                               <select
                                 id="traveler-country"
                                 name="traveler-country"
+                                aria-describedby="traveler-country-help"
                               >
 
                                 {
                                   travelerOptions.map(
                                     (
-                                      traveler: TravelerRequirement
+                                      traveler:
+                                        TravelerRequirement
                                     ) => (
+
                                       <option
                                         value={
-                                          traveler.countryCode
+                                          traveler
+                                            .countryCode
                                         }
                                         selected={
-                                          traveler.countryCode ===
-                                          entryRequirements.defaultCountryCode
+                                          traveler
+                                            .countryCode ===
+                                          entryRequirements
+                                            .defaultCountryCode
                                         }
                                       >
-                                        {traveler.countryName}
+                                        {
+                                          traveler
+                                            .countryName
+                                        }
                                       </option>
+
                                     )
                                   )
                                 }
@@ -1344,10 +1692,20 @@ const guideSchema = {
 
                             </div>
 
+                            <p
+                              id="traveler-country-help"
+                              class="entry-requirements__help"
+                            >
+                              España aparece seleccionada por defecto. Puedes consultar otras nacionalidades disponibles cuando estén verificadas.
+                            </p>
 
                             <div
-                              class="entry-result"
+                              class="
+                                entry-result
+                              "
                               data-entry-result
+                              aria-live="polite"
+                              aria-atomic="true"
                             >
 
                               <div>
@@ -1356,7 +1714,9 @@ const guideSchema = {
                                   Visado
                                 </span>
 
-                                <strong data-field="visa">
+                                <strong
+                                  data-field="visa"
+                                >
                                   {
                                     formatVisaRequirement(
                                       defaultTraveler
@@ -1374,7 +1734,9 @@ const guideSchema = {
                                   Estancia
                                 </span>
 
-                                <strong data-field="stay">
+                                <strong
+                                  data-field="stay"
+                                >
                                   {
                                     defaultTraveler
                                       .maximumStay ??
@@ -1391,7 +1753,9 @@ const guideSchema = {
                                   Documento
                                 </span>
 
-                                <strong data-field="passport">
+                                <strong
+                                  data-field="passport"
+                                >
                                   {
                                     defaultTraveler
                                       .passportRequirement ??
@@ -1408,11 +1772,14 @@ const guideSchema = {
                                   Salida del país
                                 </span>
 
-                                <strong data-field="return">
+                                <strong
+                                  data-field="return"
+                                >
                                   {
-                                    defaultTraveler.returnTicketRequired
+                                    defaultTraveler
+                                      .returnTicketRequired
                                       ? "Sí"
-                                      : "No consta"
+                                      : "Consultar"
                                   }
                                 </strong>
 
@@ -1425,22 +1792,14 @@ const guideSchema = {
                                   Medios económicos
                                 </span>
 
-                                <strong>
+                                <strong
+                                  data-field="means"
+                                >
                                   {
-                                    defaultTraveler.notes?.find(
-                                      (note) =>
-                                        note
-                                          .toLowerCase()
-                                          .includes(
-                                            "medios económicos"
-                                          ) ||
-                                        note
-                                          .toLowerCase()
-                                          .includes(
-                                            "100 usd"
-                                          )
-                                    ) ??
-                                    "Consultar condiciones oficiales"
+                                    defaultTraveler
+                                      .proofOfMeansRequired
+                                      ? "Pueden solicitarse"
+                                      : "Consultar"
                                   }
                                 </strong>
 
@@ -1453,9 +1812,12 @@ const guideSchema = {
                                   Entrada / tasas
                                 </span>
 
-                                <strong data-field="entryFee">
+                                <strong
+                                  data-field="entryFee"
+                                >
                                   {
-                                    defaultTraveler.entryFee ??
+                                    defaultTraveler
+                                      .entryFee ??
                                     "Consultar"
                                   }
                                 </strong>
@@ -1464,39 +1826,67 @@ const guideSchema = {
 
 
                               {
-                                defaultTraveler.notes &&
-                                defaultTraveler.notes.length > 0 && (
-                                  <div class="entry-notes">
+                                defaultTraveler
+                                  .notes &&
+                                defaultTraveler
+                                  .notes.length > 0 && (
+
+                                  <div
+                                    class="
+                                      entry-notes
+                                    "
+                                  >
 
                                     <span>
                                       Información adicional
                                     </span>
 
-                                    <div data-field="notes">
+                                    <div
+                                      data-field="notes"
+                                    >
 
                                       {
-                                        defaultTraveler.notes.map(
-                                          (note: string) => (
-                                            <p>{note}</p>
+                                        defaultTraveler
+                                          .notes
+                                          .map(
+                                            (
+                                              note:
+                                                string
+                                            ) => (
+
+                                              <p>
+                                                {note}
+                                              </p>
+
+                                            )
                                           )
-                                        )
                                       }
 
                                     </div>
 
                                   </div>
+
                                 )
                               }
 
                             </div>
 
 
-                            <div class="entry-requirements__footer">
+                            <div
+                              class="
+                                entry-requirements__footer
+                              "
+                            >
 
                               <span>
                                 Revisado:
-                                {entryRequirements.lastReviewed}
+                                {" "}
+                                {
+                                  entryRequirements
+                                    .lastReviewed
+                                }
                               </span>
+
 
                               <a
                                 href={
@@ -1507,15 +1897,24 @@ const guideSchema = {
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
+
                                 Fuente oficial
                                 {" "}↗
+
                               </a>
 
                             </div>
 
 
-                            <p class="entry-requirements__disclaimer">
-                              {entryRequirements.disclaimer}
+                            <p
+                              class="
+                                entry-requirements__disclaimer
+                              "
+                            >
+                              {
+                                entryRequirements
+                                  .disclaimer
+                              }
                             </p>
 
                           </div>
@@ -1525,12 +1924,17 @@ const guideSchema = {
 
 
                       <!-- ===================================
-                           SECTION CLOSING
+                           CLOSING
                       ==================================== -->
 
                       {
                         section.closing && (
-                          <div class="guide-section__closing">
+
+                          <div
+                            class="
+                              guide-section__closing
+                            "
+                          >
 
                             <span>
                               Nuestro enfoque
@@ -1541,6 +1945,7 @@ const guideSchema = {
                             </p>
 
                           </div>
+
                         )
                       }
 
@@ -1550,39 +1955,52 @@ const guideSchema = {
                       ==================================== -->
 
                       {
-                        section.id === alertsSectionId && (
+                        section.id ===
+                        alertsSectionId && (
 
-                          <div class="guide-alerts">
+                          <div
+                            class="guide-alerts"
+                          >
 
                             {
                               hasAlerts ? (
 
                                 activeAlerts.map(
                                   (
-                                    alert: TravelAlert
+                                    alert:
+                                      TravelAlert
                                   ) => (
 
                                     <article
                                       class:list={[
                                         "guide-alert",
-                                        `guide-alert--${alert.severity}`,
+                                        `guide-alert--${
+                                          alert.severity
+                                        }`,
                                       ]}
                                     >
 
-                                      <div class="guide-alert__meta">
+                                      <div
+                                        class="
+                                          guide-alert__meta
+                                        "
+                                      >
 
                                         <strong>
                                           {
                                             getAlertSeverityLabel(
-                                              alert.severity
+                                              alert
+                                                .severity
                                             )
                                           }
                                         </strong>
 
                                         <span>
-                                          {getAlertLabel(
-                                            alert.type
-                                          )}
+                                          {
+                                            getAlertLabel(
+                                              alert.type
+                                            )
+                                          }
                                         </span>
 
                                         <small>
@@ -1598,15 +2016,26 @@ const guideSchema = {
                                           {alert.title}
                                         </h3>
 
+
                                         <p>
-                                          {alert.description}
+                                          {
+                                            alert.description
+                                          }
                                         </p>
 
 
                                         {
-                                          alert.affectedAreas &&
-                                          alert.affectedAreas.length > 0 && (
-                                            <p class="guide-alert__areas">
+                                          alert
+                                            .affectedAreas &&
+                                          alert
+                                            .affectedAreas
+                                            .length > 0 && (
+
+                                            <p
+                                              class="
+                                                guide-alert__areas
+                                              "
+                                            >
 
                                               <strong>
                                                 Zonas afectadas:
@@ -1615,19 +2044,28 @@ const guideSchema = {
                                               {" "}
 
                                               {
-                                                alert.affectedAreas.join(
-                                                  " · "
-                                                )
+                                                alert
+                                                  .affectedAreas
+                                                  .join(
+                                                    " · "
+                                                  )
                                               }
 
                                             </p>
+
                                           )
                                         }
 
 
                                         {
-                                          alert.travelerAction && (
-                                            <div class="guide-alert__action">
+                                          alert
+                                            .travelerAction && (
+
+                                            <div
+                                              class="
+                                                guide-alert__action
+                                              "
+                                            >
 
                                               <strong>
                                                 Qué debería hacer
@@ -1635,16 +2073,21 @@ const guideSchema = {
                                               </strong>
 
                                               <p>
-                                                {alert.travelerAction}
+                                                {
+                                                  alert
+                                                    .travelerAction
+                                                }
                                               </p>
 
                                             </div>
+
                                           )
                                         }
 
 
                                         {
                                           alert.source && (
+
                                             <a
                                               href={
                                                 alert.source
@@ -1652,12 +2095,17 @@ const guideSchema = {
                                               target="_blank"
                                               rel="noopener noreferrer"
                                             >
+
                                               {
-                                                alert.sourceLabel ??
+                                                alert
+                                                  .sourceLabel ??
                                                 "Consultar fuente"
                                               }
+
                                               {" "}↗
+
                                             </a>
+
                                           )
                                         }
 
@@ -1670,7 +2118,11 @@ const guideSchema = {
 
                               ) : (
 
-                                <div class="guide-alerts__empty">
+                                <div
+                                  class="
+                                    guide-alerts__empty
+                                  "
+                                >
 
                                   <span>
                                     Seguimiento del destino
@@ -1681,12 +2133,11 @@ const guideSchema = {
                                   </strong>
 
                                   <p>
-                                    No hay avisos de viaje activos
-                                    publicados en este momento.
-                                    Cuando detectemos una incidencia
-                                    relevante, esta zona podrá mostrar
-                                    qué ha ocurrido, dónde, cuándo se
-                                    comprobó y qué debería hacer el viajero.
+                                    No hay avisos activos publicados
+                                    en este momento. Cuando exista una
+                                    incidencia relevante para viajeros,
+                                    aparecerá aquí con fecha, fuente,
+                                    zona afectada y explicación práctica.
                                   </p>
 
                                 </div>
@@ -1705,15 +2156,23 @@ const guideSchema = {
                       ==================================== -->
 
                       {
-                        section.id === faqSectionId && (
+                        section.id ===
+                        faqSectionId && (
 
-                          <div class="guide-faq">
+                          <div
+                            class="
+                              guide-faq
+                            "
+                          >
 
                             {
                               hasFaq ? (
 
                                 guide.faq.map(
-                                  (item: FAQItem) => (
+                                  (
+                                    item:
+                                      FAQItem
+                                  ) => (
 
                                     <details>
 
@@ -1727,10 +2186,16 @@ const guideSchema = {
 
                                       {
                                         item.reviewedAt && (
+
                                           <small>
                                             Revisado:
-                                            {item.reviewedAt}
+                                            {" "}
+                                            {
+                                              item
+                                                .reviewedAt
+                                            }
                                           </small>
+
                                         )
                                       }
 
@@ -1741,12 +2206,16 @@ const guideSchema = {
 
                               ) : (
 
-                                <div class="guide-faq__empty">
+                                <div
+                                  class="
+                                    guide-faq__empty
+                                  "
+                                >
 
                                   <p>
-                                    Estamos construyendo esta sección
-                                    a partir de preguntas reales de
-                                    viajeros y de nuestra investigación.
+                                    Esta sección crecerá
+                                    a partir de preguntas
+                                    reales.
                                   </p>
 
                                 </div>
@@ -1766,6 +2235,7 @@ const guideSchema = {
                 </div>
 
               </section>
+
             );
           }
         )
@@ -1781,11 +2251,18 @@ const guideSchema = {
     {
       guide.sources &&
       guide.sources.length > 0 && (
-        <section class="guide-sources">
+
+        <section
+          class="guide-sources"
+        >
 
           <div class="guide-shell">
 
-            <div class="guide-sources__header">
+            <div
+              class="
+                guide-sources__header
+              "
+            >
 
               <div>
 
@@ -1794,58 +2271,80 @@ const guideSchema = {
                 </p>
 
                 <h2>
-                  De dónde sale la información.
+                  De dónde sale
+                  la información.
                 </h2>
 
               </div>
 
+
               <p>
-                No toda la información tiene el mismo grado
-                de autoridad. Priorizamos fuentes oficiales
-                cuando el dato es administrativo, sanitario
-                o sensible al cambio.
+                Priorizamos fuentes oficiales
+                cuando el dato es administrativo,
+                sanitario o sensible al cambio.
               </p>
 
             </div>
 
 
-            <div class="guide-sources__grid">
+            <div
+              class="
+                guide-sources__grid
+              "
+            >
 
               {
                 guide.sources.map(
-                  (source) => (
+                  (
+                    source
+                  ) => (
 
                     <a
-                      href={source.url}
+                      href={
+                        source.url
+                      }
                       target="_blank"
                       rel="noopener noreferrer"
                       class="guide-source"
                     >
 
                       <span>
-                        {source.type === "official"
-                          ? "Fuente oficial"
-                          : source.type === "primary"
-                          ? "Fuente primaria"
-                          : source.type === "experience"
-                          ? "Experiencia"
-                          : "Fuente secundaria"}
+                        {
+                          source.type ===
+                          "official"
+                            ? "Fuente oficial"
+                            : source.type ===
+                              "primary"
+                            ? "Fuente primaria"
+                            : source.type ===
+                              "experience"
+                            ? "Experiencia"
+                            : "Fuente secundaria"
+                        }
                       </span>
+
 
                       <strong>
                         {source.label}
                       </strong>
 
+
                       {
                         source.accessedAt && (
+
                           <small>
                             Consultada:
+                            {" "}
                             {source.accessedAt}
                           </small>
+
                         )
                       }
 
-                      <em aria-hidden="true">
+
+                      <em
+                        aria-hidden="true"
+                      >
                         ↗
                       </em>
 
@@ -1860,6 +2359,7 @@ const guideSchema = {
           </div>
 
         </section>
+
       )
     }
 
@@ -1868,9 +2368,16 @@ const guideSchema = {
          EDITORIAL BRIDGE
     ====================================================== -->
 
-    <section class="guide-bridge">
+    <section
+      class="guide-bridge"
+    >
 
-      <div class="guide-shell guide-bridge__inner">
+      <div
+        class="
+          guide-shell
+          guide-bridge__inner
+        "
+      >
 
         <div>
 
@@ -1885,16 +2392,28 @@ const guideSchema = {
 
         </div>
 
+
         <div>
 
-          <p class="guide-bridge__statement">
-            Otra es saber qué hacer con toda esa
-            información cuando tienes que tomar
+          <p
+            class="
+              guide-bridge__statement
+            "
+          >
+            Otra es saber qué hacer
+            con toda esa información
+            cuando tienes que tomar
             decisiones para un viaje real.
           </p>
 
-          <p class="guide-bridge__small">
-            Ahí es donde empieza nuestro trabajo.
+
+          <p
+            class="
+              guide-bridge__small
+            "
+          >
+            Ahí es donde empieza
+            nuestro trabajo.
           </p>
 
         </div>
@@ -1908,76 +2427,119 @@ const guideSchema = {
          OUR TRIP
     ====================================================== -->
 
-    <section class="guide-our-trip">
+    {
+      guide.relatedTripSlug && (
 
-      <div class="guide-shell guide-our-trip__inner">
-
-        <p class="eyebrow">
-          Experiencia real
-        </p>
-
-        <h2>
-          ¿Quieres saber
-          cómo lo hicimos nosotros?
-        </h2>
-
-        <p>
-          La guía reúne el conocimiento del destino.
-          Nuestro viaje cuenta qué decisiones tomamos
-          nosotros, qué salió bien, qué no y qué haríamos hoy.
-        </p>
-
-        <a
-          href={`/nuestros-viajes/${destination.slug}`}
-          class="button-primary"
+        <section
+          class="guide-our-trip"
         >
-          Ver nuestro viaje
 
-          <span aria-hidden="true">
-            ↗
-          </span>
-        </a>
+          <div
+            class="
+              guide-shell
+              guide-our-trip__inner
+            "
+          >
 
-      </div>
+            <p class="eyebrow">
+              Experiencia real
+            </p>
 
-    </section>
+
+            <h2>
+              ¿Quieres saber
+              cómo lo hicimos nosotros?
+            </h2>
+
+
+            <p>
+              La guía reúne el conocimiento
+              del destino. Nuestro viaje cuenta
+              qué decisiones tomamos nosotros,
+              qué salió bien, qué no y qué
+              haríamos hoy.
+            </p>
+
+
+            <a
+              href={
+                `/nuestros-viajes/${guide.relatedTripSlug}`
+              }
+              class="button-primary"
+            >
+
+              Ver nuestro viaje
+
+              <span
+                aria-hidden="true"
+              >
+                ↗
+              </span>
+
+            </a>
+
+          </div>
+
+        </section>
+
+      )
+    }
 
 
     <!-- =====================================================
-         FINAL CTA
+         CTA
     ====================================================== -->
 
-    <section class="guide-cta">
+    <section
+      class="guide-cta"
+    >
 
-      <div class="guide-shell guide-cta__inner">
+      <div
+        class="
+          guide-shell
+          guide-cta__inner
+        "
+      >
 
         <p class="eyebrow">
           Cruzando Meridianos
         </p>
 
+
         <h2>
           {guide.cta.title}
         </h2>
+
 
         <p>
           {guide.cta.description}
         </p>
 
-        <p class="guide-cta__secondary">
+
+        <p
+          class="
+            guide-cta__secondary
+          "
+        >
           Tú decides cómo quieres viajar.
           Nosotros nos encargamos de investigar,
           filtrar y darle forma.
         </p>
 
+
         <a
           href={guide.cta.buttonHref}
           class="button-primary"
         >
+
           {guide.cta.buttonLabel}
 
-          <span aria-hidden="true">
+          <span
+            aria-hidden="true"
+          >
             ↗
           </span>
+
         </a>
 
       </div>
@@ -1986,175 +2548,233 @@ const guideSchema = {
 
   </main>
 
+
   <Footer />
 
 
-  <!-- =======================================================
-       NATIONALITY SELECTOR
-       ======================================================= -->
+  <!-- =====================================================
+       TRAVELER DATA
+  ====================================================== -->
 
   {
     entryRequirements &&
-    travelerOptions.length > 1 && (
+    travelerOptions.length > 0 && (
+
       <script
         type="application/json"
         id="guide-traveler-data"
         is:inline
-        set:html={JSON.stringify(travelerData)}
+        set:html={
+          JSON.stringify(
+            travelerData
+          )
+        }
       ></script>
+
     )
   }
 
-  <script is:inline>
-    (() => {
-      const select =
-        document.querySelector(
-          "[data-entry-requirements] select"
-        );
 
-      const wrapper =
-        document.querySelector(
-          "[data-entry-requirements]"
-        );
+  <!-- =====================================================
+       NATIONALITY SELECTOR
+  ====================================================== -->
 
-      const dataElement =
-        document.getElementById(
-          "guide-traveler-data"
-        );
+  {
+    entryRequirements &&
+    travelerOptions.length > 0 && (
 
-      if (
-        !select ||
-        !wrapper ||
-        !dataElement
-      ) {
-        return;
-      }
+      <script is:inline>
+        (() => {
 
-      let travelers = [];
+          const wrapper =
+            document.querySelector(
+              "[data-entry-requirements]"
+            );
 
-      try {
-        travelers =
-          JSON.parse(
-            dataElement.textContent || "[]"
-          );
-      } catch {
-        travelers = [];
-      }
+          const select =
+            wrapper?.querySelector(
+              "select"
+            );
 
-      const visaLabels = {
-        none: "Sin visado",
-        consular: "Visado consular",
-        restricted:
-          "Visado restringido",
-        special:
-          "Condiciones especiales",
-      };
+          const dataElement =
+            document.getElementById(
+              "guide-traveler-data"
+            );
 
-      const update = () => {
-        const countryCode =
-          select.value;
+          if (
+            !wrapper ||
+            !select ||
+            !dataElement
+          ) {
+            return;
+          }
 
-        const traveler =
-          travelers.find(
-            (item) =>
-              item.countryCode ===
-              countryCode
-          );
+          let travelers = [];
 
-        if (!traveler) {
-          return;
-        }
-
-        const visa =
-          wrapper.querySelector(
-            '[data-field="visa"]'
-          );
-
-        const stay =
-          wrapper.querySelector(
-            '[data-field="stay"]'
-          );
-
-        const passport =
-          wrapper.querySelector(
-            '[data-field="passport"]'
-          );
-
-        const returnTicket =
-          wrapper.querySelector(
-            '[data-field="return"]'
-          );
-
-        const entryFee =
-          wrapper.querySelector(
-            '[data-field="entryFee"]'
-          );
-
-        const notes =
-          wrapper.querySelector(
-            '[data-field="notes"]'
-          );
-
-        if (visa) {
-          visa.textContent =
-            visaLabels[
-              traveler.visaRequirement
-            ] ||
-            traveler.visaRequirement;
-        }
-
-        if (stay) {
-          stay.textContent =
-            traveler.maximumStay ||
-            "Consultar condiciones vigentes";
-        }
-
-        if (passport) {
-          passport.textContent =
-            traveler.passportRequirement ||
-            "Consultar requisitos oficiales";
-        }
-
-        if (returnTicket) {
-          returnTicket.textContent =
-            traveler.returnTicketRequired
-              ? "Sí"
-              : "No consta";
-        }
-
-        if (entryFee) {
-          entryFee.textContent =
-            traveler.entryFee ||
-            "Consultar";
-        }
-
-        if (notes) {
-          notes.innerHTML = "";
-
-          (traveler.notes || []).forEach(
-            (note) => {
-              const paragraph =
-                document.createElement("p");
-
-              paragraph.textContent =
-                note;
-
-              notes.appendChild(
-                paragraph
+          try {
+            travelers =
+              JSON.parse(
+                dataElement.textContent ||
+                "[]"
               );
-            }
+          } catch {
+            travelers = [];
+          }
+
+
+          const visaLabels = {
+            none:
+              "Sin visado",
+
+            consular:
+              "Visado consular",
+
+            restricted:
+              "Visado restringido",
+
+            special:
+              "Condiciones especiales",
+          };
+
+
+          const update =
+            () => {
+
+              const countryCode =
+                select.value;
+
+              const traveler =
+                travelers.find(
+                  (item) =>
+                    item.countryCode ===
+                    countryCode
+                );
+
+              if (!traveler) {
+                return;
+              }
+
+
+              const setField =
+                (
+                  field,
+                  value
+                ) => {
+
+                  const element =
+                    wrapper.querySelector(
+                      `[data-field="${field}"]`
+                    );
+
+                  if (element) {
+                    element.textContent =
+                      value;
+                  }
+                };
+
+
+              setField(
+                "visa",
+                visaLabels[
+                  traveler
+                    .visaRequirement
+                ] ??
+                  traveler
+                    .visaRequirement
+              );
+
+
+              setField(
+                "stay",
+                traveler
+                  .maximumStay ??
+                  "Consultar condiciones vigentes"
+              );
+
+
+              setField(
+                "passport",
+                traveler
+                  .passportRequirement ??
+                  "Consultar requisitos oficiales"
+              );
+
+
+              setField(
+                "return",
+                traveler
+                  .returnTicketRequired
+                  ? "Sí"
+                  : "Consultar"
+              );
+
+
+              setField(
+                "means",
+                traveler
+                  .proofOfMeansRequired
+                  ? "Pueden solicitarse"
+                  : "Consultar"
+              );
+
+
+              setField(
+                "entryFee",
+                traveler
+                  .entryFee ??
+                  "Consultar"
+              );
+
+
+              const notes =
+                wrapper.querySelector(
+                  '[data-field="notes"]'
+                );
+
+              if (
+                notes
+              ) {
+
+                notes
+                  .replaceChildren();
+
+                (
+                  traveler.notes ??
+                  []
+                )
+                  .forEach(
+                    (note) => {
+
+                      const paragraph =
+                        document
+                          .createElement(
+                            "p"
+                          );
+
+                      paragraph.textContent =
+                        note;
+
+                      notes.appendChild(
+                        paragraph
+                      );
+                    }
+                  );
+              }
+            };
+
+
+          select.addEventListener(
+            "change",
+            update
           );
-        }
-      };
 
-      select.addEventListener(
-        "change",
-        update
-      );
+          update();
 
-      update();
-    })();
-  </script>
+        })();
+      </script>
+
+    )
+  }
 
 </Layout>
 
@@ -2199,10 +2819,7 @@ const guideSchema = {
     relative;
 
   min-height:
-    min(
-      86vh,
-      900px
-    );
+    min(86vh, 900px);
 
   display:
     flex;
@@ -2254,7 +2871,7 @@ const guideSchema = {
     linear-gradient(
       to bottom,
       rgba(15,27,21,.04),
-      rgba(15,27,21,.16) 35%,
+      rgba(15,27,21,.17) 35%,
       rgba(15,27,21,.94)
     );
 }
@@ -2464,7 +3081,7 @@ const guideSchema = {
       251,
       249,
       245,
-      .8
+      .82
     );
 
   font-weight:
@@ -2498,22 +3115,12 @@ const guideSchema = {
     transform .2s ease;
 }
 
-.guide-hero__scroll span {
-  transition:
-    transform .2s ease;
-}
-
 .guide-hero__scroll:hover {
   color:
     var(--color-cobre);
 
   transform:
     translateY(2px);
-}
-
-.guide-hero__scroll:hover span {
-  transform:
-    translateY(3px);
 }
 
 
@@ -2549,12 +3156,7 @@ const guideSchema = {
 
   border-top:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .18
-    );
+    rgba(28,48,38,.18);
 }
 
 .guide-introduction__label span {
@@ -2563,6 +3165,9 @@ const guideSchema = {
 
   margin-top:
     1rem;
+
+  max-width:
+    220px;
 
   color:
     #777;
@@ -2575,8 +3180,8 @@ const guideSchema = {
 }
 
 .guide-introduction__checked {
-  max-width:
-    190px;
+  color:
+    var(--color-cobre) !important;
 }
 
 .guide-introduction__content {
@@ -2755,19 +3360,11 @@ const guideSchema = {
     grid;
 
   grid-template-columns:
-    repeat(
-      2,
-      minmax(0,1fr)
-    );
+    repeat(2,minmax(0,1fr));
 
   border-top:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .15
-    );
+    rgba(28,48,38,.15);
 }
 
 .guide-snapshot__grid article {
@@ -2776,35 +3373,21 @@ const guideSchema = {
 
   border-bottom:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .15
-    );
+    rgba(28,48,38,.15);
 }
 
-.guide-snapshot__grid article:nth-child(
-  odd
-) {
+.guide-snapshot__grid article:nth-child(odd) {
   padding-right:
     3rem;
 }
 
-.guide-snapshot__grid article:nth-child(
-  even
-) {
+.guide-snapshot__grid article:nth-child(even) {
   padding-left:
     3rem;
 
   border-left:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .15
-    );
+    rgba(28,48,38,.15);
 }
 
 .guide-snapshot__grid span {
@@ -2928,31 +3511,20 @@ const guideSchema = {
     grid;
 
   grid-template-columns:
-    repeat(
-      2,
-      minmax(0,1fr)
-    );
+    repeat(2,minmax(0,1fr));
 
   border-top:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .14
-    );
+    rgba(28,48,38,.14);
 }
 
 .guide-toc__item {
-  position:
-    relative;
-
   display:
     grid;
 
   grid-template-columns:
     45px
-    minmax(0, 1fr)
+    minmax(0,1fr)
     auto
     26px;
 
@@ -2970,12 +3542,7 @@ const guideSchema = {
 
   border-bottom:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .14
-    );
+    rgba(28,48,38,.14);
 
   color:
     var(--color-bosque);
@@ -3020,7 +3587,7 @@ const guideSchema = {
     #8a8a8a;
 
   font-size:
-    .64rem;
+    .62rem;
 
   letter-spacing:
     .06em;
@@ -3047,10 +3614,7 @@ const guideSchema = {
     1;
 
   transform:
-    translate(
-      3px,
-      -3px
-    );
+    translate(3px,-3px);
 }
 
 
@@ -3068,10 +3632,7 @@ const guideSchema = {
     grid;
 
   grid-template-columns:
-    repeat(
-      4,
-      minmax(0,1fr)
-    );
+    repeat(4,minmax(0,1fr));
 }
 
 .guide-context__grid article {
@@ -3080,12 +3641,7 @@ const guideSchema = {
 
   border-right:
     1px solid
-    rgba(
-      251,
-      249,
-      245,
-      .13
-    );
+    rgba(251,249,245,.13);
 }
 
 .guide-context__grid article:last-child {
@@ -3135,12 +3691,7 @@ const guideSchema = {
     0;
 
   color:
-    rgba(
-      251,
-      249,
-      245,
-      .62
-    );
+    rgba(251,249,245,.62);
 
   font-size:
     .84rem;
@@ -3262,12 +3813,14 @@ const guideSchema = {
     #f7f4ef !important;
 }
 
+.guide-section--updates {
+  background:
+    #ece9e1 !important;
+}
+
 .guide-section--dark {
   background:
     var(--color-bosque) !important;
-
-  color:
-    var(--color-papel);
 }
 
 .guide-section__header {
@@ -3391,7 +3944,7 @@ const guideSchema = {
     var(--color-papel);
 }
 
-.guide-section__status {
+.guide-section__verified {
   display:
     inline-flex;
 
@@ -3399,7 +3952,7 @@ const guideSchema = {
     center;
 
   gap:
-    .5rem;
+    .45rem;
 
   margin-top:
     1.6rem;
@@ -3409,31 +3962,30 @@ const guideSchema = {
 
   border:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .13
-    );
+    rgba(28,48,38,.13);
 
   border-radius:
     999px;
 
-  font-size:
-    .65rem;
-}
-
-.guide-section__status span {
-  color:
-    #888;
-}
-
-.guide-section__status strong {
   color:
     var(--color-bosque);
 
+  background:
+    rgba(255,255,255,.35);
+
+  font-size:
+    .65rem;
+
   font-weight:
     600;
+
+  letter-spacing:
+    .04em;
+}
+
+.guide-section__verified span {
+  color:
+    var(--color-cobre);
 }
 
 .guide-section__copy {
@@ -3458,12 +4010,7 @@ const guideSchema = {
 .guide-section--dark
 .guide-section__copy > p {
   color:
-    rgba(
-      251,
-      249,
-      245,
-      .72
-    );
+    rgba(251,249,245,.72);
 }
 
 
@@ -3476,10 +4023,7 @@ const guideSchema = {
     grid;
 
   grid-template-columns:
-    repeat(
-      2,
-      minmax(0,1fr)
-    );
+    repeat(2,minmax(0,1fr));
 
   gap:
     1rem;
@@ -3494,20 +4038,10 @@ const guideSchema = {
 
   border:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .13
-    );
+    rgba(28,48,38,.13);
 
   background:
-    rgba(
-      255,
-      255,
-      255,
-      .3
-    );
+    rgba(255,255,255,.3);
 
   transition:
     transform .25s ease,
@@ -3520,12 +4054,7 @@ const guideSchema = {
 
   box-shadow:
     0 12px 30px
-    rgba(
-      28,
-      48,
-      38,
-      .07
-    );
+    rgba(28,48,38,.07);
 }
 
 .guide-highlight span {
@@ -3595,12 +4124,7 @@ const guideSchema = {
 
 .guide-highlight--experience {
   background:
-    rgba(
-      28,
-      48,
-      38,
-      .04
-    );
+    rgba(28,48,38,.04);
 }
 
 .guide-highlight--decision {
@@ -3630,20 +4154,10 @@ const guideSchema = {
 
   border:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .13
-    );
+    rgba(28,48,38,.13);
 
   background:
-    rgba(
-      255,
-      255,
-      255,
-      .3
-    );
+    rgba(255,255,255,.3);
 }
 
 .guide-block__label {
@@ -3771,12 +4285,7 @@ const guideSchema = {
 
 .guide-block--experience {
   background:
-    rgba(
-      28,
-      48,
-      38,
-      .04
-    );
+    rgba(28,48,38,.04);
 }
 
 
@@ -3789,10 +4298,7 @@ const guideSchema = {
     grid;
 
   grid-template-columns:
-    repeat(
-      2,
-      minmax(0,1fr)
-    );
+    repeat(2,minmax(0,1fr));
 
   gap:
     1px;
@@ -3807,20 +4313,10 @@ const guideSchema = {
 
   border:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .13
-    );
+    rgba(28,48,38,.13);
 
   background:
-    rgba(
-      255,
-      255,
-      255,
-      .28
-    );
+    rgba(255,255,255,.28);
 }
 
 .guide-duration-grid__featured {
@@ -3902,12 +4398,7 @@ const guideSchema = {
 
   border:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .16
-    );
+    rgba(28,48,38,.16);
 
   border-radius:
     24px;
@@ -3917,12 +4408,7 @@ const guideSchema = {
 
   box-shadow:
     0 18px 45px
-    rgba(
-      28,
-      48,
-      38,
-      .06
-    );
+    rgba(28,48,38,.06);
 }
 
 .entry-requirements__header {
@@ -3943,12 +4429,7 @@ const guideSchema = {
 
   border-bottom:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .12
-    );
+    rgba(28,48,38,.12);
 }
 
 .entry-requirements__header > div > span {
@@ -4032,12 +4513,7 @@ const guideSchema = {
 
   border-bottom:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .12
-    );
+    rgba(28,48,38,.12);
 }
 
 .entry-requirements__selector label {
@@ -4066,12 +4542,7 @@ const guideSchema = {
 
   border:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .18
-    );
+    rgba(28,48,38,.18);
 
   border-radius:
     10px;
@@ -4089,24 +4560,37 @@ const guideSchema = {
     pointer;
 }
 
+.entry-requirements__help {
+  margin:
+    0;
+
+  padding:
+    1rem 1.8rem;
+
+  border-bottom:
+    1px solid
+    rgba(28,48,38,.12);
+
+  color:
+    #777;
+
+  font-size:
+    .74rem;
+
+  line-height:
+    1.6;
+}
+
 .entry-result {
   display:
     grid;
 
   grid-template-columns:
-    repeat(
-      2,
-      minmax(0,1fr)
-    );
+    repeat(2,minmax(0,1fr));
 
   border-bottom:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .12
-    );
+    rgba(28,48,38,.12);
 }
 
 .entry-result > div {
@@ -4114,17 +4598,10 @@ const guideSchema = {
     1.5rem 1.8rem;
 }
 
-.entry-result > div:nth-child(
-  odd
-) {
+.entry-result > div:nth-child(odd) {
   border-right:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .12
-    );
+    rgba(28,48,38,.12);
 }
 
 .entry-result span {
@@ -4173,12 +4650,7 @@ const guideSchema = {
 
   border-top:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .12
-    );
+    rgba(28,48,38,.12);
 }
 
 .entry-notes > span {
@@ -4269,12 +4741,7 @@ const guideSchema = {
 
   border-top:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .15
-    );
+    rgba(28,48,38,.15);
 }
 
 .guide-section__closing span {
@@ -4342,12 +4809,7 @@ const guideSchema = {
 
   border-top:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .15
-    );
+    rgba(28,48,38,.15);
 }
 
 .guide-alert--high,
@@ -4499,20 +4961,10 @@ const guideSchema = {
 
   border:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .14
-    );
+    rgba(28,48,38,.14);
 
   background:
-    rgba(
-      255,
-      255,
-      255,
-      .38
-    );
+    rgba(255,255,255,.38);
 }
 
 .guide-alerts__empty span,
@@ -4583,12 +5035,7 @@ const guideSchema = {
 
   border-top:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .14
-    );
+    rgba(28,48,38,.14);
 }
 
 .guide-faq details {
@@ -4597,12 +5044,7 @@ const guideSchema = {
 
   border-bottom:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .14
-    );
+    rgba(28,48,38,.14);
 }
 
 .guide-faq summary {
@@ -4636,9 +5078,6 @@ const guideSchema = {
 
   color:
     var(--color-cobre);
-
-  font-family:
-    var(--font-sans);
 
   font-size:
     1.2rem;
@@ -4732,11 +5171,7 @@ summary::after {
     var(--font-serif);
 
   font-size:
-    clamp(
-      3rem,
-      5vw,
-      5rem
-    );
+    clamp(3rem,5vw,5rem);
 
   font-weight:
     400;
@@ -4767,10 +5202,7 @@ summary::after {
     grid;
 
   grid-template-columns:
-    repeat(
-      2,
-      minmax(0,1fr)
-    );
+    repeat(2,minmax(0,1fr));
 
   gap:
     1rem;
@@ -4788,12 +5220,7 @@ summary::after {
 
   border:
     1px solid
-    rgba(
-      28,
-      48,
-      38,
-      .14
-    );
+    rgba(28,48,38,.14);
 
   background:
     var(--color-papel);
@@ -4815,12 +5242,7 @@ summary::after {
 
   box-shadow:
     0 14px 32px
-    rgba(
-      28,
-      48,
-      38,
-      .07
-    );
+    rgba(28,48,38,.07);
 }
 
 .guide-source span,
@@ -4938,11 +5360,7 @@ summary::after {
     var(--font-serif);
 
   font-size:
-    clamp(
-      3rem,
-      5vw,
-      5.2rem
-    );
+    clamp(3rem,5vw,5.2rem);
 
   font-weight:
     400;
@@ -5017,11 +5435,7 @@ summary::after {
     var(--font-serif);
 
   font-size:
-    clamp(
-      3.4rem,
-      6vw,
-      6rem
-    );
+    clamp(3.4rem,6vw,6rem);
 
   font-weight:
     400;
@@ -5036,8 +5450,7 @@ summary::after {
     var(--color-papel);
 }
 
-.guide-our-trip__inner
-> p:not(.eyebrow) {
+.guide-our-trip__inner > p:not(.eyebrow) {
   max-width:
     700px;
 
@@ -5045,19 +5458,13 @@ summary::after {
     2rem 0 0;
 
   color:
-    rgba(
-      251,
-      249,
-      245,
-      .7
-    );
+    rgba(251,249,245,.7);
 
   line-height:
     1.8;
 }
 
-.guide-our-trip
-.button-primary {
+.guide-our-trip .button-primary {
   display:
     inline-flex;
 
@@ -5100,11 +5507,7 @@ summary::after {
     var(--font-serif);
 
   font-size:
-    clamp(
-      3.2rem,
-      6vw,
-      6rem
-    );
+    clamp(3.2rem,6vw,6rem);
 
   font-weight:
     400;
@@ -5144,8 +5547,7 @@ summary::after {
     var(--color-bosque) !important;
 }
 
-.guide-cta
-.button-primary {
+.guide-cta .button-primary {
   display:
     inline-flex;
 
@@ -5185,7 +5587,7 @@ summary::after {
 
 
 /* =========================================================
-   RESPONSIVE — TABLET
+   TABLET
    ========================================================= */
 
 @media (max-width: 900px) {
@@ -5248,10 +5650,7 @@ summary::after {
 
   .guide-context__grid {
     grid-template-columns:
-      repeat(
-        2,
-        minmax(0,1fr)
-      );
+      repeat(2,minmax(0,1fr));
   }
 
   .guide-context__grid article:nth-child(2) {
@@ -5262,12 +5661,7 @@ summary::after {
   .guide-context__grid article:nth-child(-n + 2) {
     border-bottom:
       1px solid
-      rgba(
-        251,
-        249,
-        245,
-        .13
-      );
+      rgba(251,249,245,.13);
   }
 
   .guide-section__header {
@@ -5288,19 +5682,11 @@ summary::after {
       1fr;
   }
 
-  .entry-result {
-    grid-template-columns:
-      repeat(
-        2,
-        minmax(0,1fr)
-      );
-  }
-
 }
 
 
 /* =========================================================
-   RESPONSIVE — MOBILE
+   MOBILE
    ========================================================= */
 
 @media (max-width: 600px) {
@@ -5308,9 +5694,7 @@ summary::after {
   .guide-shell,
   .guide-hero__content {
     width:
-      calc(
-        100% - 2rem
-      );
+      calc(100% - 2rem);
   }
 
   .guide-hero {
@@ -5325,11 +5709,7 @@ summary::after {
 
   .guide-hero h1 {
     font-size:
-      clamp(
-        3.5rem,
-        16vw,
-        5rem
-      );
+      clamp(3.5rem,16vw,5rem);
   }
 
   .guide-hero__subtitle {
@@ -5379,12 +5759,7 @@ summary::after {
 
     border-bottom:
       1px solid
-      rgba(
-        251,
-        249,
-        245,
-        .13
-      );
+      rgba(251,249,245,.13);
   }
 
   .guide-context__grid article:last-child {
@@ -5431,7 +5806,6 @@ summary::after {
       1.35rem;
   }
 
-  .guide-entry-requirements,
   .entry-requirements {
     border-radius:
       18px;
