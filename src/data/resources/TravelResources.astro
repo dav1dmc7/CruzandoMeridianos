@@ -1,0 +1,2360 @@
+---
+/**
+ * ============================================================
+ * CRUZANDO MERIDIANOS
+ * TRAVEL RESOURCES — SAFE DATA ADAPTER
+ * ============================================================
+ *
+ * Este componente está diseñado para convivir con el sistema
+ * actual de recursos sin imponerle un contrato distinto.
+ *
+ * IMPORTANTE
+ * ------------------------------------------------------------
+ *
+ * No asumimos nombres concretos de exports dentro de:
+ *
+ *   src/data/resources/index.ts
+ *
+ * ni propiedades adicionales que no formen parte del modelo real.
+ *
+ * El módulo se inspecciona de forma segura y los datos se
+ * normalizan para presentación.
+ *
+ * Esto evita que una mejora visual rompa el sistema de tipos.
+ * ============================================================
+ */
+
+ import * as resourceModule from "../../data/resources";
+
+
+/* ============================================================
+   PROPS
+   ============================================================ */
+
+interface Props {
+  destinationSlug?: string;
+  category?: string;
+  limit?: number;
+  showFilters?: boolean;
+  title?: string;
+  description?: string;
+  variant?: "default" | "compact" | "featured";
+}
+
+const {
+  destinationSlug,
+  category,
+  limit,
+  showFilters = true,
+  title =
+    "Recursos que utilizamos cuando viajamos",
+  description =
+    "Herramientas y servicios que pueden ayudarte durante un viaje. Los mostramos separados del contenido editorial y con transparencia cuando existe una relación comercial.",
+  variant = "default",
+} = Astro.props;
+
+
+/* ============================================================
+   GENERIC SAFE TYPES
+   ============================================================ */
+
+type ResourceRecord =
+  Record<string, unknown>;
+
+type ResourceViewModel = {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  categoryLabel: string;
+  url: string | null;
+  buttonLabel: string;
+  featured: boolean;
+  logo: string | null;
+  tagline: string | null;
+  features: string[];
+  typeLabel: string;
+  disclosure: string | null;
+  destinations: string[];
+};
+
+
+/* ============================================================
+   HELPERS — SAFE DATA ACCESS
+   ============================================================ */
+
+const isRecord = (
+  value: unknown
+): value is ResourceRecord => {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    !Array.isArray(value)
+  );
+};
+
+
+const toStringValue = (
+  value: unknown
+): string | null => {
+  if (
+    typeof value === "string" &&
+    value.trim().length > 0
+  ) {
+    return value.trim();
+  }
+
+  return null;
+};
+
+
+const toBooleanValue = (
+  value: unknown
+): boolean => {
+  return value === true;
+};
+
+
+const toStringArray = (
+  value: unknown
+): string[] => {
+
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .filter(
+      (
+        item
+      ): item is string =>
+        typeof item === "string"
+    )
+    .map(
+      (item) =>
+        item.trim()
+    )
+    .filter(
+      (item) =>
+        item.length > 0
+    );
+};
+
+
+const firstString = (
+  record: ResourceRecord,
+  keys: string[]
+): string | null => {
+
+  for (const key of keys) {
+
+    const value =
+      toStringValue(
+        record[key]
+      );
+
+    if (value) {
+      return value;
+    }
+  }
+
+  return null;
+};
+
+
+const firstBoolean = (
+  record: ResourceRecord,
+  keys: string[]
+): boolean => {
+
+  for (const key of keys) {
+
+    if (
+      typeof record[key] ===
+      "boolean"
+    ) {
+      return Boolean(
+        record[key]
+      );
+    }
+  }
+
+  return false;
+};
+
+
+const firstArray = (
+  record: ResourceRecord,
+  keys: string[]
+): string[] => {
+
+  for (const key of keys) {
+
+    const value =
+      toStringArray(
+        record[key]
+      );
+
+    if (value.length > 0) {
+      return value;
+    }
+  }
+
+  return [];
+};
+
+
+/* ============================================================
+   RESOURCE TYPE
+   ============================================================ */
+
+const getResourceTypeLabel = (
+  value: unknown
+): string => {
+
+  const type =
+    toStringValue(value);
+
+  switch (type) {
+
+    case "official":
+      return "Fuente oficial";
+
+    case "primary":
+      return "Fuente primaria";
+
+    case "secondary":
+      return "Fuente secundaria";
+
+    case "affiliate":
+      return "Afiliación";
+
+    case "referral":
+      return "Referido";
+
+    case "tool":
+      return "Herramienta";
+
+    case "service":
+      return "Servicio";
+
+    case "editorial":
+      return "Editorial";
+
+    default:
+      return "Recurso";
+  }
+};
+
+
+/* ============================================================
+   CATEGORY LABEL
+   ============================================================ */
+
+const categoryLabels:
+  Record<string, string> = {
+
+  connectivity:
+    "Conectividad",
+
+  esim:
+    "eSIM",
+
+  money:
+    "Dinero",
+
+  insurance:
+    "Seguro",
+
+  transport:
+    "Transporte",
+
+  accommodation:
+    "Alojamiento",
+
+  flights:
+    "Vuelos",
+
+  maps:
+    "Mapas",
+
+  tools:
+    "Herramientas",
+
+  official:
+    "Fuentes oficiales",
+
+  health:
+    "Salud",
+
+  safety:
+    "Seguridad",
+
+  planning:
+    "Planificación",
+
+  other:
+    "Otros",
+};
+
+
+const humanizeCategory = (
+  value: string
+): string => {
+
+  if (
+    categoryLabels[value]
+  ) {
+    return categoryLabels[
+      value
+    ];
+  }
+
+  return value
+    .replace(
+      /[-_]+/g,
+      " "
+    )
+    .replace(
+      /\b\w/g,
+      (letter) =>
+        letter.toUpperCase()
+    );
+};
+
+
+/* ============================================================
+   FIND RESOURCE COLLECTION
+   ============================================================ */
+
+const moduleEntries =
+  Object.entries(
+    resourceModule
+  );
+
+
+const findResourceCollection =
+  (): unknown[] => {
+
+    const preferredKeys = [
+      "resources",
+      "travelResources",
+      "allResources",
+      "resourceList",
+      "travelResourceList",
+    ];
+
+    for (
+      const key of preferredKeys
+    ) {
+
+      const value =
+        resourceModule[
+          key as keyof typeof resourceModule
+        ];
+
+      if (
+        Array.isArray(value)
+      ) {
+        return value;
+      }
+    }
+
+    for (
+      const [
+        key,
+        value,
+      ] of moduleEntries
+    ) {
+
+      if (
+        key
+          .toLowerCase()
+          .includes("resource") &&
+        Array.isArray(value)
+      ) {
+        return value;
+      }
+    }
+
+    return [];
+  };
+
+
+/* ============================================================
+   FIND CATEGORY COLLECTION
+   ============================================================ */
+
+const findCategoryCollection =
+  (): unknown[] => {
+
+    const preferredKeys = [
+      "resourceCategories",
+      "categories",
+      "allResourceCategories",
+      "resourceCategoryList",
+    ];
+
+    for (
+      const key of preferredKeys
+    ) {
+
+      const value =
+        resourceModule[
+          key as keyof typeof resourceModule
+        ];
+
+      if (
+        Array.isArray(value)
+      ) {
+        return value;
+      }
+    }
+
+    for (
+      const [
+        key,
+        value,
+      ] of moduleEntries
+    ) {
+
+      const normalized =
+        key.toLowerCase();
+
+      if (
+        normalized.includes(
+          "categor"
+        ) &&
+        Array.isArray(value)
+      ) {
+        return value;
+      }
+    }
+
+    return [];
+  };
+
+
+/* ============================================================
+   RAW DATA
+   ============================================================ */
+
+const rawResources =
+  findResourceCollection();
+
+const rawCategories =
+  findCategoryCollection();
+
+
+/* ============================================================
+   CATEGORY MAP
+   ============================================================ */
+
+const categoryMap =
+  new Map<
+    string,
+    string
+  >();
+
+
+for (
+  const item of rawCategories
+) {
+
+  if (
+    !isRecord(item)
+  ) {
+    continue;
+  }
+
+  const id =
+    firstString(
+      item,
+      [
+        "id",
+        "slug",
+        "code",
+        "value",
+      ]
+    );
+
+  if (!id) {
+    continue;
+  }
+
+  const label =
+    firstString(
+      item,
+      [
+        "label",
+        "name",
+        "title",
+      ]
+    ) ??
+    humanizeCategory(
+      id
+    );
+
+  categoryMap.set(
+    id,
+    label
+  );
+}
+
+
+/* ============================================================
+   NORMALIZE RESOURCE
+   ============================================================ */
+
+const normalizeResource = (
+  value: unknown,
+  index: number
+): ResourceViewModel | null => {
+
+  if (
+    !isRecord(value)
+  ) {
+    return null;
+  }
+
+  const id =
+    firstString(
+      value,
+      [
+        "id",
+        "slug",
+        "code",
+      ]
+    ) ??
+    `resource-${index + 1}`;
+
+
+  const name =
+    firstString(
+      value,
+      [
+        "name",
+        "title",
+        "label",
+        "provider",
+      ]
+    ) ??
+    "Recurso";
+
+
+  const description =
+    firstString(
+      value,
+      [
+        "description",
+        "summary",
+        "content",
+        "text",
+      ]
+    ) ??
+    "";
+
+
+  const categoryValue =
+    firstString(
+      value,
+      [
+        "category",
+        "categoryId",
+        "categorySlug",
+        "group",
+      ]
+    ) ??
+    "other";
+
+
+  const categoryLabel =
+    categoryMap.get(
+      categoryValue
+    ) ??
+    humanizeCategory(
+      categoryValue
+    );
+
+
+  const url =
+    firstString(
+      value,
+      [
+        "url",
+        "href",
+        "link",
+      ]
+    );
+
+
+  const buttonLabel =
+    firstString(
+      value,
+      [
+        "buttonLabel",
+        "ctaLabel",
+        "linkLabel",
+        "actionLabel",
+      ]
+    ) ??
+    "Ver recurso";
+
+
+  const featured =
+    firstBoolean(
+      value,
+      [
+        "featured",
+        "isFeatured",
+        "highlighted",
+      ]
+    );
+
+
+  const logo =
+    firstString(
+      value,
+      [
+        "logo",
+        "logoUrl",
+        "image",
+        "imageUrl",
+        "icon",
+      ]
+    );
+
+
+  const tagline =
+    firstString(
+      value,
+      [
+        "tagline",
+        "subtitle",
+        "shortDescription",
+      ]
+    );
+
+
+  const features =
+    firstArray(
+      value,
+      [
+        "features",
+        "benefits",
+        "highlights",
+      ]
+    );
+
+
+  const disclosure =
+    firstString(
+      value,
+      [
+        "disclosure",
+        "affiliateDisclosure",
+        "legalDisclosure",
+      ]
+    );
+
+
+  const destinations =
+    firstArray(
+      value,
+      [
+        "destinations",
+        "destinationSlugs",
+      ]
+    );
+
+
+  const active =
+    !(
+      "active" in value
+    ) ||
+    toBooleanValue(
+      value.active
+    );
+
+
+  if (!active) {
+    return null;
+  }
+
+
+  return {
+    id,
+    name,
+    description,
+    category:
+      categoryValue,
+    categoryLabel,
+    url,
+    buttonLabel,
+    featured,
+    logo,
+    tagline,
+    features,
+    typeLabel:
+      getResourceTypeLabel(
+        value.type ??
+        value.resourceType
+      ),
+    disclosure,
+    destinations,
+  };
+};
+
+
+/* ============================================================
+   NORMALIZED RESOURCES
+   ============================================================ */
+
+const normalizedResources =
+  rawResources
+    .map(
+      normalizeResource
+    )
+    .filter(
+      (
+        item
+      ): item is ResourceViewModel =>
+        item !== null
+    );
+
+
+/* ============================================================
+   DESTINATION FILTER
+   ============================================================ */
+
+const destinationResources =
+  normalizedResources.filter(
+    (
+      resource
+    ) => {
+
+      if (
+        !destinationSlug
+      ) {
+        return true;
+      }
+
+      if (
+        resource.destinations.length ===
+        0
+      ) {
+        return true;
+      }
+
+      return resource.destinations.includes(
+        destinationSlug
+      );
+    }
+  );
+
+
+/* ============================================================
+   CATEGORY FILTER
+   ============================================================ */
+
+const categoryResources =
+  destinationResources.filter(
+    (
+      resource
+    ) => {
+
+      if (
+        !category
+      ) {
+        return true;
+      }
+
+      return (
+        resource.category ===
+        category
+      );
+    }
+  );
+
+
+/* ============================================================
+   SORT
+   ============================================================ */
+
+const sortedResources =
+  [
+    ...categoryResources,
+  ].sort(
+    (
+      a,
+      b
+    ) => {
+
+      if (
+        a.featured &&
+        !b.featured
+      ) {
+        return -1;
+      }
+
+      if (
+        !a.featured &&
+        b.featured
+      ) {
+        return 1;
+      }
+
+      return a.name.localeCompare(
+        b.name,
+        "es"
+      );
+    }
+  );
+
+
+/* ============================================================
+   LIMIT
+   ============================================================ */
+
+const resources =
+  typeof limit ===
+  "number" &&
+  limit > 0
+    ? sortedResources.slice(
+        0,
+        limit
+      )
+    : sortedResources;
+
+
+/* ============================================================
+   FILTER CATEGORIES
+   ============================================================ */
+
+const usedCategories =
+  Array.from(
+    new Set(
+      resources.map(
+        (
+          resource
+        ) =>
+          resource.category
+      )
+    )
+  );
+
+
+const filterCategories =
+  usedCategories.map(
+    (
+      id
+    ) => ({
+      id,
+      label:
+        categoryMap.get(
+          id
+        ) ??
+        humanizeCategory(
+          id
+        ),
+    })
+  );
+
+
+/* ============================================================
+   JSON-LD
+   ============================================================ */
+
+const itemListSchema =
+  resources.length > 0
+    ? {
+        "@context":
+          "https://schema.org",
+
+        "@type":
+          "ItemList",
+
+        itemListElement:
+          resources.map(
+            (
+              resource,
+              index
+            ) => {
+
+              const item: Record<
+                string,
+                unknown
+              > = {
+
+                "@type":
+                  "ListItem",
+
+                position:
+                  index + 1,
+
+                name:
+                  resource.name,
+              };
+
+              if (
+                resource.url
+              ) {
+                item.url =
+                  resource.url;
+              }
+
+              return item;
+            }
+          ),
+      }
+    : null;
+---
+
+
+{
+  resources.length > 0 ? (
+
+    <section
+      class:list={[
+        "travel-resources",
+        `travel-resources--${variant}`,
+      ]}
+      aria-labelledby="travel-resources-title"
+    >
+
+      {
+        itemListSchema && (
+          <script
+            type="application/ld+json"
+            is:inline
+            set:html={JSON.stringify(
+              itemListSchema
+            )}
+          />
+        )
+      }
+
+
+      <div class="travel-resources__shell">
+
+
+        <!-- ==================================================
+             HEADER
+        =================================================== -->
+
+        <header
+          class="travel-resources__header"
+        >
+
+          <div>
+
+            <p class="eyebrow">
+              Recursos de viaje
+            </p>
+
+            <h2
+              id="travel-resources-title"
+            >
+              {title}
+            </h2>
+
+          </div>
+
+
+          <p class="travel-resources__intro">
+            {description}
+          </p>
+
+        </header>
+
+
+        <!-- ==================================================
+             TRANSPARENCY
+        =================================================== -->
+
+        <div
+          class="travel-resources__disclosure"
+          role="note"
+        >
+
+          <span>
+            Transparencia
+          </span>
+
+          <p>
+            Algunos enlaces pueden corresponder
+            a servicios con los que tenemos una
+            relación comercial, de afiliación o
+            de referido. Cuando sea relevante,
+            lo indicaremos claramente.
+          </p>
+
+        </div>
+
+
+        <!-- ==================================================
+             FILTERS
+        =================================================== -->
+
+        {
+          showFilters &&
+          filterCategories.length > 1 && (
+
+            <div
+              class="travel-resources__filters"
+              data-resource-filters
+            >
+
+              <button
+                type="button"
+                class="travel-resource-filter is-active"
+                data-resource-filter="all"
+                aria-pressed="true"
+              >
+                Todos
+              </button>
+
+
+              {
+                filterCategories.map(
+                  (
+                    resourceCategory
+                  ) => (
+
+                    <button
+                      type="button"
+                      class="travel-resource-filter"
+                      data-resource-filter={
+                        resourceCategory.id
+                      }
+                      aria-pressed="false"
+                    >
+                      {
+                        resourceCategory.label
+                      }
+                    </button>
+
+                  )
+                )
+              }
+
+            </div>
+
+          )
+        }
+
+
+        <!-- ==================================================
+             RESOURCE GRID
+        =================================================== -->
+
+        <div
+          class="travel-resources__grid"
+          data-resource-grid
+        >
+
+          {
+            resources.map(
+              (
+                resource,
+                index
+              ) => (
+
+                <article
+                  class:list={[
+                    "travel-resource-card",
+
+                    {
+                      "travel-resource-card--featured":
+                        resource.featured,
+
+                      "travel-resource-card--hero":
+                        variant ===
+                          "featured" &&
+                        index === 0,
+                    },
+                  ]}
+                  data-resource-card
+                  data-resource-category={
+                    resource.category
+                  }
+                >
+
+                  <div
+                    class="travel-resource-card__top"
+                  >
+
+                    <span
+                      class="travel-resource-card__category"
+                    >
+                      {
+                        resource.categoryLabel
+                      }
+                    </span>
+
+
+                    {
+                      resource.featured && (
+                        <span
+                          class="travel-resource-card__featured"
+                        >
+                          Seleccionado
+                        </span>
+                      )
+                    }
+
+                  </div>
+
+
+                  {
+                    resource.logo && (
+                      <div
+                        class="travel-resource-card__logo"
+                      >
+
+                        <img
+                          src={
+                            resource.logo
+                          }
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                        />
+
+                      </div>
+                    )
+                  }
+
+
+                  <p
+                    class="travel-resource-card__type"
+                  >
+                    {
+                      resource.typeLabel
+                    }
+                  </p>
+
+
+                  <h3>
+                    {resource.name}
+                  </h3>
+
+
+                  {
+                    resource.tagline && (
+                      <p
+                        class="travel-resource-card__tagline"
+                      >
+                        {
+                          resource.tagline
+                        }
+                      </p>
+                    )
+                  }
+
+
+                  {
+                    resource.description && (
+                      <p
+                        class="travel-resource-card__description"
+                      >
+                        {
+                          resource.description
+                        }
+                      </p>
+                    )
+                  }
+
+
+                  {
+                    resource.features.length >
+                      0 && (
+
+                      <ul
+                        class="travel-resource-card__features"
+                      >
+
+                        {
+                          resource.features.map(
+                            (
+                              feature
+                            ) => (
+
+                              <li>
+                                <span
+                                  aria-hidden="true"
+                                >
+                                  ✓
+                                </span>
+
+                                {
+                                  feature
+                                }
+                              </li>
+
+                            )
+                          )
+                        }
+
+                      </ul>
+
+                    )
+                  }
+
+
+                  <div
+                    class="travel-resource-card__footer"
+                  >
+
+                    {
+                      resource.url ? (
+
+                        <a
+                          href={
+                            resource.url
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="travel-resource-card__link"
+                        >
+
+                          {
+                            resource.buttonLabel
+                          }
+
+                          <span
+                            aria-hidden="true"
+                          >
+                            ↗
+                          </span>
+
+                        </a>
+
+                      ) : (
+
+                        <span
+                          class="
+                            travel-resource-card__link
+                            travel-resource-card__link--disabled
+                          "
+                        >
+                          Próximamente
+                        </span>
+
+                      )
+                    }
+
+                  </div>
+
+
+                  {
+                    resource.disclosure && (
+                      <p
+                        class="travel-resource-card__disclosure"
+                      >
+                        {
+                          resource.disclosure
+                        }
+                      </p>
+                    )
+                  }
+
+                </article>
+
+              )
+            )
+          }
+
+        </div>
+
+
+        <!-- ==================================================
+             NO RESULTS AFTER CLIENT FILTER
+        =================================================== -->
+
+        <div
+          class="travel-resources__filtered-empty"
+          data-resource-empty
+          hidden
+        >
+
+          <span>
+            Sin resultados
+          </span>
+
+          <p>
+            No hay recursos de esta categoría.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  ) : (
+
+    <section
+      class:list={[
+        "travel-resources",
+        `travel-resources--${variant}`,
+      ]}
+    >
+
+      <div class="travel-resources__shell">
+
+        <div
+          class="travel-resources__empty"
+        >
+
+          <span>
+            Recursos de viaje
+          </span>
+
+          <h2>
+            Estamos preparando esta selección.
+          </h2>
+
+          <p>
+            Preferimos publicar pocos recursos
+            y que cada uno tenga una razón real
+            para estar aquí.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  )
+}
+
+
+<!-- ========================================================
+     CLIENT FILTERS
+     ========================================================= -->
+
+<script is:inline>
+  (() => {
+
+    const root =
+      document.querySelector(
+        ".travel-resources"
+      );
+
+    if (!root) {
+      return;
+    }
+
+
+    const filters =
+      Array.from(
+        root.querySelectorAll(
+          "[data-resource-filter]"
+        )
+      );
+
+
+    const cards =
+      Array.from(
+        root.querySelectorAll(
+          "[data-resource-card]"
+        )
+      );
+
+
+    const empty =
+      root.querySelector(
+        "[data-resource-empty]"
+      );
+
+
+    if (
+      filters.length === 0 ||
+      cards.length === 0
+    ) {
+      return;
+    }
+
+
+    filters.forEach(
+      (filter) => {
+
+        filter.addEventListener(
+          "click",
+          () => {
+
+            const category =
+              filter.getAttribute(
+                "data-resource-filter"
+              );
+
+
+            filters.forEach(
+              (item) => {
+
+                const active =
+                  item === filter;
+
+                item.classList.toggle(
+                  "is-active",
+                  active
+                );
+
+                item.setAttribute(
+                  "aria-pressed",
+                  String(active)
+                );
+
+              }
+            );
+
+
+            let visibleCount =
+              0;
+
+
+            cards.forEach(
+              (card) => {
+
+                const cardCategory =
+                  card.getAttribute(
+                    "data-resource-category"
+                  );
+
+
+                const visible =
+                  category ===
+                    "all" ||
+                  cardCategory ===
+                    category;
+
+
+                card.hidden =
+                  !visible;
+
+
+                if (
+                  visible
+                ) {
+                  visibleCount += 1;
+                }
+
+              }
+            );
+
+
+            if (empty) {
+
+              empty.hidden =
+                visibleCount > 0;
+
+            }
+
+          }
+        );
+
+      }
+    );
+
+  })();
+</script>
+
+
+<style>
+
+/* ============================================================
+   BASE
+   ============================================================ */
+
+.travel-resources {
+  --resources-bg:
+    var(--color-papel);
+
+  --resources-text:
+    var(--color-bosque);
+
+  --resources-muted:
+    #666;
+
+  --resources-border:
+    rgba(
+      28,
+      48,
+      38,
+      .13
+    );
+
+  --resources-accent:
+    var(--color-cobre);
+
+  padding:
+    8rem 0;
+
+  background:
+    var(--resources-bg);
+}
+
+
+.travel-resources__shell {
+  width:
+    min(
+      var(--content-width),
+      calc(100% - 4rem)
+    );
+
+  margin-inline:
+    auto;
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.travel-resources__header {
+  display:
+    grid;
+
+  grid-template-columns:
+    1fr .65fr;
+
+  gap:
+    5rem;
+
+  align-items:
+    end;
+
+  margin-bottom:
+    3rem;
+}
+
+
+.travel-resources__header h2 {
+  max-width:
+    850px;
+
+  margin:
+    0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    clamp(
+      3rem,
+      5.5vw,
+      5.8rem
+    );
+
+  font-weight:
+    400;
+
+  line-height:
+    .95;
+
+  letter-spacing:
+    -.04em;
+
+  color:
+    var(--resources-text);
+}
+
+
+.travel-resources__intro {
+  margin:
+    0;
+
+  color:
+    var(--resources-muted);
+
+  line-height:
+    1.8;
+}
+
+
+/* ============================================================
+   TRANSPARENCY
+   ============================================================ */
+
+.travel-resources__disclosure {
+  display:
+    grid;
+
+  grid-template-columns:
+    140px 1fr;
+
+  gap:
+    2rem;
+
+  padding:
+    1.4rem 0;
+
+  border-top:
+    1px solid
+    var(--resources-border);
+
+  border-bottom:
+    1px solid
+    var(--resources-border);
+}
+
+
+.travel-resources__disclosure > span {
+  color:
+    var(--resources-accent);
+
+  font-size:
+    .66rem;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    .13em;
+
+  text-transform:
+    uppercase;
+}
+
+
+.travel-resources__disclosure p {
+  max-width:
+    760px;
+
+  margin:
+    0;
+
+  color:
+    #777;
+
+  font-size:
+    .78rem;
+
+  line-height:
+    1.65;
+}
+
+
+/* ============================================================
+   FILTERS
+   ============================================================ */
+
+.travel-resources__filters {
+  display:
+    flex;
+
+  flex-wrap:
+    wrap;
+
+  gap:
+    .55rem;
+
+  margin:
+    2rem 0 2.5rem;
+}
+
+
+.travel-resource-filter {
+  padding:
+    .65rem .9rem;
+
+  border:
+    1px solid
+    var(--resources-border);
+
+  border-radius:
+    999px;
+
+  background:
+    transparent;
+
+  color:
+    var(--resources-text);
+
+  font:
+    inherit;
+
+  font-size:
+    .72rem;
+
+  cursor:
+    pointer;
+
+  transition:
+    background .2s ease,
+    color .2s ease,
+    border-color .2s ease;
+}
+
+
+.travel-resource-filter:hover,
+.travel-resource-filter.is-active {
+  border-color:
+    var(--resources-text);
+
+  background:
+    var(--resources-text);
+
+  color:
+    var(--color-papel);
+}
+
+
+/* ============================================================
+   GRID
+   ============================================================ */
+
+.travel-resources__grid {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0,1fr)
+    );
+
+  gap:
+    1rem;
+}
+
+
+/* ============================================================
+   CARD
+   ============================================================ */
+
+.travel-resource-card {
+  position:
+    relative;
+
+  min-width:
+    0;
+
+  padding:
+    1.8rem;
+
+  border:
+    1px solid
+    var(--resources-border);
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      .35
+    );
+
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    border-color .25s ease;
+}
+
+
+.travel-resource-card:hover {
+  transform:
+    translateY(-4px);
+
+  border-color:
+    rgba(
+      28,
+      48,
+      38,
+      .22
+    );
+
+  box-shadow:
+    0 18px 40px
+    rgba(
+      28,
+      48,
+      38,
+      .07
+    );
+}
+
+
+.travel-resource-card--featured {
+  background:
+    #f2eee6;
+}
+
+
+.travel-resource-card--hero {
+  grid-column:
+    span 2;
+
+  padding:
+    2.4rem;
+}
+
+
+.travel-resource-card__top {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    1rem;
+
+  margin-bottom:
+    2rem;
+}
+
+
+.travel-resource-card__category,
+.travel-resource-card__featured,
+.travel-resource-card__type {
+  font-size:
+    .65rem;
+
+  letter-spacing:
+    .11em;
+
+  text-transform:
+    uppercase;
+}
+
+
+.travel-resource-card__category {
+  color:
+    var(--resources-accent);
+
+  font-weight:
+    600;
+}
+
+
+.travel-resource-card__featured {
+  padding:
+    .35rem .55rem;
+
+  border-radius:
+    999px;
+
+  background:
+    var(--resources-text);
+
+  color:
+    var(--color-papel);
+
+  font-weight:
+    600;
+}
+
+
+.travel-resource-card__logo {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  width:
+    52px;
+
+  height:
+    52px;
+
+  margin-bottom:
+    1.2rem;
+
+  overflow:
+    hidden;
+
+  border-radius:
+    12px;
+
+  background:
+    #fff;
+}
+
+
+.travel-resource-card__logo img {
+  width:
+    100%;
+
+  height:
+    100%;
+
+  object-fit:
+    contain;
+}
+
+
+.travel-resource-card__type {
+  margin:
+    0 0 .7rem;
+
+  color:
+    #888;
+}
+
+
+.travel-resource-card h3 {
+  margin:
+    0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    2rem;
+
+  font-weight:
+    400;
+
+  line-height:
+    1;
+
+  letter-spacing:
+    -.025em;
+
+  color:
+    var(--resources-text);
+}
+
+
+.travel-resource-card--hero h3 {
+  font-size:
+    clamp(
+      2.3rem,
+      4vw,
+      3.5rem
+    );
+}
+
+
+.travel-resource-card__tagline {
+  margin:
+    .8rem 0 0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    1.05rem;
+
+  line-height:
+    1.45;
+
+  color:
+    var(--resources-text);
+}
+
+
+.travel-resource-card__description {
+  margin:
+    1rem 0 0;
+
+  color:
+    var(--resources-muted);
+
+  line-height:
+    1.75;
+}
+
+
+/* ============================================================
+   FEATURES
+   ============================================================ */
+
+.travel-resource-card__features {
+  margin:
+    1.4rem 0 0;
+
+  padding:
+    0;
+
+  list-style:
+    none;
+}
+
+
+.travel-resource-card__features li {
+  display:
+    flex;
+
+  align-items:
+    flex-start;
+
+  gap:
+    .55rem;
+
+  color:
+    #666;
+
+  font-size:
+    .86rem;
+
+  line-height:
+    1.55;
+}
+
+
+.travel-resource-card__features li + li {
+  margin-top:
+    .5rem;
+}
+
+
+.travel-resource-card__features li span {
+  flex:
+    0 0 auto;
+
+  margin-top:
+    .1rem;
+
+  color:
+    var(--resources-accent);
+
+  font-weight:
+    700;
+}
+
+
+/* ============================================================
+   CTA
+   ============================================================ */
+
+.travel-resource-card__footer {
+  margin-top:
+    2rem;
+
+  padding-top:
+    1.2rem;
+
+  border-top:
+    1px solid
+    var(--resources-border);
+}
+
+
+.travel-resource-card__link {
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  gap:
+    .55rem;
+
+  color:
+    var(--resources-text);
+
+  font-size:
+    .8rem;
+
+  font-weight:
+    600;
+
+  text-decoration:
+    none;
+}
+
+
+.travel-resource-card__link span {
+  transition:
+    transform .2s ease;
+}
+
+
+.travel-resource-card__link:hover {
+  color:
+    var(--resources-accent);
+}
+
+
+.travel-resource-card__link:hover span {
+  transform:
+    translate(
+      3px,
+      -3px
+    );
+}
+
+
+.travel-resource-card__link--disabled {
+  color:
+    #999;
+}
+
+
+/* ============================================================
+   DISCLOSURE
+   ============================================================ */
+
+.travel-resource-card__disclosure {
+  margin:
+    1rem 0 0;
+
+  color:
+    #999;
+
+  font-size:
+    .67rem;
+
+  line-height:
+    1.55;
+}
+
+
+/* ============================================================
+   EMPTY
+   ============================================================ */
+
+.travel-resources__empty {
+  padding:
+    3rem 0;
+
+  border-top:
+    1px solid
+    var(--resources-border);
+
+  border-bottom:
+    1px solid
+    var(--resources-border);
+}
+
+
+.travel-resources__empty > span,
+.travel-resources__filtered-empty > span {
+  display:
+    block;
+
+  margin-bottom:
+    .8rem;
+
+  color:
+    var(--resources-accent);
+
+  font-size:
+    .66rem;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    .13em;
+
+  text-transform:
+    uppercase;
+}
+
+
+.travel-resources__empty h2 {
+  margin:
+    0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    2rem;
+
+  font-weight:
+    400;
+
+  color:
+    var(--resources-text);
+}
+
+
+.travel-resources__empty p,
+.travel-resources__filtered-empty p {
+  max-width:
+    600px;
+
+  margin:
+    1rem 0 0;
+
+  color:
+    var(--resources-muted);
+
+  line-height:
+    1.7;
+}
+
+
+.travel-resources__filtered-empty {
+  padding:
+    2rem 0;
+}
+
+
+/* ============================================================
+   COMPACT
+   ============================================================ */
+
+.travel-resources--compact {
+  padding:
+    5rem 0;
+}
+
+
+.travel-resources--compact
+.travel-resources__header h2 {
+  font-size:
+    clamp(
+      2.5rem,
+      4vw,
+      4rem
+    );
+}
+
+
+.travel-resources--compact
+.travel-resource-card {
+  padding:
+    1.4rem;
+}
+
+
+/* ============================================================
+   MOBILE / TABLET
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+  .travel-resources {
+    padding:
+      6rem 0;
+  }
+
+
+  .travel-resources__shell {
+    width:
+      min(
+        var(--content-width),
+        calc(100% - 3rem)
+      );
+  }
+
+
+  .travel-resources__header {
+    grid-template-columns:
+      1fr;
+
+    gap:
+      2rem;
+  }
+
+
+  .travel-resources__grid {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .travel-resource-card--hero {
+    grid-column:
+      auto;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .travel-resources {
+    padding:
+      5rem 0;
+  }
+
+
+  .travel-resources__shell {
+    width:
+      calc(
+        100% - 2rem
+      );
+  }
+
+
+  .travel-resources__header h2 {
+    font-size:
+      3rem;
+  }
+
+
+  .travel-resources__disclosure {
+    grid-template-columns:
+      1fr;
+
+    gap:
+      .7rem;
+  }
+
+
+  .travel-resource-card {
+    padding:
+      1.4rem;
+  }
+
+
+  .travel-resource-card--hero {
+    padding:
+      1.4rem;
+  }
+
+
+  .travel-resource-card__top {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+
+    gap:
+      .6rem;
+  }
+
+
+  .travel-resource-card h3 {
+    font-size:
+      1.8rem;
+  }
+
+}
+
+
+/* ============================================================
+   ACCESSIBILITY / MOTION
+   ============================================================ */
+
+.travel-resource-filter:focus-visible,
+.travel-resource-card__link:focus-visible {
+  outline:
+    2px solid
+    var(--resources-accent);
+
+  outline-offset:
+    3px;
+}
+
+
+@media (
+  prefers-reduced-motion: reduce
+) {
+
+  .travel-resource-card,
+  .travel-resource-filter,
+  .travel-resource-card__link span {
+    transition:
+      none;
+  }
+
+}
+
+</style>
