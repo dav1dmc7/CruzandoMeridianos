@@ -1,6 +1,6 @@
 import type { ImageMetadata } from "astro";
 
-import costaRica from "../assets/images/playa-costa-rica.jpg";
+import costaRica from "../assets/images/costa-rica/playa-costa-rica.jpg";
 import sudafrica from "../assets/images/leonas.jpg";
 import jordania from "../assets/images/petra.jpg";
 import grecia from "../assets/images/corfu.jpg";
