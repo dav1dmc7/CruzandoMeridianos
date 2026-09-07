@@ -25,8 +25,9 @@ if (!trip) {
 }
 
 const title = `${trip.title} | Cruzando Meridianos`;
-
 const description = trip.subtitle;
+
+const metrics = trip.metrics;
 
 const formatNumber = (value?: number) =>
   value?.toLocaleString("es-ES") ?? "—";
@@ -39,9 +40,7 @@ const formatDate = (date: string) =>
   });
 
 const visitedPlaces = trip.places.filter(
-  (place) =>
-    place.status === "visited" &&
-    place.confidence === "high",
+  (place) => place.status === "visited",
 );
 
 const plannedPlaces = trip.plannedButNotVisited;
@@ -52,7 +51,7 @@ const plannedPlaces = trip.plannedButNotVisited;
     <!-- =========================================================
          HERO
     ========================================================== -->
-    <section class="trip-hero">
+    <section class="trip-hero" aria-labelledby="trip-title">
       <div class="trip-hero-inner">
         <div class="trip-hero-top">
           <a class="trip-back" href="/nuestros-viajes">
@@ -60,7 +59,7 @@ const plannedPlaces = trip.plannedButNotVisited;
             Volver a nuestros viajes
           </a>
 
-          <span class="trip-hero-number">01</span>
+          <span class="trip-hero-number" aria-hidden="true">01</span>
         </div>
 
         <div class="trip-hero-grid">
@@ -69,7 +68,7 @@ const plannedPlaces = trip.plannedButNotVisited;
               Nuestro viaje · {trip.destination}
             </p>
 
-            <h1>
+            <h1 id="trip-title">
               Nuestro viaje a {trip.destination}.
             </h1>
 
@@ -77,10 +76,10 @@ const plannedPlaces = trip.plannedButNotVisited;
               {trip.subtitle}
             </p>
 
-            <div class="trip-hero-meta">
-              <span>{formatDate(trip.startDate)}</span>
+            <div class="trip-hero-meta" aria-label="Fechas del viaje">
+              <span>{formatDate(metrics.startDate)}</span>
               <span aria-hidden="true">·</span>
-              <span>{formatDate(trip.endDate)}</span>
+              <span>{formatDate(metrics.endDate)}</span>
             </div>
           </div>
 
@@ -91,6 +90,7 @@ const plannedPlaces = trip.plannedButNotVisited;
               loading="eager"
               sizes="(max-width: 900px) 100vw, 48vw"
             />
+
             <figcaption>
               Costa Rica · naturaleza, carretera y descubrimiento
             </figcaption>
@@ -126,7 +126,10 @@ const plannedPlaces = trip.plannedButNotVisited;
     <!-- =========================================================
          FOTO — RÍO Y PLAYA
     ========================================================== -->
-    <section class="trip-photo-break" aria-label="Paisaje de Costa Rica">
+    <section
+      class="trip-photo-break"
+      aria-label="Paisaje de Costa Rica"
+    >
       <figure class="trip-photo-break-figure">
         <Image
           src={rioPlaya}
@@ -144,48 +147,69 @@ const plannedPlaces = trip.plannedButNotVisited;
     <!-- =========================================================
          MÉTRICAS
     ========================================================== -->
-    <section class="trip-metrics">
+    <section
+      class="trip-metrics"
+      aria-label="Datos principales del viaje"
+    >
       <div class="trip-metrics-inner">
         <div class="trip-metric">
           <span class="trip-metric-value">
-            {formatNumber(trip.durationDays)}
+            {formatNumber(metrics.durationDays)}
           </span>
-          <span class="trip-metric-label">días</span>
+
+          <span class="trip-metric-label">
+            días
+          </span>
         </div>
 
         <div class="trip-metric">
           <span class="trip-metric-value">
-            {formatNumber(trip.carKm)}
+            {formatNumber(metrics.carKm)}
           </span>
-          <span class="trip-metric-label">km en coche</span>
+
+          <span class="trip-metric-label">
+            km en coche
+          </span>
         </div>
 
         <div class="trip-metric">
           <span class="trip-metric-value">
-            {formatNumber(trip.photos)}
+            {formatNumber(metrics.photos)}
           </span>
-          <span class="trip-metric-label">fotografías</span>
+
+          <span class="trip-metric-label">
+            fotografías
+          </span>
         </div>
 
         <div class="trip-metric">
           <span class="trip-metric-value">
-            {formatNumber(trip.placesRecorded)}
+            {formatNumber(metrics.placesRecorded)}
           </span>
-          <span class="trip-metric-label">lugares registrados</span>
+
+          <span class="trip-metric-label">
+            lugares registrados
+          </span>
         </div>
 
         <div class="trip-metric trip-metric-date">
           <span class="trip-metric-value">
-            {formatDate(trip.startDate)}
+            {formatDate(metrics.startDate)}
           </span>
-          <span class="trip-metric-label">comienzo</span>
+
+          <span class="trip-metric-label">
+            comienzo
+          </span>
         </div>
 
         <div class="trip-metric trip-metric-date">
           <span class="trip-metric-value">
-            {formatDate(trip.endDate)}
+            {formatDate(metrics.endDate)}
           </span>
-          <span class="trip-metric-label">final</span>
+
+          <span class="trip-metric-label">
+            final
+          </span>
         </div>
       </div>
     </section>
@@ -210,15 +234,21 @@ const plannedPlaces = trip.plannedButNotVisited;
         </div>
 
         <div class="trip-section-body">
-          <p class="trip-section-lead">
-            {trip.whyDestination.lead}
-          </p>
+          <div class="trip-section-lead">
+            <p>
+              Elegimos Costa Rica buscando una combinación de
+              naturaleza, carretera, fauna y variedad de paisajes.
+            </p>
+          </div>
 
           <div class="trip-bullet-list">
             {
-              trip.whyDestination.points.map((point) => (
+              trip.whyDestination.map((point) => (
                 <div class="trip-bullet-item">
-                  <span class="trip-bullet-mark" aria-hidden="true">
+                  <span
+                    class="trip-bullet-mark"
+                    aria-hidden="true"
+                  >
                     +
                   </span>
 
@@ -367,8 +397,7 @@ const plannedPlaces = trip.plannedButNotVisited;
                 </span>
 
                 <div class="trip-route-content">
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
+                  <p>{item}</p>
                 </div>
               </article>
             ))
@@ -404,7 +433,7 @@ const plannedPlaces = trip.plannedButNotVisited;
 
                 <h3>{decision.title}</h3>
 
-                <p>{decision.description}</p>
+                <p>{decision.content}</p>
               </article>
             ))
           }
@@ -433,7 +462,9 @@ const plannedPlaces = trip.plannedButNotVisited;
         </div>
 
         <div class="trip-fauna-grid">
-          <figure class="trip-fauna-photo trip-fauna-featured">
+          <figure
+            class="trip-fauna-photo trip-fauna-featured"
+          >
             <Image
               src={mono}
               alt="Mono entre la vegetación tropical"
@@ -519,7 +550,7 @@ const plannedPlaces = trip.plannedButNotVisited;
         <div class="trip-extra-grid">
           <div class="trip-extra-item">
             <span class="trip-extra-value">
-              {formatNumber(trip.flightKm)}
+              {formatNumber(metrics.flightKm)}
             </span>
 
             <span class="trip-extra-label">
@@ -529,7 +560,7 @@ const plannedPlaces = trip.plannedButNotVisited;
 
           <div class="trip-extra-item">
             <span class="trip-extra-value">
-              {formatNumber(trip.boatNm)}
+              {formatNumber(metrics.boatNm)}
             </span>
 
             <span class="trip-extra-label">
@@ -539,7 +570,7 @@ const plannedPlaces = trip.plannedButNotVisited;
 
           <div class="trip-extra-item">
             <span class="trip-extra-value">
-              {formatNumber(trip.countries)}
+              {formatNumber(metrics.countries)}
             </span>
 
             <span class="trip-extra-label">
@@ -586,13 +617,7 @@ const plannedPlaces = trip.plannedButNotVisited;
               {plannedPlaces.map((place) => (
                 <article class="trip-not-visited-item">
                   <div>
-                    <h3>{place.name}</h3>
-
-                    {place.location && (
-                      <span class="trip-not-visited-location">
-                        {place.location}
-                      </span>
-                    )}
+                    <h3>{place.title}</h3>
                   </div>
 
                   <div class="trip-not-visited-reason">
@@ -644,7 +669,9 @@ const plannedPlaces = trip.plannedButNotVisited;
 
                   <div class="trip-accommodation-price">
                     {formatNumber(accommodation.amount)}
-                    <span>{accommodation.currency}</span>
+                    <span>
+                      {accommodation.currency ?? ""}
+                    </span>
                   </div>
                 </article>
               ))}
@@ -699,7 +726,10 @@ const plannedPlaces = trip.plannedButNotVisited;
     <!-- =========================================================
          FOTO FINAL — PLAYA
     ========================================================== -->
-    <section class="trip-final-photo" aria-label="Playa de Costa Rica">
+    <section
+      class="trip-final-photo"
+      aria-label="Playa de Costa Rica"
+    >
       <div class="trip-final-photo-inner">
         <figure>
           <Image
@@ -743,7 +773,10 @@ const plannedPlaces = trip.plannedButNotVisited;
             {trip.relatedGuide.title}
           </span>
 
-          <span class="trip-guide-arrow" aria-hidden="true">
+          <span
+            class="trip-guide-arrow"
+            aria-hidden="true"
+          >
             →
           </span>
         </a>
@@ -769,10 +802,13 @@ const plannedPlaces = trip.plannedButNotVisited;
 
         <a
           class="trip-cta-button"
-          href={trip.cta.href}
+          href={trip.cta.buttonHref}
         >
-          {trip.cta.label}
-          <span aria-hidden="true">→</span>
+          {trip.cta.buttonLabel}
+
+          <span aria-hidden="true">
+            →
+          </span>
         </a>
       </div>
     </section>
@@ -861,6 +897,13 @@ const plannedPlaces = trip.plannedButNotVisited;
   .trip-back:hover {
     color: var(--color-cobre);
     transform: translateX(-3px);
+  }
+
+  .trip-back:focus-visible,
+  .trip-guide-link:focus-visible,
+  .trip-cta-button:focus-visible {
+    outline: 2px solid var(--color-cobre);
+    outline-offset: 4px;
   }
 
   .trip-back span {
@@ -1018,7 +1061,7 @@ const plannedPlaces = trip.plannedButNotVisited;
   ============================================================ */
 
   .trip-photo-break {
-    padding: 0 0 0;
+    padding: 0;
     background: #f3f0e9;
   }
 
@@ -1151,6 +1194,10 @@ const plannedPlaces = trip.plannedButNotVisited;
     font-family: var(--font-serif, Georgia, serif);
     font-size: clamp(1.25rem, 2vw, 1.65rem);
     line-height: 1.55;
+  }
+
+  .trip-section-lead p {
+    margin: 0;
   }
 
   .trip-bullet-list {
@@ -1296,7 +1343,8 @@ const plannedPlaces = trip.plannedButNotVisited;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 600ms cubic-bezier(0.2, 0.65, 0.25, 1);
+    transition:
+      transform 600ms cubic-bezier(0.2, 0.65, 0.25, 1);
   }
 
   .trip-story-photo:hover img {
@@ -1330,15 +1378,6 @@ const plannedPlaces = trip.plannedButNotVisited;
     font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.1em;
-  }
-
-  .trip-route-content h3 {
-    margin: 0 0 0.7rem;
-    color: var(--color-bosque);
-    font-family: var(--font-serif, Georgia, serif);
-    font-size: clamp(1.7rem, 2.6vw, 2.5rem);
-    font-weight: 400;
-    letter-spacing: -0.025em;
   }
 
   .trip-route-content p {
@@ -1474,7 +1513,8 @@ const plannedPlaces = trip.plannedButNotVisited;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 600ms cubic-bezier(0.2, 0.65, 0.25, 1);
+    transition:
+      transform 600ms cubic-bezier(0.2, 0.65, 0.25, 1);
   }
 
   .trip-fauna-photo:hover img {
@@ -1606,16 +1646,6 @@ const plannedPlaces = trip.plannedButNotVisited;
     font-family: var(--font-serif, Georgia, serif);
     font-size: 1.8rem;
     font-weight: 400;
-  }
-
-  .trip-not-visited-location {
-    display: block;
-    margin-top: 0.5rem;
-    color: rgba(28, 54, 42, 0.5);
-    font-family: var(--font-sans, sans-serif);
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
   }
 
   .trip-not-visited-reason p {
@@ -2015,6 +2045,17 @@ const plannedPlaces = trip.plannedButNotVisited;
       grid-template-columns: 1fr;
       gap: 3rem;
     }
+
+    .trip-accommodation-item,
+    .trip-budget-item {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .trip-accommodation-price,
+    .trip-budget-amount {
+      text-align: left;
+    }
   }
 
   /* ============================================================
@@ -2173,8 +2214,8 @@ const plannedPlaces = trip.plannedButNotVisited;
       padding: 1.7rem 0;
     }
 
-    .trip-route-content h3 {
-      font-size: 1.65rem;
+    .trip-route-content p {
+      font-size: 0.9rem;
     }
 
     .trip-decisions-grid {
@@ -2291,6 +2332,21 @@ const plannedPlaces = trip.plannedButNotVisited;
 
     .trip-route-index {
       margin-bottom: 0.2rem;
+    }
+  }
+
+  /* ============================================================
+     REDUCED MOTION
+  ============================================================ */
+
+  @media (prefers-reduced-motion: reduce) {
+    .trip-page *,
+    .trip-page *::before,
+    .trip-page *::after {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
     }
   }
 </style>
