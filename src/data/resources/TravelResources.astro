@@ -2,29 +2,24 @@
 /**
  * ============================================================
  * CRUZANDO MERIDIANOS
- * TRAVEL RESOURCES — SAFE DATA ADAPTER
+ * TRAVEL RESOURCES
  * ============================================================
  *
- * Este componente está diseñado para convivir con el sistema
- * actual de recursos sin imponerle un contrato distinto.
+ * Componente de presentación para los recursos de viaje.
  *
- * IMPORTANTE
- * ------------------------------------------------------------
- *
- * No asumimos nombres concretos de exports dentro de:
+ * Consume directamente el registro público definido en:
  *
  *   src/data/resources/index.ts
  *
- * ni propiedades adicionales que no formen parte del modelo real.
+ * No contiene conocimiento de la estructura interna del
+ * registro ni intenta autodetectar propiedades.
  *
- * El módulo se inspecciona de forma segura y los datos se
- * normalizan para presentación.
- *
- * Esto evita que una mejora visual rompa el sistema de tipos.
  * ============================================================
  */
 
- import * as resourceModule from "../../data/resources";
+ import {
+  getPublicTravelResources,
+} from "./index";
 
 
 /* ============================================================
@@ -41,6 +36,7 @@ interface Props {
   variant?: "default" | "compact" | "featured";
 }
 
+
 const {
   destinationSlug,
   category,
@@ -55,672 +51,102 @@ const {
 
 
 /* ============================================================
-   GENERIC SAFE TYPES
-   ============================================================ */
-
-type ResourceRecord =
-  Record<string, unknown>;
-
-type ResourceViewModel = {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  categoryLabel: string;
-  url: string | null;
-  buttonLabel: string;
-  featured: boolean;
-  logo: string | null;
-  tagline: string | null;
-  features: string[];
-  typeLabel: string;
-  disclosure: string | null;
-  destinations: string[];
-};
-
-
-/* ============================================================
-   HELPERS — SAFE DATA ACCESS
-   ============================================================ */
-
-const isRecord = (
-  value: unknown
-): value is ResourceRecord => {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    !Array.isArray(value)
-  );
-};
-
-
-const toStringValue = (
-  value: unknown
-): string | null => {
-  if (
-    typeof value === "string" &&
-    value.trim().length > 0
-  ) {
-    return value.trim();
-  }
-
-  return null;
-};
-
-
-const toBooleanValue = (
-  value: unknown
-): boolean => {
-  return value === true;
-};
-
-
-const toStringArray = (
-  value: unknown
-): string[] => {
-
-  if (!Array.isArray(value)) {
-    return [];
-  }
-
-  return value
-    .filter(
-      (
-        item
-      ): item is string =>
-        typeof item === "string"
-    )
-    .map(
-      (item) =>
-        item.trim()
-    )
-    .filter(
-      (item) =>
-        item.length > 0
-    );
-};
-
-
-const firstString = (
-  record: ResourceRecord,
-  keys: string[]
-): string | null => {
-
-  for (const key of keys) {
-
-    const value =
-      toStringValue(
-        record[key]
-      );
-
-    if (value) {
-      return value;
-    }
-  }
-
-  return null;
-};
-
-
-const firstBoolean = (
-  record: ResourceRecord,
-  keys: string[]
-): boolean => {
-
-  for (const key of keys) {
-
-    if (
-      typeof record[key] ===
-      "boolean"
-    ) {
-      return Boolean(
-        record[key]
-      );
-    }
-  }
-
-  return false;
-};
-
-
-const firstArray = (
-  record: ResourceRecord,
-  keys: string[]
-): string[] => {
-
-  for (const key of keys) {
-
-    const value =
-      toStringArray(
-        record[key]
-      );
-
-    if (value.length > 0) {
-      return value;
-    }
-  }
-
-  return [];
-};
-
-
-/* ============================================================
-   RESOURCE TYPE
-   ============================================================ */
-
-const getResourceTypeLabel = (
-  value: unknown
-): string => {
-
-  const type =
-    toStringValue(value);
-
-  switch (type) {
-
-    case "official":
-      return "Fuente oficial";
-
-    case "primary":
-      return "Fuente primaria";
-
-    case "secondary":
-      return "Fuente secundaria";
-
-    case "affiliate":
-      return "Afiliación";
-
-    case "referral":
-      return "Referido";
-
-    case "tool":
-      return "Herramienta";
-
-    case "service":
-      return "Servicio";
-
-    case "editorial":
-      return "Editorial";
-
-    default:
-      return "Recurso";
-  }
-};
-
-
-/* ============================================================
-   CATEGORY LABEL
+   CATEGORY LABELS
    ============================================================ */
 
 const categoryLabels:
   Record<string, string> = {
 
-  connectivity:
-    "Conectividad",
-
-  esim:
-    "eSIM",
-
   money:
     "Dinero",
+
+  connectivity:
+    "Conectividad",
 
   insurance:
     "Seguro",
 
-  transport:
-    "Transporte",
-
-  accommodation:
-    "Alojamiento",
-
-  flights:
-    "Vuelos",
-
   maps:
     "Mapas",
 
-  tools:
-    "Herramientas",
+  bookings:
+    "Reservas",
 
-  official:
-    "Fuentes oficiales",
-
-  health:
-    "Salud",
-
-  safety:
-    "Seguridad",
+  gear:
+    "Equipamiento",
 
   planning:
     "Planificación",
+
+  communication:
+    "Comunicación",
 
   other:
     "Otros",
 };
 
 
-const humanizeCategory = (
-  value: string
-): string => {
+const humanizeCategory =
+  (
+    value: string
+  ): string => {
 
-  if (
-    categoryLabels[value]
-  ) {
-    return categoryLabels[
-      value
-    ];
-  }
-
-  return value
-    .replace(
-      /[-_]+/g,
-      " "
-    )
-    .replace(
-      /\b\w/g,
-      (letter) =>
-        letter.toUpperCase()
-    );
-};
-
-
-/* ============================================================
-   FIND RESOURCE COLLECTION
-   ============================================================ */
-
-const moduleEntries =
-  Object.entries(
-    resourceModule
-  );
-
-
-const findResourceCollection =
-  (): unknown[] => {
-
-    const preferredKeys = [
-      "resources",
-      "travelResources",
-      "allResources",
-      "resourceList",
-      "travelResourceList",
-    ];
-
-    for (
-      const key of preferredKeys
+    if (
+      categoryLabels[value]
     ) {
-
-      const value =
-        resourceModule[
-          key as keyof typeof resourceModule
-        ];
-
-      if (
-        Array.isArray(value)
-      ) {
-        return value;
-      }
+      return categoryLabels[value];
     }
 
-    for (
-      const [
-        key,
-        value,
-      ] of moduleEntries
-    ) {
-
-      if (
-        key
-          .toLowerCase()
-          .includes("resource") &&
-        Array.isArray(value)
-      ) {
-        return value;
-      }
-    }
-
-    return [];
+    return value
+      .replace(
+        /[-_]+/g,
+        " "
+      )
+      .replace(
+        /\b\w/g,
+        (letter) =>
+          letter.toUpperCase()
+      );
   };
 
 
 /* ============================================================
-   FIND CATEGORY COLLECTION
+   RESOURCE TYPE
    ============================================================ */
 
-const findCategoryCollection =
-  (): unknown[] => {
+const getRelationshipLabel =
+  (
+    relationship?: string
+  ): string => {
 
-    const preferredKeys = [
-      "resourceCategories",
-      "categories",
-      "allResourceCategories",
-      "resourceCategoryList",
-    ];
-
-    for (
-      const key of preferredKeys
+    switch (
+      relationship
     ) {
 
-      const value =
-        resourceModule[
-          key as keyof typeof resourceModule
-        ];
+      case "affiliate":
+        return "Afiliación";
 
-      if (
-        Array.isArray(value)
-      ) {
-        return value;
-      }
+      case "referral":
+        return "Referido";
+
+      case "sponsor":
+        return "Patrocinado";
+
+      case "editorial":
+        return "Recomendación editorial";
+
+      default:
+        return "Recurso";
     }
-
-    for (
-      const [
-        key,
-        value,
-      ] of moduleEntries
-    ) {
-
-      const normalized =
-        key.toLowerCase();
-
-      if (
-        normalized.includes(
-          "categor"
-        ) &&
-        Array.isArray(value)
-      ) {
-        return value;
-      }
-    }
-
-    return [];
   };
 
 
 /* ============================================================
-   RAW DATA
+   RESOURCE DATA
    ============================================================ */
 
-const rawResources =
-  findResourceCollection();
-
-const rawCategories =
-  findCategoryCollection();
-
-
-/* ============================================================
-   CATEGORY MAP
-   ============================================================ */
-
-const categoryMap =
-  new Map<
-    string,
-    string
-  >();
-
-
-for (
-  const item of rawCategories
-) {
-
-  if (
-    !isRecord(item)
-  ) {
-    continue;
-  }
-
-  const id =
-    firstString(
-      item,
-      [
-        "id",
-        "slug",
-        "code",
-        "value",
-      ]
-    );
-
-  if (!id) {
-    continue;
-  }
-
-  const label =
-    firstString(
-      item,
-      [
-        "label",
-        "name",
-        "title",
-      ]
-    ) ??
-    humanizeCategory(
-      id
-    );
-
-  categoryMap.set(
-    id,
-    label
-  );
-}
-
-
-/* ============================================================
-   NORMALIZE RESOURCE
-   ============================================================ */
-
-const normalizeResource = (
-  value: unknown,
-  index: number
-): ResourceViewModel | null => {
-
-  if (
-    !isRecord(value)
-  ) {
-    return null;
-  }
-
-  const id =
-    firstString(
-      value,
-      [
-        "id",
-        "slug",
-        "code",
-      ]
-    ) ??
-    `resource-${index + 1}`;
-
-
-  const name =
-    firstString(
-      value,
-      [
-        "name",
-        "title",
-        "label",
-        "provider",
-      ]
-    ) ??
-    "Recurso";
-
-
-  const description =
-    firstString(
-      value,
-      [
-        "description",
-        "summary",
-        "content",
-        "text",
-      ]
-    ) ??
-    "";
-
-
-  const categoryValue =
-    firstString(
-      value,
-      [
-        "category",
-        "categoryId",
-        "categorySlug",
-        "group",
-      ]
-    ) ??
-    "other";
-
-
-  const categoryLabel =
-    categoryMap.get(
-      categoryValue
-    ) ??
-    humanizeCategory(
-      categoryValue
-    );
-
-
-  const url =
-    firstString(
-      value,
-      [
-        "url",
-        "href",
-        "link",
-      ]
-    );
-
-
-  const buttonLabel =
-    firstString(
-      value,
-      [
-        "buttonLabel",
-        "ctaLabel",
-        "linkLabel",
-        "actionLabel",
-      ]
-    ) ??
-    "Ver recurso";
-
-
-  const featured =
-    firstBoolean(
-      value,
-      [
-        "featured",
-        "isFeatured",
-        "highlighted",
-      ]
-    );
-
-
-  const logo =
-    firstString(
-      value,
-      [
-        "logo",
-        "logoUrl",
-        "image",
-        "imageUrl",
-        "icon",
-      ]
-    );
-
-
-  const tagline =
-    firstString(
-      value,
-      [
-        "tagline",
-        "subtitle",
-        "shortDescription",
-      ]
-    );
-
-
-  const features =
-    firstArray(
-      value,
-      [
-        "features",
-        "benefits",
-        "highlights",
-      ]
-    );
-
-
-  const disclosure =
-    firstString(
-      value,
-      [
-        "disclosure",
-        "affiliateDisclosure",
-        "legalDisclosure",
-      ]
-    );
-
-
-  const destinations =
-    firstArray(
-      value,
-      [
-        "destinations",
-        "destinationSlugs",
-      ]
-    );
-
-
-  const active =
-    !(
-      "active" in value
-    ) ||
-    toBooleanValue(
-      value.active
-    );
-
-
-  if (!active) {
-    return null;
-  }
-
-
-  return {
-    id,
-    name,
-    description,
-    category:
-      categoryValue,
-    categoryLabel,
-    url,
-    buttonLabel,
-    featured,
-    logo,
-    tagline,
-    features,
-    typeLabel:
-      getResourceTypeLabel(
-        value.type ??
-        value.resourceType
-      ),
-    disclosure,
-    destinations,
-  };
-};
-
-
-/* ============================================================
-   NORMALIZED RESOURCES
-   ============================================================ */
-
-const normalizedResources =
-  rawResources
-    .map(
-      normalizeResource
-    )
-    .filter(
-      (
-        item
-      ): item is ResourceViewModel =>
-        item !== null
-    );
+const allResources =
+  getPublicTravelResources();
 
 
 /* ============================================================
@@ -728,7 +154,7 @@ const normalizedResources =
    ============================================================ */
 
 const destinationResources =
-  normalizedResources.filter(
+  allResources.filter(
     (
       resource
     ) => {
@@ -740,15 +166,17 @@ const destinationResources =
       }
 
       if (
-        resource.destinations.length ===
-        0
+        !resource.relevantDestinations ||
+        resource.relevantDestinations.length === 0
       ) {
         return true;
       }
 
-      return resource.destinations.includes(
-        destinationSlug
-      );
+      return resource
+        .relevantDestinations
+        .includes(
+          destinationSlug
+        );
     }
   );
 
@@ -791,22 +219,26 @@ const sortedResources =
     ) => {
 
       if (
-        a.featured &&
-        !b.featured
+        a.recommended &&
+        !b.recommended
       ) {
         return -1;
       }
 
       if (
-        !a.featured &&
-        b.featured
+        !a.recommended &&
+        b.recommended
       ) {
         return 1;
       }
 
-      return a.name.localeCompare(
-        b.name,
-        "es"
+      return (
+        a.priority ??
+        999
+      ) -
+      (
+        b.priority ??
+        999
       );
     }
   );
@@ -834,7 +266,7 @@ const resources =
 const usedCategories =
   Array.from(
     new Set(
-      resources.map(
+      destinationResources.map(
         (
           resource
         ) =>
@@ -849,14 +281,13 @@ const filterCategories =
     (
       id
     ) => ({
+
       id,
+
       label:
-        categoryMap.get(
-          id
-        ) ??
-        humanizeCategory(
-          id
-        ),
+        categoryLabels[id] ??
+        humanizeCategory(id),
+
     })
   );
 
@@ -868,6 +299,7 @@ const filterCategories =
 const itemListSchema =
   resources.length > 0
     ? {
+
         "@context":
           "https://schema.org",
 
@@ -881,10 +313,11 @@ const itemListSchema =
               index
             ) => {
 
-              const item: Record<
-                string,
-                unknown
-              > = {
+              const item:
+                Record<
+                  string,
+                  unknown
+                > = {
 
                 "@type":
                   "ListItem",
@@ -893,21 +326,60 @@ const itemListSchema =
                   index + 1,
 
                 name:
-                  resource.name,
+                  resource.title,
+
               };
 
               if (
                 resource.url
               ) {
+
                 item.url =
                   resource.url;
+
               }
 
               return item;
             }
           ),
+
       }
     : null;
+
+
+/* ============================================================
+   HELPERS FOR TEMPLATE
+   ============================================================ */
+
+const getResourceHref =
+  (
+    resource: (typeof resources)[number]
+  ): string =>
+    resource.trackingUrl ??
+    resource.url;
+
+
+const getButtonLabel =
+  (
+    resource: (typeof resources)[number]
+  ): string => {
+
+    if (
+      resource.relationship ===
+      "referral"
+    ) {
+      return "Ver recurso";
+    }
+
+    if (
+      resource.relationship ===
+      "affiliate"
+    ) {
+      return "Ver recurso";
+    }
+
+    return "Visitar recurso";
+  };
 ---
 
 
@@ -985,8 +457,8 @@ const itemListSchema =
             Algunos enlaces pueden corresponder
             a servicios con los que tenemos una
             relación comercial, de afiliación o
-            de referido. Cuando sea relevante,
-            lo indicaremos claramente.
+            de referido. Cuando exista una relación
+            comercial, la indicamos claramente.
           </p>
 
         </div>
@@ -1066,7 +538,7 @@ const itemListSchema =
 
                     {
                       "travel-resource-card--featured":
-                        resource.featured,
+                        resource.recommended,
 
                       "travel-resource-card--hero":
                         variant ===
@@ -1088,13 +560,18 @@ const itemListSchema =
                       class="travel-resource-card__category"
                     >
                       {
-                        resource.categoryLabel
+                        categoryLabels[
+                          resource.category
+                        ] ??
+                        humanizeCategory(
+                          resource.category
+                        )
                       }
                     </span>
 
 
                     {
-                      resource.featured && (
+                      resource.recommended && (
                         <span
                           class="travel-resource-card__featured"
                         >
@@ -1106,98 +583,72 @@ const itemListSchema =
                   </div>
 
 
+                  <p
+                    class="travel-resource-card__type"
+                  >
+                    {
+                      getRelationshipLabel(
+                        resource.relationship
+                      )
+                    }
+                  </p>
+
+
+                  <h3>
+                    {resource.title}
+                  </h3>
+
+
+                  <p
+                    class="travel-resource-card__provider"
+                  >
+                    {resource.provider}
+                  </p>
+
+
+                  <p
+                    class="travel-resource-card__description"
+                  >
+                    {
+                      resource.shortDescription
+                    }
+                  </p>
+
+
                   {
-                    resource.logo && (
+                    resource.benefit && (
                       <div
-                        class="travel-resource-card__logo"
+                        class="travel-resource-card__benefit"
                       >
 
-                        <img
-                          src={
-                            resource.logo
-                          }
-                          alt=""
-                          loading="lazy"
-                          decoding="async"
-                        />
+                        <span>
+                          Por qué lo utilizamos
+                        </span>
+
+                        <p>
+                          {resource.benefit}
+                        </p>
 
                       </div>
                     )
                   }
 
 
-                  <p
-                    class="travel-resource-card__type"
-                  >
-                    {
-                      resource.typeLabel
-                    }
-                  </p>
-
-
-                  <h3>
-                    {resource.name}
-                  </h3>
-
-
                   {
-                    resource.tagline && (
-                      <p
-                        class="travel-resource-card__tagline"
-                      >
-                        {
-                          resource.tagline
-                        }
-                      </p>
-                    )
-                  }
-
-
-                  {
-                    resource.description && (
-                      <p
-                        class="travel-resource-card__description"
-                      >
-                        {
-                          resource.description
-                        }
-                      </p>
-                    )
-                  }
-
-
-                  {
-                    resource.features.length >
-                      0 && (
-
-                      <ul
-                        class="travel-resource-card__features"
+                    resource.limitation && (
+                      <div
+                        class="travel-resource-card__limitation"
                       >
 
-                        {
-                          resource.features.map(
-                            (
-                              feature
-                            ) => (
+                        <span>
+                          A tener en cuenta
+                        </span>
 
-                              <li>
-                                <span
-                                  aria-hidden="true"
-                                >
-                                  ✓
-                                </span>
+                        <p>
+                          {resource.limitation}
+                        </p>
 
-                                {
-                                  feature
-                                }
-                              </li>
-
-                            )
-                          )
-                        }
-
-                      </ul>
-
+                      </div>
                     )
                   }
 
@@ -1206,43 +657,30 @@ const itemListSchema =
                     class="travel-resource-card__footer"
                   >
 
-                    {
-                      resource.url ? (
+                    <a
+                      href={
+                        getResourceHref(
+                          resource
+                        )
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="travel-resource-card__link"
+                    >
 
-                        <a
-                          href={
-                            resource.url
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="travel-resource-card__link"
-                        >
+                      {
+                        getButtonLabel(
+                          resource
+                        )
+                      }
 
-                          {
-                            resource.buttonLabel
-                          }
+                      <span
+                        aria-hidden="true"
+                      >
+                        ↗
+                      </span>
 
-                          <span
-                            aria-hidden="true"
-                          >
-                            ↗
-                          </span>
-
-                        </a>
-
-                      ) : (
-
-                        <span
-                          class="
-                            travel-resource-card__link
-                            travel-resource-card__link--disabled
-                          "
-                        >
-                          Próximamente
-                        </span>
-
-                      )
-                    }
+                    </a>
 
                   </div>
 
@@ -1258,6 +696,15 @@ const itemListSchema =
                       </p>
                     )
                   }
+
+
+                  <p
+                    class="travel-resource-card__reviewed"
+                  >
+                    Revisado:
+                    {" "}
+                    {resource.reviewedAt}
+                  </p>
 
                 </article>
 
@@ -1338,119 +785,122 @@ const itemListSchema =
 <script is:inline>
   (() => {
 
-    const root =
-      document.querySelector(
-        ".travel-resources"
-      );
-
-    if (!root) {
-      return;
-    }
-
-
-    const filters =
+    const roots =
       Array.from(
-        root.querySelectorAll(
-          "[data-resource-filter]"
+        document.querySelectorAll(
+          ".travel-resources"
         )
       );
 
+    roots.forEach(
+      (root) => {
 
-    const cards =
-      Array.from(
-        root.querySelectorAll(
-          "[data-resource-card]"
-        )
-      );
-
-
-    const empty =
-      root.querySelector(
-        "[data-resource-empty]"
-      );
+        const filters =
+          Array.from(
+            root.querySelectorAll(
+              "[data-resource-filter]"
+            )
+          );
 
 
-    if (
-      filters.length === 0 ||
-      cards.length === 0
-    ) {
-      return;
-    }
+        const cards =
+          Array.from(
+            root.querySelectorAll(
+              "[data-resource-card]"
+            )
+          );
 
 
-    filters.forEach(
-      (filter) => {
-
-        filter.addEventListener(
-          "click",
-          () => {
-
-            const category =
-              filter.getAttribute(
-                "data-resource-filter"
-              );
+        const empty =
+          root.querySelector(
+            "[data-resource-empty]"
+          );
 
 
-            filters.forEach(
-              (item) => {
-
-                const active =
-                  item === filter;
-
-                item.classList.toggle(
-                  "is-active",
-                  active
-                );
-
-                item.setAttribute(
-                  "aria-pressed",
-                  String(active)
-                );
-
-              }
-            );
+        if (
+          filters.length === 0 ||
+          cards.length === 0
+        ) {
+          return;
+        }
 
 
-            let visibleCount =
-              0;
+        filters.forEach(
+          (filter) => {
 
+            filter.addEventListener(
+              "click",
+              () => {
 
-            cards.forEach(
-              (card) => {
-
-                const cardCategory =
-                  card.getAttribute(
-                    "data-resource-category"
+                const category =
+                  filter.getAttribute(
+                    "data-resource-filter"
                   );
 
 
-                const visible =
-                  category ===
-                    "all" ||
-                  cardCategory ===
-                    category;
+                filters.forEach(
+                  (item) => {
+
+                    const active =
+                      item === filter;
+
+                    item.classList.toggle(
+                      "is-active",
+                      active
+                    );
+
+                    item.setAttribute(
+                      "aria-pressed",
+                      String(active)
+                    );
+
+                  }
+                );
 
 
-                card.hidden =
-                  !visible;
+                let visibleCount =
+                  0;
 
 
-                if (
-                  visible
-                ) {
-                  visibleCount += 1;
+                cards.forEach(
+                  (card) => {
+
+                    const cardCategory =
+                      card.getAttribute(
+                        "data-resource-category"
+                      );
+
+
+                    const visible =
+                      category ===
+                        "all" ||
+                      cardCategory ===
+                        category;
+
+
+                    card.hidden =
+                      !visible;
+
+
+                    if (
+                      visible
+                    ) {
+                      visibleCount += 1;
+                    }
+
+                  }
+                );
+
+
+                if (empty) {
+
+                  empty.hidden =
+                    visibleCount > 0;
+
                 }
 
               }
             );
-
-
-            if (empty) {
-
-              empty.hidden =
-                visibleCount > 0;
-
-            }
 
           }
         );
@@ -1851,48 +1301,6 @@ const itemListSchema =
 }
 
 
-.travel-resource-card__logo {
-  display:
-    flex;
-
-  align-items:
-    center;
-
-  justify-content:
-    center;
-
-  width:
-    52px;
-
-  height:
-    52px;
-
-  margin-bottom:
-    1.2rem;
-
-  overflow:
-    hidden;
-
-  border-radius:
-    12px;
-
-  background:
-    #fff;
-}
-
-
-.travel-resource-card__logo img {
-  width:
-    100%;
-
-  height:
-    100%;
-
-  object-fit:
-    contain;
-}
-
-
 .travel-resource-card__type {
   margin:
     0 0 .7rem;
@@ -1910,7 +1318,7 @@ const itemListSchema =
     var(--font-serif);
 
   font-size:
-    2rem;
+    2.3rem;
 
   font-weight:
     400;
@@ -1936,27 +1344,24 @@ const itemListSchema =
 }
 
 
-.travel-resource-card__tagline {
+.travel-resource-card__provider {
   margin:
-    .8rem 0 0;
-
-  font-family:
-    var(--font-serif);
-
-  font-size:
-    1.05rem;
-
-  line-height:
-    1.45;
+    .65rem 0 0;
 
   color:
-    var(--resources-text);
+    #888;
+
+  font-size:
+    .78rem;
+
+  letter-spacing:
+    .04em;
 }
 
 
 .travel-resource-card__description {
   margin:
-    1rem 0 0;
+    1.2rem 0 0;
 
   color:
     var(--resources-muted);
@@ -1967,30 +1372,52 @@ const itemListSchema =
 
 
 /* ============================================================
-   FEATURES
+   BENEFIT / LIMITATION
    ============================================================ */
 
-.travel-resource-card__features {
-  margin:
-    1.4rem 0 0;
+.travel-resource-card__benefit,
+.travel-resource-card__limitation {
+  margin-top:
+    1.4rem;
 
-  padding:
-    0;
+  padding-top:
+    1rem;
 
-  list-style:
-    none;
+  border-top:
+    1px solid
+    var(--resources-border);
 }
 
 
-.travel-resource-card__features li {
+.travel-resource-card__benefit > span,
+.travel-resource-card__limitation > span {
   display:
-    flex;
+    block;
 
-  align-items:
-    flex-start;
+  margin-bottom:
+    .4rem;
 
-  gap:
-    .55rem;
+  color:
+    var(--resources-accent);
+
+  font-size:
+    .65rem;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    .1em;
+
+  text-transform:
+    uppercase;
+}
+
+
+.travel-resource-card__benefit p,
+.travel-resource-card__limitation p {
+  margin:
+    0;
 
   color:
     #666;
@@ -1999,28 +1426,7 @@ const itemListSchema =
     .86rem;
 
   line-height:
-    1.55;
-}
-
-
-.travel-resource-card__features li + li {
-  margin-top:
-    .5rem;
-}
-
-
-.travel-resource-card__features li span {
-  flex:
-    0 0 auto;
-
-  margin-top:
-    .1rem;
-
-  color:
-    var(--resources-accent);
-
-  font-weight:
-    700;
+    1.6;
 }
 
 
@@ -2086,14 +1492,8 @@ const itemListSchema =
 }
 
 
-.travel-resource-card__link--disabled {
-  color:
-    #999;
-}
-
-
 /* ============================================================
-   DISCLOSURE
+   DISCLOSURE / REVIEW
    ============================================================ */
 
 .travel-resource-card__disclosure {
@@ -2108,6 +1508,21 @@ const itemListSchema =
 
   line-height:
     1.55;
+}
+
+
+.travel-resource-card__reviewed {
+  margin:
+    .7rem 0 0;
+
+  color:
+    #aaa;
+
+  font-size:
+    .62rem;
+
+  letter-spacing:
+    .02em;
 }
 
 

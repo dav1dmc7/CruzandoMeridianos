@@ -33,165 +33,170 @@
 import type {
     TravelResource,
   } from "./types";
-  
-  
+
+
   /* ============================================================
      CONSTANTS
      ============================================================ */
-  
+
   const LAST_REVIEWED =
     "2026-08-27";
-  
-  
+
+
   /* ============================================================
      RESOURCE — REVOLUT
      ============================================================ */
-  
+
   const revolutTravelMoney:
     TravelResource = {
+
     id:
       "revolut-travel-money",
-  
+
     category:
       "money",
-  
+
     title:
       "Revolut",
-  
+
     shortDescription:
       "Una opción práctica para gestionar dinero y pagos cuando viajas al extranjero.",
-  
+
     longDescription:
       "Revolut puede resultar útil durante un viaje para gestionar pagos y disponer de una alternativa a la banca tradicional. Las condiciones, funcionalidades, límites, tipos de cambio y promociones pueden variar según el país y el plan contratado, por lo que conviene comprobar siempre las condiciones vigentes directamente con Revolut.",
-  
+
     url:
       "https://www.revolut.com/",
-  
+
     trackingUrl:
       "https://revolut.com/referral/?referral-code=david3txj!SEP1-26-AR-RFAC-CRY&geo-redirect",
-  
+
     provider:
       "Revolut",
-  
+
     status:
       "active",
-  
+
     recommended:
       true,
-  
+
     referral:
       true,
-  
+
     relationship:
       "referral",
-  
+
     disclosure:
       "Este enlace es de referido. Cruzando Meridianos puede recibir una recompensa si cumples las condiciones aplicables del programa de referidos de Revolut. Las condiciones pueden cambiar.",
-  
+
     reviewedAt:
       LAST_REVIEWED,
-  
+
     benefit:
       "Puede simplificar la gestión de pagos y dinero durante un viaje.",
-  
+
     limitation:
       "Las condiciones, comisiones, límites y promociones dependen del producto, país y condiciones vigentes.",
-  
+
     priority:
       10,
-  
+
     showOnResourcesPage:
       true,
-  
+
     showInGuides:
       true,
   };
-  
-  
+
+
   /* ============================================================
      RESOURCE — BLINKeSIM
      ============================================================ */
-  
+
   const blinkEsim:
     TravelResource = {
+
     id:
       "blinkesim",
-  
+
     category:
       "connectivity",
-  
+
     title:
       "BLINKeSIM",
-  
+
     shortDescription:
       "eSIM para disponer de conexión móvil mientras viajas sin depender necesariamente de una SIM física.",
-  
+
     longDescription:
       "Una eSIM puede ser una solución práctica para mantener conexión móvil durante un viaje y evitar determinados procesos asociados a las tarjetas SIM físicas. BLINKeSIM dispone además de un programa de referidos. Las condiciones exactas de sus promociones pueden cambiar, por lo que no las presentamos como una ventaja permanente.",
-  
+
     url:
       "https://blinkesim.com/",
-  
+
     trackingUrl:
       "https://blinkesim.com/es/my-account?pkey=M5HI4PQ8GE",
-  
+
     provider:
       "BLINKeSIM",
-  
+
     status:
       "active",
-  
+
     recommended:
       true,
-  
+
     referral:
       true,
-  
+
     relationship:
       "referral",
-  
+
     disclosure:
       "Este enlace es de referido. La disponibilidad y las condiciones del beneficio para quien se registre dependen del programa vigente de BLINKeSIM. Comprueba las condiciones antes de contratar.",
-  
+
     reviewedAt:
       LAST_REVIEWED,
-  
+
     benefit:
       "Permite utilizar una eSIM para disponer de conectividad durante el viaje.",
-  
+
     limitation:
       "La cobertura, precio, duración, compatibilidad y promociones dependen del destino, dispositivo y condiciones vigentes.",
-  
+
     relevantDestinations: [
       "costa-rica",
     ],
-  
+
     priority:
       20,
-  
+
     showOnResourcesPage:
       true,
-  
+
     showInGuides:
       true,
   };
-  
-  
+
+
   /* ============================================================
      RESOURCE REGISTRY
      ============================================================ */
-  
+
   const resources:
     TravelResource[] = [
-      revolutTravelMoney,
-      blinkEsim,
-    ];
-  
-  
+
+    revolutTravelMoney,
+
+    blinkEsim,
+
+  ];
+
+
   /* ============================================================
      PUBLIC API
      ============================================================ */
-  
+
   /**
    * Devuelve todos los recursos registrados.
    */
@@ -208,8 +213,8 @@ import type {
             (a.priority ?? 999) -
             (b.priority ?? 999)
         );
-  
-  
+
+
   /**
    * Devuelve únicamente los recursos que deben aparecer
    * en la página pública de recursos.
@@ -222,8 +227,8 @@ import type {
             resource.showOnResourcesPage !==
             false
         );
-  
-  
+
+
   /**
    * Devuelve los recursos que pueden mostrarse
    * dentro de las guías.
@@ -240,21 +245,20 @@ import type {
         )
         .filter(
           (resource) => {
+
             if (
               !destinationSlug
             ) {
               return true;
             }
-  
+
             if (
-              !resource
-                .relevantDestinations ||
-              resource.relevantDestinations
-                .length === 0
+              !resource.relevantDestinations ||
+              resource.relevantDestinations.length === 0
             ) {
               return true;
             }
-  
+
             return resource
               .relevantDestinations
               .includes(
@@ -262,8 +266,8 @@ import type {
               );
           }
         );
-  
-  
+
+
   /**
    * Busca un recurso por su ID.
    */
@@ -275,8 +279,8 @@ import type {
         (resource) =>
           resource.id === id
       );
-  
-  
+
+
   /**
    * Comprueba si existe un recurso.
    */
