@@ -71,7 +71,10 @@ import "../styles/global.css";
 
     <meta name="description" content={description} />
 
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta
+      name="robots"
+      content={noindex ? "noindex, nofollow" : "index, follow"}
+    />
 
     <meta name="theme-color" content="#FBF9F5" />
 
@@ -81,6 +84,7 @@ import "../styles/global.css";
     <!-- Open Graph -->
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content="Cruzando Meridianos" />
+    <meta property="og:locale" content="es_ES" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
