@@ -4,170 +4,130 @@ import avestruces from "../../assets/images/avestruces.jpg";
 ---
 
 <section class="travel-story">
-
   <div class="story-image">
     <Image
       src={avestruces}
-      alt="Avestruces en libertad durante un viaje"
+      alt="Avestruces durante un viaje por carretera"
+      widths={[700, 1000, 1400]}
+      sizes="(max-width: 768px) 100vw, 55vw"
+      loading="lazy"
+      decoding="async"
     />
   </div>
 
   <div class="story-content">
-
-    <p class="eyebrow">
-      LA EXPERIENCIA
-    </p>
+    <p class="eyebrow">LA EXPERIENCIA</p>
 
     <h2>
-      Hay viajes que empiezan mucho antes de llegar.
+      Un buen viaje no se decide solo mirando un mapa.
     </h2>
 
     <p class="story-text">
-      Una carretera cualquiera. Un desvío que merece la pena.
-      Un lugar que no aparecía en la primera búsqueda.
+      Hay lugares que parecen imprescindibles hasta que entiendes cómo encajan en tu viaje.
+      Y hay otros que no salen en la primera búsqueda y terminan siendo de lo mejor del camino.
     </p>
 
     <p class="story-text">
-      Ahí es donde empieza nuestro trabajo.
+      Por eso no nos limitamos a reunir sitios. Miramos distancias, tiempos, temporada,
+      ritmo y contexto hasta encontrar lo que de verdad tiene sentido.
     </p>
 
     <p class="story-highlight">
-      Viajar con criterio también significa saber cuándo
-      salirse del camino.
+      El objetivo no es hacer más cosas. Es hacer mejores elecciones.
     </p>
-
   </div>
-
 </section>
 
 <style>
-
-.travel-story {
-
-  max-width: 1200px;
-  width: 100%;
-
-  margin: 8rem auto;
-
-  padding: 0 2rem;
-
-  display: grid;
-
-  grid-template-columns: 1.15fr 0.85fr;
-
-  gap: 5rem;
-
-  align-items: center;
-
-}
-
-.story-image {
-
-  width: 100%;
-
-}
-
-.story-image img {
-
-  width: 100%;
-
-  height: 620px;
-
-  object-fit: cover;
-
-  display: block;
-
-  border-radius: 24px;
-
-}
-
-.story-content {
-
-  max-width: 480px;
-
-}
-
-.eyebrow {
-
-  margin: 0 0 1.5rem;
-
-  letter-spacing: 3px;
-
-  text-transform: uppercase;
-
-  font-size: .8rem;
-
-  color: var(--color-cobre);
-
-}
-
-h2 {
-
-  margin: 0;
-
-  font-size: 3.2rem;
-
-  line-height: 1.1;
-
-}
-
-.story-text {
-
-  margin-top: 2rem;
-
-  font-size: 1.1rem;
-
-  line-height: 1.8;
-
-  color: #555;
-
-}
-
-.story-highlight {
-
-  margin-top: 3rem;
-
-  padding-left: 1.5rem;
-
-  border-left: 2px solid var(--color-cobre);
-
-  font-size: 1.15rem;
-
-  line-height: 1.7;
-
-  color: var(--color-bosque);
-
-  font-weight: 600;
-
-}
-
-
-/* Móvil */
-
-@media (max-width: 768px) {
-
   .travel-story {
+    max-width: 1320px;
+    width: 100%;
+    margin: clamp(6rem, 11vw, 11rem) auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+    gap: clamp(3rem, 7vw, 7rem);
+    align-items: center;
+  }
 
-    margin: 5rem auto;
-
-    grid-template-columns: 1fr;
-
-    gap: 3rem;
-
+  .story-image {
+    width: 100%;
   }
 
   .story-image img {
+    width: 100%;
+    aspect-ratio: 1 / 1.05;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border-radius: 2rem 2rem 2rem 7rem;
+  }
 
-    height: 450px;
+  .story-content {
+    max-width: 560px;
+  }
 
+  .eyebrow {
+    margin: 0 0 1.5rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-cobre);
   }
 
   h2 {
-
-    font-size: 2.5rem;
-
+    margin: 0;
+    max-width: 11ch;
+    font-size: clamp(2.8rem, 4.5vw, 4.6rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
   }
 
-}
+  .story-text {
+    margin-top: 1.8rem;
+    max-width: 560px;
+    font-size: 1.08rem;
+    line-height: 1.8;
+    color: var(--color-texto-suave, #555);
+  }
 
+  .story-highlight {
+    margin: 2.5rem 0 0;
+    padding-left: 1.25rem;
+    border-left: 2px solid var(--color-cobre);
+    font-size: 1.12rem;
+    line-height: 1.65;
+    color: var(--color-bosque);
+    font-weight: 600;
+  }
+
+  @media (max-width: 900px) {
+    .travel-story {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    .story-content {
+      max-width: 680px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .travel-story {
+      margin: 5rem auto;
+      padding: 0 1.25rem;
+    }
+
+    .story-image img {
+      aspect-ratio: 1 / 1.08;
+      border-radius: 1.5rem 1.5rem 1.5rem 4rem;
+    }
+
+    h2 {
+      max-width: 12ch;
+      font-size: clamp(2.7rem, 11vw, 4rem);
+    }
+  }
 </style>
