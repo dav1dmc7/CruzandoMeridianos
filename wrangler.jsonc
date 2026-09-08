@@ -1,8 +1,16 @@
 {
-  "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "cruzandomeridianos",
-  "compatibility_date": "2026-08-08",
-  "assets": {
-    "directory": "./dist"
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "cruzandomeridianos",
+	"compatibility_date": "2026-08-08",
+	"assets": {
+	  "directory": "./dist"
+	},
+	"d1_databases": [
+	  {
+		"binding": "cruzandomeridianos_leads",
+		"database_name": "cruzandomeridianos-leads",
+		"database_id": "92e9d032-4a04-4161-81fc-cfce9094dc58",
+		"migrations_dir": "./migrations"
+	  }
+	]
   }
-}

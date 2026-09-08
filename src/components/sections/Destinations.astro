@@ -1,11 +1,9 @@
 ---
-import { Image } from "astro:assets";
+import DestinationCard from "./DestinationCard.astro";
+import { destinations } from "../../data/destinations";
 
-import costaRica from "../../assets/images/playa-costa-rica.jpg";
-import sudafrica from "../../assets/images/leonas.jpg";
-import jordania from "../../assets/images/petra.jpg";
-import grecia from "../../assets/images/corfu.jpg";
-import auroras from "../../assets/images/aurora.jpg";
+const featuredDestination = destinations[0];
+const otherDestinations = destinations.slice(1);
 ---
 
 <section class="destinations">
@@ -33,169 +31,18 @@ import auroras from "../../assets/images/aurora.jpg";
 
     <div class="destinations-grid">
 
-      <!-- 01 COSTA RICA -->
+      {featuredDestination && (
+        <DestinationCard
+          destination={featuredDestination}
+          featured
+        />
+      )}
 
-      <article class="destination destination-large">
-
-        <div class="destination-image">
-
-          <Image
-            src={costaRica}
-            alt="Playa tropical en Costa Rica"
-          />
-
-        </div>
-
-        <div class="destination-content">
-
-          <span class="destination-number">
-            01
-          </span>
-
-          <h3>
-            Costa Rica
-          </h3>
-
-          <p>
-            Selva, fauna y costa. Un viaje de naturaleza y aventura
-            que permite combinar diferentes paisajes y ritmos.
-          </p>
-
-        </div>
-
-      </article>
-
-
-      <!-- 02 SUDÁFRICA -->
-
-      <article class="destination">
-
-        <div class="destination-image">
-
-          <Image
-            src={sudafrica}
-            alt="Leonas durante un safari en Sudáfrica"
-          />
-
-        </div>
-
-        <div class="destination-content">
-
-          <span class="destination-number">
-            02
-          </span>
-
-          <h3>
-            Sudáfrica
-          </h3>
-
-          <p>
-            Kruger y Ciudad del Cabo. Safari, naturaleza, gastronomía
-            y ciudad en un mismo viaje.
-          </p>
-
-        </div>
-
-      </article>
-
-
-      <!-- 03 JORDANIA -->
-
-      <article class="destination">
-
-        <div class="destination-image">
-
-          <Image
-            src={jordania}
-            alt="Petra, Jordania"
-          />
-
-        </div>
-
-        <div class="destination-content">
-
-          <span class="destination-number">
-            03
-          </span>
-
-          <h3>
-            Jordania
-          </h3>
-
-          <p>
-            Petra, desierto y cultura. Un viaje para descubrir
-            paisajes e historia a otro ritmo.
-          </p>
-
-        </div>
-
-      </article>
-
-
-      <!-- 04 GRECIA -->
-
-      <article class="destination">
-
-        <div class="destination-image">
-
-          <Image
-            src={grecia}
-            alt="Paisaje costero de Corfú, Grecia"
-          />
-
-        </div>
-
-        <div class="destination-content">
-
-          <span class="destination-number">
-            04
-          </span>
-
-          <h3>
-            Grecia
-          </h3>
-
-          <p>
-            Islas, historia y Mediterráneo. Un viaje que combina
-            cultura, paisaje y tiempo para disfrutar sin prisas.
-          </p>
-
-        </div>
-
-      </article>
-
-
-      <!-- 05 AURORAS -->
-
-      <article class="destination">
-
-        <div class="destination-image">
-
-          <Image
-            src={auroras}
-            alt="Auroras boreales sobre un paisaje nórdico"
-          />
-
-        </div>
-
-        <div class="destination-content">
-
-          <span class="destination-number">
-            05
-          </span>
-
-          <h3>
-            Auroras
-          </h3>
-
-          <p>
-            No es solo verlas. Es saber cuándo ir, dónde buscarlas
-            y cómo construir el viaje alrededor de la experiencia.
-          </p>
-
-        </div>
-
-      </article>
+      {otherDestinations.map((destination) => (
+        <DestinationCard
+          destination={destination}
+        />
+      ))}
 
     </div>
 
@@ -208,170 +55,125 @@ import auroras from "../../assets/images/aurora.jpg";
 
 .destinations {
   padding: 9rem 2rem;
+
   background: #f7f4ef;
 }
 
 .destinations-inner {
-  max-width: 1200px;
+  max-width: 1280px;
+
   margin: 0 auto;
 }
 
 .destinations-intro {
   max-width: 760px;
+
   margin-bottom: 6rem;
 }
 
 .eyebrow {
   margin: 0 0 1.5rem;
 
-  letter-spacing: 3px;
-  text-transform: uppercase;
+  color: var(--color-cobre);
 
   font-size: .8rem;
+  letter-spacing: 3px;
 
-  color: var(--color-cobre);
+  text-transform: uppercase;
 }
 
-h2 {
+.destinations-intro h2 {
   margin: 0;
 
+  font-family: var(--font-serif);
+
   font-size: 3.8rem;
+  font-weight: 500;
+
   line-height: 1.08;
 }
 
-.destinations-intro p:last-child {
+.destinations-intro > p:last-child {
+  max-width: 620px;
+
   margin-top: 2rem;
 
-  max-width: 620px;
+  color: #555;
 
   font-size: 1.1rem;
   line-height: 1.8;
-
-  color: #555;
 }
 
+
+/* ─────────────────────────────
+   GRID
+───────────────────────────── */
 
 .destinations-grid {
   display: grid;
 
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
 
   gap: 5rem 3rem;
 }
 
 
-.destination {
-  min-width: 0;
-}
+/*
+ * El primer destino es el protagonista
+ * de la sección.
+ */
 
-.destination-large {
+.destinations-grid > :first-child {
   grid-column: 1 / -1;
-
-  display: grid;
-
-  grid-template-columns: 1.4fr 1fr;
-
-  gap: 4rem;
-
-  align-items: center;
 }
 
 
-.destination-image {
-  overflow: hidden;
-
-  border-radius: 24px;
-}
-
-.destination-image img {
-  width: 100%;
-  height: 100%;
-
-  display: block;
-
-  object-fit: cover;
-}
-
-.destination-large .destination-image {
-  height: 520px;
-}
-
-.destination:not(.destination-large) .destination-image {
-  height: 420px;
-}
-
-
-.destination-content {
-  padding-top: 1.5rem;
-}
-
-.destination-number {
-  display: block;
-
-  margin-bottom: 1.5rem;
-
-  font-size: .8rem;
-  letter-spacing: 2px;
-
-  color: var(--color-cobre);
-}
-
-h3 {
-  margin: 0 0 1rem;
-
-  font-size: 2.2rem;
-}
-
-.destination-content p {
-  margin: 0;
-
-  max-width: 460px;
-
-  font-size: 1rem;
-  line-height: 1.7;
-
-  color: #555;
-}
-
+/* ─────────────────────────────
+   RESPONSIVE
+───────────────────────────── */
 
 @media (max-width: 800px) {
 
-.destinations {
-  padding: 6rem 1.5rem;
+  .destinations {
+    padding: 6rem 1.5rem;
+  }
+
+  .destinations-intro {
+    margin-bottom: 4rem;
+  }
+
+  .destinations-intro h2 {
+    font-size: 2.7rem;
+  }
+
+  .destinations-grid {
+    grid-template-columns: 1fr;
+
+    gap: 4rem;
+  }
+
+  .destinations-grid > :first-child {
+    grid-column: auto;
+  }
+
 }
 
-h2 {
-  font-size: 2.7rem;
-}
 
-.destinations-grid {
-  grid-template-columns: 1fr;
-  gap: 4rem;
-}
+@media (max-width: 500px) {
 
-.destination {
-  display: flex;
-  flex-direction: column;
-}
+  .destinations {
+    padding: 5rem 1.25rem;
+  }
 
-.destination-large {
-  grid-column: auto;
-  gap: 2rem;
-}
+  .destinations-intro h2 {
+    font-size: 2.35rem;
+  }
 
-.destination-content {
-  order: 1;
-  padding-top: 0;
-}
-
-.destination-image {
-  order: 2;
-}
-
-.destination-large .destination-image,
-.destination:not(.destination-large) .destination-image {
-  height: 380px;
-}
+  .destinations-intro > p:last-child {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
 
 }
 

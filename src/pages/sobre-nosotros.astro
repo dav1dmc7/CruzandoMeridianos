@@ -1,0 +1,884 @@
+---
+import { Image } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/layout/Header.astro";
+import FinalCTA from "../components/sections/FinalCTA.astro";
+import Footer from "../components/layout/Footer.astro";
+
+import davidItciar from "../assets/images/david-itciar.jpg";
+import davidItciarViaje from "../assets/images/david-itciar-viaje.jpg";
+---
+
+<Layout
+  title="Sobre nosotros | Cruzando Meridianos"
+  description="Somos David e Itciar. En Cruzando Meridianos diseñamos viajes a medida desde la investigación, la experiencia y el criterio."
+>
+
+  <Header />
+
+  <main>
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="about-hero">
+
+      <div class="about-hero-inner">
+
+        <div class="about-hero-text">
+
+          <p class="eyebrow">
+            DAVID & ITCIAR
+          </p>
+
+          <h1>
+            Dos personas.<br />
+            Una forma de entender<br />
+            los viajes.
+          </h1>
+
+          <p class="hero-intro">
+            Creemos que un gran viaje empieza mucho antes
+            de hacer la maleta.
+          </p>
+
+        </div>
+
+        <div class="about-hero-image">
+
+          <Image
+            src={davidItciar}
+            alt="David e Itciar durante uno de sus viajes"
+            widths={[600, 900, 1200]}
+            sizes="(max-width: 800px) 100vw, 55vw"
+          />
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         HISTORIA
+    ====================================================== -->
+
+    <section class="story-section">
+
+      <div class="story-inner">
+
+        <div class="section-label">
+          <span>01</span>
+          <span>UNA FORMA DE ENTENDER LOS VIAJES</span>
+        </div>
+
+        <div class="story-grid">
+
+          <div class="story-heading">
+
+            <h2>
+              Hay viajes que empiezan mucho antes de llegar.
+            </h2>
+
+          </div>
+
+          <div class="story-copy">
+
+            <p>
+              Cruzando Meridianos nace de nuestra propia forma
+              de entender el mundo: con curiosidad, con tiempo
+              y con ganas de ir un poco más allá de lo evidente.
+            </p>
+
+            <p>
+              Siempre hemos disfrutado de investigar un destino
+              hasta descubrir aquello que no aparece en las
+              primeras búsquedas.
+            </p>
+
+            <p>
+              Encontrar el lugar perfecto para dormir, una mesa
+              que merece la pena reservar, una ruta que transforma
+              un trayecto en parte del viaje o ese rincón al que
+              llegar justo cuando la luz es la adecuada.
+            </p>
+
+            <p>
+              Con el tiempo, preparar nuestros viajes se convirtió
+              en mucho más que una tarea previa. Se convirtió en
+              una de las partes que más disfrutamos de viajar.
+            </p>
+
+            <p class="story-highlight">
+              Y quisimos llevar esa manera de hacer las cosas
+              un paso más allá.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FILOSOFÍA
+    ====================================================== -->
+
+    <section class="philosophy-section">
+
+      <div class="philosophy-inner">
+
+        <div class="section-label">
+          <span>02</span>
+          <span>VIAJAR, PERO HACERLO A TU MANERA</span>
+        </div>
+
+        <div class="philosophy-grid">
+
+          <div class="philosophy-heading">
+
+            <h2>
+              No creemos en los viajes diseñados para todo el mundo.
+            </h2>
+
+            <p class="large-statement">
+              Creemos en los viajes que tienen sentido para ti.
+            </p>
+
+          </div>
+
+          <div class="philosophy-copy">
+
+            <p>
+              Por eso no partimos de catálogos ni de itinerarios
+              prefabricados.
+            </p>
+
+            <p>
+              Partimos de una conversación. De entender qué buscas,
+              qué te emociona, qué ritmo quieres llevar y qué esperas
+              sentir cuando regreses.
+            </p>
+
+            <p>
+              Después empieza nuestro trabajo.
+            </p>
+
+            <p>
+              Investigamos, contrastamos, comparamos y seleccionamos.
+              Eliminamos lo que sobra y cuidamos lo que importa.
+            </p>
+
+            <p>
+              Cada alojamiento, cada experiencia, cada trayecto y
+              cada recomendación tiene un motivo para estar ahí.
+            </p>
+
+            <div class="philosophy-highlight">
+
+              <span>El resultado no es simplemente un itinerario.</span>
+
+              <strong>
+                Es tu viaje, pensado para ti.
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MENOS LUGARES
+    ====================================================== -->
+
+    <section class="less-section">
+
+      <div class="less-inner">
+
+        <div class="less-image">
+
+          <Image
+            src={davidItciarViaje}
+            alt="David e Itciar disfrutando de un viaje"
+            widths={[600, 900, 1200]}
+            sizes="(max-width: 800px) 100vw, 50vw"
+          />
+
+        </div>
+
+        <div class="less-content">
+
+          <div class="section-label">
+            <span>03</span>
+            <span>MENOS LUGARES. MÁS MOMENTOS.</span>
+          </div>
+
+          <h2>
+            Viajar bien no consiste en acumular destinos.
+          </h2>
+
+          <p>
+            Consiste en saber dónde merece la pena detenerse.
+          </p>
+
+          <p>
+            En tener tiempo para disfrutar de una ciudad sin correr.
+            En descubrir un paisaje cuando todavía no ha llegado
+            todo el mundo. En sentarse a comer sin mirar el reloj.
+            En tomar un desvío porque sabemos que merece la pena.
+          </p>
+
+          <p>
+            Por eso también sabemos qué dejar fuera.
+          </p>
+
+          <p>
+            Porque parte de nuestro trabajo consiste precisamente
+            en filtrar todo aquello que no aporta valor para que tú
+            puedas dedicarte a lo importante.
+          </p>
+
+          <p class="less-highlight">
+            Vivir el viaje.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MANIFIESTO
+    ====================================================== -->
+
+    <section class="manifesto-section">
+
+      <div class="manifesto-inner">
+
+        <p class="eyebrow">
+          CRUZANDO MERIDIANOS
+        </p>
+
+        <h2>
+          No queremos ser una agencia más.
+        </h2>
+
+        <p class="manifesto-text">
+          Queremos ser ese lugar al que acudir cuando sabes
+          que quieres hacer un viaje especial, pero no quieres
+          conformarte con lo de siempre.
+        </p>
+
+        <p class="manifesto-text">
+          Ponemos nuestra curiosidad, nuestro tiempo y nuestro
+          criterio al servicio de cada viaje.
+        </p>
+
+        <div class="manifesto-closing">
+
+          <p>
+            Tú eliges dónde quieres ir.
+          </p>
+
+          <p>
+            Nosotros nos encargamos de descubrir cómo vivirlo.
+          </p>
+
+        </div>
+
+        <p class="signature">
+          — David & Itciar
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <FinalCTA />
+
+  </main>
+
+  <Footer />
+
+</Layout>
+
+
+<style>
+
+  /* =========================================================
+     HERO
+  ========================================================= */
+
+  .about-hero {
+
+    padding: 6rem 2rem 9rem;
+
+  }
+
+  .about-hero-inner {
+
+    max-width: 1200px;
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: .85fr 1.15fr;
+
+    gap: 5rem;
+    align-items: center;
+
+  }
+
+  .about-hero-text {
+
+    max-width: 600px;
+
+  }
+
+  .eyebrow {
+
+    margin: 0 0 1.5rem;
+
+    letter-spacing: 3px;
+    text-transform: uppercase;
+
+    font-size: .8rem;
+
+    color: var(--color-cobre);
+
+  }
+
+  h1 {
+
+    margin: 0;
+
+    font-size: 4.5rem;
+    line-height: 1.05;
+
+  }
+
+  .hero-intro {
+
+    max-width: 480px;
+
+    margin-top: 2.5rem;
+
+    font-family: var(--font-serif);
+
+    font-size: 1.7rem;
+    line-height: 1.45;
+
+    color: var(--color-bosque);
+
+  }
+
+  .about-hero-image {
+
+    width: 100%;
+
+  }
+
+  .about-hero-image img {
+
+    width: 100%;
+    height: 680px;
+
+    display: block;
+
+    object-fit: cover;
+
+    object-position: center center;
+
+    border-radius: 24px;
+
+  }
+
+
+  /* =========================================================
+     LABELS
+  ========================================================= */
+
+  .section-label {
+
+    display: flex;
+    align-items: center;
+
+    gap: 1.5rem;
+
+    margin-bottom: 4rem;
+
+    font-size: .75rem;
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+
+    color: var(--color-cobre);
+
+  }
+
+
+  /* =========================================================
+     STORY
+  ========================================================= */
+
+  .story-section {
+
+    padding: 9rem 2rem;
+
+    background: var(--color-arena);
+
+  }
+
+  .story-inner {
+
+    max-width: 1200px;
+    margin: 0 auto;
+
+  }
+
+  .story-grid {
+
+    display: grid;
+
+    grid-template-columns: .9fr 1.1fr;
+
+    gap: 6rem;
+
+  }
+
+  .story-heading h2 {
+
+    margin: 0;
+
+    font-size: 3.5rem;
+    line-height: 1.08;
+
+  }
+
+  .story-copy {
+
+    max-width: 650px;
+
+  }
+
+  .story-copy p {
+
+    margin: 0 0 1.8rem;
+
+    font-size: 1.1rem;
+    line-height: 1.8;
+
+    color: #555;
+
+  }
+
+  .story-copy .story-highlight {
+
+    margin-top: 2.5rem;
+
+    font-family: var(--font-serif);
+
+    font-size: 1.5rem;
+
+    line-height: 1.5;
+
+    color: var(--color-bosque);
+
+  }
+
+
+  /* =========================================================
+     PHILOSOPHY
+  ========================================================= */
+
+  .philosophy-section {
+
+    padding: 10rem 2rem;
+
+  }
+
+  .philosophy-inner {
+
+    max-width: 1200px;
+    margin: 0 auto;
+
+  }
+
+  .philosophy-grid {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 7rem;
+
+  }
+
+  .philosophy-heading h2 {
+
+    margin: 0;
+
+    font-size: 3.6rem;
+    line-height: 1.08;
+
+  }
+
+  .large-statement {
+
+    margin-top: 2.5rem;
+
+    font-family: var(--font-serif);
+
+    font-size: 1.6rem;
+    line-height: 1.5;
+
+    color: var(--color-bosque);
+
+  }
+
+  .philosophy-copy {
+
+    max-width: 600px;
+
+  }
+
+  .philosophy-copy p {
+
+    margin: 0 0 1.8rem;
+
+    font-size: 1.1rem;
+    line-height: 1.8;
+
+    color: #555;
+
+  }
+
+  .philosophy-highlight {
+
+    display: flex;
+    flex-direction: column;
+
+    gap: .5rem;
+
+    margin-top: 3rem;
+
+    padding-left: 1.5rem;
+
+    border-left: 2px solid var(--color-cobre);
+
+    color: var(--color-bosque);
+
+  }
+
+  .philosophy-highlight span {
+
+    font-size: 1.05rem;
+    line-height: 1.6;
+
+  }
+
+  .philosophy-highlight strong {
+
+    font-family: var(--font-serif);
+
+    font-size: 1.5rem;
+    font-weight: 500;
+
+  }
+
+
+  /* =========================================================
+     LESS / MORE
+  ========================================================= */
+
+  .less-section {
+
+    padding: 5rem 2rem 10rem;
+
+  }
+
+  .less-inner {
+
+    max-width: 1200px;
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 6rem;
+
+    align-items: center;
+
+  }
+
+  .less-image img {
+
+    width: 100%;
+    height: 650px;
+
+    display: block;
+
+    object-fit: cover;
+
+    object-position: center center;
+
+    border-radius: 24px;
+
+  }
+
+  .less-content {
+
+    max-width: 550px;
+
+  }
+
+  .less-content .section-label {
+
+    margin-bottom: 2.5rem;
+
+  }
+
+  .less-content h2 {
+
+    margin: 0 0 2rem;
+
+    font-size: 3.4rem;
+    line-height: 1.08;
+
+  }
+
+  .less-content p {
+
+    margin: 0 0 1.7rem;
+
+    font-size: 1.1rem;
+    line-height: 1.8;
+
+    color: #555;
+
+  }
+
+  .less-content .less-highlight {
+
+    margin-top: 2.5rem;
+
+    font-family: var(--font-serif);
+
+    font-size: 2rem;
+    line-height: 1.3;
+
+    color: var(--color-bosque);
+
+  }
+
+
+  /* =========================================================
+     MANIFESTO
+  ========================================================= */
+
+  .manifesto-section {
+
+    padding: 10rem 2rem;
+
+    background: var(--color-bosque);
+
+    color: white;
+
+    text-align: center;
+
+  }
+
+  .manifesto-inner {
+
+    max-width: 850px;
+    margin: 0 auto;
+
+  }
+
+  .manifesto-section .eyebrow {
+
+    color: var(--color-cobre);
+
+  }
+
+  .manifesto-section h2 {
+
+    margin: 0;
+
+    font-size: 4rem;
+    line-height: 1.08;
+
+  }
+
+  .manifesto-text {
+
+    max-width: 650px;
+
+    margin: 2rem auto 0;
+
+    font-size: 1.1rem;
+    line-height: 1.8;
+
+    opacity: .85;
+
+  }
+
+  .manifesto-closing {
+
+    margin-top: 5rem;
+
+    font-family: var(--font-serif);
+
+    font-size: 2rem;
+    line-height: 1.4;
+
+  }
+
+  .manifesto-closing p {
+
+    margin: .25rem 0;
+
+  }
+
+  .manifesto-closing p:last-child {
+
+    color: var(--color-arena);
+
+  }
+
+  .signature {
+
+    margin-top: 4rem;
+
+    font-size: .9rem;
+    letter-spacing: 1px;
+
+    opacity: .7;
+
+  }
+
+
+  /* =========================================================
+     MOBILE
+  ========================================================= */
+
+  @media (max-width: 800px) {
+
+    .about-hero {
+
+      padding: 4rem 1.5rem 6rem;
+
+    }
+
+    .about-hero-inner {
+
+      grid-template-columns: 1fr;
+
+      gap: 3rem;
+
+    }
+
+    h1 {
+
+      font-size: clamp(3rem, 13vw, 4.5rem);
+
+    }
+
+    .hero-intro {
+
+      font-size: 1.4rem;
+
+    }
+
+    .about-hero-image img {
+
+      height: 520px;
+
+    }
+
+    .story-section,
+    .philosophy-section,
+    .less-section,
+    .manifesto-section {
+
+      padding: 6rem 1.5rem;
+
+    }
+
+    .section-label {
+
+      margin-bottom: 3rem;
+
+      gap: 1rem;
+
+      font-size: .68rem;
+
+    }
+
+    .story-grid,
+    .philosophy-grid,
+    .less-inner {
+
+      grid-template-columns: 1fr;
+
+      gap: 3rem;
+
+    }
+
+    .story-heading h2,
+    .philosophy-heading h2,
+    .less-content h2 {
+
+      font-size: 2.7rem;
+
+    }
+
+    .less-image {
+
+      order: 2;
+
+    }
+
+    .less-content {
+
+      order: 1;
+
+    }
+
+    .less-image img {
+
+      height: 500px;
+
+    }
+
+    .manifesto-section h2 {
+
+      font-size: 3rem;
+
+    }
+
+    .manifesto-closing {
+
+      margin-top: 4rem;
+
+      font-size: 1.6rem;
+
+    }
+
+  }
+
+</style>

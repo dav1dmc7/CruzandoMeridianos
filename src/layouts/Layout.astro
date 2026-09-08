@@ -4,13 +4,17 @@ interface Props {
   description?: string;
   canonical?: string;
   ogImage?: string;
+  type?: "website" | "article";
+  noindex?: boolean;
 }
 
 const {
-  title = "Cruzando Meridianos | Viajes a medida",
-  description = "Diseñamos viajes a medida desde cero, con investigación, experiencia y criterio. Cuéntanos cómo quieres viajar y diseñaremos una propuesta para ti.",
+  title = "Cruzando Meridianos | Viajes con investigación y criterio",
+  description = "Investigamos destinos, contrastamos información y contamos lo que realmente importa para que puedas decidir mejor cómo viajar.",
   canonical,
   ogImage = "/brujula.png",
+  type = "website",
+  noindex = false,
 } = Astro.props;
 
 const siteUrl = "https://www.cruzandomeridianos.com";
@@ -21,6 +25,38 @@ const canonicalUrl = canonical
 
 const ogImageUrl = new URL(ogImage, siteUrl).href;
 
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Cruzando Meridianos",
+  url: `${siteUrl}/`,
+  inLanguage: "es",
+  description:
+    "Investigación, experiencias y criterio para viajar mejor.",
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Cruzando Meridianos",
+  url: `${siteUrl}/`,
+  logo: new URL("/brujula.png", siteUrl).href,
+};
+
+const webPageSchema = {
+  "@context": "https://schema.org",
+  "@type": type === "article" ? "Article" : "WebPage",
+  name: title,
+  description,
+  url: canonicalUrl,
+  inLanguage: "es",
+  isPartOf: {
+    "@type": "WebSite",
+    name: "Cruzando Meridianos",
+    url: `${siteUrl}/`,
+  },
+};
+
 import "../styles/global.css";
 ---
 
@@ -29,110 +65,52 @@ import "../styles/global.css";
   <head>
     <meta charset="UTF-8" />
 
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>{title}</title>
 
-    <meta
-      name="description"
-      content={description}
-    />
+    <meta name="description" content={description} />
 
-    <meta
-      name="theme-color"
-      content="#FBF9F5"
-    />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta name="theme-color" content="#FBF9F5" />
 
     <!-- Canonical -->
-    <link
-      rel="canonical"
-      href={canonicalUrl}
-    />
+    <link rel="canonical" href={canonicalUrl} />
 
     <!-- Open Graph -->
-    <meta
-      property="og:type"
-      content="website"
-    />
-
-    <meta
-      property="og:site_name"
-      content="Cruzando Meridianos"
-    />
-
-    <meta
-      property="og:title"
-      content={title}
-    />
-
-    <meta
-      property="og:description"
-      content={description}
-    />
-
-    <meta
-      property="og:url"
-      content={canonicalUrl}
-    />
-
-    <meta
-      property="og:image"
-      content={ogImageUrl}
-    />
-
-    <meta
-      property="og:image:alt"
-      content="Cruzando Meridianos"
-    />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="Cruzando Meridianos" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content="Cruzando Meridianos" />
 
     <!-- Twitter / X -->
-    <meta
-      name="twitter:card"
-      content="summary_large_image"
-    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
 
-    <meta
-      name="twitter:title"
-      content={title}
-    />
-
-    <meta
-      name="twitter:description"
-      content={description}
-    />
-
-    <meta
-      name="twitter:image"
-      content={ogImageUrl}
+    <!-- Structured data -->
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify([
+        websiteSchema,
+        organizationSchema,
+        webPageSchema,
+      ])}
     />
 
     <!-- Icons -->
-    <link
-      rel="icon"
-      type="image/png"
-      href="/brujula.png"
-    />
-
-    <link
-      rel="apple-touch-icon"
-      href="/brujula.png"
-    />
+    <link rel="icon" type="image/png" href="/brujula.png" />
+    <link rel="apple-touch-icon" href="/brujula.png" />
 
     <!-- Fonts -->
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-    />
-
-    <link
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin
-    />
-
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:wght@400;500;600;700&display=swap"
       rel="stylesheet"

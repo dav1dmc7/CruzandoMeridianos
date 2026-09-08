@@ -1,0 +1,5901 @@
+---
+import { Image } from "astro:assets";
+
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/layout/Header.astro";
+import Footer from "../../components/layout/Footer.astro";
+
+import { destinations } from "../../data/destinations";
+import { getGuideBySlug } from "../../data/guides";
+
+import type {
+  DestinationGuide,
+  GuideBlock,
+  GuideHighlight,
+  GuideSection,
+  TravelAlert,
+  TravelerRequirement,
+  FAQItem,
+} from "../../data/guides/types";
+
+
+/* =========================================================
+   ROUTE
+   ========================================================= */
+
+const slug =
+  Astro.params.slug;
+
+if (!slug) {
+  return Astro.redirect("/viajes");
+}
+
+
+/* =========================================================
+   DESTINATION
+   ========================================================= */
+
+const destination =
+  destinations.find(
+    (item) =>
+      item.slug === slug
+  );
+
+if (
+  !destination ||
+  destination.status !== "ready"
+) {
+  return Astro.redirect("/viajes");
+}
+
+
+/* =========================================================
+   GUIDE
+   ========================================================= */
+
+const guide:
+  DestinationGuide | undefined =
+    getGuideBySlug(slug);
+
+if (!guide) {
+  return Astro.redirect("/viajes");
+}
+
+
+/* =========================================================
+   CURRENT DATE
+   ========================================================= */
+
+const now =
+  new Date();
+
+
+/* =========================================================
+   ACTIVE ALERTS
+   ========================================================= */
+
+const activeAlerts:
+  TravelAlert[] =
+    [...guide.alerts]
+      .filter(
+        (alert) => {
+
+          if (!alert.active) {
+            return false;
+          }
+
+          if (!alert.expiresAt) {
+            return true;
+          }
+
+          return (
+            new Date(
+              `${alert.expiresAt}T23:59:59`
+            ).getTime()
+            >=
+            now.getTime()
+          );
+        }
+      )
+      .sort(
+        (a, b) =>
+          new Date(b.date).getTime()
+          -
+          new Date(a.date).getTime()
+      );
+
+const hasAlerts =
+  activeAlerts.length > 0;
+
+const hasFaq =
+  guide.faq.length > 0;
+
+
+/* =========================================================
+   ENTRY REQUIREMENTS
+   ========================================================= */
+
+const entryRequirements =
+  guide.entryRequirements;
+
+const travelerOptions:
+  TravelerRequirement[] =
+    entryRequirements?.travelers ?? [];
+
+const defaultTraveler:
+  TravelerRequirement | undefined =
+    entryRequirements
+      ? travelerOptions.find(
+          (traveler) =>
+            traveler.countryCode ===
+            entryRequirements.defaultCountryCode
+        ) ?? travelerOptions[0]
+      : undefined;
+
+
+/* =========================================================
+   SECTION HELPERS
+   ========================================================= */
+
+const getSectionCategory =
+  (
+    section: GuideSection
+  ): string => {
+
+    switch (section.category) {
+      case "overview":
+        return "Guía del destino";
+
+      case "planning":
+        return "Planificación";
+
+      case "experience":
+        return "Experiencias";
+
+      case "practical":
+        return "Información práctica";
+
+      case "updates":
+        return "Actualidad";
+
+      default:
+        return "Guía del destino";
+    }
+  };
+
+
+/* =========================================================
+   BLOCK HELPERS
+   ========================================================= */
+
+const getBlockClass =
+  (
+    block: GuideBlock
+  ): string =>
+    `guide-block guide-block--${block.type}`;
+
+
+/* =========================================================
+   HIGHLIGHT LABELS
+   ========================================================= */
+
+const getHighlightLabel =
+  (
+    highlight: GuideHighlight
+  ): string => {
+
+    switch (highlight.type) {
+      case "decision":
+        return "Decisión";
+
+      case "warning":
+        return "Importante";
+
+      case "experience":
+        return "Experiencia";
+
+      case "important":
+        return "A tener en cuenta";
+
+      case "tip":
+        return "Consejo";
+
+      default:
+        return "A tener en cuenta";
+    }
+  };
+
+
+/* =========================================================
+   ALERT LABELS
+   ========================================================= */
+
+const getAlertLabel =
+  (
+    type: TravelAlert["type"]
+  ): string => {
+
+    const labels:
+      Record<
+        TravelAlert["type"],
+        string
+      > = {
+
+      carretera:
+        "Carretera",
+
+      clima:
+        "Clima",
+
+      parque:
+        "Parque",
+
+      transporte:
+        "Transporte",
+
+      entrada:
+        "Entrada",
+
+      seguridad:
+        "Seguridad",
+
+      salud:
+        "Salud",
+
+      volcan:
+        "Volcán",
+
+      otro:
+        "Información",
+    };
+
+    return labels[type];
+  };
+
+
+/* =========================================================
+   ALERT SEVERITY
+   ========================================================= */
+
+const getAlertSeverityLabel =
+  (
+    severity:
+      TravelAlert["severity"]
+  ): string => {
+
+    const labels:
+      Record<
+        TravelAlert["severity"],
+        string
+      > = {
+
+      critical:
+        "Crítico",
+
+      high:
+        "Importante",
+
+      medium:
+        "Atención",
+
+      low:
+        "Información",
+    };
+
+    return labels[severity];
+  };
+
+
+/* =========================================================
+   VISA LABEL
+   ========================================================= */
+
+const formatVisaRequirement =
+  (
+    requirement:
+      TravelerRequirement["visaRequirement"]
+  ): string => {
+
+    const labels:
+      Record<
+        TravelerRequirement["visaRequirement"],
+        string
+      > = {
+
+      none:
+        "Sin visado",
+
+      consular:
+        "Visado consular",
+
+      restricted:
+        "Visado restringido",
+
+      special:
+        "Condiciones especiales",
+    };
+
+    return labels[requirement];
+  };
+
+
+/* =========================================================
+   SPECIAL IDS
+   ========================================================= */
+
+const durationSectionId =
+  "cuantos-dias";
+
+const entrySectionId =
+  "documentacion-y-entrada";
+
+const alertsSectionId =
+  "actualidad-y-avisos";
+
+const faqSectionId =
+  "preguntas-frecuentes";
+
+const errorsSectionId =
+  "errores-habituales";
+
+
+/* =========================================================
+   EDITORIAL STATUS
+   ========================================================= */
+
+const getEditorialStatus =
+  (
+    status:
+      NonNullable<DestinationGuide["editorial"]>["status"]
+  ): string => {
+
+    switch (status) {
+      case "published":
+        return "Publicada";
+
+      case "in-review":
+        return "En revisión";
+
+      case "draft":
+      default:
+        return "En investigación";
+    }
+  };
+
+
+/* =========================================================
+   SEO
+   ========================================================= */
+
+const pageTitle =
+  `${guide.title} | Cruzando Meridianos`;
+
+const pageDescription =
+  guide.subtitle;
+
+const canonicalUrl =
+  `https://www.cruzandomeridianos.com/viajes/${destination.slug}`;
+
+
+/* =========================================================
+   JSON-LD
+   ========================================================= */
+
+const guideSchema = {
+  "@context":
+    "https://schema.org",
+
+  "@type":
+    "Article",
+
+  headline:
+    guide.title,
+
+  description:
+    guide.subtitle,
+
+  url:
+    canonicalUrl,
+
+  inLanguage:
+    "es",
+
+  ...(guide.editorial?.updatedAt
+    ? {
+        dateModified:
+          guide.editorial.updatedAt,
+      }
+    : {}),
+
+  author: {
+    "@type":
+      "Organization",
+
+    name:
+      "Cruzando Meridianos",
+
+    url:
+      "https://www.cruzandomeridianos.com",
+  },
+
+  publisher: {
+    "@type":
+      "Organization",
+
+    name:
+      "Cruzando Meridianos",
+
+    url:
+      "https://www.cruzandomeridianos.com",
+  },
+
+  image:
+    destination.image.src,
+
+  about: {
+    "@type":
+      "Place",
+
+    name:
+      destination.name,
+  },
+
+  mainEntityOfPage: {
+    "@type":
+      "WebPage",
+
+    "@id":
+      canonicalUrl,
+  },
+};
+
+
+/* =========================================================
+   TRAVELER DATA
+   ========================================================= */
+
+const travelerData =
+  travelerOptions.map(
+    (traveler) => ({
+      countryCode:
+        traveler.countryCode,
+
+      countryName:
+        traveler.countryName,
+
+      visaRequirement:
+        traveler.visaRequirement,
+
+      maximumStay:
+        traveler.maximumStay ??
+        null,
+
+      passportRequirement:
+        traveler.passportRequirement ??
+        null,
+
+      returnTicketRequired:
+        traveler.returnTicketRequired ??
+        false,
+
+      proofOfMeansRequired:
+        traveler.proofOfMeansRequired ??
+        false,
+
+      entryFee:
+        traveler.entryFee ??
+        null,
+
+      onwardTravelRequired:
+        traveler.onwardTravelRequired ??
+        false,
+
+      yellowFeverRelevant:
+        traveler.yellowFeverRelevant ??
+        false,
+
+      notes:
+        traveler.notes ??
+        [],
+
+      sourceUrl:
+        traveler.source?.url ??
+        null,
+
+      sourceLabel:
+        traveler.source?.label ??
+        null,
+
+      reviewedAt:
+        traveler.lastReviewed ??
+        entryRequirements?.lastReviewed ??
+        null,
+    })
+  );
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  canonical={`/viajes/${destination.slug}`}
+  ogImage={destination.image.src}
+>
+
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify(guideSchema)}
+  />
+
+
+  <Header />
+
+
+  <main
+    class="guide-page"
+    data-guide-slug={guide.slug}
+  >
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section
+      class="guide-hero"
+    >
+
+      <div
+        class="guide-hero__media"
+        aria-hidden="true"
+      >
+
+        <Image
+          src={destination.image}
+          alt={destination.imageAlt}
+          widths={[
+            900,
+            1400,
+            1800,
+            2200,
+          ]}
+          sizes="100vw"
+          loading="eager"
+          decoding="async"
+        />
+
+      </div>
+
+
+      <div
+        class="guide-hero__overlay"
+        aria-hidden="true"
+      ></div>
+
+
+      <div
+        class="guide-hero__content"
+      >
+
+        <div
+          class="guide-hero__meta"
+        >
+
+          <span
+            class="guide-hero__number"
+          >
+            {destination.number}
+          </span>
+
+          <span
+            class="guide-hero__label"
+          >
+            Guía de viaje
+          </span>
+
+        </div>
+
+
+        <h1>
+          {guide.title}
+        </h1>
+
+
+        <p
+          class="guide-hero__subtitle"
+        >
+          {guide.subtitle}
+        </p>
+
+
+        <div
+          class="guide-hero__status"
+        >
+
+          <span>
+            Estado editorial
+          </span>
+
+          <strong>
+            {
+              guide.editorial
+                ? getEditorialStatus(
+                    guide.editorial.status
+                  )
+                : "En investigación"
+            }
+          </strong>
+
+        </div>
+
+
+        {
+          guide.editorial?.updatedAt && (
+
+            <div
+              class="guide-hero__updated"
+            >
+
+              Última revisión:
+
+              <strong>
+                {guide.editorial.updatedAt}
+              </strong>
+
+            </div>
+
+          )
+        }
+
+
+        <a
+          href="#en-esta-guia"
+          class="guide-hero__scroll"
+        >
+
+          Explorar la guía
+
+          <span
+            aria-hidden="true"
+          >
+            ↓
+          </span>
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         INTRO
+    ====================================================== -->
+
+    <section
+      id="en-esta-guia"
+      class="guide-introduction"
+    >
+
+      <div
+        class="
+          guide-shell
+          guide-introduction__grid
+        "
+      >
+
+        <div
+          class="guide-introduction__label"
+        >
+
+          <p class="eyebrow">
+            Antes de empezar
+          </p>
+
+          <span>
+            {guide.sections.length}
+            secciones
+          </span>
+
+          {
+            guide.editorial?.factsCheckedAt && (
+
+              <span
+                class="guide-introduction__checked"
+              >
+                Datos sensibles comprobados:
+                {guide.editorial.factsCheckedAt}
+              </span>
+
+            )
+          }
+
+        </div>
+
+
+        <div
+          class="
+            guide-introduction__content
+          "
+        >
+
+          <h2>
+            Entender el destino
+            antes de decidir el viaje.
+          </h2>
+
+
+          <p
+            class="guide-introduction__lead"
+          >
+            {guide.intro}
+          </p>
+
+
+          <p>
+            No queremos convertir esta guía
+            en una lista interminable de lugares
+            que tachar.
+          </p>
+
+
+          <p>
+            Queremos reunir investigación,
+            información práctica y criterio
+            para ayudarte a tomar mejores
+            decisiones antes de viajar.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SNAPSHOT
+    ====================================================== -->
+
+    {
+      guide.snapshot && (
+
+        <section
+          class="guide-snapshot"
+        >
+
+          <div class="guide-shell">
+
+            <div
+              class="
+                guide-snapshot__header
+              "
+            >
+
+              <div>
+
+                <p class="eyebrow">
+                  01 / Contexto
+                </p>
+
+                <h2>
+                  {destination.name}
+                  <br />
+                  de un vistazo.
+                </h2>
+
+              </div>
+
+
+              {
+                guide.snapshot
+                  .climateSummary && (
+
+                  <div
+                    class="
+                      guide-snapshot__climate
+                    "
+                  >
+
+                    <span>
+                      Clima
+                    </span>
+
+                    <p>
+                      {
+                        guide.snapshot
+                          .climateSummary
+                      }
+                    </p>
+
+                  </div>
+
+                )
+              }
+
+            </div>
+
+
+            <div
+              class="
+                guide-snapshot__grid
+              "
+            >
+
+              {
+                guide.snapshot
+                  .travelStyle && (
+
+                  <article>
+
+                    <span>
+                      Estilo de viaje
+                    </span>
+
+                    <p>
+                      {
+                        guide.snapshot
+                          .travelStyle
+                      }
+                    </p>
+
+                  </article>
+
+                )
+              }
+
+
+              {
+                guide.snapshot
+                  .mainStrengths &&
+                guide.snapshot
+                  .mainStrengths.length > 0 && (
+
+                  <article>
+
+                    <span>
+                      Puntos fuertes
+                    </span>
+
+                    <ul>
+
+                      {
+                        guide.snapshot
+                          .mainStrengths
+                          .map(
+                            (
+                              item: string
+                            ) => (
+
+                              <li>
+                                {item}
+                              </li>
+
+                            )
+                          )
+                      }
+
+                    </ul>
+
+                  </article>
+
+                )
+              }
+
+
+              {
+                guide.snapshot
+                  .mainConsiderations &&
+                guide.snapshot
+                  .mainConsiderations.length > 0 && (
+
+                  <article>
+
+                    <span>
+                      Lo que condiciona el viaje
+                    </span>
+
+                    <ul>
+
+                      {
+                        guide.snapshot
+                          .mainConsiderations
+                          .map(
+                            (
+                              item: string
+                            ) => (
+
+                              <li>
+                                {item}
+                              </li>
+
+                            )
+                          )
+                      }
+
+                    </ul>
+
+                  </article>
+
+                )
+              }
+
+            </div>
+
+          </div>
+
+        </section>
+
+      )
+    }
+
+
+    <!-- =====================================================
+         TOC
+    ====================================================== -->
+
+    <section
+      class="guide-toc-section"
+    >
+
+      <div class="guide-shell">
+
+        <div
+          class="guide-toc-header"
+        >
+
+          <div>
+
+            <p class="eyebrow">
+              En esta guía
+            </p>
+
+            <h2>
+              Una sola página.
+              Todas las decisiones importantes.
+            </h2>
+
+          </div>
+
+
+          <p>
+            Puedes recorrerla de principio a fin
+            o saltar directamente a la decisión
+            que necesitas resolver.
+          </p>
+
+        </div>
+
+
+        <nav
+          class="guide-toc"
+          aria-label="Índice de la guía"
+        >
+
+          {
+            guide.sections.map(
+              (
+                section: GuideSection
+              ) => (
+
+                <a
+                  href={`#${section.id}`}
+                  class:list={[
+                    "guide-toc__item",
+                    `guide-toc__item--${
+                      section.category ??
+                      "overview"
+                    }`,
+                  ]}
+                >
+
+                  <span
+                    class="
+                      guide-toc__number
+                    "
+                  >
+                    {section.number}
+                  </span>
+
+
+                  <span
+                    class="
+                      guide-toc__title
+                    "
+                  >
+                    {section.title}
+                  </span>
+
+
+                  <span
+                    class="
+                      guide-toc__category
+                    "
+                  >
+                    {getSectionCategory(
+                      section
+                    )}
+                  </span>
+
+
+                  <span
+                    class="
+                      guide-toc__arrow
+                    "
+                    aria-hidden="true"
+                  >
+                    ↗
+                  </span>
+
+                </a>
+
+              )
+            )
+          }
+
+        </nav>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CONTEXT STRIP
+    ====================================================== -->
+
+    <section
+      class="guide-context"
+    >
+
+      <div
+        class="
+          guide-shell
+          guide-context__grid
+        "
+      >
+
+        <article>
+          <span>01</span>
+
+          <strong>
+            Entender
+          </strong>
+
+          <p>
+            Geografía, regiones,
+            clima y características
+            del destino.
+          </p>
+        </article>
+
+
+        <article>
+          <span>02</span>
+
+          <strong>
+            Elegir
+          </strong>
+
+          <p>
+            Tiempo, zonas,
+            experiencias y transporte.
+          </p>
+        </article>
+
+
+        <article>
+          <span>03</span>
+
+          <strong>
+            Preparar
+          </strong>
+
+          <p>
+            Documentación, salud,
+            dinero y conectividad.
+          </p>
+        </article>
+
+
+        <article>
+          <span>04</span>
+
+          <strong>
+            Decidir
+          </strong>
+
+          <p>
+            Convertir información
+            en un viaje coherente.
+          </p>
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         LIVE ALERT
+    ====================================================== -->
+
+    {
+      hasAlerts && (
+
+        <section
+          class="guide-live"
+        >
+
+          <div
+            class="
+              guide-shell
+              guide-live__inner
+            "
+          >
+
+            <div
+              class="
+                guide-live__heading
+              "
+            >
+
+              <span>
+                Seguimiento activo
+              </span>
+
+              <strong>
+                {activeAlerts.length}
+
+                {
+                  activeAlerts.length === 1
+                    ? " aviso relevante"
+                    : " avisos relevantes"
+                }
+
+              </strong>
+
+            </div>
+
+
+            <a
+              href={`#${alertsSectionId}`}
+              class="guide-live__link"
+            >
+
+              Ver actualidad
+
+              <span
+                aria-hidden="true"
+              >
+                ↓
+              </span>
+
+            </a>
+
+          </div>
+
+        </section>
+
+      )
+    }
+
+
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+
+    <div
+      class="guide-content"
+    >
+
+      {
+        guide.sections.map(
+          (
+            section: GuideSection,
+            index: number
+          ) => {
+
+            const firstSection =
+              index === 0;
+
+            const darkSection =
+              section.id ===
+              errorsSectionId;
+
+            return (
+
+              <section
+                id={section.id}
+                data-section-category={section.category ?? "overview"}
+                data-section-status={section.status ?? "draft"}
+                class:list={[
+                  "guide-section",
+
+                  {
+                    "guide-section--featured":
+                      firstSection,
+
+                    "guide-section--planning":
+                      section.category ===
+                      "planning",
+
+                    "guide-section--experience":
+                      section.category ===
+                      "experience",
+
+                    "guide-section--practical":
+                      section.category ===
+                      "practical",
+
+                    "guide-section--updates":
+                      section.category ===
+                      "updates",
+
+                    "guide-section--dark":
+                      darkSection,
+                  },
+                ]}
+              >
+
+                <div
+                  class="guide-shell"
+                >
+
+                  <div
+                    class="
+                      guide-section__header
+                    "
+                  >
+
+                    <div
+                      class="
+                        guide-section__number
+                      "
+                    >
+                      {section.number}
+                    </div>
+
+
+                    <div>
+
+                      <p
+                        class="
+                          guide-section__category
+                        "
+                      >
+                        {
+                          getSectionCategory(
+                            section
+                          )
+                        }
+                      </p>
+
+
+                      <h2>
+                        {section.title}
+                      </h2>
+
+                    </div>
+
+                  </div>
+
+
+                  <div
+                    class="
+                      guide-section__body
+                    "
+                  >
+
+                    <div>
+
+                      {
+                        section.intro && (
+
+                          <p
+                            class="
+                              guide-section__intro
+                            "
+                          >
+                            {section.intro}
+                          </p>
+
+                        )
+                      }
+
+                      {
+                        section.status === "reviewed" && (
+                          <div
+                            class="guide-section__verified"
+                            aria-label="Contenido revisado"
+                          >
+                            <span aria-hidden="true">✓</span>
+                            Información revisada
+                          </div>
+                        )
+                      }
+
+                    </div>
+
+
+                    <div
+                      class="
+                        guide-section__copy
+                      "
+                    >
+
+                      {
+                        section.paragraphs?.map(
+                          (
+                            paragraph: string
+                          ) => (
+
+                            <p>
+                              {paragraph}
+                            </p>
+
+                          )
+                        )
+                      }
+
+
+                      <!-- ===================================
+                           HIGHLIGHTS
+                      ==================================== -->
+
+                      {
+                        section.highlights &&
+                        section.highlights.length > 0 && (
+
+                          <div
+                            class="
+                              guide-highlights
+                            "
+                          >
+
+                            {
+                              section.highlights.map(
+                                (
+                                  highlight:
+                                    GuideHighlight
+                                ) => (
+
+                                  <article
+                                    class:list={[
+                                      "guide-highlight",
+                                      `guide-highlight--${
+                                        highlight.type ??
+                                        "tip"
+                                      }`,
+                                    ]}
+                                  >
+
+                                    <span>
+                                      {
+                                        getHighlightLabel(
+                                          highlight
+                                        )
+                                      }
+                                    </span>
+
+                                    <h3>
+                                      {
+                                        highlight.title
+                                      }
+                                    </h3>
+
+                                    <p>
+                                      {
+                                        highlight.description
+                                      }
+                                    </p>
+
+                                  </article>
+
+                                )
+                              )
+                            }
+
+                          </div>
+
+                        )
+                      }
+
+
+                      <!-- ===================================
+                           BLOCKS
+                      ==================================== -->
+
+                      {
+                        section.blocks &&
+                        section.blocks.length > 0 && (
+
+                          <div
+                            class="
+                              guide-blocks
+                            "
+                          >
+
+                            {
+                              section.blocks.map(
+                                (
+                                  block:
+                                    GuideBlock
+                                ) => (
+
+                                  <article
+                                    class={
+                                      getBlockClass(
+                                        block
+                                      )
+                                    }
+                                  >
+
+                                    {
+                                      block.label && (
+
+                                        <span
+                                          class="
+                                            guide-block__label
+                                          "
+                                        >
+                                          {block.label}
+                                        </span>
+
+                                      )
+                                    }
+
+
+                                    {
+                                      block.title && (
+
+                                        <h3>
+                                          {block.title}
+                                        </h3>
+
+                                      )
+                                    }
+
+
+                                    {
+                                      block.content && (
+
+                                        <p>
+                                          {
+                                            block.content
+                                          }
+                                        </p>
+
+                                      )
+                                    }
+
+
+                                    {
+                                      block.items &&
+                                      block.items.length > 0 && (
+
+                                        <ul>
+
+                                          {
+                                            block.items.map(
+                                              (
+                                                item:
+                                                  string
+                                              ) => (
+
+                                                <li>
+                                                  {item}
+                                                </li>
+
+                                              )
+                                            )
+                                          }
+
+                                        </ul>
+
+                                      )
+                                    }
+
+
+                                    {
+                                      block.source && (
+
+                                        <a
+                                          href={
+                                            block
+                                              .source
+                                              .url
+                                          }
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                        >
+
+                                          {
+                                            block
+                                              .source
+                                              .label
+                                          }
+
+                                          {" "}↗
+
+                                        </a>
+
+                                      )
+                                    }
+
+                                  </article>
+
+                                )
+                              )
+                            }
+
+                          </div>
+
+                        )
+                      }
+
+
+                      <!-- ===================================
+                           DURACIÓN
+                      ==================================== -->
+
+                      {
+                        section.id ===
+                        durationSectionId &&
+                        guide.durationOptions &&
+                        guide.durationOptions.length > 0 && (
+
+                          <div
+                            class="
+                              guide-duration-grid
+                            "
+                          >
+
+                            {
+                              guide.durationOptions.map(
+                                (
+                                  option
+                                ) => (
+
+                                  <article
+                                    class:list={[
+                                      {
+                                        "guide-duration-grid__featured":
+                                          option.featured,
+                                      },
+                                    ]}
+                                  >
+
+                                    <span>
+                                      {option.days}
+                                      {" "}
+                                      días
+                                    </span>
+
+                                    <strong>
+                                      {option.title}
+                                    </strong>
+
+                                    <p>
+                                      {
+                                        option.description
+                                      }
+                                    </p>
+
+                                  </article>
+
+                                )
+                              )
+                            }
+
+                          </div>
+
+                        )
+                      }
+
+
+                      <!-- ===================================
+                           ENTRY REQUIREMENTS
+                      ==================================== -->
+
+                      {
+                        section.id ===
+                        entrySectionId &&
+                        entryRequirements &&
+                        defaultTraveler && (
+
+                          <div
+                            class="
+                              entry-requirements
+                            "
+                            data-entry-requirements
+                          >
+
+                            <div
+                              class="
+                                entry-requirements__header
+                              "
+                            >
+
+                              <div>
+
+                                <span>
+                                  Requisitos según nacionalidad
+                                </span>
+
+                                <h3>
+                                  Comprueba tu entrada antes de viajar.
+                                </h3>
+
+                              </div>
+
+
+                              <span
+                                class="
+                                  entry-requirements__badge
+                                "
+                              >
+                                España por defecto
+                              </span>
+
+                            </div>
+
+
+                            <div
+                              class="
+                                entry-requirements__selector
+                              "
+                            >
+
+                              <label
+                                for="traveler-country"
+                              >
+                                Nacionalidad
+                              </label>
+
+
+                              <select
+                                id="traveler-country"
+                                name="traveler-country"
+                                aria-describedby="traveler-country-help"
+                              >
+
+                                {
+                                  travelerOptions.map(
+                                    (
+                                      traveler:
+                                        TravelerRequirement
+                                    ) => (
+
+                                      <option
+                                        value={
+                                          traveler
+                                            .countryCode
+                                        }
+                                        selected={
+                                          traveler
+                                            .countryCode ===
+                                          entryRequirements
+                                            .defaultCountryCode
+                                        }
+                                      >
+                                        {
+                                          traveler
+                                            .countryName
+                                        }
+                                      </option>
+
+                                    )
+                                  )
+                                }
+
+                              </select>
+
+                            </div>
+
+                            <p
+                              id="traveler-country-help"
+                              class="entry-requirements__help"
+                            >
+                              España aparece seleccionada por defecto. Puedes consultar otras nacionalidades disponibles cuando estén verificadas.
+                            </p>
+
+                            <div
+                              class="
+                                entry-result
+                              "
+                              data-entry-result
+                              aria-live="polite"
+                              aria-atomic="true"
+                            >
+
+                              <div>
+
+                                <span>
+                                  Visado
+                                </span>
+
+                                <strong
+                                  data-field="visa"
+                                >
+                                  {
+                                    formatVisaRequirement(
+                                      defaultTraveler
+                                        .visaRequirement
+                                    )
+                                  }
+                                </strong>
+
+                              </div>
+
+
+                              <div>
+
+                                <span>
+                                  Estancia
+                                </span>
+
+                                <strong
+                                  data-field="stay"
+                                >
+                                  {
+                                    defaultTraveler
+                                      .maximumStay ??
+                                    "Consultar condiciones vigentes"
+                                  }
+                                </strong>
+
+                              </div>
+
+
+                              <div>
+
+                                <span>
+                                  Documento
+                                </span>
+
+                                <strong
+                                  data-field="passport"
+                                >
+                                  {
+                                    defaultTraveler
+                                      .passportRequirement ??
+                                    "Consultar requisitos oficiales"
+                                  }
+                                </strong>
+
+                              </div>
+
+
+                              <div>
+
+                                <span>
+                                  Salida del país
+                                </span>
+
+                                <strong
+                                  data-field="return"
+                                >
+                                  {
+                                    defaultTraveler
+                                      .returnTicketRequired
+                                      ? "Sí"
+                                      : "Consultar"
+                                  }
+                                </strong>
+
+                              </div>
+
+
+                              <div>
+
+                                <span>
+                                  Medios económicos
+                                </span>
+
+                                <strong
+                                  data-field="means"
+                                >
+                                  {
+                                    defaultTraveler
+                                      .proofOfMeansRequired
+                                      ? "Pueden solicitarse"
+                                      : "Consultar"
+                                  }
+                                </strong>
+
+                              </div>
+
+
+                              <div>
+
+                                <span>
+                                  Entrada / tasas
+                                </span>
+
+                                <strong
+                                  data-field="entryFee"
+                                >
+                                  {
+                                    defaultTraveler
+                                      .entryFee ??
+                                    "Consultar"
+                                  }
+                                </strong>
+
+                              </div>
+
+
+                              {
+                                defaultTraveler
+                                  .notes &&
+                                defaultTraveler
+                                  .notes.length > 0 && (
+
+                                  <div
+                                    class="
+                                      entry-notes
+                                    "
+                                  >
+
+                                    <span>
+                                      Información adicional
+                                    </span>
+
+                                    <div
+                                      data-field="notes"
+                                    >
+
+                                      {
+                                        defaultTraveler
+                                          .notes
+                                          .map(
+                                            (
+                                              note:
+                                                string
+                                            ) => (
+
+                                              <p>
+                                                {note}
+                                              </p>
+
+                                            )
+                                          )
+                                      }
+
+                                    </div>
+
+                                  </div>
+
+                                )
+                              }
+
+                            </div>
+
+
+                            <div
+                              class="
+                                entry-requirements__footer
+                              "
+                            >
+
+                              <span>
+                                Revisado:
+                                {" "}
+                                {
+                                  entryRequirements
+                                    .lastReviewed
+                                }
+                              </span>
+
+
+                              <a
+                                href={
+                                  entryRequirements
+                                    .legalSource
+                                    .url
+                                }
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+
+                                Fuente oficial
+                                {" "}↗
+
+                              </a>
+
+                            </div>
+
+
+                            <p
+                              class="
+                                entry-requirements__disclaimer
+                              "
+                            >
+                              {
+                                entryRequirements
+                                  .disclaimer
+                              }
+                            </p>
+
+                          </div>
+
+                        )
+                      }
+
+
+                      <!-- ===================================
+                           CLOSING
+                      ==================================== -->
+
+                      {
+                        section.closing && (
+
+                          <div
+                            class="
+                              guide-section__closing
+                            "
+                          >
+
+                            <span>
+                              Nuestro enfoque
+                            </span>
+
+                            <p>
+                              {section.closing}
+                            </p>
+
+                          </div>
+
+                        )
+                      }
+
+
+                      <!-- ===================================
+                           ALERTS
+                      ==================================== -->
+
+                      {
+                        section.id ===
+                        alertsSectionId && (
+
+                          <div
+                            class="guide-alerts"
+                          >
+
+                            {
+                              hasAlerts ? (
+
+                                activeAlerts.map(
+                                  (
+                                    alert:
+                                      TravelAlert
+                                  ) => (
+
+                                    <article
+                                      class:list={[
+                                        "guide-alert",
+                                        `guide-alert--${
+                                          alert.severity
+                                        }`,
+                                      ]}
+                                    >
+
+                                      <div
+                                        class="
+                                          guide-alert__meta
+                                        "
+                                      >
+
+                                        <strong>
+                                          {
+                                            getAlertSeverityLabel(
+                                              alert
+                                                .severity
+                                            )
+                                          }
+                                        </strong>
+
+                                        <span>
+                                          {
+                                            getAlertLabel(
+                                              alert.type
+                                            )
+                                          }
+                                        </span>
+
+                                        <small>
+                                          {alert.date}
+                                        </small>
+
+                                      </div>
+
+
+                                      <div>
+
+                                        <h3>
+                                          {alert.title}
+                                        </h3>
+
+
+                                        <p>
+                                          {
+                                            alert.description
+                                          }
+                                        </p>
+
+
+                                        {
+                                          alert
+                                            .affectedAreas &&
+                                          alert
+                                            .affectedAreas
+                                            .length > 0 && (
+
+                                            <p
+                                              class="
+                                                guide-alert__areas
+                                              "
+                                            >
+
+                                              <strong>
+                                                Zonas afectadas:
+                                              </strong>
+
+                                              {" "}
+
+                                              {
+                                                alert
+                                                  .affectedAreas
+                                                  .join(
+                                                    " · "
+                                                  )
+                                              }
+
+                                            </p>
+
+                                          )
+                                        }
+
+
+                                        {
+                                          alert
+                                            .travelerAction && (
+
+                                            <div
+                                              class="
+                                                guide-alert__action
+                                              "
+                                            >
+
+                                              <strong>
+                                                Qué debería hacer
+                                                el viajero
+                                              </strong>
+
+                                              <p>
+                                                {
+                                                  alert
+                                                    .travelerAction
+                                                }
+                                              </p>
+
+                                            </div>
+
+                                          )
+                                        }
+
+
+                                        {
+                                          alert.source && (
+
+                                            <a
+                                              href={
+                                                alert.source
+                                              }
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                            >
+
+                                              {
+                                                alert
+                                                  .sourceLabel ??
+                                                "Consultar fuente"
+                                              }
+
+                                              {" "}↗
+
+                                            </a>
+
+                                          )
+                                        }
+
+                                      </div>
+
+                                    </article>
+
+                                  )
+                                )
+
+                              ) : (
+
+                                <div
+                                  class="
+                                    guide-alerts__empty
+                                  "
+                                >
+
+                                  <span>
+                                    Seguimiento del destino
+                                  </span>
+
+                                  <strong>
+                                    Sin avisos activos
+                                  </strong>
+
+                                  <p>
+                                    No hay avisos activos publicados
+                                    en este momento. Cuando exista una
+                                    incidencia relevante para viajeros,
+                                    aparecerá aquí con fecha, fuente,
+                                    zona afectada y explicación práctica.
+                                  </p>
+
+                                </div>
+
+                              )
+                            }
+
+                          </div>
+
+                        )
+                      }
+
+
+                      <!-- ===================================
+                           FAQ
+                      ==================================== -->
+
+                      {
+                        section.id ===
+                        faqSectionId && (
+
+                          <div
+                            class="
+                              guide-faq
+                            "
+                          >
+
+                            {
+                              hasFaq ? (
+
+                                guide.faq.map(
+                                  (
+                                    item:
+                                      FAQItem
+                                  ) => (
+
+                                    <details>
+
+                                      <summary>
+                                        {item.question}
+                                      </summary>
+
+                                      <p>
+                                        {item.answer}
+                                      </p>
+
+                                      {
+                                        item.reviewedAt && (
+
+                                          <small>
+                                            Revisado:
+                                            {" "}
+                                            {
+                                              item
+                                                .reviewedAt
+                                            }
+                                          </small>
+
+                                        )
+                                      }
+
+                                    </details>
+
+                                  )
+                                )
+
+                              ) : (
+
+                                <div
+                                  class="
+                                    guide-faq__empty
+                                  "
+                                >
+
+                                  <p>
+                                    Esta sección crecerá
+                                    a partir de preguntas
+                                    reales.
+                                  </p>
+
+                                </div>
+
+                              )
+                            }
+
+                          </div>
+
+                        )
+                      }
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </section>
+
+            );
+          }
+        )
+      }
+
+    </div>
+
+
+    <!-- =====================================================
+         SOURCES
+    ====================================================== -->
+
+    {
+      guide.sources &&
+      guide.sources.length > 0 && (
+
+        <section
+          class="guide-sources"
+        >
+
+          <div class="guide-shell">
+
+            <div
+              class="
+                guide-sources__header
+              "
+            >
+
+              <div>
+
+                <p class="eyebrow">
+                  Fuentes
+                </p>
+
+                <h2>
+                  De dónde sale
+                  la información.
+                </h2>
+
+              </div>
+
+
+              <p>
+                Priorizamos fuentes oficiales
+                cuando el dato es administrativo,
+                sanitario o sensible al cambio.
+              </p>
+
+            </div>
+
+
+            <div
+              class="
+                guide-sources__grid
+              "
+            >
+
+              {
+                guide.sources.map(
+                  (
+                    source
+                  ) => (
+
+                    <a
+                      href={
+                        source.url
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="guide-source"
+                    >
+
+                      <span>
+                        {
+                          source.type ===
+                          "official"
+                            ? "Fuente oficial"
+                            : source.type ===
+                              "primary"
+                            ? "Fuente primaria"
+                            : source.type ===
+                              "experience"
+                            ? "Experiencia"
+                            : "Fuente secundaria"
+                        }
+                      </span>
+
+
+                      <strong>
+                        {source.label}
+                      </strong>
+
+
+                      {
+                        source.accessedAt && (
+
+                          <small>
+                            Consultada:
+                            {" "}
+                            {source.accessedAt}
+                          </small>
+
+                        )
+                      }
+
+
+                      <em
+                        aria-hidden="true"
+                      >
+                        ↗
+                      </em>
+
+                    </a>
+
+                  )
+                )
+              }
+
+            </div>
+
+          </div>
+
+        </section>
+
+      )
+    }
+
+
+    <!-- =====================================================
+         EDITORIAL BRIDGE
+    ====================================================== -->
+
+    <section
+      class="guide-bridge"
+    >
+
+      <div
+        class="
+          guide-shell
+          guide-bridge__inner
+        "
+      >
+
+        <div>
+
+          <p class="eyebrow">
+            La diferencia
+          </p>
+
+          <h2>
+            Una cosa es conocer
+            un destino.
+          </h2>
+
+        </div>
+
+
+        <div>
+
+          <p
+            class="
+              guide-bridge__statement
+            "
+          >
+            Otra es saber qué hacer
+            con toda esa información
+            cuando tienes que tomar
+            decisiones para un viaje real.
+          </p>
+
+
+          <p
+            class="
+              guide-bridge__small
+            "
+          >
+            Ahí es donde empieza
+            nuestro trabajo.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         OUR TRIP
+    ====================================================== -->
+
+    {
+      guide.relatedTripSlug && (
+
+        <section
+          class="guide-our-trip"
+        >
+
+          <div
+            class="
+              guide-shell
+              guide-our-trip__inner
+            "
+          >
+
+            <p class="eyebrow">
+              Experiencia real
+            </p>
+
+
+            <h2>
+              ¿Quieres saber
+              cómo lo hicimos nosotros?
+            </h2>
+
+
+            <p>
+              La guía reúne el conocimiento
+              del destino. Nuestro viaje cuenta
+              qué decisiones tomamos nosotros,
+              qué salió bien, qué no y qué
+              haríamos hoy.
+            </p>
+
+
+            <a
+              href={
+                `/nuestros-viajes/${guide.relatedTripSlug}`
+              }
+              class="button-primary"
+            >
+
+              Ver nuestro viaje
+
+              <span
+                aria-hidden="true"
+              >
+                ↗
+              </span>
+
+            </a>
+
+          </div>
+
+        </section>
+
+      )
+    }
+
+
+    <!-- =====================================================
+         CTA
+    ====================================================== -->
+
+    <section
+      class="guide-cta"
+    >
+
+      <div
+        class="
+          guide-shell
+          guide-cta__inner
+        "
+      >
+
+        <p class="eyebrow">
+          Cruzando Meridianos
+        </p>
+
+
+        <h2>
+          {guide.cta.title}
+        </h2>
+
+
+        <p>
+          {guide.cta.description}
+        </p>
+
+
+        <p
+          class="
+            guide-cta__secondary
+          "
+        >
+          Tú decides cómo quieres viajar.
+          Nosotros nos encargamos de investigar,
+          filtrar y darle forma.
+        </p>
+
+
+        <a
+          href={guide.cta.buttonHref}
+          class="button-primary"
+        >
+
+          {guide.cta.buttonLabel}
+
+          <span
+            aria-hidden="true"
+          >
+            ↗
+          </span>
+
+        </a>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <Footer />
+
+
+  <!-- =====================================================
+       TRAVELER DATA
+  ====================================================== -->
+
+  {
+    entryRequirements &&
+    travelerOptions.length > 0 && (
+
+      <script
+        type="application/json"
+        id="guide-traveler-data"
+        is:inline
+        set:html={
+          JSON.stringify(
+            travelerData
+          )
+        }
+      ></script>
+
+    )
+  }
+
+
+  <!-- =====================================================
+       NATIONALITY SELECTOR
+  ====================================================== -->
+
+  {
+    entryRequirements &&
+    travelerOptions.length > 0 && (
+
+      <script is:inline>
+        (() => {
+
+          const wrapper =
+            document.querySelector(
+              "[data-entry-requirements]"
+            );
+
+          const select =
+            wrapper?.querySelector(
+              "select"
+            );
+
+          const dataElement =
+            document.getElementById(
+              "guide-traveler-data"
+            );
+
+          if (
+            !wrapper ||
+            !select ||
+            !dataElement
+          ) {
+            return;
+          }
+
+          let travelers = [];
+
+          try {
+            travelers =
+              JSON.parse(
+                dataElement.textContent ||
+                "[]"
+              );
+          } catch {
+            travelers = [];
+          }
+
+
+          const visaLabels = {
+            none:
+              "Sin visado",
+
+            consular:
+              "Visado consular",
+
+            restricted:
+              "Visado restringido",
+
+            special:
+              "Condiciones especiales",
+          };
+
+
+          const update =
+            () => {
+
+              const countryCode =
+                select.value;
+
+              const traveler =
+                travelers.find(
+                  (item) =>
+                    item.countryCode ===
+                    countryCode
+                );
+
+              if (!traveler) {
+                return;
+              }
+
+
+              const setField =
+                (
+                  field,
+                  value
+                ) => {
+
+                  const element =
+                    wrapper.querySelector(
+                      `[data-field="${field}"]`
+                    );
+
+                  if (element) {
+                    element.textContent =
+                      value;
+                  }
+                };
+
+
+              setField(
+                "visa",
+                visaLabels[
+                  traveler
+                    .visaRequirement
+                ] ??
+                  traveler
+                    .visaRequirement
+              );
+
+
+              setField(
+                "stay",
+                traveler
+                  .maximumStay ??
+                  "Consultar condiciones vigentes"
+              );
+
+
+              setField(
+                "passport",
+                traveler
+                  .passportRequirement ??
+                  "Consultar requisitos oficiales"
+              );
+
+
+              setField(
+                "return",
+                traveler
+                  .returnTicketRequired
+                  ? "Sí"
+                  : "Consultar"
+              );
+
+
+              setField(
+                "means",
+                traveler
+                  .proofOfMeansRequired
+                  ? "Pueden solicitarse"
+                  : "Consultar"
+              );
+
+
+              setField(
+                "entryFee",
+                traveler
+                  .entryFee ??
+                  "Consultar"
+              );
+
+
+              const notes =
+                wrapper.querySelector(
+                  '[data-field="notes"]'
+                );
+
+              if (
+                notes
+              ) {
+
+                notes
+                  .replaceChildren();
+
+                (
+                  traveler.notes ??
+                  []
+                )
+                  .forEach(
+                    (note) => {
+
+                      const paragraph =
+                        document
+                          .createElement(
+                            "p"
+                          );
+
+                      paragraph.textContent =
+                        note;
+
+                      notes.appendChild(
+                        paragraph
+                      );
+                    }
+                  );
+              }
+            };
+
+
+          select.addEventListener(
+            "change",
+            update
+          );
+
+          update();
+
+        })();
+      </script>
+
+    )
+  }
+
+</Layout>
+
+
+<style>
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+.guide-page {
+  --guide-shell:
+    var(--content-width);
+
+  overflow:
+    clip;
+}
+
+.guide-shell {
+  width:
+    min(
+      var(--guide-shell),
+      calc(100% - 4rem)
+    );
+
+  margin-inline:
+    auto;
+}
+
+.guide-page section {
+  scroll-margin-top:
+    7rem;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.guide-hero {
+  position:
+    relative;
+
+  min-height:
+    min(86vh, 900px);
+
+  display:
+    flex;
+
+  align-items:
+    flex-end;
+
+  overflow:
+    hidden;
+
+  background:
+    var(--color-bosque);
+}
+
+.guide-hero__media,
+.guide-hero__overlay {
+  position:
+    absolute;
+
+  inset:
+    0;
+}
+
+.guide-hero__media img {
+  width:
+    100%;
+
+  height:
+    100%;
+
+  display:
+    block;
+
+  object-fit:
+    cover;
+
+  transform:
+    scale(1.025);
+
+  animation:
+    guideHeroReveal
+    1.2s
+    cubic-bezier(.22,1,.36,1)
+    both;
+}
+
+.guide-hero__overlay {
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(15,27,21,.04),
+      rgba(15,27,21,.17) 35%,
+      rgba(15,27,21,.94)
+    );
+}
+
+.guide-hero__content {
+  position:
+    relative;
+
+  z-index:
+    2;
+
+  width:
+    min(
+      var(--guide-shell),
+      calc(100% - 4rem)
+    );
+
+  margin-inline:
+    auto;
+
+  padding:
+    9rem 0 6rem;
+
+  color:
+    var(--color-papel);
+}
+
+.guide-hero__meta {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  flex-wrap:
+    wrap;
+
+  gap:
+    1.2rem;
+
+  margin-bottom:
+    1.7rem;
+}
+
+.guide-hero__number {
+  color:
+    var(--color-cobre);
+
+  font-size:
+    .78rem;
+
+  letter-spacing:
+    3px;
+}
+
+.guide-hero__label {
+  color:
+    rgba(
+      251,
+      249,
+      245,
+      .72
+    );
+
+  font-size:
+    .68rem;
+
+  font-weight:
+    500;
+
+  letter-spacing:
+    .16em;
+
+  text-transform:
+    uppercase;
+}
+
+.guide-hero h1 {
+  max-width:
+    1050px;
+
+  margin:
+    0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    clamp(
+      4.2rem,
+      8vw,
+      8rem
+    );
+
+  font-weight:
+    400;
+
+  line-height:
+    .91;
+
+  letter-spacing:
+    -.045em;
+
+  color:
+    var(--color-papel);
+}
+
+.guide-hero__subtitle {
+  max-width:
+    720px;
+
+  margin:
+    2rem 0 0;
+
+  color:
+    rgba(
+      251,
+      249,
+      245,
+      .82
+    );
+
+  font-size:
+    1.08rem;
+
+  line-height:
+    1.8;
+}
+
+.guide-hero__status {
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  gap:
+    .55rem;
+
+  margin-top:
+    1.7rem;
+
+  padding:
+    .55rem .8rem;
+
+  border:
+    1px solid
+    rgba(
+      251,
+      249,
+      245,
+      .17
+    );
+
+  border-radius:
+    999px;
+
+  background:
+    rgba(
+      15,
+      27,
+      21,
+      .3
+    );
+
+  font-size:
+    .68rem;
+}
+
+.guide-hero__status span {
+  color:
+    rgba(
+      251,
+      249,
+      245,
+      .55
+    );
+}
+
+.guide-hero__status strong {
+  color:
+    var(--color-papel);
+
+  font-weight:
+    500;
+}
+
+.guide-hero__updated {
+  margin-top:
+    .8rem;
+
+  color:
+    rgba(
+      251,
+      249,
+      245,
+      .5
+    );
+
+  font-size:
+    .72rem;
+}
+
+.guide-hero__updated strong {
+  color:
+    rgba(
+      251,
+      249,
+      245,
+      .82
+    );
+
+  font-weight:
+    500;
+}
+
+.guide-hero__scroll {
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  gap:
+    .7rem;
+
+  margin-top:
+    3rem;
+
+  color:
+    var(--color-papel);
+
+  text-decoration:
+    none;
+
+  font-size:
+    .82rem;
+
+  transition:
+    color .2s ease,
+    transform .2s ease;
+}
+
+.guide-hero__scroll:hover {
+  color:
+    var(--color-cobre);
+
+  transform:
+    translateY(2px);
+}
+
+
+/* =========================================================
+   INTRO
+   ========================================================= */
+
+.guide-introduction {
+  padding:
+    9rem 0;
+
+  background:
+    var(--color-papel);
+}
+
+.guide-introduction__grid {
+  display:
+    grid;
+
+  grid-template-columns:
+    .45fr 1.55fr;
+
+  gap:
+    6rem;
+
+  align-items:
+    start;
+}
+
+.guide-introduction__label {
+  padding-top:
+    .5rem;
+
+  border-top:
+    1px solid
+    rgba(28,48,38,.18);
+}
+
+.guide-introduction__label span {
+  display:
+    block;
+
+  margin-top:
+    1rem;
+
+  max-width:
+    220px;
+
+  color:
+    #777;
+
+  font-size:
+    .76rem;
+
+  line-height:
+    1.5;
+}
+
+.guide-introduction__checked {
+  color:
+    var(--color-cobre) !important;
+}
+
+.guide-introduction__content {
+  max-width:
+    820px;
+}
+
+.guide-introduction__content h2 {
+  max-width:
+    850px;
+
+  margin:
+    0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    clamp(
+      3rem,
+      5.5vw,
+      5.3rem
+    );
+
+  font-weight:
+    400;
+
+  line-height:
+    .98;
+
+  letter-spacing:
+    -.035em;
+
+  color:
+    var(--color-bosque);
+}
+
+.guide-introduction__lead {
+  max-width:
+    760px;
+
+  margin:
+    2.5rem 0 0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    1.5rem;
+
+  line-height:
+    1.5;
+
+  color:
+    var(--color-bosque);
+}
+
+.guide-introduction__content p:not(
+  .guide-introduction__lead
+) {
+  max-width:
+    700px;
+
+  margin-top:
+    1.5rem;
+
+  color:
+    #5b5b5b;
+
+  line-height:
+    1.8;
+}
+
+
+/* =========================================================
+   SNAPSHOT
+   ========================================================= */
+
+.guide-snapshot {
+  padding:
+    8rem 0;
+
+  background:
+    #f3f0e9;
+}
+
+.guide-snapshot__header {
+  display:
+    grid;
+
+  grid-template-columns:
+    1fr .7fr;
+
+  gap:
+    4rem;
+
+  align-items:
+    end;
+
+  margin-bottom:
+    4rem;
+}
+
+.guide-snapshot__header h2 {
+  margin:
+    0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    clamp(
+      3rem,
+      5vw,
+      5rem
+    );
+
+  font-weight:
+    400;
+
+  line-height:
+    .95;
+
+  letter-spacing:
+    -.035em;
+
+  color:
+    var(--color-bosque);
+}
+
+.guide-snapshot__climate {
+  padding-left:
+    1.5rem;
+
+  border-left:
+    2px solid
+    var(--color-cobre);
+}
+
+.guide-snapshot__climate span {
+  display:
+    block;
+
+  margin-bottom:
+    .55rem;
+
+  color:
+    var(--color-cobre);
+
+  font-size:
+    .66rem;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    .13em;
+
+  text-transform:
+    uppercase;
+}
+
+.guide-snapshot__climate p {
+  margin:
+    0;
+
+  color:
+    #666;
+
+  line-height:
+    1.7;
+}
+
+.guide-snapshot__grid {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  border-top:
+    1px solid
+    rgba(28,48,38,.15);
+}
+
+.guide-snapshot__grid article {
+  padding:
+    2.3rem 0;
+
+  border-bottom:
+    1px solid
+    rgba(28,48,38,.15);
+}
+
+.guide-snapshot__grid article:nth-child(odd) {
+  padding-right:
+    3rem;
+}
+
+.guide-snapshot__grid article:nth-child(even) {
+  padding-left:
+    3rem;
+
+  border-left:
+    1px solid
+    rgba(28,48,38,.15);
+}
+
+.guide-snapshot__grid span {
+  display:
+    block;
+
+  margin-bottom:
+    1.1rem;
+
+  color:
+    var(--color-cobre);
+
+  font-size:
+    .68rem;
+
+  font-weight:
+    500;
+
+  letter-spacing:
+    .14em;
+
+  text-transform:
+    uppercase;
+}
+
+.guide-snapshot__grid p,
+.guide-snapshot__grid ul {
+  margin:
+    0;
+
+  color:
+    #555;
+
+  line-height:
+    1.7;
+}
+
+.guide-snapshot__grid ul {
+  padding-left:
+    1.1rem;
+}
+
+.guide-snapshot__grid li + li {
+  margin-top:
+    .45rem;
+}
+
+
+/* =========================================================
+   TOC
+   ========================================================= */
+
+.guide-toc-section {
+  padding:
+    7rem 0 8rem;
+
+  background:
+    #ece9e1;
+}
+
+.guide-toc-header {
+  display:
+    grid;
+
+  grid-template-columns:
+    1fr .52fr;
+
+  gap:
+    5rem;
+
+  align-items:
+    end;
+
+  margin-bottom:
+    4rem;
+}
+
+.guide-toc-header h2 {
+  max-width:
+    760px;
+
+  margin:
+    0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    clamp(
+      2.7rem,
+      4.5vw,
+      4.7rem
+    );
+
+  font-weight:
+    400;
+
+  line-height:
+    1;
+
+  letter-spacing:
+    -.035em;
+
+  color:
+    var(--color-bosque);
+}
+
+.guide-toc-header > p {
+  margin:
+    0;
+
+  color:
+    #666;
+
+  line-height:
+    1.75;
+}
+
+.guide-toc {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  border-top:
+    1px solid
+    rgba(28,48,38,.14);
+}
+
+.guide-toc__item {
+  display:
+    grid;
+
+  grid-template-columns:
+    45px
+    minmax(0,1fr)
+    auto
+    26px;
+
+  gap:
+    1rem;
+
+  align-items:
+    center;
+
+  min-height:
+    76px;
+
+  padding:
+    1rem 0;
+
+  border-bottom:
+    1px solid
+    rgba(28,48,38,.14);
+
+  color:
+    var(--color-bosque);
+
+  text-decoration:
+    none;
+
+  transition:
+    color .2s ease,
+    padding .25s ease;
+}
+
+.guide-toc__item:hover {
+  padding-left:
+    .5rem;
+
+  color:
+    var(--color-cobre);
+}
+
+.guide-toc__number {
+  color:
+    var(--color-cobre);
+
+  font-size:
+    .68rem;
+
+  letter-spacing:
+    .12em;
+}
+
+.guide-toc__title {
+  font-size:
+    .94rem;
+
+  line-height:
+    1.35;
+}
+
+.guide-toc__category {
+  color:
+    #8a8a8a;
+
+  font-size:
+    .62rem;
+
+  letter-spacing:
+    .06em;
+
+  text-transform:
+    uppercase;
+}
+
+.guide-toc__arrow {
+  justify-self:
+    end;
+
+  opacity:
+    0;
+
+  transition:
+    opacity .2s ease,
+    transform .2s ease;
+}
+
+.guide-toc__item:hover
+.guide-toc__arrow {
+  opacity:
+    1;
+
+  transform:
+    translate(3px,-3px);
+}
+
+
+/* =========================================================
+   CONTEXT
+   ========================================================= */
+
+.guide-context {
+  background:
+    var(--color-bosque);
+}
+
+.guide-context__grid {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(4,minmax(0,1fr));
+}
+
+.guide-context__grid article {
+  padding:
+    2.4rem 1.8rem;
+
+  border-right:
+    1px solid
+    rgba(251,249,245,.13);
+}
+
+.guide-context__grid article:last-child {
+  border-right:
+    0;
+}
+
+.guide-context__grid span {
+  display:
+    block;
+
+  margin-bottom:
+    2rem;
+
+  color:
+    var(--color-cobre);
+
+  font-size:
+    .68rem;
+
+  letter-spacing:
+    .14em;
+}
+
+.guide-context__grid strong {
+  display:
+    block;
+
+  margin-bottom:
+    .55rem;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    1.5rem;
+
+  font-weight:
+    400;
+
+  color:
+    var(--color-papel);
+}
+
+.guide-context__grid p {
+  margin:
+    0;
+
+  color:
+    rgba(251,249,245,.62);
+
+  font-size:
+    .84rem;
+
+  line-height:
+    1.65;
+}
+
+
+/* =========================================================
+   LIVE
+   ========================================================= */
+
+.guide-live {
+  background:
+    var(--color-cobre);
+
+  color:
+    var(--color-bosque);
+}
+
+.guide-live__inner {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    2rem;
+
+  min-height:
+    72px;
+}
+
+.guide-live__heading {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    .8rem;
+}
+
+.guide-live__heading span {
+  font-size:
+    .66rem;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    .13em;
+
+  text-transform:
+    uppercase;
+}
+
+.guide-live__heading strong {
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    1.15rem;
+
+  font-weight:
+    400;
+}
+
+.guide-live__link {
+  color:
+    inherit;
+
+  font-size:
+    .8rem;
+
+  font-weight:
+    600;
+
+  text-decoration:
+    none;
+}
+
+
+/* =========================================================
+   GUIDE SECTIONS
+   ========================================================= */
+
+.guide-section {
+  padding:
+    8.5rem 0;
+
+  background:
+    var(--color-papel);
+}
+
+.guide-section:nth-child(even) {
+  background:
+    #f7f4ef;
+}
+
+.guide-section--planning {
+  background:
+    #f3f0e9 !important;
+}
+
+.guide-section--experience {
+  background:
+    var(--color-papel) !important;
+}
+
+.guide-section--practical {
+  background:
+    #f7f4ef !important;
+}
+
+.guide-section--updates {
+  background:
+    #ece9e1 !important;
+}
+
+.guide-section--dark {
+  background:
+    var(--color-bosque) !important;
+}
+
+.guide-section__header {
+  display:
+    grid;
+
+  grid-template-columns:
+    105px 1fr;
+
+  gap:
+    2rem;
+
+  align-items:
+    start;
+
+  max-width:
+    950px;
+
+  margin-bottom:
+    4.5rem;
+}
+
+.guide-section__number {
+  color:
+    var(--color-cobre);
+
+  font-size:
+    .78rem;
+
+  letter-spacing:
+    .14em;
+}
+
+.guide-section__category {
+  margin:
+    0 0 .9rem;
+
+  color:
+    var(--color-cobre);
+
+  font-size:
+    .68rem;
+
+  font-weight:
+    500;
+
+  letter-spacing:
+    .15em;
+
+  text-transform:
+    uppercase;
+}
+
+.guide-section__header h2 {
+  margin:
+    0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    clamp(
+      3rem,
+      5.8vw,
+      5.9rem
+    );
+
+  font-weight:
+    400;
+
+  line-height:
+    .95;
+
+  letter-spacing:
+    -.04em;
+
+  color:
+    var(--color-bosque);
+}
+
+.guide-section--dark
+.guide-section__header h2 {
+  color:
+    var(--color-papel);
+}
+
+.guide-section__body {
+  display:
+    grid;
+
+  grid-template-columns:
+    .8fr 1.2fr;
+
+  gap:
+    6rem;
+
+  align-items:
+    start;
+}
+
+.guide-section__intro {
+  margin:
+    0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    1.65rem;
+
+  line-height:
+    1.45;
+
+  color:
+    var(--color-bosque);
+}
+
+.guide-section--dark
+.guide-section__intro {
+  color:
+    var(--color-papel);
+}
+
+.guide-section__verified {
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  gap:
+    .45rem;
+
+  margin-top:
+    1.6rem;
+
+  padding:
+    .45rem .7rem;
+
+  border:
+    1px solid
+    rgba(28,48,38,.13);
+
+  border-radius:
+    999px;
+
+  color:
+    var(--color-bosque);
+
+  background:
+    rgba(255,255,255,.35);
+
+  font-size:
+    .65rem;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    .04em;
+}
+
+.guide-section__verified span {
+  color:
+    var(--color-cobre);
+}
+
+.guide-section__copy {
+  max-width:
+    760px;
+}
+
+.guide-section__copy > p {
+  margin:
+    0 0 1.5rem;
+
+  color:
+    #606060;
+
+  font-size:
+    1rem;
+
+  line-height:
+    1.85;
+}
+
+.guide-section--dark
+.guide-section__copy > p {
+  color:
+    rgba(251,249,245,.72);
+}
+
+
+/* =========================================================
+   HIGHLIGHTS
+   ========================================================= */
+
+.guide-highlights {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap:
+    1rem;
+
+  margin:
+    2.5rem 0;
+}
+
+.guide-highlight {
+  padding:
+    1.6rem;
+
+  border:
+    1px solid
+    rgba(28,48,38,.13);
+
+  background:
+    rgba(255,255,255,.3);
+
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease;
+}
+
+.guide-highlight:hover {
+  transform:
+    translateY(-3px);
+
+  box-shadow:
+    0 12px 30px
+    rgba(28,48,38,.07);
+}
+
+.guide-highlight span {
+  display:
+    block;
+
+  margin-bottom:
+    1rem;
+
+  color:
+    var(--color-cobre);
+
+  font-size:
+    .66rem;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    .13em;
+
+  text-transform:
+    uppercase;
+}
+
+.guide-highlight h3 {
+  margin:
+    0 0 .65rem;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    1.4rem;
+
+  font-weight:
+    400;
+
+  color:
+    var(--color-bosque);
+}
+
+.guide-highlight p {
+  margin:
+    0;
+
+  color:
+    #666;
+
+  font-size:
+    .9rem;
+
+  line-height:
+    1.7;
+}
+
+.guide-highlight--warning {
+  border-left:
+    2px solid
+    var(--color-cobre);
+}
+
+.guide-highlight--important {
+  background:
+    #ebe7de;
+}
+
+.guide-highlight--experience {
+  background:
+    rgba(28,48,38,.04);
+}
+
+.guide-highlight--decision {
+  background:
+    #f4f1e9;
+}
+
+
+/* =========================================================
+   BLOCKS
+   ========================================================= */
+
+.guide-blocks {
+  display:
+    grid;
+
+  gap:
+    1rem;
+
+  margin:
+    2.5rem 0;
+}
+
+.guide-block {
+  padding:
+    1.7rem;
+
+  border:
+    1px solid
+    rgba(28,48,38,.13);
+
+  background:
+    rgba(255,255,255,.3);
+}
+
+.guide-block__label {
+  display:
+    block;
+
+  margin-bottom:
+    .75rem;
+
+  color:
+    var(--color-cobre);
+
+  font-size:
+    .66rem;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    .13em;
+
+  text-transform:
+    uppercase;
+}
+
+.guide-block h3 {
+  margin:
+    0 0 .65rem;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    1.45rem;
+
+  font-weight:
+    400;
+
+  color:
+    var(--color-bosque);
+}
+
+.guide-block p,
+.guide-block ul {
+  margin:
+    0;
+
+  color:
+    #666;
+
+  line-height:
+    1.75;
+}
+
+.guide-block ul {
+  margin-top:
+    1rem;
+
+  padding-left:
+    1.15rem;
+}
+
+.guide-block li + li {
+  margin-top:
+    .4rem;
+}
+
+.guide-block a {
+  display:
+    inline-block;
+
+  margin-top:
+    1rem;
+
+  color:
+    var(--color-bosque);
+
+  font-size:
+    .82rem;
+
+  font-weight:
+    600;
+}
+
+.guide-block--warning {
+  border-left:
+    2px solid
+    var(--color-cobre);
+
+  background:
+    #f1ece2;
+}
+
+.guide-block--tip {
+  background:
+    #eef0eb;
+}
+
+.guide-block--important {
+  background:
+    #ebe7de;
+}
+
+.guide-block--highlight {
+  background:
+    #f4f1e9;
+}
+
+.guide-block--quote {
+  border-left:
+    2px solid
+    var(--color-cobre);
+}
+
+.guide-block--source {
+  background:
+    #f6f3ed;
+}
+
+.guide-block--comparison,
+.guide-block--table {
+  background:
+    #eeeae2;
+}
+
+.guide-block--experience {
+  background:
+    rgba(28,48,38,.04);
+}
+
+
+/* =========================================================
+   DURATION
+   ========================================================= */
+
+.guide-duration-grid {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap:
+    1px;
+
+  margin-top:
+    2.5rem;
+}
+
+.guide-duration-grid article {
+  padding:
+    1.6rem;
+
+  border:
+    1px solid
+    rgba(28,48,38,.13);
+
+  background:
+    rgba(255,255,255,.28);
+}
+
+.guide-duration-grid__featured {
+  background:
+    var(--color-bosque) !important;
+}
+
+.guide-duration-grid__featured strong,
+.guide-duration-grid__featured p {
+  color:
+    var(--color-papel);
+}
+
+.guide-duration-grid span {
+  display:
+    block;
+
+  margin-bottom:
+    2rem;
+
+  color:
+    var(--color-cobre);
+
+  font-size:
+    .68rem;
+
+  letter-spacing:
+    .12em;
+
+  text-transform:
+    uppercase;
+}
+
+.guide-duration-grid strong {
+  display:
+    block;
+
+  margin-bottom:
+    .7rem;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    1.55rem;
+
+  font-weight:
+    400;
+
+  color:
+    var(--color-bosque);
+}
+
+.guide-duration-grid p {
+  margin:
+    0;
+
+  color:
+    #666;
+
+  font-size:
+    .88rem;
+
+  line-height:
+    1.65;
+}
+
+
+/* =========================================================
+   ENTRY REQUIREMENTS
+   ========================================================= */
+
+.entry-requirements {
+  margin-top:
+    2.8rem;
+
+  overflow:
+    hidden;
+
+  border:
+    1px solid
+    rgba(28,48,38,.16);
+
+  border-radius:
+    24px;
+
+  background:
+    #f4f1e9;
+
+  box-shadow:
+    0 18px 45px
+    rgba(28,48,38,.06);
+}
+
+.entry-requirements__header {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    1.5rem;
+
+  padding:
+    1.8rem;
+
+  border-bottom:
+    1px solid
+    rgba(28,48,38,.12);
+}
+
+.entry-requirements__header > div > span {
+  display:
+    block;
+
+  margin-bottom:
+    .55rem;
+
+  color:
+    var(--color-cobre);
+
+  font-size:
+    .66rem;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    .13em;
+
+  text-transform:
+    uppercase;
+}
+
+.entry-requirements__header h3 {
+  margin:
+    0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    2rem;
+
+  font-weight:
+    400;
+
+  color:
+    var(--color-bosque);
+}
+
+.entry-requirements__badge {
+  padding:
+    .45rem .7rem;
+
+  border-radius:
+    999px;
+
+  background:
+    var(--color-bosque);
+
+  color:
+    var(--color-papel);
+
+  font-size:
+    .65rem;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    .08em;
+
+  text-transform:
+    uppercase;
+}
+
+.entry-requirements__selector {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    1rem;
+
+  padding:
+    1.4rem 1.8rem;
+
+  border-bottom:
+    1px solid
+    rgba(28,48,38,.12);
+}
+
+.entry-requirements__selector label {
+  color:
+    #777;
+
+  font-size:
+    .72rem;
+
+  font-weight:
+    500;
+
+  letter-spacing:
+    .08em;
+
+  text-transform:
+    uppercase;
+}
+
+.entry-requirements__selector select {
+  min-width:
+    220px;
+
+  padding:
+    .7rem .9rem;
+
+  border:
+    1px solid
+    rgba(28,48,38,.18);
+
+  border-radius:
+    10px;
+
+  background:
+    var(--color-papel);
+
+  color:
+    var(--color-bosque);
+
+  font:
+    inherit;
+
+  cursor:
+    pointer;
+}
+
+.entry-requirements__help {
+  margin:
+    0;
+
+  padding:
+    1rem 1.8rem;
+
+  border-bottom:
+    1px solid
+    rgba(28,48,38,.12);
+
+  color:
+    #777;
+
+  font-size:
+    .74rem;
+
+  line-height:
+    1.6;
+}
+
+.entry-result {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  border-bottom:
+    1px solid
+    rgba(28,48,38,.12);
+}
+
+.entry-result > div {
+  padding:
+    1.5rem 1.8rem;
+}
+
+.entry-result > div:nth-child(odd) {
+  border-right:
+    1px solid
+    rgba(28,48,38,.12);
+}
+
+.entry-result span {
+  display:
+    block;
+
+  margin-bottom:
+    .5rem;
+
+  color:
+    #777;
+
+  font-size:
+    .68rem;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    .08em;
+}
+
+.entry-result strong {
+  display:
+    block;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    1.05rem;
+
+  font-weight:
+    400;
+
+  line-height:
+    1.45;
+
+  color:
+    var(--color-bosque);
+}
+
+.entry-notes {
+  grid-column:
+    1 / -1;
+
+  border-top:
+    1px solid
+    rgba(28,48,38,.12);
+}
+
+.entry-notes > span {
+  margin-bottom:
+    .8rem;
+}
+
+.entry-notes p {
+  margin:
+    0 0 .5rem;
+
+  color:
+    #666;
+
+  line-height:
+    1.65;
+}
+
+.entry-notes p:last-child {
+  margin-bottom:
+    0;
+}
+
+.entry-requirements__footer {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    1rem;
+
+  padding:
+    1.3rem 1.8rem;
+}
+
+.entry-requirements__footer span {
+  color:
+    #777;
+
+  font-size:
+    .72rem;
+}
+
+.entry-requirements__footer a {
+  color:
+    var(--color-bosque);
+
+  font-size:
+    .78rem;
+
+  font-weight:
+    600;
+}
+
+.entry-requirements__disclaimer {
+  margin:
+    0;
+
+  padding:
+    0 1.8rem 1.5rem;
+
+  color:
+    #777;
+
+  font-size:
+    .75rem;
+
+  line-height:
+    1.6;
+}
+
+
+/* =========================================================
+   CLOSING
+   ========================================================= */
+
+.guide-section__closing {
+  margin-top:
+    2.5rem;
+
+  padding:
+    1.7rem 0 0;
+
+  border-top:
+    1px solid
+    rgba(28,48,38,.15);
+}
+
+.guide-section__closing span {
+  display:
+    block;
+
+  margin-bottom:
+    .7rem;
+
+  color:
+    var(--color-cobre);
+
+  font-size:
+    .66rem;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    .13em;
+
+  text-transform:
+    uppercase;
+}
+
+.guide-section__closing p {
+  margin:
+    0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    1.2rem;
+
+  line-height:
+    1.5;
+
+  color:
+    var(--color-bosque);
+}
+
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
+
+.guide-alerts {
+  margin-top:
+    2.5rem;
+}
+
+.guide-alert {
+  display:
+    grid;
+
+  grid-template-columns:
+    150px 1fr;
+
+  gap:
+    2rem;
+
+  padding:
+    1.7rem 0;
+
+  border-top:
+    1px solid
+    rgba(28,48,38,.15);
+}
+
+.guide-alert--high,
+.guide-alert--critical {
+  border-left:
+    3px solid
+    var(--color-cobre);
+
+  padding-left:
+    1.2rem;
+}
+
+.guide-alert__meta strong,
+.guide-alert__meta span,
+.guide-alert__meta small {
+  display:
+    block;
+}
+
+.guide-alert__meta strong {
+  margin-bottom:
+    .4rem;
+
+  font-size:
+    .67rem;
+
+  letter-spacing:
+    .1em;
+
+  text-transform:
+    uppercase;
+}
+
+.guide-alert__meta span {
+  margin-bottom:
+    .4rem;
+
+  color:
+    var(--color-cobre);
+
+  font-size:
+    .68rem;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    .1em;
+
+  text-transform:
+    uppercase;
+}
+
+.guide-alert__meta small {
+  color:
+    #777;
+
+  font-size:
+    .72rem;
+}
+
+.guide-alert h3 {
+  margin:
+    0 0 .6rem;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    1.7rem;
+
+  font-weight:
+    400;
+}
+
+.guide-alert p {
+  margin:
+    0 0 .8rem;
+
+  color:
+    #666;
+
+  line-height:
+    1.75;
+}
+
+.guide-alert__areas {
+  font-size:
+    .82rem;
+}
+
+.guide-alert__action {
+  margin-top:
+    1.3rem;
+
+  padding:
+    1rem 1.2rem;
+
+  border-left:
+    2px solid
+    var(--color-cobre);
+
+  background:
+    #f2eee6;
+}
+
+.guide-alert__action strong {
+  display:
+    block;
+
+  margin-bottom:
+    .45rem;
+
+  color:
+    var(--color-bosque);
+
+  font-size:
+    .72rem;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    .08em;
+}
+
+.guide-alert__action p {
+  margin:
+    0;
+
+  font-size:
+    .9rem;
+}
+
+.guide-alert a {
+  color:
+    var(--color-bosque);
+
+  font-size:
+    .8rem;
+
+  font-weight:
+    600;
+}
+
+.guide-alerts__empty {
+  padding:
+    2rem;
+
+  border:
+    1px solid
+    rgba(28,48,38,.14);
+
+  background:
+    rgba(255,255,255,.38);
+}
+
+.guide-alerts__empty span,
+.guide-alerts__empty strong {
+  display:
+    block;
+}
+
+.guide-alerts__empty span {
+  margin-bottom:
+    .6rem;
+
+  color:
+    var(--color-cobre);
+
+  font-size:
+    .68rem;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    .14em;
+
+  text-transform:
+    uppercase;
+}
+
+.guide-alerts__empty strong {
+  margin-bottom:
+    .7rem;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    1.4rem;
+
+  font-weight:
+    400;
+
+  color:
+    var(--color-bosque);
+}
+
+.guide-alerts__empty p {
+  margin:
+    0;
+
+  max-width:
+    700px;
+
+  color:
+    #666;
+
+  line-height:
+    1.7;
+}
+
+
+/* =========================================================
+   FAQ
+   ========================================================= */
+
+.guide-faq {
+  margin-top:
+    2.5rem;
+
+  border-top:
+    1px solid
+    rgba(28,48,38,.14);
+}
+
+.guide-faq details {
+  padding:
+    1.25rem 0;
+
+  border-bottom:
+    1px solid
+    rgba(28,48,38,.14);
+}
+
+.guide-faq summary {
+  cursor:
+    pointer;
+
+  list-style:
+    none;
+
+  color:
+    var(--color-bosque);
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    1.25rem;
+}
+
+.guide-faq summary::-webkit-details-marker {
+  display:
+    none;
+}
+
+.guide-faq summary::after {
+  content:
+    "+";
+
+  float:
+    right;
+
+  color:
+    var(--color-cobre);
+
+  font-size:
+    1.2rem;
+}
+
+.guide-faq details[open]
+summary::after {
+  content:
+    "−";
+}
+
+.guide-faq details p {
+  max-width:
+    720px;
+
+  margin:
+    1rem 0 0;
+
+  color:
+    #666;
+
+  line-height:
+    1.75;
+}
+
+.guide-faq details small {
+  display:
+    block;
+
+  margin-top:
+    .8rem;
+
+  color:
+    #888;
+
+  font-size:
+    .7rem;
+}
+
+.guide-faq__empty {
+  padding:
+    1.8rem 0;
+}
+
+.guide-faq__empty p {
+  margin:
+    0;
+
+  color:
+    #666;
+
+  line-height:
+    1.7;
+}
+
+
+/* =========================================================
+   SOURCES
+   ========================================================= */
+
+.guide-sources {
+  padding:
+    8rem 0;
+
+  background:
+    #f3f0e9;
+}
+
+.guide-sources__header {
+  display:
+    grid;
+
+  grid-template-columns:
+    1fr .65fr;
+
+  gap:
+    5rem;
+
+  align-items:
+    end;
+
+  margin-bottom:
+    3.5rem;
+}
+
+.guide-sources__header h2 {
+  margin:
+    0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    clamp(3rem,5vw,5rem);
+
+  font-weight:
+    400;
+
+  line-height:
+    .95;
+
+  letter-spacing:
+    -.035em;
+
+  color:
+    var(--color-bosque);
+}
+
+.guide-sources__header > p {
+  margin:
+    0;
+
+  color:
+    #666;
+
+  line-height:
+    1.7;
+}
+
+.guide-sources__grid {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap:
+    1rem;
+}
+
+.guide-source {
+  position:
+    relative;
+
+  display:
+    block;
+
+  padding:
+    1.7rem;
+
+  border:
+    1px solid
+    rgba(28,48,38,.14);
+
+  background:
+    var(--color-papel);
+
+  color:
+    inherit;
+
+  text-decoration:
+    none;
+
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease;
+}
+
+.guide-source:hover {
+  transform:
+    translateY(-3px);
+
+  box-shadow:
+    0 14px 32px
+    rgba(28,48,38,.07);
+}
+
+.guide-source span,
+.guide-source small {
+  display:
+    block;
+}
+
+.guide-source span {
+  margin-bottom:
+    .75rem;
+
+  color:
+    var(--color-cobre);
+
+  font-size:
+    .66rem;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    .13em;
+
+  text-transform:
+    uppercase;
+}
+
+.guide-source strong {
+  display:
+    block;
+
+  max-width:
+    85%;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    1.25rem;
+
+  font-weight:
+    400;
+
+  line-height:
+    1.4;
+
+  color:
+    var(--color-bosque);
+}
+
+.guide-source small {
+  margin-top:
+    .7rem;
+
+  color:
+    #888;
+
+  font-size:
+    .7rem;
+}
+
+.guide-source em {
+  position:
+    absolute;
+
+  right:
+    1.5rem;
+
+  top:
+    1.5rem;
+
+  color:
+    var(--color-cobre);
+
+  font-style:
+    normal;
+}
+
+
+/* =========================================================
+   BRIDGE
+   ========================================================= */
+
+.guide-bridge {
+  padding:
+    8rem 0;
+
+  background:
+    #f3f0e9;
+}
+
+.guide-bridge__inner {
+  display:
+    grid;
+
+  grid-template-columns:
+    1fr .7fr;
+
+  gap:
+    6rem;
+
+  align-items:
+    end;
+}
+
+.guide-bridge h2 {
+  max-width:
+    720px;
+
+  margin:
+    0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    clamp(3rem,5vw,5.2rem);
+
+  font-weight:
+    400;
+
+  line-height:
+    .98;
+
+  letter-spacing:
+    -.035em;
+
+  color:
+    var(--color-bosque);
+}
+
+.guide-bridge__statement {
+  margin:
+    0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    1.45rem;
+
+  line-height:
+    1.5;
+
+  color:
+    var(--color-bosque);
+}
+
+.guide-bridge__small {
+  margin:
+    1.5rem 0 0;
+
+  color:
+    #666;
+
+  line-height:
+    1.7;
+}
+
+
+/* =========================================================
+   OUR TRIP
+   ========================================================= */
+
+.guide-our-trip {
+  padding:
+    8rem 0;
+
+  background:
+    var(--color-bosque);
+
+  color:
+    var(--color-papel);
+}
+
+.guide-our-trip__inner {
+  max-width:
+    950px;
+}
+
+.guide-our-trip h2 {
+  max-width:
+    900px;
+
+  margin:
+    0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    clamp(3.4rem,6vw,6rem);
+
+  font-weight:
+    400;
+
+  line-height:
+    .95;
+
+  letter-spacing:
+    -.04em;
+
+  color:
+    var(--color-papel);
+}
+
+.guide-our-trip__inner > p:not(.eyebrow) {
+  max-width:
+    700px;
+
+  margin:
+    2rem 0 0;
+
+  color:
+    rgba(251,249,245,.7);
+
+  line-height:
+    1.8;
+}
+
+.guide-our-trip .button-primary {
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  gap:
+    .65rem;
+
+  margin-top:
+    2.5rem;
+}
+
+
+/* =========================================================
+   CTA
+   ========================================================= */
+
+.guide-cta {
+  padding:
+    9rem 0;
+
+  background:
+    var(--color-papel);
+
+  text-align:
+    center;
+}
+
+.guide-cta__inner {
+  max-width:
+    850px;
+}
+
+.guide-cta h2 {
+  margin:
+    0;
+
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    clamp(3.2rem,6vw,6rem);
+
+  font-weight:
+    400;
+
+  line-height:
+    .95;
+
+  letter-spacing:
+    -.04em;
+
+  color:
+    var(--color-bosque);
+}
+
+.guide-cta p:not(.eyebrow) {
+  max-width:
+    680px;
+
+  margin:
+    2rem auto 0;
+
+  color:
+    #666;
+
+  line-height:
+    1.8;
+}
+
+.guide-cta__secondary {
+  font-family:
+    var(--font-serif);
+
+  font-size:
+    1.2rem;
+
+  color:
+    var(--color-bosque) !important;
+}
+
+.guide-cta .button-primary {
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  gap:
+    .65rem;
+
+  margin-top:
+    2.5rem;
+}
+
+
+/* =========================================================
+   ANIMATION
+   ========================================================= */
+
+@keyframes guideHeroReveal {
+
+  from {
+    opacity:
+      0;
+
+    transform:
+      scale(1.06);
+  }
+
+  to {
+    opacity:
+      1;
+
+    transform:
+      scale(1.025);
+  }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .guide-shell,
+  .guide-hero__content {
+    width:
+      min(
+        var(--guide-shell),
+        calc(100% - 3rem)
+      );
+  }
+
+  .guide-introduction,
+  .guide-snapshot,
+  .guide-section,
+  .guide-toc-section,
+  .guide-sources,
+  .guide-bridge,
+  .guide-our-trip,
+  .guide-cta {
+    padding:
+      6rem 0;
+  }
+
+  .guide-introduction__grid,
+  .guide-snapshot__header,
+  .guide-toc-header,
+  .guide-section__body,
+  .guide-sources__header,
+  .guide-bridge__inner {
+    grid-template-columns:
+      1fr;
+
+    gap:
+      3rem;
+  }
+
+  .guide-toc {
+    grid-template-columns:
+      1fr;
+  }
+
+  .guide-snapshot__grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .guide-snapshot__grid article:nth-child(odd),
+  .guide-snapshot__grid article:nth-child(even) {
+    padding-left:
+      0;
+
+    padding-right:
+      0;
+
+    border-left:
+      0;
+  }
+
+  .guide-context__grid {
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
+  }
+
+  .guide-context__grid article:nth-child(2) {
+    border-right:
+      0;
+  }
+
+  .guide-context__grid article:nth-child(-n + 2) {
+    border-bottom:
+      1px solid
+      rgba(251,249,245,.13);
+  }
+
+  .guide-section__header {
+    grid-template-columns:
+      55px 1fr;
+
+    gap:
+      1.2rem;
+
+    margin-bottom:
+      3rem;
+  }
+
+  .guide-highlights,
+  .guide-duration-grid,
+  .guide-sources__grid {
+    grid-template-columns:
+      1fr;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .guide-shell,
+  .guide-hero__content {
+    width:
+      calc(100% - 2rem);
+  }
+
+  .guide-hero {
+    min-height:
+      650px;
+  }
+
+  .guide-hero__content {
+    padding:
+      7rem 0 4rem;
+  }
+
+  .guide-hero h1 {
+    font-size:
+      clamp(3.5rem,16vw,5rem);
+  }
+
+  .guide-hero__subtitle {
+    font-size:
+      .98rem;
+  }
+
+  .guide-introduction,
+  .guide-snapshot,
+  .guide-section,
+  .guide-toc-section,
+  .guide-sources,
+  .guide-bridge,
+  .guide-our-trip,
+  .guide-cta {
+    padding:
+      5rem 0;
+  }
+
+  .guide-introduction__content h2,
+  .guide-section__header h2,
+  .guide-snapshot__header h2,
+  .guide-sources__header h2 {
+    font-size:
+      3rem;
+  }
+
+  .guide-introduction__lead {
+    font-size:
+      1.35rem;
+  }
+
+  .guide-toc-header h2 {
+    font-size:
+      2.8rem;
+  }
+
+  .guide-context__grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .guide-context__grid article,
+  .guide-context__grid article:nth-child(2) {
+    border-right:
+      0;
+
+    border-bottom:
+      1px solid
+      rgba(251,249,245,.13);
+  }
+
+  .guide-context__grid article:last-child {
+    border-bottom:
+      0;
+  }
+
+  .guide-live__inner {
+    min-height:
+      88px;
+
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+
+    justify-content:
+      center;
+
+    gap:
+      .55rem;
+  }
+
+  .guide-toc__item {
+    grid-template-columns:
+      40px
+      minmax(0,1fr)
+      24px;
+  }
+
+  .guide-toc__category {
+    display:
+      none;
+  }
+
+  .guide-section__header {
+    grid-template-columns:
+      42px 1fr;
+  }
+
+  .guide-section__intro {
+    font-size:
+      1.35rem;
+  }
+
+  .entry-requirements {
+    border-radius:
+      18px;
+  }
+
+  .entry-requirements__header {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .entry-requirements__selector {
+    align-items:
+      stretch;
+
+    flex-direction:
+      column;
+  }
+
+  .entry-requirements__selector select {
+    width:
+      100%;
+  }
+
+  .entry-result {
+    grid-template-columns:
+      1fr;
+  }
+
+  .entry-result > div:nth-child(odd) {
+    border-right:
+      0;
+  }
+
+  .entry-requirements__footer {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .guide-alert {
+    grid-template-columns:
+      1fr;
+
+    gap:
+      1rem;
+  }
+
+  .guide-bridge h2 {
+    font-size:
+      3.2rem;
+  }
+
+  .guide-our-trip h2,
+  .guide-cta h2 {
+    font-size:
+      3.3rem;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (
+  prefers-reduced-motion: reduce
+) {
+
+  .guide-hero__media img {
+    animation:
+      none;
+
+    transform:
+      scale(1.025);
+  }
+
+  .guide-hero__scroll,
+  .guide-toc__item,
+  .guide-highlight,
+  .guide-source {
+    transition:
+      none;
+  }
+
+}
+
+</style>
