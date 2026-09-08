@@ -1,0 +1,745 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+import TravelResources from "../data/resources/TravelResources.astro";
+
+const pageTitle = "Recursos de viaje | Cruzando Meridianos";
+const pageDescription =
+  "Herramientas, servicios y recursos de viaje que consideramos útiles, seleccionados con criterio y explicados con transparencia.";
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  canonical="/recursos"
+>
+  <script type="application/ld+json" is:inline>
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      name: pageTitle,
+      description: pageDescription,
+      url: canonicalUrl,
+      isPartOf: {
+        "@type": "WebSite",
+        name: "Cruzando Meridianos",
+        url: "https://www.cruzandomeridianos.com/"
+      }
+    })}
+  </script>
+
+  <Header />
+
+  <main>
+    <section class="resources-hero">
+      <div class="container resources-hero__inner">
+        <div class="resources-hero__content">
+          <p class="eyebrow">RECURSOS</p>
+
+          <h1>
+            Cosas que realmente
+            <em> pueden ayudarte </em>
+            cuando viajas.
+          </h1>
+
+          <p class="resources-hero__lead">
+            Herramientas, servicios y recursos que creemos que pueden
+            aportar algo durante un viaje. Los seleccionamos porque
+            tienen sentido, no para llenar una lista.
+          </p>
+        </div>
+
+        <aside class="resources-hero__aside" aria-label="Nuestro criterio">
+          <p class="resources-hero__aside-label">Nuestra regla</p>
+
+          <p class="resources-hero__aside-text">
+            Preferimos recomendar pocas cosas y explicar por qué están aquí.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="resources-intro">
+      <div class="container resources-intro__inner">
+        <div class="resources-intro__label">
+          <p class="eyebrow">CÓMO LOS ELEGIMOS</p>
+        </div>
+
+        <div class="resources-intro__content">
+          <h2>
+            No todo lo que sirve para viajar
+            merece una recomendación.
+          </h2>
+
+          <div class="resources-intro__text">
+            <p>
+              Queremos que esta sección sea una extensión de nuestra forma
+              de trabajar: investigar, comparar y explicar con honestidad.
+            </p>
+
+            <p>
+              Algunos recursos pueden tener una relación comercial con
+              nosotros. Cuando ocurre, lo indicamos claramente. Y eso no
+              elimina nuestra obligación de explicar también sus límites,
+              condiciones o posibles inconvenientes.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="resources-list" aria-labelledby="resources-list-title">
+      <div class="container">
+        <header class="resources-list__header">
+          <div>
+            <p class="eyebrow">SELECCIÓN ACTUAL</p>
+
+            <h2 id="resources-list-title">
+              Lo que tenemos seleccionado ahora
+            </h2>
+          </div>
+
+          <p>
+            Una selección pequeña de herramientas y servicios que pueden
+            resultar útiles según el tipo de viaje.
+          </p>
+        </header>
+
+        <TravelResources
+          variant="featured"
+          showFilters={true}
+        />
+      </div>
+    </section>
+
+    <section class="resources-principles">
+      <div class="container">
+        <header class="resources-principles__header">
+          <p class="eyebrow">NUESTRO CRITERIO</p>
+
+          <h2>
+            La utilidad está antes que
+            la recomendación.
+          </h2>
+        </header>
+
+        <div class="resources-principles__grid">
+          <article class="principle">
+            <span class="principle__number">01</span>
+
+            <h3>Tiene que aportar algo</h3>
+
+            <p>
+              No añadimos una herramienta simplemente porque exista un
+              programa de afiliados. Si no vemos una utilidad clara para
+              el viajero, no entra.
+            </p>
+          </article>
+
+          <article class="principle">
+            <span class="principle__number">02</span>
+
+            <h3>Contamos también lo que limita</h3>
+
+            <p>
+              Una recomendación no debería ocultar sus condiciones,
+              límites o posibles inconvenientes. Explicarlos forma parte
+              de la recomendación.
+            </p>
+          </article>
+
+          <article class="principle">
+            <span class="principle__number">03</span>
+
+            <h3>Revisamos lo que cambia</h3>
+
+            <p>
+              Precios, coberturas, promociones, condiciones y
+              funcionalidades pueden cambiar. Por eso nuestros recursos
+              llevan una fecha de revisión.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="resources-boundary">
+      <div class="container resources-boundary__inner">
+        <div class="resources-boundary__content">
+          <p class="eyebrow">Y ESTO ES SOLO UNA PARTE</p>
+
+          <h2>
+            Compartimos herramientas.
+            <em>No todo nuestro trabajo.</em>
+          </h2>
+
+          <p>
+            En nuestras guías encontrarás información, investigación y
+            experiencias que pueden ayudarte a tomar mejores decisiones.
+          </p>
+
+          <p>
+            Pero construir un viaje para una persona concreta requiere
+            otro nivel de trabajo: investigar, comparar, ordenar, decidir
+            y conectar cada pieza.
+          </p>
+        </div>
+
+        <div class="resources-boundary__action">
+          <p>
+            ¿Quieres que hagamos esa parte contigo?
+          </p>
+
+          <a
+            href="/cuentatuviaje"
+            class="text-link"
+            aria-label="Cuéntanos tu viaje"
+          >
+            Cuéntanos tu viaje
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="resources-cta">
+      <div class="container resources-cta__inner">
+        <p class="eyebrow">SIGUIENTE PASO</p>
+
+        <h2>
+          Una buena herramienta ayuda.
+          Una buena decisión cambia el viaje.
+        </h2>
+
+        <p>
+          Cuando necesites algo más que una lista de recomendaciones,
+          podemos investigar y diseñar el viaje contigo.
+        </p>
+
+        <a href="/cuentatuviaje" class="button-primary">
+          Cuéntanos tu viaje
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .resources-hero {
+    background: var(--color-bosque);
+    color: var(--color-papel);
+    padding: 8rem 0 7rem;
+  }
+
+  .resources-hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.5fr);
+    gap: 5rem;
+    align-items: end;
+  }
+
+  .resources-hero__content {
+    max-width: 850px;
+  }
+
+  .eyebrow {
+    margin: 0 0 1.25rem;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .resources-hero .eyebrow {
+    color: rgba(251, 249, 245, 0.62);
+  }
+
+  .resources-hero h1 {
+    max-width: 850px;
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(3.5rem, 7vw, 7rem);
+    font-weight: 400;
+    letter-spacing: -0.045em;
+    line-height: 0.94;
+    text-wrap: balance;
+  }
+
+  .resources-hero h1 em {
+    color: var(--color-cobre);
+    font-style: italic;
+  }
+
+  .resources-hero__lead {
+    max-width: 680px;
+    margin: 2.5rem 0 0;
+    color: rgba(251, 249, 245, 0.78);
+    font-size: 1.1rem;
+    line-height: 1.75;
+  }
+
+  .resources-hero__aside {
+    padding-left: 2rem;
+    border-left: 1px solid rgba(251, 249, 245, 0.2);
+  }
+
+  .resources-hero__aside-label {
+    margin: 0 0 0.75rem;
+    color: rgba(251, 249, 245, 0.52);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .resources-hero__aside-text {
+    max-width: 260px;
+    margin: 0;
+    color: var(--color-papel);
+    font-family: var(--font-serif);
+    font-size: 1.55rem;
+    line-height: 1.25;
+  }
+
+  .resources-intro {
+    background: var(--color-papel);
+    padding: 8rem 0;
+  }
+
+  .resources-intro__inner {
+    display: grid;
+    grid-template-columns: 0.32fr 1fr;
+    gap: 4rem;
+  }
+
+  .resources-intro__label .eyebrow,
+  .resources-list__header .eyebrow,
+  .resources-principles .eyebrow,
+  .resources-boundary .eyebrow,
+  .resources-cta .eyebrow {
+    color: var(--color-cobre);
+  }
+
+  .resources-intro__content {
+    max-width: 850px;
+  }
+
+  .resources-intro h2 {
+    max-width: 780px;
+    margin: 0;
+    color: var(--color-bosque);
+    font-family: var(--font-serif);
+    font-size: clamp(2.8rem, 5vw, 5rem);
+    font-weight: 400;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    text-wrap: balance;
+  }
+
+  .resources-intro__text {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem;
+    margin-top: 3rem;
+    max-width: 850px;
+  }
+
+  .resources-intro__text p {
+    margin: 0;
+    color: rgba(26, 26, 26, 0.72);
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .resources-list {
+    background: var(--color-arena);
+    padding: 7rem 0 8rem;
+  }
+
+  .resources-list__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 3rem;
+  }
+
+  .resources-list__header h2 {
+    max-width: 720px;
+    margin: 0;
+    color: var(--color-bosque);
+    font-family: var(--font-serif);
+    font-size: clamp(2.7rem, 5vw, 4.8rem);
+    font-weight: 400;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+
+  .resources-list__header > p {
+    max-width: 420px;
+    margin: 0 0 0.25rem;
+    color: rgba(26, 26, 26, 0.68);
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .resources-principles {
+    background: var(--color-bosque);
+    color: var(--color-papel);
+    padding: 8rem 0;
+  }
+
+  .resources-principles__header {
+    max-width: 800px;
+    margin-bottom: 4rem;
+  }
+
+  .resources-principles__header h2 {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 0.98;
+    text-wrap: balance;
+  }
+
+  .resources-principles__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    overflow: hidden;
+    border: 1px solid rgba(251, 249, 245, 0.16);
+    background: rgba(251, 249, 245, 0.16);
+  }
+
+  .principle {
+    min-height: 300px;
+    padding: 2rem;
+    background: var(--color-bosque);
+  }
+
+  .principle__number {
+    display: block;
+    margin-bottom: 5rem;
+    color: rgba(251, 249, 245, 0.42);
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .principle h3 {
+    margin: 0 0 1rem;
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.05;
+  }
+
+  .principle p {
+    max-width: 360px;
+    margin: 0;
+    color: rgba(251, 249, 245, 0.66);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .resources-boundary {
+    background: var(--color-arena);
+    padding: 8rem 0;
+  }
+
+  .resources-boundary__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
+    gap: 5rem;
+    align-items: end;
+  }
+
+  .resources-boundary__content {
+    max-width: 850px;
+  }
+
+  .resources-boundary__content h2 {
+    margin: 0 0 2.25rem;
+    color: var(--color-bosque);
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 5.5vw, 5.7rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 0.96;
+    text-wrap: balance;
+  }
+
+  .resources-boundary__content h2 em {
+    color: var(--color-cobre);
+    font-style: italic;
+  }
+
+  .resources-boundary__content p:not(.eyebrow) {
+    max-width: 680px;
+    margin: 0 0 1rem;
+    color: rgba(26, 26, 26, 0.72);
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .resources-boundary__action {
+    padding-left: 2rem;
+    border-left: 1px solid rgba(26, 26, 26, 0.16);
+  }
+
+  .resources-boundary__action p {
+    margin: 0 0 1.25rem;
+    color: rgba(26, 26, 26, 0.58);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: var(--color-bosque);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .text-link span {
+    display: inline-block;
+    font-size: 1.15rem;
+    transition: transform 180ms ease;
+  }
+
+  .text-link:hover span {
+    transform: translate(3px, -3px);
+  }
+
+  .text-link:focus-visible {
+    outline: 2px solid var(--color-cobre);
+    outline-offset: 5px;
+  }
+
+  .resources-cta {
+    background: var(--color-papel);
+    padding: 8rem 0 9rem;
+  }
+
+  .resources-cta__inner {
+    max-width: 850px;
+  }
+
+  .resources-cta h2 {
+    margin: 0;
+    color: var(--color-bosque);
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 5.5vw, 5.5rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 0.96;
+    text-wrap: balance;
+  }
+
+  .resources-cta p:not(.eyebrow) {
+    max-width: 620px;
+    margin: 2rem 0 2.5rem;
+    color: rgba(26, 26, 26, 0.68);
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .button-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.35rem;
+    background: var(--color-bosque);
+    color: var(--color-papel);
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+      transform 180ms ease,
+      background-color 180ms ease;
+  }
+
+  .button-primary:hover {
+    transform: translateY(-2px);
+    background: #284235;
+  }
+
+  .button-primary:focus-visible {
+    outline: 2px solid var(--color-cobre);
+    outline-offset: 5px;
+  }
+
+  .button-primary span {
+    font-size: 1.05rem;
+  }
+
+  @media (max-width: 900px) {
+    .resources-hero {
+      padding: 6rem 0;
+    }
+
+    .resources-hero__inner,
+    .resources-boundary__inner {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    .resources-hero__aside {
+      max-width: 500px;
+      padding-top: 1.5rem;
+      padding-left: 0;
+      border-top: 1px solid rgba(251, 249, 245, 0.2);
+      border-left: 0;
+    }
+
+    .resources-intro {
+      padding: 6rem 0;
+    }
+
+    .resources-intro__inner {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .resources-list {
+      padding: 6rem 0;
+    }
+
+    .resources-list__header {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .resources-principles {
+      padding: 6rem 0;
+    }
+
+    .resources-principles__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .principle {
+      min-height: auto;
+    }
+
+    .principle__number {
+      margin-bottom: 3rem;
+    }
+
+    .resources-boundary {
+      padding: 6rem 0;
+    }
+
+    .resources-boundary__action {
+      padding-top: 1.5rem;
+      padding-left: 0;
+      border-top: 1px solid rgba(26, 26, 26, 0.16);
+      border-left: 0;
+    }
+
+    .resources-cta {
+      padding: 6rem 0 7rem;
+    }
+  }
+
+  @media (max-width: 680px) {
+    .resources-hero {
+      padding: 5rem 0 4.5rem;
+    }
+
+    .resources-hero h1 {
+      font-size: clamp(3rem, 13vw, 4.5rem);
+    }
+
+    .resources-hero__lead {
+      margin-top: 2rem;
+      font-size: 1rem;
+    }
+
+    .resources-intro {
+      padding: 5rem 0;
+    }
+
+    .resources-intro h2 {
+      font-size: clamp(2.6rem, 11vw, 4rem);
+    }
+
+    .resources-intro__text {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .resources-list {
+      padding: 5rem 0;
+    }
+
+    .resources-list__header h2 {
+      font-size: clamp(2.6rem, 11vw, 4rem);
+    }
+
+    .resources-principles {
+      padding: 5rem 0;
+    }
+
+    .resources-boundary {
+      padding: 5rem 0;
+    }
+
+    .resources-boundary__content h2 {
+      font-size: clamp(2.7rem, 11vw, 4.2rem);
+    }
+
+    .resources-cta {
+      padding: 5rem 0 6rem;
+    }
+
+    .resources-cta h2 {
+      font-size: clamp(2.7rem, 11vw, 4.2rem);
+    }
+  }
+
+  @media (max-width: 420px) {
+    .resources-hero h1 {
+      font-size: 3rem;
+    }
+
+    .resources-hero__aside-text {
+      font-size: 1.35rem;
+    }
+
+    .principle {
+      padding: 1.5rem;
+    }
+
+    .principle h3 {
+      font-size: 1.75rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .text-link span,
+    .button-primary {
+      transition: none;
+    }
+
+    .text-link:hover span,
+    .button-primary:hover {
+      transform: none;
+    }
+  }
+</style>

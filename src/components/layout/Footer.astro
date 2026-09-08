@@ -1,8 +1,11 @@
 <footer class="site-footer">
-
   <div class="footer-inner">
 
     <div class="footer-main">
+
+      <!-- =====================================================
+           MARCA
+      ====================================================== -->
 
       <div class="footer-brand">
 
@@ -24,27 +27,69 @@
       </div>
 
 
-      <div class="footer-column">
+      <!-- =====================================================
+           EXPLORAR
+      ====================================================== -->
 
-        <h2>Explorar</h2>
+      <nav
+        class="footer-column"
+        aria-label="Explorar"
+      >
 
-        <a href="/">Inicio</a>
-        <a href="/como-trabajamos">Cómo trabajamos</a>
-        <a href="/viajes">Viajes</a>
-        <a href="/nuestros-viajes">Nuestros viajes</a>
+        <h2>
+          Explorar
+        </h2>
 
-      </div>
+        <a href="/">
+          Inicio
+        </a>
+
+        <a href="/viajes">
+          Guías y viajes
+        </a>
+
+        <a href="/nuestros-viajes">
+          Nuestros viajes
+        </a>
+
+        <a href="/recursos">
+          Recursos
+        </a>
+
+        <a href="/como-trabajamos">
+          Cómo trabajamos
+        </a>
+
+      </nav>
 
 
-      <div class="footer-column">
+      <!-- =====================================================
+           LA MARCA
+      ====================================================== -->
 
-        <h2>La marca</h2>
+      <nav
+        class="footer-column"
+        aria-label="La marca"
+      >
 
-        <a href="/sobre-nosotros">Sobre nosotros</a>
-        <a href="/contacto">Contacto</a>
+        <h2>
+          La marca
+        </h2>
 
-      </div>
+        <a href="/sobre-nosotros">
+          Sobre nosotros
+        </a>
 
+        <a href="/contacto">
+          Contacto
+        </a>
+
+      </nav>
+
+
+      <!-- =====================================================
+           CTA
+      ====================================================== -->
 
       <div class="footer-highlight">
 
@@ -61,17 +106,24 @@
         </p>
 
         <a
-        href="/cuentatuviaje"
-        class="footer-cta"
-      >
-        Cuéntanos tu viaje
-        <span aria-hidden="true">↗</span>
-      </a>
+          href="/cuentatuviaje"
+          class="footer-cta"
+        >
+          Cuéntanos tu viaje
+
+          <span aria-hidden="true">
+            ↗
+          </span>
+        </a>
 
       </div>
 
     </div>
 
+
+    <!-- =======================================================
+         FOOTER INFERIOR
+    ======================================================== -->
 
     <div class="footer-bottom">
 
@@ -80,15 +132,24 @@
       </span>
 
       <div class="footer-legal">
-        <a href="/privacidad">Privacidad</a>
-        <a href="/aviso-legal">Aviso legal</a>
-        <a href="/cookies">Cookies</a>
+
+        <a href="/privacidad">
+          Privacidad
+        </a>
+
+        <a href="/aviso-legal">
+          Aviso legal
+        </a>
+
+        <a href="/cookies">
+          Cookies
+        </a>
+
       </div>
 
     </div>
 
   </div>
-
 </footer>
 
 
@@ -110,13 +171,12 @@
 
 
   .footer-main {
-
     display: grid;
 
     grid-template-columns:
-      1.45fr
-      .8fr
-      .8fr
+      1.35fr
+      .9fr
+      .75fr
       1.5fr;
 
     gap: 4rem;
@@ -125,6 +185,10 @@
   }
 
 
+  /* =========================================================
+     MARCA
+     ========================================================= */
+
   .footer-brand {
     max-width: 280px;
   }
@@ -132,11 +196,12 @@
 
   .footer-brand > a {
     display: inline-flex;
+
+    align-items: center;
   }
 
 
   .footer-isotipo {
-
     display: block;
 
     width: 70px;
@@ -147,7 +212,6 @@
 
 
   .footer-brand p {
-
     margin: 0;
 
     max-width: 250px;
@@ -162,8 +226,11 @@
   }
 
 
-  .footer-column {
+  /* =========================================================
+     COLUMNAS
+     ========================================================= */
 
+  .footer-column {
     display: flex;
 
     flex-direction: column;
@@ -175,7 +242,6 @@
 
 
   .footer-column h2 {
-
     margin: 0 0 1rem;
 
     font-family: var(--font-sans);
@@ -193,12 +259,13 @@
 
 
   .footer-column a {
-
     color: rgba(251, 249, 245, .72);
 
     text-decoration: none;
 
     font-size: .9rem;
+
+    line-height: 1.4;
 
     transition:
       color .2s ease,
@@ -207,15 +274,29 @@
 
 
   .footer-column a:hover {
-
     color: var(--color-papel);
 
     transform: translateX(2px);
   }
 
 
-  .footer-highlight {
+  .footer-column a:focus-visible,
+  .footer-cta:focus-visible,
+  .footer-legal a:focus-visible,
+  .footer-brand a:focus-visible {
+    outline: 2px solid var(--color-cobre);
 
+    outline-offset: 4px;
+
+    border-radius: 2px;
+  }
+
+
+  /* =========================================================
+     CTA
+     ========================================================= */
+
+  .footer-highlight {
     padding-left: 2.5rem;
 
     border-left:
@@ -224,7 +305,6 @@
 
 
   .footer-eyebrow {
-
     display: block;
 
     margin-bottom: 1rem;
@@ -240,7 +320,6 @@
 
 
   .footer-highlight h2 {
-
     margin: 0;
 
     max-width: 360px;
@@ -256,7 +335,6 @@
 
 
   .footer-highlight p {
-
     margin: 1rem 0 1.5rem;
 
     color: rgba(251, 249, 245, .65);
@@ -268,7 +346,6 @@
 
 
   .footer-cta {
-
     display: inline-flex;
 
     align-items: center;
@@ -289,26 +366,27 @@
 
 
   .footer-cta span {
-
     transition:
       transform .2s ease;
   }
 
 
   .footer-cta:hover {
-
     color: var(--color-cobre);
   }
 
 
   .footer-cta:hover span {
-
-    transform: translate(3px, -3px);
+    transform:
+      translate(3px, -3px);
   }
 
 
-  .footer-bottom {
+  /* =========================================================
+     FOOTER INFERIOR
+     ========================================================= */
 
+  .footer-bottom {
     display: flex;
 
     align-items: center;
@@ -320,57 +398,64 @@
     padding-top: 1.5rem;
 
     border-top:
-      1px solid rgba(251, 249, 245, .16);
+      1px solid rgba(251, 249, 245, .12);
 
-    font-size: .7rem;
+    color: rgba(251, 249, 245, .52);
 
-    line-height: 1.5;
-
-    color: rgba(251, 249, 245, .45);
+    font-size: .78rem;
   }
 
 
   .footer-legal {
-
     display: flex;
 
-    gap: 1.5rem;
+    align-items: center;
+
+    justify-content: flex-end;
+
+    flex-wrap: wrap;
+
+    gap: 1.25rem;
   }
 
 
   .footer-legal a {
-
     color: inherit;
 
     text-decoration: none;
+
+    transition:
+      color .2s ease;
   }
 
 
   .footer-legal a:hover {
-
     color: var(--color-papel);
   }
 
 
-  @media (max-width: 950px) {
+  /* =========================================================
+     RESPONSIVE
+     ========================================================= */
+
+  @media (max-width: 1000px) {
 
     .footer-main {
+      grid-template-columns:
+        1.2fr
+        .9fr
+        .9fr;
 
-      grid-template-columns: 1fr 1fr;
-
-      gap: 4rem 3rem;
+      gap: 3rem;
     }
 
-    .footer-brand {
-
-      grid-column: 1 / -1;
-    }
 
     .footer-highlight {
+      grid-column: 1 / -1;
 
       padding-left: 0;
 
-      padding-top: 2rem;
+      padding-top: 2.5rem;
 
       border-left: 0;
 
@@ -381,52 +466,89 @@
   }
 
 
-  @media (max-width: 600px) {
+  @media (max-width: 680px) {
 
     .site-footer {
-
       padding:
-        5rem 1.5rem 1.5rem;
+        5rem
+        1.25rem
+        1.5rem;
     }
 
+
     .footer-main {
+      grid-template-columns:
+        1fr 1fr;
 
-      grid-template-columns: 1fr;
-
-      gap: 3rem;
+      gap:
+        3rem 2rem;
 
       padding-bottom: 4rem;
     }
 
-    .footer-brand {
 
-      grid-column: auto;
+    .footer-brand {
+      grid-column: 1 / -1;
+
+      max-width: 320px;
     }
 
+
     .footer-highlight {
+      grid-column: 1 / -1;
 
       padding-top: 2rem;
     }
 
-    .footer-highlight h2 {
 
-      font-size: 1.8rem;
+    .footer-highlight h2 {
+      font-size: 1.75rem;
     }
 
+
     .footer-bottom {
+      flex-direction: column;
 
       align-items: flex-start;
 
-      flex-direction: column;
-
-      gap: .8rem;
+      gap: 1rem;
     }
 
+
     .footer-legal {
+      justify-content: flex-start;
 
-      flex-wrap: wrap;
+      gap:
+        .75rem
+        1rem;
+    }
 
-      gap: 1rem;
+  }
+
+
+  @media (max-width: 420px) {
+
+    .footer-main {
+      grid-template-columns: 1fr;
+
+      gap: 2.5rem;
+    }
+
+
+    .footer-column {
+      gap: .65rem;
+    }
+
+  }
+
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .footer-column a,
+    .footer-cta,
+    .footer-cta span,
+    .footer-legal a {
+      transition: none;
     }
 
   }
