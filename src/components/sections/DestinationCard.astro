@@ -25,199 +25,126 @@ const destinationUrl = `/viajes/${destination.slug}`;
     },
   ]}
 >
+  <div class="destination-content">
+    <div class="destination-copy">
+      <span class="destination-number">
+        {destination.number}
+      </span>
 
-  <div class="destination-image">
+      <h3>
+        {isReady ? (
+          <a
+            href={destinationUrl}
+            class="destination-title-link"
+          >
+            {destination.name}
+          </a>
+        ) : (
+          destination.name
+        )}
+      </h3>
 
-    {isReady ? (
+      <p>
+        {destination.description}
+      </p>
 
-      <a
-        href={destinationUrl}
-        class="destination-image-link"
-        aria-label={`Explorar ${destination.name}`}
-      >
+      {isReady ? (
+        <a
+          href={destinationUrl}
+          class="destination-link"
+        >
+          Explorar destino
+          <span aria-hidden="true">↗</span>
+        </a>
+      ) : (
+        <span class="destination-coming">
+          Estamos investigándolo
+        </span>
+      )}
+    </div>
+
+    <div class="destination-image">
+      {isReady ? (
+        <a
+          href={destinationUrl}
+          class="destination-image-link"
+          aria-label={`Explorar ${destination.name}`}
+        >
+          <Image
+            src={destination.image}
+            alt={destination.imageAlt}
+            loading={featured ? "eager" : "lazy"}
+          />
+        </a>
+      ) : (
         <Image
           src={destination.image}
           alt={destination.imageAlt}
           loading={featured ? "eager" : "lazy"}
         />
-      </a>
-
-    ) : (
-
-      <Image
-        src={destination.image}
-        alt={destination.imageAlt}
-        loading={featured ? "eager" : "lazy"}
-      />
-
-    )}
-
-    {!isReady && (
-      <span class="destination-status">
-        Próximamente
-      </span>
-    )}
-
-  </div>
-
-
-  <div class="destination-content">
-
-    <span class="destination-number">
-      {destination.number}
-    </span>
-
-    <h3>
-      {isReady ? (
-        <a
-          href={destinationUrl}
-          class="destination-title-link"
-        >
-          {destination.name}
-        </a>
-      ) : (
-        destination.name
       )}
-    </h3>
 
-    <p>
-      {destination.description}
-    </p>
-
-    {isReady ? (
-
-      <a
-        href={destinationUrl}
-        class="destination-link"
-      >
-        Explorar destino
-        <span aria-hidden="true">↗</span>
-      </a>
-
-    ) : (
-
-      <span class="destination-coming">
-        Estamos investigándolo
-      </span>
-
-    )}
-
+      {!isReady && (
+        <span class="destination-status">
+          Próximamente
+        </span>
+      )}
+    </div>
   </div>
-
 </article>
 
-
 <style>
-
 .destination {
   min-width: 0;
 }
 
-
-/* =========================================================
-   IMAGEN
-   ========================================================= */
-
-.destination-image {
-  position: relative;
-
-  overflow: hidden;
-
-  border-radius: 24px;
-
-  background: var(--color-arena);
-}
-
-.destination-image-link {
-  display: block;
-
-  width: 100%;
-  height: 100%;
-
-  color: inherit;
-
-  text-decoration: none;
-}
-
-.destination-image img {
-  display: block;
-
-  width: 100%;
-  height: 100%;
-
-  object-fit: cover;
-
-  transition: transform .6s ease;
-}
-
-.destination:not(.destination-disabled):hover
-.destination-image img {
-  transform: scale(1.025);
-}
-
-
-/* =========================================================
-   DESTINO DESTACADO — DESKTOP
-   ========================================================= */
-
-.destination-featured {
-  display: grid;
-
-  grid-template-columns: minmax(0, 1.65fr) minmax(320px, .85fr);
-
-  gap: 5rem;
-
-  align-items: center;
-}
-
-.destination-featured .destination-image {
-  height: 560px;
-}
-
-
-/* =========================================================
-   DESTINOS NORMALES — DESKTOP
-   ========================================================= */
-
-.destination:not(.destination-featured) .destination-image {
-  height: 440px;
-}
-
-
-/* =========================================================
-   CONTENIDO
-   ========================================================= */
-
 .destination-content {
-  padding-top: 1.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 168px;
+  gap: 2rem;
+  align-items: center;
+  min-height: 168px;
+  padding: 1.35rem;
+  border: 1px solid rgba(28, 48, 38, .12);
+  border-radius: 24px;
+  background: var(--color-papel);
+}
+
+.destination-featured .destination-content {
+  grid-template-columns: minmax(0, 1fr) 220px;
+  min-height: 210px;
+  padding: 1.5rem;
+}
+
+.destination-copy {
+  min-width: 0;
 }
 
 .destination-number {
   display: block;
-
-  margin-bottom: 1.4rem;
-
+  margin-bottom: .85rem;
   color: var(--color-cobre);
-
-  font-size: .8rem;
+  font-size: .72rem;
   letter-spacing: 2px;
 }
 
 .destination h3 {
-  margin: 0 0 1rem;
-
+  margin: 0 0 .8rem;
+  color: var(--color-bosque);
   font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -.02em;
+}
 
+.destination-featured h3 {
   font-size: 2.35rem;
-  font-weight: 500;
-  line-height: 1.1;
 }
 
 .destination-title-link {
   color: inherit;
-
   text-decoration: none;
-
   transition: color .2s ease;
 }
 
@@ -225,41 +152,27 @@ const destinationUrl = `/viajes/${destination.slug}`;
   color: var(--color-cobre);
 }
 
-.destination-content p {
-  max-width: 460px;
-
+.destination-copy p {
+  max-width: 520px;
   margin: 0;
-
   color: #555;
-
-  font-size: 1rem;
-  line-height: 1.7;
+  font-size: .92rem;
+  line-height: 1.65;
 }
-
-
-/* =========================================================
-   LINKS
-   ========================================================= */
 
 .destination-link,
 .destination-coming {
   display: inline-flex;
-
   align-items: center;
-
   gap: .6rem;
-
-  margin-top: 1.5rem;
-
-  font-size: .85rem;
+  margin-top: 1.1rem;
+  font-size: .8rem;
   font-weight: 500;
 }
 
 .destination-link {
   color: var(--color-bosque);
-
   text-decoration: none;
-
   transition: color .2s ease;
 }
 
@@ -277,145 +190,152 @@ const destinationUrl = `/viajes/${destination.slug}`;
 
 .destination-coming {
   color: #777;
-
-  font-size: .78rem;
+  font-size: .76rem;
   letter-spacing: .5px;
 }
 
+.destination-image {
+  position: relative;
+  width: 168px;
+  height: 116px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--color-arena);
+  border: 1px solid rgba(28, 48, 38, .08);
+  isolation: isolate;
+}
 
-/* =========================================================
-   PRÓXIMAMENTE
-   ========================================================= */
+.destination-featured .destination-image {
+  width: 220px;
+  height: 150px;
+  border-radius: 18px;
+}
+
+.destination-image-link {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.destination-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  transition: transform .45s ease;
+}
+
+.destination:not(.destination-disabled):hover .destination-image img {
+  transform: scale(1.025);
+}
 
 .destination-status {
   position: absolute;
-
-  top: 1.25rem;
-  left: 1.25rem;
-
-  padding: .5rem .8rem;
-
+  top: .7rem;
+  left: .7rem;
+  padding: .4rem .6rem;
   border-radius: 999px;
-
-  background: rgba(251, 249, 245, .92);
-
+  background: rgba(251, 249, 245, .94);
   color: var(--color-bosque);
-
-  font-size: .7rem;
+  font-size: .62rem;
   font-weight: 500;
-
-  letter-spacing: .5px;
+  letter-spacing: .4px;
 }
 
 .destination-disabled {
-  opacity: .9;
+  opacity: .92;
 }
 
-
-/* =========================================================
-   TABLET
-   ========================================================= */
+.destination:focus-within .destination-content {
+  outline: 2px solid var(--color-cobre);
+  outline-offset: 4px;
+}
 
 @media (max-width: 900px) {
-
-  .destination-featured {
-    grid-template-columns: minmax(0, 1.35fr) minmax(280px, .9fr);
-
-    gap: 3rem;
-  }
-
-  .destination-featured .destination-image {
-    height: 480px;
-  }
-
-  .destination:not(.destination-featured) .destination-image {
-    height: 380px;
-  }
-
-}
-
-
-/* =========================================================
-   MÓVIL
-   ORDEN:
-   número
-   título
-   descripción
-   enlace
-   imagen
-   ========================================================= */
-
-@media (max-width: 700px) {
-
-  .destination-featured {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 2rem;
-
-    align-items: stretch;
-  }
-
-  .destination {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 1.75rem;
-  }
-
-  .destination-content {
-    order: 1;
-
-    padding-top: 0;
-  }
-
-  .destination-image {
-    order: 2;
-  }
-
-  .destination-featured .destination-image,
-  .destination:not(.destination-featured) .destination-image {
-    height: 380px;
-
-    width: 100%;
-  }
-
-  .destination h3 {
-    font-size: 2rem;
-  }
-
-}
-
-
-/* =========================================================
-   MÓVIL PEQUEÑO
-   ========================================================= */
-
-@media (max-width: 500px) {
-
-  .destination {
+  .destination-content,
+  .destination-featured .destination-content {
+    grid-template-columns: minmax(0, 1fr) 150px;
     gap: 1.5rem;
   }
 
-  .destination-featured .destination-image,
-  .destination:not(.destination-featured) .destination-image {
-    height: 320px;
+  .destination-image,
+  .destination-featured .destination-image {
+    width: 150px;
+    height: 108px;
+  }
 
+  .destination h3,
+  .destination-featured h3 {
+    font-size: 1.9rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .destination-content,
+  .destination-featured .destination-content {
+    grid-template-columns: minmax(0, 1fr) 122px;
+    min-height: 0;
+    gap: 1rem;
+    padding: 1rem;
     border-radius: 18px;
   }
 
-  .destination h3 {
-    font-size: 1.85rem;
+  .destination-image,
+  .destination-featured .destination-image {
+    width: 122px;
+    height: 92px;
+    border-radius: 14px;
   }
 
-  .destination-content p {
-    font-size: .98rem;
-
-    line-height: 1.7;
+  .destination h3,
+  .destination-featured h3 {
+    font-size: 1.7rem;
   }
 
+  .destination-copy p {
+    font-size: .88rem;
+    line-height: 1.6;
+  }
+
+  .destination-link,
+  .destination-coming {
+    margin-top: .9rem;
+  }
 }
 
+@media (max-width: 480px) {
+  .destination-content,
+  .destination-featured .destination-content {
+    grid-template-columns: 1fr;
+  }
+
+  .destination-image,
+  .destination-featured .destination-image {
+    width: 100%;
+    height: 140px;
+    order: 2;
+  }
+
+  .destination-copy {
+    order: 1;
+  }
+
+  .destination h3,
+  .destination-featured h3 {
+    font-size: 1.85rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .destination-title-link,
+  .destination-link,
+  .destination-link span,
+  .destination-image img {
+    transition: none;
+  }
+}
 </style>
