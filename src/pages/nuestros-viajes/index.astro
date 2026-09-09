@@ -15,960 +15,640 @@ const comingSoonDestinations = destinations.filter(
 const title = "Nuestros viajes | Cruzando Meridianos";
 
 const description =
-  "Viajes que hemos investigado, vivido y documentado. Descubre cómo viajamos y qué hay detrás de cada destino.";
+  "Viajes que hemos vivido, investigado y documentado. Descubre lo que aprendimos sobre el terreno y el criterio que hay detrás de cada destino.";
 ---
 
-<Layout
-  title={title}
-  description={description}
->
-  <main>
-
-    <!-- =====================================================
-         HERO
-         ===================================================== -->
-
+<Layout title={title} description={description}>
+  <main class="trips-page">
     <section class="trips-hero">
-
       <div class="trips-hero-inner">
-
         <div class="trips-hero-copy">
-
-          <span class="eyebrow">
-            Nuestros viajes
-          </span>
-
+          <p class="eyebrow">Nuestros viajes</p>
           <h1>
-            Antes de diseñar<br />
-            un viaje para ti,<br />
-            <em>lo vivimos nosotros.</em>
+            Antes de diseñar un viaje para ti,
+            <em> lo vivimos nosotros.</em>
           </h1>
-
           <p class="hero-description">
-            No queremos recomendar destinos desde un escritorio.
-            Viajamos, investigamos, nos equivocamos, descubrimos
-            y tomamos notas. Después convertimos todo ese
-            conocimiento en criterio.
+            Viajamos, investigamos, nos equivocamos, descubrimos y tomamos notas.
+            Después convertimos todo ese conocimiento en criterio.
           </p>
-
+          <div class="hero-actions">
+            <a href="#vividos" class="hero-link hero-link-primary">
+              Ver nuestros viajes <span aria-hidden="true">↓</span>
+            </a>
+            <a href="/cuentatuviaje" class="hero-link hero-link-secondary">
+              Cuéntanos el tuyo <span aria-hidden="true">↗</span>
+            </a>
+          </div>
         </div>
 
-        <div class="hero-index">
-
-          <span>01</span>
-
-          <p>
-            Destinos<br />
-            investigados
+        <div class="hero-aside" aria-label="Nuestra forma de viajar">
+          <span class="hero-aside-number">01</span>
+          <p class="hero-aside-label">Sobre el terreno</p>
+          <p class="hero-aside-copy">
+            No recomendamos un lugar porque exista. Queremos saber qué se siente
+            estar allí y qué decisiones merece la pena tomar.
           </p>
-
         </div>
-
       </div>
-
     </section>
-
-
-    <!-- =====================================================
-         INTRODUCCIÓN
-         ===================================================== -->
 
     <section class="trips-introduction">
-
-      <div class="section-label">
-        <span>La idea</span>
-      </div>
-
-      <div class="introduction-content">
-
-        <h2>
-          Un viaje no empieza<br />
-          cuando compras un vuelo.
-        </h2>
-
-        <div class="introduction-text">
-
-          <p>
-            Empieza mucho antes: cuando decides qué quieres vivir,
-            cuánto tiempo tienes y qué merece realmente la pena.
-          </p>
-
-          <p>
-            Por eso nuestros viajes no son simples diarios de viaje.
-            Son investigaciones sobre el terreno: lugares, rutas,
-            tiempos, desplazamientos, experiencias, errores,
-            decisiones y todo aquello que nos habría gustado saber
-            antes de salir de casa.
-          </p>
-
+      <div class="section-frame">
+        <div class="section-kicker">La idea</div>
+        <div class="introduction-grid">
+          <h2>
+            Un viaje no empieza<br />
+            cuando compras un vuelo.
+          </h2>
+          <div class="introduction-copy">
+            <p>
+              Empieza mucho antes: cuando decides qué quieres vivir, cuánto tiempo
+              tienes y qué merece realmente la pena.
+            </p>
+            <p>
+              Por eso nuestros viajes no son simples diarios. Son investigaciones
+              sobre el terreno: lugares, rutas, tiempos, desplazamientos,
+              experiencias, errores y decisiones.
+            </p>
+          </div>
         </div>
-
       </div>
-
     </section>
-
-
-    <!-- =====================================================
-         DESTINOS VIVIDOS
-         ===================================================== -->
 
     {readyDestinations.length > 0 && (
-
-      <section class="trips-destinations">
-
-        <div class="section-header">
-
-          <div>
-
-            <span class="eyebrow">
-              Sobre el terreno
-            </span>
-
-            <h2>
-              Viajes que ya hemos vivido.
-            </h2>
-
+      <section class="trips-destinations" id="vividos">
+        <div class="section-frame">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Viajes que ya hemos vivido</p>
+              <h2>Lo que sabemos porque estuvimos allí.</h2>
+            </div>
+            <p>
+              Aquí no encontrarás un tutorial para copiar nuestro viaje al milímetro.
+              Encontrarás lo que nos enseñó estar allí y lo que cambió nuestra forma
+              de decidir.
+            </p>
           </div>
 
-          <p>
-            Aquí empieza nuestra biblioteca de experiencias.
-            Cada destino irá creciendo con nuevas investigaciones,
-            notas y aprendizajes.
-          </p>
-
+          <div class="lived-destinations">
+            {readyDestinations.map((destination, index) => (
+              <DestinationCard destination={destination} featured={index === 0} />
+            ))}
+          </div>
         </div>
-
-
-        <div class="destination-list">
-
-          {readyDestinations.map((destination, index) => (
-
-            <DestinationCard
-              destination={destination}
-              featured={index === 0}
-            />
-
-          ))}
-
-        </div>
-
       </section>
-
     )}
-
-
-    <!-- =====================================================
-         PRÓXIMOS VIAJES
-         ===================================================== -->
 
     {comingSoonDestinations.length > 0 && (
-
       <section class="trips-coming">
+        <div class="section-frame">
+          <div class="coming-panel">
+            <div class="coming-heading">
+              <p class="eyebrow">En preparación</p>
+              <h2>
+                Algunos destinos están en
+                <em> últimos detalles.</em>
+              </h2>
+            </div>
+            <div class="coming-copy">
+              <p>
+                Estamos terminando de investigar, ordenar y contrastar lo que merece
+                entrar en la web. Preferimos publicar menos y hacerlo bien.
+              </p>
+              <span class="coming-note">Próximamente, nuevos viajes.</span>
+            </div>
+          </div>
 
-        <div class="coming-header">
-
-          <span class="eyebrow">
-            Lo que estamos investigando
-          </span>
-
-          <h2>
-            Algunos viajes<br />
-            todavía están por vivir.
-          </h2>
-
-          <p>
-            No publicamos una guía porque exista un destino.
-            Primero queremos tener algo que aportar.
-          </p>
-
+          <div class="coming-grid">
+            {comingSoonDestinations.map((destination) => (
+              <DestinationCard destination={destination} />
+            ))}
+          </div>
         </div>
-
-
-        <div class="coming-grid">
-
-          {comingSoonDestinations.map((destination) => (
-
-            <DestinationCard
-              destination={destination}
-            />
-
-          ))}
-
-        </div>
-
       </section>
-
     )}
 
-
-    <!-- =====================================================
-         FILOSOFÍA
-         ===================================================== -->
-
     <section class="trips-philosophy">
-
-      <div class="philosophy-inner">
-
-        <div class="philosophy-number">
-          02
-        </div>
-
+      <div class="section-frame philosophy-frame">
+        <div class="philosophy-index">02</div>
         <div class="philosophy-content">
-
-          <span class="eyebrow">
-            Lo que buscamos
-          </span>
-
+          <p class="eyebrow">Lo que buscamos</p>
           <h2>
-            No queremos conocer
-            todos los lugares.
+            No queremos conocer todos los lugares.
             <em>Queremos conocerlos bien.</em>
           </h2>
-
           <p>
-            Hay miles de destinos sobre los que podemos hablar.
-            Preferimos hablar de menos y haberlos investigado
-            de verdad.
+            Hay miles de destinos sobre los que podemos hablar. Preferimos hablar
+            de menos y haberlos investigado de verdad.
           </p>
-
         </div>
-
       </div>
-
     </section>
-
-
-    <!-- =====================================================
-         CTA
-         ===================================================== -->
 
     <section class="trips-cta">
-
-      <div class="cta-inner">
-
-        <span class="eyebrow">
-          Tu próximo viaje
-        </span>
-
-        <h2>
-          ¿Y si empezamos<br />
-          por tu viaje?
-        </h2>
-
-        <p>
-          Cuéntanos qué tienes en mente. Nosotros empezamos
-          a investigar qué podría tener sentido para ti.
-        </p>
-
-        <a
-          href="/cuentatuviaje"
-          class="cta-link"
-        >
-          Cuéntanos tu viaje
-          <span aria-hidden="true">↗</span>
-        </a>
-
+      <div class="section-frame cta-frame">
+        <div>
+          <p class="eyebrow">Tu próximo viaje</p>
+          <h2>
+            Ya hemos hecho nuestra parte.
+            <em>Ahora cuéntanos la tuya.</em>
+          </h2>
+        </div>
+        <div class="cta-copy">
+          <p>
+            Cuéntanos qué tienes en mente, qué os gustaría vivir y qué preferís
+            evitar. Nosotros empezamos a darle sentido.
+          </p>
+          <a href="/cuentatuviaje" class="cta-link">
+            Cuéntanos tu viaje <span aria-hidden="true">↗</span>
+          </a>
+        </div>
       </div>
-
     </section>
-
   </main>
 
   <Footer />
 </Layout>
 
-
 <style>
-
-/* =========================================================
-   BASE
-   ========================================================= */
-
-main {
-  overflow: hidden;
-}
-
-
-/* =========================================================
-   HERO
-   ========================================================= */
-
-.trips-hero {
-  padding:
-    9rem 2rem
-    7rem;
-
-  background: var(--color-papel);
-}
-
-.trips-hero-inner {
-  width: min(1200px, 100%);
-  margin: 0 auto;
-
-  display: grid;
-
-  grid-template-columns:
-    minmax(0, 1fr)
-    auto;
-
-  gap: 5rem;
-
-  align-items: end;
-}
-
-.trips-hero-copy {
-  max-width: 850px;
-}
-
-.eyebrow {
-  display: block;
-
-  margin-bottom: 1.5rem;
-
-  color: var(--color-cobre);
-
-  font-size: .72rem;
-  font-weight: 500;
-
-  letter-spacing: 2px;
-
-  text-transform: uppercase;
-}
-
-.trips-hero h1 {
-  margin: 0;
-
-  max-width: 900px;
-
-  font-family: var(--font-serif);
-
-  font-size: clamp(
-    4rem,
-    7vw,
-    7rem
-  );
-
-  font-weight: 400;
-
-  line-height: .94;
-
-  letter-spacing: -.045em;
-
-  color: var(--color-bosque);
-}
-
-.trips-hero h1 em {
-  color: var(--color-cobre);
-
-  font-style: italic;
-}
-
-.hero-description {
-  max-width: 590px;
-
-  margin: 2.5rem 0 0;
-
-  color: rgba(20, 45, 35, .68);
-
-  font-size: 1.05rem;
-
-  line-height: 1.8;
-}
-
-.hero-index {
-  min-width: 130px;
-
-  padding-bottom: .4rem;
-}
-
-.hero-index span {
-  display: block;
-
-  margin-bottom: .8rem;
-
-  color: var(--color-cobre);
-
-  font-family: var(--font-serif);
-
-  font-size: 3rem;
-
-  line-height: 1;
-}
-
-.hero-index p {
-  margin: 0;
-
-  color: rgba(20, 45, 35, .5);
-
-  font-size: .7rem;
-
-  line-height: 1.5;
-
-  letter-spacing: 1.5px;
-
-  text-transform: uppercase;
-}
-
-
-/* =========================================================
-   INTRODUCCIÓN
-   ========================================================= */
-
-.trips-introduction {
-  padding:
-    7rem 2rem
-    8rem;
-
-  background: #f3f0e9;
-}
-
-.section-label {
-  width: min(1200px, 100%);
-
-  margin: 0 auto 4rem;
-
-  padding-bottom: 1rem;
-
-  border-bottom:
-    1px solid rgba(20, 45, 35, .15);
-}
-
-.section-label span {
-  color: var(--color-cobre);
-
-  font-size: .7rem;
-
-  letter-spacing: 1.8px;
-
-  text-transform: uppercase;
-}
-
-.introduction-content {
-  width: min(1200px, 100%);
-
-  margin: 0 auto;
-
-  display: grid;
-
-  grid-template-columns:
-    minmax(0, 1.3fr)
-    minmax(280px, .7fr);
-
-  gap: 8rem;
-
-  align-items: start;
-}
-
-.introduction-content h2 {
-  margin: 0;
-
-  font-family: var(--font-serif);
-
-  font-size: clamp(
-    3rem,
-    5vw,
-    5.2rem
-  );
-
-  font-weight: 400;
-
-  line-height: .98;
-
-  letter-spacing: -.035em;
-
-  color: var(--color-bosque);
-}
-
-.introduction-text {
-  padding-top: .8rem;
-}
-
-.introduction-text p {
-  margin: 0 0 1.5rem;
-
-  color: rgba(20, 45, 35, .67);
-
-  font-size: 1rem;
-
-  line-height: 1.85;
-}
-
-
-/* =========================================================
-   DESTINOS
-   ========================================================= */
-
-.trips-destinations {
-  width: min(1200px, 100%);
-
-  margin: 0 auto;
-
-  padding:
-    9rem 2rem
-    10rem;
-}
-
-.section-header {
-  display: grid;
-
-  grid-template-columns:
-    minmax(0, 1fr)
-    minmax(280px, .55fr);
-
-  gap: 5rem;
-
-  align-items: end;
-
-  margin-bottom: 5rem;
-}
-
-.section-header h2 {
-  margin: 0;
-
-  font-family: var(--font-serif);
-
-  font-size: clamp(
-    3rem,
-    5vw,
-    5rem
-  );
-
-  font-weight: 400;
-
-  line-height: .98;
-
-  letter-spacing: -.035em;
-
-  color: var(--color-bosque);
-}
-
-.section-header > p {
-  margin: 0;
-
-  color: rgba(20, 45, 35, .62);
-
-  font-size: .95rem;
-
-  line-height: 1.8;
-}
-
-.destination-list {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 9rem;
-}
-
-
-/* =========================================================
-   PRÓXIMOS DESTINOS
-   ========================================================= */
-
-.trips-coming {
-  padding:
-    9rem 2rem
-    10rem;
-
-  background: #f3f0e9;
-}
-
-.coming-header {
-  width: min(1200px, 100%);
-
-  margin: 0 auto 5rem;
-}
-
-.coming-header h2 {
-  margin: 0;
-
-  max-width: 800px;
-
-  font-family: var(--font-serif);
-
-  font-size: clamp(
-    3rem,
-    5vw,
-    5rem
-  );
-
-  font-weight: 400;
-
-  line-height: .98;
-
-  letter-spacing: -.035em;
-
-  color: var(--color-bosque);
-}
-
-.coming-header p {
-  max-width: 560px;
-
-  margin: 2rem 0 0;
-
-  color: rgba(20, 45, 35, .62);
-
-  font-size: .95rem;
-
-  line-height: 1.8;
-}
-
-.coming-grid {
-  width: min(1200px, 100%);
-
-  margin: 0 auto;
-
-  display: grid;
-
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
-
-  gap: 6rem 3rem;
-}
-
-
-/* =========================================================
-   FILOSOFÍA
-   ========================================================= */
-
-.trips-philosophy {
-  padding:
-    10rem 2rem;
-
-  background: var(--color-bosque);
-
-  color: var(--color-papel);
-}
-
-.philosophy-inner {
-  width: min(1200px, 100%);
-
-  margin: 0 auto;
-
-  display: grid;
-
-  grid-template-columns: 100px minmax(0, 850px);
-
-  gap: 5rem;
-
-  align-items: start;
-}
-
-.philosophy-number {
-  padding-top: .5rem;
-
-  color: var(--color-cobre);
-
-  font-family: var(--font-serif);
-
-  font-size: 3rem;
-}
-
-.philosophy-content h2 {
-  margin: 0;
-
-  font-family: var(--font-serif);
-
-  font-size: clamp(
-    3rem,
-    5vw,
-    5.5rem
-  );
-
-  font-weight: 400;
-
-  line-height: .98;
-
-  letter-spacing: -.035em;
-}
-
-.philosophy-content h2 em {
-  color: var(--color-cobre);
-
-  font-style: italic;
-}
-
-.philosophy-content p {
-  max-width: 560px;
-
-  margin: 2.5rem 0 0;
-
-  color: rgba(251, 249, 245, .67);
-
-  font-size: 1rem;
-
-  line-height: 1.8;
-}
-
-
-/* =========================================================
-   CTA
-   ========================================================= */
-
-.trips-cta {
-  padding:
-    10rem 2rem;
-
-  background: var(--color-papel);
-}
-
-.cta-inner {
-  width: min(1200px, 100%);
-
-  margin: 0 auto;
-}
-
-.cta-inner h2 {
-  margin: 0;
-
-  max-width: 850px;
-
-  font-family: var(--font-serif);
-
-  font-size: clamp(
-    4rem,
-    7vw,
-    7rem
-  );
-
-  font-weight: 400;
-
-  line-height: .94;
-
-  letter-spacing: -.045em;
-
-  color: var(--color-bosque);
-}
-
-.cta-inner p {
-  max-width: 500px;
-
-  margin: 2rem 0 2rem;
-
-  color: rgba(20, 45, 35, .62);
-
-  font-size: 1rem;
-
-  line-height: 1.8;
-}
-
-.cta-link {
-  display: inline-flex;
-
-  align-items: center;
-
-  gap: .7rem;
-
-  color: var(--color-bosque);
-
-  text-decoration: none;
-
-  font-size: .9rem;
-
-  font-weight: 500;
-
-  transition:
-    color .2s ease;
-}
-
-.cta-link span {
-  transition:
-    transform .2s ease;
-}
-
-.cta-link:hover {
-  color: var(--color-cobre);
-}
-
-.cta-link:hover span {
-  transform:
-    translate(3px, -3px);
-}
-
-
-/* =========================================================
-   TABLET
-   ========================================================= */
-
-@media (max-width: 900px) {
+  .trips-page {
+    overflow: hidden;
+    background: var(--color-papel);
+  }
+
+  .section-frame {
+    width: min(1180px, calc(100% - 4rem));
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    margin: 0 0 1.25rem;
+    color: var(--color-cobre);
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
 
   .trips-hero {
-    padding:
-      7rem 1.5rem
-      5rem;
+    padding: clamp(6.5rem, 11vw, 10.5rem) 0 clamp(5rem, 8vw, 7.5rem);
+    background:
+      radial-gradient(circle at 84% 18%, rgba(194,125,56,.10), transparent 23rem),
+      var(--color-papel);
   }
 
   .trips-hero-inner {
-    gap: 3rem;
+    width: min(1180px, calc(100% - 4rem));
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 250px;
+    gap: clamp(3rem, 7vw, 7rem);
+    align-items: end;
   }
 
-  .introduction-content {
-    gap: 4rem;
-  }
-
-  .section-header {
-    gap: 3rem;
-  }
-
-  .philosophy-inner {
-    grid-template-columns:
-      70px minmax(0, 1fr);
-
-    gap: 3rem;
-  }
-
-}
-
-
-/* =========================================================
-   MÓVIL
-   ========================================================= */
-
-@media (max-width: 700px) {
-
-  .trips-hero {
-    padding:
-      5.5rem 1.5rem
-      4.5rem;
-  }
-
-  .trips-hero-inner {
-    display: block;
+  .trips-hero-copy {
+    max-width: 900px;
   }
 
   .trips-hero h1 {
-    font-size:
-      clamp(3.3rem, 15vw, 5rem);
+    max-width: 900px;
+    margin: 0;
+    color: var(--color-bosque);
+    font-family: var(--font-serif);
+    font-size: clamp(4rem, 7.5vw, 7rem);
+    font-weight: 400;
+    line-height: .91;
+    letter-spacing: -.05em;
+  }
+
+  .trips-hero h1 em,
+  .coming-heading h2 em,
+  .cta-frame h2 em {
+    color: var(--color-cobre);
+    font-style: italic;
   }
 
   .hero-description {
-    margin-top: 2rem;
-
-    font-size: .98rem;
+    max-width: 650px;
+    margin: 2.5rem 0 0;
+    color: rgba(20,45,35,.68);
+    font-size: 1.08rem;
+    line-height: 1.85;
   }
 
-  .hero-index {
-    margin-top: 3rem;
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    margin-top: 2.25rem;
+  }
 
-    padding-top: 1.5rem;
+  .hero-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .65rem;
+    padding: .85rem 1.1rem;
+    border-radius: 999px;
+    font-size: .82rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+  }
 
-    border-top:
-      1px solid rgba(20, 45, 35, .14);
+  .hero-link:hover {
+    transform: translateY(-2px);
+  }
+
+  .hero-link-primary {
+    border: 1px solid var(--color-bosque);
+    background: var(--color-bosque);
+    color: var(--color-papel);
+  }
+
+  .hero-link-secondary {
+    border: 1px solid rgba(28,48,38,.16);
+    color: var(--color-bosque);
+    background: rgba(251,249,245,.45);
+  }
+
+  .hero-aside {
+    padding: 1.25rem 0 0 1.5rem;
+    border-left: 1px solid rgba(28,48,38,.15);
+  }
+
+  .hero-aside-number,
+  .philosophy-index {
+    display: block;
+    color: var(--color-cobre);
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    line-height: 1;
+  }
+
+  .hero-aside-label {
+    margin: 1rem 0 .85rem;
+    color: var(--color-bosque);
+    font-size: .7rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .hero-aside-copy {
+    margin: 0;
+    color: rgba(20,45,35,.58);
+    font-size: .85rem;
+    line-height: 1.7;
   }
 
   .trips-introduction {
-    padding:
-      5rem 1.5rem
-      5.5rem;
+    padding: clamp(5rem, 9vw, 8rem) 0;
+    background: #f2efe8;
   }
 
-  .section-label {
-    margin-bottom: 3rem;
+  .section-kicker {
+    padding-bottom: .85rem;
+    border-bottom: 1px solid rgba(28,48,38,.14);
+    color: var(--color-cobre);
+    font-size: .7rem;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
   }
 
-  .introduction-content {
-    display: block;
+  .introduction-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr);
+    gap: clamp(3rem, 8vw, 8rem);
+    margin-top: 3.75rem;
+    align-items: start;
   }
 
-  .introduction-content h2 {
-    font-size:
-      clamp(2.8rem, 12vw, 4rem);
+  .introduction-grid h2 {
+    margin: 0;
+    color: var(--color-bosque);
+    font-family: var(--font-serif);
+    font-size: clamp(3.2rem, 5vw, 5.4rem);
+    font-weight: 400;
+    line-height: .96;
+    letter-spacing: -.04em;
   }
 
-  .introduction-text {
-    margin-top: 2.5rem;
+  .introduction-copy {
+    padding-top: .25rem;
+  }
+
+  .introduction-copy p {
+    max-width: 520px;
+    margin: 0 0 1.5rem;
+    color: rgba(20,45,35,.66);
+    font-size: 1rem;
+    line-height: 1.85;
   }
 
   .trips-destinations {
-    padding:
-      6rem 1.5rem
-      7rem;
+    padding: clamp(6rem, 10vw, 9rem) 0;
   }
 
-  .section-header {
-    display: block;
-
-    margin-bottom: 4rem;
+  .section-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, .5fr);
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: clamp(3rem, 5vw, 5rem);
   }
 
-  .section-header h2 {
-    font-size:
-      clamp(2.8rem, 12vw, 4rem);
+  .section-heading h2 {
+    max-width: 760px;
+    margin: 0;
+    color: var(--color-bosque);
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: 400;
+    line-height: .96;
+    letter-spacing: -.04em;
   }
 
-  .section-header > p {
-    margin-top: 2rem;
+  .section-heading > p {
+    margin: 0;
+    color: rgba(20,45,35,.60);
+    font-size: .95rem;
+    line-height: 1.8;
   }
 
-  .destination-list {
-    gap: 6rem;
+  .lived-destinations {
+    display: grid;
+    gap: 4rem;
   }
 
   .trips-coming {
-    padding:
-      6rem 1.5rem
-      7rem;
+    padding: clamp(5.5rem, 9vw, 8rem) 0;
+    background: #f2efe8;
   }
 
-  .coming-header {
+  .coming-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(260px, .85fr);
+    gap: 4rem;
+    align-items: end;
     margin-bottom: 4rem;
   }
 
-  .coming-header h2 {
-    font-size:
-      clamp(2.8rem, 12vw, 4rem);
+  .coming-heading h2 {
+    max-width: 800px;
+    margin: 0;
+    color: var(--color-bosque);
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 5vw, 5.2rem);
+    font-weight: 400;
+    line-height: .96;
+    letter-spacing: -.04em;
+  }
+
+  .coming-copy p {
+    max-width: 520px;
+    margin: 0;
+    color: rgba(20,45,35,.62);
+    font-size: .98rem;
+    line-height: 1.8;
+  }
+
+  .coming-note {
+    display: inline-block;
+    margin-top: 1.3rem;
+    color: var(--color-bosque);
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
   }
 
   .coming-grid {
-    grid-template-columns: 1fr;
-
-    gap: 5rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 2rem;
   }
 
   .trips-philosophy {
-    padding:
-      6rem 1.5rem
-      7rem;
+    padding: clamp(6rem, 10vw, 9rem) 0;
+    background: var(--color-bosque);
+    color: var(--color-papel);
   }
 
-  .philosophy-inner {
-    display: block;
-  }
-
-  .philosophy-number {
-    margin-bottom: 2rem;
+  .philosophy-frame {
+    display: grid;
+    grid-template-columns: 90px minmax(0, 880px);
+    gap: 3rem;
+    align-items: start;
   }
 
   .philosophy-content h2 {
-    font-size:
-      clamp(2.8rem, 12vw, 4rem);
+    max-width: 850px;
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(3.2rem, 5.2vw, 5.8rem);
+    font-weight: 400;
+    line-height: .95;
+    letter-spacing: -.045em;
+  }
+
+  .philosophy-content h2 em {
+    color: var(--color-cobre);
+    font-style: italic;
+  }
+
+  .philosophy-content > p:last-child {
+    max-width: 570px;
+    margin: 2.3rem 0 0;
+    color: rgba(251,249,245,.68);
+    font-size: 1rem;
+    line-height: 1.8;
   }
 
   .trips-cta {
-    padding:
-      6rem 1.5rem
-      7rem;
+    padding: clamp(6rem, 10vw, 9rem) 0;
+    background: var(--color-papel);
   }
 
-  .cta-inner h2 {
-    font-size:
-      clamp(3.3rem, 15vw, 5rem);
+  .cta-frame {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(260px, .55fr);
+    gap: 5rem;
+    align-items: end;
   }
 
-}
-
-
-/* =========================================================
-   MÓVIL PEQUEÑO
-   ========================================================= */
-
-@media (max-width: 400px) {
-
-  .trips-hero h1,
-  .cta-inner h2 {
-    font-size: 3.15rem;
+  .cta-frame h2 {
+    max-width: 850px;
+    margin: 0;
+    color: var(--color-bosque);
+    font-family: var(--font-serif);
+    font-size: clamp(3.8rem, 6.5vw, 6.5rem);
+    font-weight: 400;
+    line-height: .93;
+    letter-spacing: -.05em;
   }
 
-}
+  .cta-copy p {
+    max-width: 480px;
+    margin: 0 0 1.75rem;
+    color: rgba(20,45,35,.62);
+    font-size: 1rem;
+    line-height: 1.8;
+  }
 
+  .cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .65rem;
+    color: var(--color-bosque);
+    font-size: .9rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-cobre);
+    padding-bottom: .4rem;
+    transition: gap .2s ease, color .2s ease;
+  }
+
+  .cta-link:hover {
+    gap: .9rem;
+    color: var(--color-cobre);
+  }
+
+  @media (max-width: 900px) {
+    .section-frame,
+    .trips-hero-inner {
+      width: min(100% - 3rem, 760px);
+    }
+
+    .trips-hero-inner,
+    .introduction-grid,
+    .section-heading,
+    .coming-panel,
+    .cta-frame {
+      grid-template-columns: 1fr;
+      gap: 2.75rem;
+    }
+
+    .hero-aside {
+      max-width: 430px;
+    }
+
+    .coming-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .philosophy-frame {
+      grid-template-columns: 70px minmax(0,1fr);
+      gap: 2rem;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .section-frame,
+    .trips-hero-inner {
+      width: min(100% - 2.2rem, 540px);
+    }
+
+    .trips-hero {
+      padding-top: 5.5rem;
+      padding-bottom: 4.75rem;
+    }
+
+    .trips-hero h1 {
+      font-size: clamp(3.45rem, 15vw, 5rem);
+      line-height: .93;
+    }
+
+    .hero-description {
+      margin-top: 2rem;
+      font-size: .98rem;
+      line-height: 1.75;
+    }
+
+    .hero-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .hero-link {
+      justify-content: center;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .hero-aside {
+      padding-left: 1.1rem;
+    }
+
+    .trips-introduction,
+    .trips-destinations,
+    .trips-coming,
+    .trips-philosophy,
+    .trips-cta {
+      padding-top: 5rem;
+      padding-bottom: 5.5rem;
+    }
+
+    .introduction-grid {
+      margin-top: 2.75rem;
+    }
+
+    .introduction-grid h2,
+    .section-heading h2,
+    .coming-heading h2 {
+      font-size: clamp(2.75rem, 12vw, 4rem);
+    }
+
+    .section-heading {
+      margin-bottom: 3rem;
+    }
+
+    .lived-destinations {
+      gap: 2rem;
+    }
+
+    .coming-panel {
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .philosophy-frame {
+      display: block;
+    }
+
+    .philosophy-index {
+      margin-bottom: 1.8rem;
+      font-size: 2.6rem;
+    }
+
+    .philosophy-content h2 {
+      font-size: clamp(2.75rem, 12vw, 4.1rem);
+    }
+
+    .cta-frame {
+      gap: 2.75rem;
+    }
+
+    .cta-frame h2 {
+      font-size: clamp(3.4rem, 14vw, 5rem);
+    }
+  }
+
+  @media (max-width: 380px) {
+    .section-frame,
+    .trips-hero-inner {
+      width: min(100% - 1.75rem, 340px);
+    }
+
+    .trips-hero h1,
+    .cta-frame h2 {
+      font-size: 3.15rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-link,
+    .cta-link {
+      transition: none;
+    }
+  }
 </style>
