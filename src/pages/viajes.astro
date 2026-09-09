@@ -62,7 +62,7 @@ const catalogDestinations = destinations
 
         <div class="travel-hero-note">
           <span>Cómo funciona</span>
-          <p>Explora. Descubre. Guarda tus favoritos. La ruta viene después.</p>
+          <p>Explora. Compara. Entiende. La ruta viene después.</p>
         </div>
       </div>
     </section>
@@ -191,7 +191,11 @@ const catalogDestinations = destinations
               const categoryEntries = entries.filter((entry) => entry.category === category);
 
               return (
-                <details class="catalog-section" id={`${destination.slug}-${category}`} open>
+                <details
+                  class="catalog-section"
+                  id={`${destination.slug}-${category}`}
+                  open={category === categories[0]}
+                >
                   <summary>
                     <span class="catalog-section-title">{categoryLabels[category]}</span>
                     <span class="catalog-section-meta">
