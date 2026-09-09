@@ -48,7 +48,7 @@ const destinationUrl = Astro.url.pathname.startsWith("/nuestros-viajes")
           <span aria-hidden="true">↗</span>
         </a>
       ) : (
-        <span class="destination-coming">Estamos investigándolo</span>
+        <span class="destination-coming">En preparación</span>
       )}
     </div>
 
@@ -75,7 +75,7 @@ const destinationUrl = Astro.url.pathname.startsWith("/nuestros-viajes")
 
       {!isReady && (
         <span class="destination-status">
-          Próximamente
+          En preparación
         </span>
       )}
     </div>
