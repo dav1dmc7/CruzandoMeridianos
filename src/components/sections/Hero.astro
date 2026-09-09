@@ -26,11 +26,20 @@
         </a>
       </div>
     </div>
+
+    <div class="hero-mark" aria-hidden="true">
+      <div class="hero-mark-ring hero-mark-ring--outer"></div>
+      <div class="hero-mark-ring hero-mark-ring--inner"></div>
+      <span class="hero-mark-dot"></span>
+      <span class="hero-mark-word">CM</span>
+      <span class="hero-mark-caption">ENTENDER · ELEGIR · VIVIR</span>
+    </div>
   </div>
 </section>
 
 <style>
   .hero {
+    position: relative;
     min-height: min(760px, calc(100vh - 80px));
     display: flex;
     align-items: center;
@@ -39,11 +48,14 @@
   }
 
   .hero-shell {
+    position: relative;
     width: min(1120px, 100%);
     margin: 0 auto;
   }
 
   .hero-copy {
+    position: relative;
+    z-index: 2;
     max-width: 940px;
   }
 
@@ -119,6 +131,76 @@
     transform: translateX(4px);
   }
 
+  .hero-mark {
+    position: absolute;
+    right: -5.5rem;
+    bottom: -6.5rem;
+    width: 31rem;
+    height: 31rem;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.78;
+  }
+
+  .hero-mark-ring {
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgb(28 48 38 / 9%);
+    border-radius: 50%;
+  }
+
+  .hero-mark-ring--outer {
+    transform: rotate(-12deg) scale(0.98, 0.74);
+    border-left-color: rgb(194 125 56 / 28%);
+  }
+
+  .hero-mark-ring--inner {
+    inset: 2.8rem;
+    transform: rotate(18deg) scale(0.98, 0.74);
+    border-right-color: rgb(194 125 56 / 18%);
+  }
+
+  .hero-mark-dot {
+    position: absolute;
+    top: 8.8rem;
+    right: 5.4rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-cobre);
+    box-shadow: 0 0 0 8px rgb(194 125 56 / 9%);
+  }
+
+  .hero-mark-word {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 4.2rem;
+    color: rgb(28 48 38 / 7%);
+    font-family: var(--font-serif);
+    font-size: clamp(10rem, 20vw, 15rem);
+    line-height: 0.78;
+    letter-spacing: -0.08em;
+    font-weight: 400;
+  }
+
+  .hero-mark-caption {
+    position: absolute;
+    right: 2rem;
+    bottom: 1.8rem;
+    color: rgb(28 48 38 / 32%);
+    font-size: 0.56rem;
+    letter-spacing: 0.18em;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 1000px) {
+    .hero-mark {
+      right: -11rem;
+      bottom: -7rem;
+      opacity: 0.6;
+    }
+  }
+
   @media (max-width: 800px) {
     .hero {
       min-height: auto;
@@ -139,6 +221,24 @@
       align-items: flex-start;
       gap: 1rem;
       margin-top: 2rem;
+    }
+
+    .hero-mark {
+      right: -13rem;
+      bottom: -10rem;
+      opacity: 0.42;
+    }
+
+    .hero-mark-caption {
+      display: none;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .hero-mark {
+      right: -15rem;
+      bottom: -11rem;
+      opacity: 0.28;
     }
   }
 
