@@ -379,3 +379,24 @@
       height: min(58vh, 520px);
     }
   }
+
+  /* =========================================================
+     NUESTROS VIAJES — MÉTRICAS
+     Hasta reconstruir el recuento completo del viaje,
+     mostramos únicamente cifras sólidas y comprensibles.
+  ========================================================= */
+
+  .trip-page .trip-metrics-inner {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .trip-page .trip-metric:nth-child(3),
+  .trip-page .trip-metric:nth-child(4) {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    .trip-page .trip-metrics-inner {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
