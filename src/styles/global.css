@@ -239,13 +239,10 @@
   }
 
   .journey-page .journey-progress {
-    position: sticky;
-    top: 78px;
-    z-index: 5;
-    padding: 1rem 0 3.8rem;
-    background: color-mix(in srgb, var(--color-arena) 90%, transparent);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    position: relative;
+    z-index: 2;
+    padding: 1rem 0 4.5rem;
+    background: transparent;
   }
 
   .journey-page .progress-top {
@@ -264,6 +261,8 @@
   }
 
   .journey-page .question-block {
+    position: relative;
+    z-index: 1;
     max-width: 800px;
     margin-inline: auto;
     padding: 4.5rem 0 5rem;
@@ -271,6 +270,8 @@
 
   .journey-page .question-number {
     display: inline-flex;
+    position: relative;
+    z-index: 2;
     align-items: center;
     min-width: 3rem;
     min-height: 1.8rem;
@@ -317,7 +318,6 @@
 
   @media (max-width: 800px) {
     .journey-page .journey-progress {
-      top: 64px;
       padding: .8rem 0 3rem;
     }
 
