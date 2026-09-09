@@ -7,10 +7,7 @@ interface Props {
   featured?: boolean;
 }
 
-const {
-  destination,
-  featured = false,
-} = Astro.props;
+const { destination, featured = false } = Astro.props;
 
 const isReady = destination.status === "ready";
 const destinationUrl = `/viajes/${destination.slug}`;
@@ -33,10 +30,7 @@ const destinationUrl = `/viajes/${destination.slug}`;
 
       <h3>
         {isReady ? (
-          <a
-            href={destinationUrl}
-            class="destination-title-link"
-          >
+          <a href={destinationUrl} class="destination-title-link">
             {destination.name}
           </a>
         ) : (
@@ -44,22 +38,15 @@ const destinationUrl = `/viajes/${destination.slug}`;
         )}
       </h3>
 
-      <p>
-        {destination.description}
-      </p>
+      <p>{destination.description}</p>
 
       {isReady ? (
-        <a
-          href={destinationUrl}
-          class="destination-link"
-        >
+        <a href={destinationUrl} class="destination-link">
           Explorar destino
           <span aria-hidden="true">↗</span>
         </a>
       ) : (
-        <span class="destination-coming">
-          Estamos investigándolo
-        </span>
+        <span class="destination-coming">Estamos investigándolo</span>
       )}
     </div>
 
@@ -200,8 +187,7 @@ const destinationUrl = `/viajes/${destination.slug}`;
   height: 116px;
   overflow: hidden;
   border-radius: 16px;
-  background: var(--color-arena);
-  border: 1px solid rgba(28, 48, 38, .08);
+  background: transparent;
   isolation: isolate;
 }
 
