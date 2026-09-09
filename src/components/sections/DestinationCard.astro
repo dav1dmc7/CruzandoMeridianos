@@ -10,7 +10,9 @@ interface Props {
 const { destination, featured = false } = Astro.props;
 
 const isReady = destination.status === "ready";
-const destinationUrl = `/viajes/${destination.slug}`;
+const destinationUrl = Astro.url.pathname.startsWith("/nuestros-viajes")
+  ? `/nuestros-viajes/${destination.slug}`
+  : `/viajes/${destination.slug}`;
 ---
 
 <article
