@@ -41,12 +41,12 @@ const revolutTravelMoney: TravelResource = {
   referral: true,
   relationship: "referral",
   disclosure:
-    "Este enlace es de referido. Cruzando Meridianos puede recibir una recompensa si cumples las condiciones aplicables del programa de referidos de Revolut. Las condiciones pueden cambiar.",
+    "Este enlace es de referido. Cruzando Meridianos puede recibir una recompensa si se cumplen las condiciones aplicables del programa de Revolut. Las promociones y condiciones pueden cambiar.",
   reviewedAt: LAST_REVIEWED,
   benefit:
-    "Puede simplificar la gestión de pagos y dinero durante un viaje.",
+    "Puede simplificar la gestión de pagos y dinero durante un viaje. Al utilizar nuestro enlace, además, puedes acceder a la promoción que Revolut tenga asociada en ese momento, si cumples sus condiciones.",
   limitation:
-    "Las condiciones, comisiones, límites y promociones dependen del producto, país y condiciones vigentes.",
+    "Las condiciones, comisiones, límites y promociones dependen del producto, país y condiciones vigentes. Comprueba siempre la oferta mostrada por Revolut al abrir el enlace.",
   priority: 10,
   showOnResourcesPage: true,
   showInGuides: true,
@@ -59,7 +59,7 @@ const blinkEsim: TravelResource = {
   shortDescription:
     "Una eSIM para tener conexión móvil durante el viaje sin depender de una tarjeta SIM física.",
   longDescription:
-    "BLINKeSIM ofrece conectividad mediante eSIM. Además, dispone de un programa de referidos. En la promoción que nos has indicado, una persona que se registre con nuestro enlace obtiene 1 día de internet gratis y nosotros podemos recibir 1 día adicional cuando se cumplan las condiciones del programa.",
+    "BLINKeSIM ofrece conectividad mediante eSIM. En la promoción de referidos que nos ha comunicado BLINKeSIM, quien se registre con nuestro enlace obtiene 1 día de internet gratis y Cruzando Meridianos puede recibir 1 día adicional cuando se cumplen las condiciones del programa.",
   url: "https://blinkesim.com/",
   trackingUrl: "https://blinkesim.com/es/my-account?pkey=M5HI4PQ8GE",
   provider: "BLINKeSIM",
@@ -68,10 +68,10 @@ const blinkEsim: TravelResource = {
   referral: true,
   relationship: "referral",
   disclosure:
-    "Este es un enlace de referido. Con la promoción que nos ha comunicado BLINKeSIM, quien se registre con nuestro enlace obtiene 1 día de internet gratis y Cruzando Meridianos puede recibir 1 día adicional cuando se cumplen las condiciones del programa. Las condiciones de la promoción pueden cambiar.",
+    "Este es un enlace de referido. Según la promoción que nos ha comunicado BLINKeSIM, quien se registre con nuestro enlace obtiene 1 día de internet gratis y Cruzando Meridianos puede recibir 1 día adicional cuando se cumplen las condiciones del programa. Las condiciones de la promoción pueden cambiar.",
   reviewedAt: LAST_REVIEWED,
   benefit:
-    "Nos ayudas a seguir mejorando Cruzando Meridianos y, con la promoción indicada, puedes conseguir 1 día de internet gratis al registrarte con nuestro enlace.",
+    "Al registrarte con nuestro enlace, puedes conseguir 1 día de internet gratis según la promoción de referidos indicada por BLINKeSIM.",
   limitation:
     "La cobertura, precio, duración, compatibilidad y condiciones de la promoción dependen del destino, dispositivo y programa vigente de BLINKeSIM.",
   relevantDestinations: ["costa-rica"],
@@ -85,9 +85,9 @@ const tripCom: TravelResource = {
   category: "bookings",
   title: "Trip.com",
   shortDescription:
-    "Una plataforma para buscar y reservar alojamientos, vuelos y otros servicios de viaje.",
+    "Una plataforma para comparar y reservar alojamientos, vuelos y otros servicios de viaje.",
   longDescription:
-    "Trip.com puede servir como punto de comparación y reserva para distintas partes de un viaje. Este enlace pertenece a un programa de referido, por lo que puede existir una compensación para Cruzando Meridianos si se cumplen sus condiciones.",
+    "Trip.com puede servir como punto de comparación y reserva para distintas partes de un viaje. Este es un enlace de referido de Cruzando Meridianos.",
   url: "https://es.trip.com/",
   trackingUrl:
     "https://es.trip.com/sale/4283/referee.html?locale=es-ES&referCode=B836SR",
@@ -97,12 +97,12 @@ const tripCom: TravelResource = {
   referral: true,
   relationship: "referral",
   disclosure:
-    "Este es un enlace de referido. Cruzando Meridianos puede recibir una compensación si se cumplen las condiciones del programa de referidos de Trip.com. Consulta las condiciones vigentes antes de reservar.",
+    "Este es un enlace de referido. Cruzando Meridianos puede recibir una compensación si se cumplen las condiciones del programa de Trip.com. Consulta las condiciones vigentes antes de reservar.",
   reviewedAt: LAST_REVIEWED,
   benefit:
-    "Si te registras a través de nuestro enlace, puedes acceder a las condiciones o promociones que Trip.com tenga activas en ese momento, y nos ayudas a sostener el proyecto.",
+    "Puedes usar Trip.com para comparar y reservar parte del viaje desde un mismo sitio. Al registrarte o reservar mediante nuestro enlace, además, puedes ayudarnos a sostener el proyecto.",
   limitation:
-    "Las promociones, requisitos, disponibilidad y condiciones del programa pueden cambiar y dependen de Trip.com.",
+    "Las promociones, requisitos, disponibilidad, precios y condiciones del programa pueden cambiar y dependen de Trip.com.",
   priority: 30,
   showOnResourcesPage: true,
   showInGuides: true,
