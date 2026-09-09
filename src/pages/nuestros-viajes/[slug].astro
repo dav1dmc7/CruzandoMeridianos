@@ -473,7 +473,7 @@ const plannedPlaces = trip.plannedButNotVisited;
             />
 
             <figcaption>
-              Mono · Costa Rica
+              Mono · entre la vegetación tropical
             </figcaption>
           </figure>
 
@@ -486,7 +486,7 @@ const plannedPlaces = trip.plannedButNotVisited;
             />
 
             <figcaption>
-              Perezoso
+              Perezoso · quietud en el bosque
             </figcaption>
           </figure>
 
@@ -499,7 +499,7 @@ const plannedPlaces = trip.plannedButNotVisited;
             />
 
             <figcaption>
-              Cocodrilo
+              Cocodrilo · junto al agua
             </figcaption>
           </figure>
 
@@ -512,7 +512,7 @@ const plannedPlaces = trip.plannedButNotVisited;
             />
 
             <figcaption>
-              Rana
+              Rana · escondida entre el verde
             </figcaption>
           </figure>
 
@@ -525,7 +525,7 @@ const plannedPlaces = trip.plannedButNotVisited;
             />
 
             <figcaption>
-              Otro encuentro en el camino
+              Otro encuentro · naturaleza a pie de ruta
             </figcaption>
           </figure>
         </div>
@@ -2349,4 +2349,179 @@ const plannedPlaces = trip.plannedButNotVisited;
       animation-iteration-count: 1 !important;
     }
   }
+
+    /* CM FINAL PHOTO + FAUNA OVERRIDE */
+    html body .trip-page .trip-photo-break {
+      padding: clamp(4rem, 7vw, 7rem) 0 clamp(2rem, 4vw, 3.5rem) !important;
+      background: var(--color-papel) !important;
+    }
+
+    html body .trip-page .trip-photo-break-figure {
+      width: min(820px, calc(100% - 10rem)) !important;
+      margin-inline: auto !important;
+    }
+
+    html body .trip-page .trip-photo-break-figure img {
+      width: 100% !important;
+      height: auto !important;
+      aspect-ratio: 16 / 8.7 !important;
+      max-height: 450px !important;
+      min-height: 0 !important;
+      object-fit: cover !important;
+      box-shadow: 0 28px 70px rgba(28, 48, 38, .14) !important;
+    }
+
+    html body .trip-page .trip-photo-break-figure figcaption {
+      margin-top: 1rem !important;
+      padding: 0 !important;
+    }
+
+    html body .trip-page .trip-photo-break-figure::after {
+      content: "" !important;
+      position: absolute !important;
+      right: -10px !important;
+      bottom: -10px !important;
+      width: 24% !important;
+      height: 48% !important;
+      border-right: 1px solid rgba(194, 125, 56, .38) !important;
+      border-bottom: 1px solid rgba(194, 125, 56, .38) !important;
+    }
+
+    html body .trip-page .trip-photo-story-grid {
+      grid-template-columns: minmax(0, 1.55fr) minmax(250px, .75fr) !important;
+      grid-template-rows: minmax(260px, 350px) minmax(220px, 290px) !important;
+      gap: clamp(1.5rem, 3vw, 2.75rem) !important;
+    }
+
+    html body .trip-page .trip-story-photo {
+      overflow: visible !important;
+    }
+
+    html body .trip-page .trip-story-photo img {
+      display: block !important;
+      overflow: hidden !important;
+      border-radius: 2px !important;
+      box-shadow: 0 18px 45px rgba(28, 48, 38, .08) !important;
+    }
+
+    html body .trip-page .trip-fauna-grid {
+      grid-template-columns: minmax(0, 1.65fr) minmax(210px, .72fr) minmax(210px, .72fr) !important;
+      grid-template-rows: 370px 250px !important;
+      gap: clamp(1.5rem, 3vw, 3rem) !important;
+      align-items: start !important;
+    }
+
+    html body .trip-page .trip-fauna-photo {
+      overflow: visible !important;
+    }
+
+    html body .trip-page .trip-fauna-photo img {
+      display: block !important;
+      width: 100% !important;
+      height: 100% !important;
+      overflow: hidden !important;
+      border-radius: 2px !important;
+    }
+
+    html body .trip-page .trip-fauna-featured img {
+      min-height: 620px !important;
+    }
+
+    html body .trip-page .trip-fauna-perezoso {
+      margin-top: 3rem !important;
+    }
+
+    html body .trip-page .trip-fauna-wide {
+      margin-bottom: 2.5rem !important;
+    }
+
+    html body .trip-page .trip-fauna-photo figcaption {
+      margin-top: .9rem !important;
+      padding: 0 !important;
+      font-size: .68rem !important;
+      letter-spacing: .10em !important;
+      line-height: 1.5 !important;
+    }
+
+    @media (max-width: 900px) {
+      html body .trip-page .trip-photo-break-figure {
+        width: min(620px, calc(100% - 2rem)) !important;
+      }
+
+      html body .trip-page .trip-fauna-grid {
+        grid-template-columns: minmax(0, 1.35fr) minmax(180px, .8fr) !important;
+        grid-template-rows: 360px 230px 230px !important;
+      }
+
+      html body .trip-page .trip-fauna-featured {
+        grid-column: 1 !important;
+        grid-row: 1 / span 2 !important;
+      }
+
+      html body .trip-page .trip-fauna-featured img {
+        min-height: 0 !important;
+      }
+
+      html body .trip-page .trip-fauna-perezoso {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        margin-top: 0 !important;
+      }
+
+      html body .trip-page .trip-fauna-cocodrilo {
+        grid-column: 2 !important;
+        grid-row: 2 !important;
+      }
+
+      html body .trip-page .trip-fauna-rana {
+        grid-column: 1 !important;
+        grid-row: 3 !important;
+      }
+
+      html body .trip-page .trip-fauna-wide {
+        grid-column: 2 !important;
+        grid-row: 3 !important;
+        margin-bottom: 0 !important;
+      }
+    }
+
+    @media (max-width: 700px) {
+      html body .trip-page .trip-photo-break-figure {
+        width: calc(100% - 1rem) !important;
+      }
+
+      html body .trip-page .trip-photo-break-figure img {
+        aspect-ratio: 16 / 9.2 !important;
+      }
+
+      html body .trip-page .trip-photo-story-grid {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto !important;
+      }
+
+      html body .trip-page .trip-fauna-grid {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto !important;
+      }
+
+      html body .trip-page .trip-fauna-featured,
+      html body .trip-page .trip-fauna-perezoso,
+      html body .trip-page .trip-fauna-cocodrilo,
+      html body .trip-page .trip-fauna-rana,
+      html body .trip-page .trip-fauna-wide {
+        grid-column: auto !important;
+        grid-row: auto !important;
+        margin: 0 !important;
+      }
+
+      html body .trip-page .trip-fauna-photo {
+        min-height: 0 !important;
+      }
+
+      html body .trip-page .trip-fauna-photo img {
+        height: auto !important;
+        aspect-ratio: 4 / 3 !important;
+      }
+    }
+
 </style>
