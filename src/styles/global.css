@@ -338,3 +338,44 @@
       transition: none;
     }
   }
+
+  /* =========================================================
+     NUESTROS VIAJES — AJUSTE EDITORIAL DE IMÁGENES
+     Mantiene el lenguaje visual de la página, pero evita que
+     los bloques fotográficos queden pegados a los bordes.
+  ========================================================= */
+
+  .trip-page .trip-photo-break {
+    padding: clamp(0.5rem, 2vw, 1.5rem) 0 0;
+  }
+
+  .trip-page .trip-photo-break-figure {
+    width: min(1180px, calc(100% - 4rem));
+    margin-inline: auto;
+  }
+
+  .trip-page .trip-photo-break-figure img {
+    width: 100%;
+    max-width: 100%;
+    height: min(68vh, 680px);
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .trip-page .trip-photo-break-figure figcaption {
+    padding-inline: 0.15rem;
+  }
+
+  @media (max-width: 800px) {
+    .trip-page .trip-photo-break {
+      padding-top: 0.25rem;
+    }
+
+    .trip-page .trip-photo-break-figure {
+      width: calc(100% - 2.5rem);
+    }
+
+    .trip-page .trip-photo-break-figure img {
+      height: min(58vh, 520px);
+    }
+  }
