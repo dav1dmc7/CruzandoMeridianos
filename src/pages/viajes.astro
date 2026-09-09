@@ -5,6 +5,8 @@ import Footer from "../components/layout/Footer.astro";
 import DestinationCard from "../components/sections/DestinationCard.astro";
 
 import { destinations } from "../data/destinations";
+import { getGuideBySlug } from "../data/guides";
+import type { GuideBlock } from "../data/guides/types";
 
 const featuredDestination = destinations.find(
   (destination) => destination.status === "ready"
@@ -13,11 +15,37 @@ const featuredDestination = destinations.find(
 const otherDestinations = destinations.filter(
   (destination) => destination !== featuredDestination
 );
+
+const exploreableDestinations = destinations
+  .map((destination) => ({
+    destination,
+    guide: getGuideBySlug(destination.slug),
+  }))
+  .filter(
+    (item) =>
+      item.destination.status === "ready" &&
+      item.guide?.editorial?.status === "published"
+  )
+  .map(({ destination, guide }) => ({
+    destination,
+    guide: guide!,
+  }));
+
+const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"]) =>
+  guide.sections.flatMap((section) =>
+    (section.blocks ?? [])
+      .filter((block: GuideBlock) => block.type === "place" || block.type === "region")
+      .map((block: GuideBlock) => ({
+        ...block,
+        sectionTitle: section.title,
+        sectionCategory: section.category,
+      }))
+  );
 ---
 
 <Layout
   title="Viajes | Cruzando Meridianos"
-  description="Descubre qué ver, qué hacer y qué necesitas saber antes de viajar a nuestros destinos, con información clara y experiencias reales."
+  description="Explora nuestros destinos y descubre todo lo que puedes ver, hacer y conocer en cada uno antes de decidir cómo viajar."
   canonical="/viajes"
 >
   <Header />
@@ -29,24 +57,24 @@ const otherDestinations = destinations.filter(
           <p class="eyebrow">VIAJES</p>
 
           <h1>
-            Conoce un destino antes de
-            <em> decidir cómo vivirlo.</em>
+            Primero conoce el lugar.
+            <em> Después decide el viaje.</em>
           </h1>
 
           <p class="travel-hero-description">
-            Aquí encontrarás lo que merece la pena conocer de cada lugar:
-            qué ver, qué hacer, qué tipo de experiencias ofrece, qué zonas
-            tienen más sentido según tus intereses y la información práctica
-            que conviene tener antes de viajar.
+            Este es nuestro atlas de destinos: una forma de reunir en un mismo
+            sitio qué puedes encontrar en cada país, qué experiencias ofrece,
+            qué lugares despiertan interés y qué información conviene conocer
+            antes de empezar a planificar.
           </p>
         </div>
 
         <div class="travel-hero-note">
-          <span>Nuestra idea</span>
+          <span>Qué encontrarás</span>
 
           <p>
-            Primero te ayudamos a conocer el destino. Después, si quieres,
-            nosotros nos encargamos de decidir contigo cómo convertirlo en viaje.
+            Lugares, naturaleza, cultura, actividades e información práctica.
+            No una ruta cerrada para copiar.
           </p>
         </div>
       </div>
@@ -58,16 +86,15 @@ const otherDestinations = destinations.filter(
           <p class="eyebrow">DESTINOS</p>
 
           <h2>
-            Todo empieza por saber
+            Elige un país y
             <br />
-            qué tiene realmente un lugar.
+            empieza a explorar.
           </h2>
 
           <p>
-            No queremos que tengas que recorrer diez páginas para entender un
-            destino. Nuestra intención es reunir en un mismo sitio una visión
-            clara de lo que merece la pena descubrir y ayudarte a orientarte
-            entre todas las posibilidades.
+            Cada destino reúne su propia selección de lugares, paisajes,
+            experiencias y datos útiles. La idea es que puedas entrar, curiosear,
+            guardar mentalmente tus favoritos y empezar a descubrir qué te llama.
           </p>
         </div>
 
@@ -86,30 +113,96 @@ const otherDestinations = destinations.filter(
       </div>
     </section>
 
+    {exploreableDestinations.map(({ destination, guide }) => {
+      const places = getPlaceEntries(guide);
+
+      return (
+        <section
+          class="destination-atlas"
+          id={`atlas-${destination.slug}`}
+        >
+          <div class="destination-atlas-inner">
+            <div class="destination-atlas-header">
+              <div>
+                <p class="eyebrow">EXPLORAR DESTINO</p>
+                <h2>{destination.name}</h2>
+              </div>
+
+              <div class="destination-atlas-intro">
+                <p>{guide.subtitle}</p>
+                <a href={`/viajes/${destination.slug}`}>
+                  Abrir guía completa <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </div>
+
+            <details class="destination-atlas-disclosure" open>
+              <summary>
+                <span>
+                  {places.length > 0
+                    ? `${places.length} lugares y zonas para explorar`
+                    : "Explorar el destino"}
+                </span>
+                <span class="summary-toggle" aria-hidden="true">+</span>
+              </summary>
+
+              <div class="places-grid">
+                {places.length > 0 ? (
+                  places.map((place) => (
+                    <article class="place-card">
+                      <div class="place-card-topline">
+                        <span>
+                          {place.type === "region" ? "Zona" : "Lugar"}
+                        </span>
+                        <span>{place.sectionTitle}</span>
+                      </div>
+
+                      {place.title && <h3>{place.title}</h3>}
+
+                      {place.content && <p>{place.content}</p>}
+
+                      {place.items && place.items.length > 0 && (
+                        <ul>
+                          {place.items.map((item) => <li>{item}</li>)}
+                        </ul>
+                      )}
+                    </article>
+                  ))
+                ) : (
+                  <p class="places-empty">
+                    Estamos incorporando los lugares y experiencias de este destino.
+                  </p>
+                )}
+              </div>
+            </details>
+          </div>
+        </section>
+      );
+    })}
+
     <section class="knowledge">
       <div class="knowledge-inner">
         <div class="knowledge-copy">
-          <p class="eyebrow">CENTRO DE CONOCIMIENTO</p>
+          <p class="eyebrow">EL ATLAS CRECE</p>
 
           <h2>
-            Lo que necesitas saber antes de decidir.
+            Un destino no es solo una lista de sitios.
           </h2>
 
           <p>
-            Queremos que esta sección sea útil incluso si todavía no sabes
-            qué viaje quieres hacer. Aquí reunimos la información que te ayuda
-            a entender las posibilidades de un destino sin obligarte a copiar
-            el viaje de otra persona.
+            A medida que incorporemos nuevos países iremos reuniendo aquí todo
+            aquello que ayuda a entenderlos: naturaleza, playas, parques, fauna,
+            cultura, pueblos, gastronomía, actividades, zonas e información
+            práctica. La planificación personalizada vendrá después.
           </p>
         </div>
 
         <div class="knowledge-grid">
           <article>
             <span>01</span>
-            <h3>Qué ver</h3>
+            <h3>Lugares y zonas</h3>
             <p>
-              Lugares, paisajes y rincones que merece la pena conocer y por qué
-              pueden resultar interesantes.
+              Los sitios que merece la pena conocer para empezar a imaginar el destino.
             </p>
           </article>
 
@@ -117,26 +210,23 @@ const otherDestinations = destinations.filter(
             <span>02</span>
             <h3>Qué hacer</h3>
             <p>
-              Naturaleza, cultura, gastronomía y experiencias para entender
-              qué tipo de cosas ofrece realmente cada destino.
+              Naturaleza, cultura, gastronomía y experiencias disponibles en cada lugar.
             </p>
           </article>
 
           <article>
             <span>03</span>
-            <h3>Información práctica</h3>
+            <h3>Información útil</h3>
             <p>
-              Lo básico que conviene saber antes de viajar: documentación,
-              temporadas, conectividad y otros aspectos importantes.
+              Lo que conviene saber para llegar preparado, con fuentes y revisiones cuando corresponda.
             </p>
           </article>
 
           <article>
             <span>04</span>
-            <h3>Experiencias reales</h3>
+            <h3>Después, tu viaje</h3>
             <p>
-              Lo que hemos visto y vivido nosotros para que puedas distinguir
-              entre una descripción de catálogo y una experiencia real.
+              Cuando ya sabes qué te interesa, podemos ayudarte a convertir todo eso en un viaje pensado para ti.
             </p>
           </article>
         </div>
@@ -145,24 +235,18 @@ const otherDestinations = destinations.filter(
 
     <section class="travel-cta">
       <div class="travel-cta-inner">
-        <p class="eyebrow">¿YA SABES QUÉ DESTINO TE LLAMA?</p>
+        <p class="eyebrow">YA SABES QUÉ TE LLAMA</p>
 
         <h2>
-          Conocer las opciones es una cosa.
-          <br />
-          Elegir el viaje adecuado es otra.
+          Ahora podemos ayudarte a convertir tus intereses en viaje.
         </h2>
 
         <p>
-          Si no tienes claro qué ver, qué dejar fuera, cuánto tiempo dedicarle
-          o cómo encajar todo lo que has descubierto, ahí es donde entramos
-          nosotros.
+          Tú descubres el destino. Nosotros hacemos el trabajo de unir tus preferencias,
+          tiempos y prioridades en una propuesta pensada para ti.
         </p>
 
-        <a
-          href="/cuentatuviaje"
-          class="button-primary"
-        >
+        <a href="/cuentatuviaje" class="button-primary">
           Cuéntanos tu viaje
           <span aria-hidden="true">↗</span>
         </a>
@@ -202,7 +286,7 @@ const otherDestinations = destinations.filter(
 }
 
 .travel-hero h1 {
-  max-width: 900px;
+  max-width: 980px;
   margin: 0;
   color: var(--color-bosque);
   font-family: var(--font-serif);
@@ -218,7 +302,7 @@ const otherDestinations = destinations.filter(
 }
 
 .travel-hero-description {
-  max-width: 680px;
+  max-width: 720px;
   margin-top: 2.5rem;
   color: #555;
   font-size: 1.1rem;
@@ -244,7 +328,7 @@ const otherDestinations = destinations.filter(
   margin: 0;
   color: #555;
   font-family: var(--font-serif);
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   line-height: 1.5;
 }
 
@@ -274,7 +358,7 @@ const otherDestinations = destinations.filter(
 }
 
 .destinations-intro > p:last-child {
-  max-width: 690px;
+  max-width: 700px;
   margin-top: 2rem;
   color: #555;
   font-size: 1.05rem;
@@ -288,9 +372,178 @@ const otherDestinations = destinations.filter(
   margin-top: 6rem;
 }
 
+.destination-atlas {
+  padding: 8rem 2rem;
+  background: var(--color-papel);
+  border-top: 1px solid rgba(28, 48, 38, .08);
+}
+
+.destination-atlas:nth-of-type(even) {
+  background: var(--color-arena);
+}
+
+.destination-atlas-inner {
+  width: min(var(--content-width), 100%);
+  margin: 0 auto;
+}
+
+.destination-atlas-header {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(280px, .7fr);
+  gap: 5rem;
+  align-items: end;
+  margin-bottom: 3rem;
+}
+
+.destination-atlas-header h2 {
+  margin: 0;
+  color: var(--color-bosque);
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 5vw, 5rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -.035em;
+}
+
+.destination-atlas-intro p {
+  margin: 0;
+  color: #555;
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.destination-atlas-intro a {
+  display: inline-flex;
+  gap: .6rem;
+  margin-top: 1.4rem;
+  color: var(--color-bosque);
+  font-size: .85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.destination-atlas-intro a span {
+  transition: transform .2s ease;
+}
+
+.destination-atlas-intro a:hover span {
+  transform: translate(3px, -3px);
+}
+
+.destination-atlas-disclosure {
+  border-top: 1px solid rgba(28, 48, 38, .2);
+  border-bottom: 1px solid rgba(28, 48, 38, .2);
+}
+
+.destination-atlas-disclosure summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.5rem 0;
+  cursor: pointer;
+  list-style: none;
+  color: var(--color-bosque);
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+}
+
+.destination-atlas-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary-toggle {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid rgba(28, 48, 38, .2);
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: 1.2rem;
+  line-height: 1;
+  transition: transform .2s ease;
+}
+
+.destination-atlas-disclosure[open] .summary-toggle {
+  transform: rotate(45deg);
+}
+
+.places-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 0 0 2rem;
+}
+
+.place-card {
+  min-height: 100%;
+  padding: 1.5rem;
+  border: 1px solid rgba(28, 48, 38, .1);
+  border-radius: 18px;
+  background: rgba(251, 249, 245, .7);
+}
+
+.place-card-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+  color: var(--color-cobre);
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: 1.3px;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.place-card-topline span:last-child {
+  color: #777;
+  font-weight: 500;
+  letter-spacing: .4px;
+  text-align: right;
+  text-transform: none;
+}
+
+.place-card h3 {
+  margin: 0 0 .7rem;
+  color: var(--color-bosque);
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.place-card p,
+.place-card li {
+  color: #555;
+  font-size: .92rem;
+  line-height: 1.7;
+}
+
+.place-card p {
+  margin: 0;
+}
+
+.place-card ul {
+  margin: .9rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.place-card li + li {
+  margin-top: .35rem;
+}
+
+.places-empty {
+  margin: 0;
+  padding: 1.5rem 0 2rem;
+  color: #666;
+  line-height: 1.7;
+}
+
 .knowledge {
   padding: 9rem 2rem;
-  background: var(--color-papel);
+  background: #f7f4ef;
 }
 
 .knowledge-inner {
@@ -302,7 +555,7 @@ const otherDestinations = destinations.filter(
 }
 
 .knowledge-copy {
-  max-width: 520px;
+  max-width: 540px;
 }
 
 .knowledge-copy h2 {
@@ -422,6 +675,7 @@ const otherDestinations = destinations.filter(
   }
 
   .destinations,
+  .destination-atlas,
   .knowledge,
   .travel-cta {
     padding-left: 1.5rem;
@@ -442,6 +696,20 @@ const otherDestinations = destinations.filter(
     margin-top: 4rem;
   }
 
+  .destination-atlas {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+
+  .destination-atlas-header {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .places-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .knowledge {
     padding-top: 6rem;
     padding-bottom: 7rem;
@@ -460,8 +728,13 @@ const otherDestinations = destinations.filter(
 
 @media (max-width: 650px) {
   .destinations-grid,
-  .knowledge-grid {
+  .knowledge-grid,
+  .places-grid {
     grid-template-columns: 1fr;
+  }
+
+  .destination-atlas-disclosure summary {
+    font-size: 1.35rem;
   }
 
   .travel-cta h2 {
