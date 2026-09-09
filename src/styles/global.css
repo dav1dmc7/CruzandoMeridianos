@@ -24,7 +24,6 @@
     --section-space-mobile: 5rem;
   }
   
-  
   /* =========================================================
      RESET
   ========================================================= */
@@ -42,18 +41,14 @@
   body {
     margin: 0;
     padding: 0;
-  
     background: var(--color-papel);
     color: var(--color-grafito);
-  
     font-family: var(--font-sans);
     font-weight: 400;
     line-height: 1.6;
-  
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  
   
   /* =========================================================
      TIPOGRAFÍA
@@ -66,10 +61,8 @@
   h5,
   h6 {
     margin: 0;
-  
     font-family: var(--font-serif);
     font-weight: 500;
-  
     line-height: 1.1;
   }
   
@@ -88,7 +81,6 @@
     font: inherit;
   }
   
-  
   /* =========================================================
      IMÁGENES
   ========================================================= */
@@ -103,7 +95,6 @@
     vertical-align: middle;
   }
   
-  
   /* =========================================================
      SELECCIÓN
   ========================================================= */
@@ -112,7 +103,6 @@
     background: var(--color-cobre);
     color: var(--color-papel);
   }
-  
   
   /* =========================================================
      ELEMENTOS COMUNES
@@ -123,7 +113,6 @@
       var(--content-width),
       calc(100% - 4rem)
     );
-  
     margin-inline: auto;
   }
   
@@ -132,24 +121,18 @@
       var(--content-width-narrow),
       calc(100% - 4rem)
     );
-  
     margin-inline: auto;
   }
   
   .eyebrow {
     margin: 0 0 1.5rem;
-  
     color: var(--color-cobre);
-  
     font-size: .78rem;
     font-weight: 500;
-  
     letter-spacing: 3px;
     line-height: 1.4;
-  
     text-transform: uppercase;
   }
-  
   
   /* =========================================================
      BOTONES
@@ -159,21 +142,15 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-  
     min-height: 48px;
     padding: .8rem 1.4rem;
-  
     border: 1px solid var(--color-bosque);
     border-radius: 999px;
-  
     background: var(--color-bosque);
     color: var(--color-papel);
-  
     text-decoration: none;
-  
     font-size: .88rem;
     font-weight: 500;
-  
     transition:
       transform .2s ease,
       background .2s ease,
@@ -182,7 +159,6 @@
   
   .button-primary:hover {
     transform: translateY(-2px);
-  
     background: transparent;
     color: var(--color-bosque);
   }
@@ -190,14 +166,10 @@
   .button-secondary {
     display: inline-flex;
     align-items: center;
-  
     color: var(--color-bosque);
-  
     text-decoration: none;
-  
     font-size: .9rem;
     font-weight: 500;
-  
     transition:
       color .2s ease,
       transform .2s ease;
@@ -208,7 +180,6 @@
     transform: translateX(2px);
   }
   
-  
   /* =========================================================
      FOCUS — ACCESIBILIDAD
   ========================================================= */
@@ -218,13 +189,11 @@
     outline-offset: 4px;
   }
   
-  
   /* =========================================================
      RESPONSIVE
   ========================================================= */
   
   @media (max-width: 800px) {
-  
     :root {
       --section-space: var(--section-space-mobile);
     }
@@ -235,5 +204,137 @@
         100% - 3rem,
         var(--content-width)
       );
+    }
+  }
+
+  /* =========================================================
+     VIAJE — CAPA PREMIUM
+     Estas reglas elevan la experiencia del formulario sin
+     alterar su estructura ni su lógica de envío.
+  ========================================================= */
+
+  .journey-page .conversation {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 78% 16%, rgba(194,125,56,.08), transparent 30rem),
+      var(--color-arena);
+  }
+
+  .journey-page .conversation::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(28,48,38,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(28,48,38,.035) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,.55), transparent 72%);
+  }
+
+  .journey-page .conversation-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .journey-page .journey-progress {
+    position: sticky;
+    top: 78px;
+    z-index: 5;
+    padding: 1rem 0 1.4rem;
+    background: color-mix(in srgb, var(--color-arena) 90%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .journey-page .progress-top {
+    margin-bottom: .85rem;
+  }
+
+  .journey-page .progress-message {
+    font-size: 1.05rem;
+  }
+
+  .journey-page .progress-count {
+    padding: .35rem .65rem;
+    border: 1px solid rgba(28,48,38,.1);
+    border-radius: 999px;
+    background: rgba(251,249,245,.62);
+  }
+
+  .journey-page .question-block {
+    max-width: 800px;
+    margin-inline: auto;
+    padding: 4.5rem 0 5rem;
+  }
+
+  .journey-page .question-number {
+    display: inline-flex;
+    align-items: center;
+    min-width: 3rem;
+    min-height: 1.8rem;
+    margin-bottom: 1.6rem;
+    padding: .35rem .65rem;
+    border: 1px solid rgba(194,125,56,.32);
+    border-radius: 999px;
+    background: rgba(194,125,56,.07);
+    letter-spacing: 2px;
+  }
+
+  .journey-page .question-block > label,
+  .journey-page .question-block > .final-question-title,
+  .journey-page .choice-fieldset > legend {
+    max-width: 720px;
+  }
+
+  .journey-page textarea,
+  .journey-page .field input {
+    box-shadow: 0 16px 45px rgba(28,48,38,.045);
+  }
+
+  .journey-page .question-actions {
+    margin-top: 2rem;
+    align-items: center;
+  }
+
+  .journey-page .next-button,
+  .journey-page .submit-button {
+    box-shadow: 0 14px 30px rgba(28,48,38,.13);
+  }
+
+  .journey-page .arrival {
+    min-height: 75vh;
+    background:
+      radial-gradient(circle at 50% 35%, rgba(194,125,56,.12), transparent 24rem),
+      var(--color-bosque);
+  }
+
+  .journey-page .arrival-copy h2,
+  .journey-page .arrival-final h2 {
+    text-wrap: balance;
+  }
+
+  @media (max-width: 800px) {
+    .journey-page .journey-progress {
+      top: 64px;
+      padding: .8rem 0 1.1rem;
+    }
+
+    .journey-page .question-block {
+      padding: 3.2rem 0 4rem;
+    }
+
+    .journey-page .conversation::before {
+      background-size: 48px 48px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .journey-page .question-block.active,
+    .journey-page .route-progress,
+    .journey-page .route-plane {
+      animation: none;
+      transition: none;
     }
   }
