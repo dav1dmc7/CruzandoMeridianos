@@ -4,17 +4,19 @@ import Header from "../components/layout/Header.astro";
 import Footer from "../components/layout/Footer.astro";
 import DestinationCard from "../components/sections/DestinationCard.astro";
 
-import { destinations } from "../data/destinations";
+import { destinations, type DestinationContinent } from "../data/destinations";
 import { getGuideBySlug } from "../data/guides";
 import type { GuideBlock } from "../data/guides/types";
 
-const featuredDestination = destinations.find(
-  (destination) => destination.status === "ready"
-);
+const featuredDestinations = destinations.slice(0, 4);
 
-const otherDestinations = destinations.filter(
-  (destination) => destination !== featuredDestination
-);
+const continents: DestinationContinent[] = [
+  "Europa",
+  "África",
+  "Asia",
+  "América",
+  "Oceanía",
+];
 
 const exploreableDestinations = destinations
   .map((destination) => ({
@@ -38,14 +40,16 @@ const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"])
       .map((block: GuideBlock) => ({
         ...block,
         sectionTitle: section.title,
-        sectionCategory: section.category,
       }))
   );
+
+const formatCount = (count: number, singular: string, plural: string) =>
+  `${count} ${count === 1 ? singular : plural}`;
 ---
 
 <Layout
   title="Viajes | Cruzando Meridianos"
-  description="Explora nuestros destinos y descubre todo lo que puedes ver, hacer y conocer en cada uno antes de decidir cómo viajar."
+  description="Explora nuestros destinos y descubre qué ver, qué hacer y qué necesitas saber en cada uno antes de decidir cómo viajar."
   canonical="/viajes"
 >
   <Header />
@@ -74,40 +78,110 @@ const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"])
 
           <p>
             Lugares, naturaleza, cultura, actividades e información práctica.
-            No una ruta cerrada para copiar.
+            La planificación del viaje viene después.
           </p>
         </div>
       </div>
     </section>
 
-    <section class="destinations">
-      <div class="destinations-inner">
-        <div class="destinations-intro">
-          <p class="eyebrow">DESTINOS</p>
-
-          <h2>
-            Elige un país y
-            <br />
-            empieza a explorar.
-          </h2>
+    <section class="destination-explorer" id="explorador">
+      <div class="explorer-inner">
+        <div class="explorer-heading">
+          <div>
+            <p class="eyebrow">EXPLORADOR DE DESTINOS</p>
+            <h2>¿Dónde te gustaría viajar?</h2>
+          </div>
 
           <p>
-            Cada destino reúne su propia selección de lugares, paisajes,
-            experiencias y datos útiles. La idea es que puedas entrar, curiosear,
-            guardar mentalmente tus favoritos y empezar a descubrir qué te llama.
+            Busca un país directamente o explora por continente. Aquí iremos
+            incorporando todos los destinos que vayamos investigando.
           </p>
         </div>
 
-        {featuredDestination && (
-          <DestinationCard
-            destination={featuredDestination}
-            featured
-          />
-        )}
+        <div class="destination-search">
+          <label for="destination-search-input">Buscar un destino</label>
+          <div class="destination-search-field">
+            <span aria-hidden="true">⌕</span>
+            <input
+              id="destination-search-input"
+              type="search"
+              autocomplete="off"
+              placeholder="Escribe un país…"
+            />
+          </div>
+        </div>
 
-        <div class="destinations-grid">
-          {otherDestinations.map((destination) => (
-            <DestinationCard destination={destination} />
+        <div class="continent-filter" role="group" aria-label="Filtrar por continente">
+          <button type="button" class="continent-button is-active" data-continent="all">
+            Todos
+          </button>
+
+          {continents.map((continent) => (
+            <button
+              type="button"
+              class="continent-button"
+              data-continent={continent}
+            >
+              {continent}
+            </button>
+          ))}
+        </div>
+
+        <div class="destination-results" data-destination-results>
+          {destinations.map((destination) => (
+            <a
+              href={destination.status === "ready" ? `/viajes/${destination.slug}` : "#"}
+              class:list={[
+                "destination-result",
+                { "destination-result--disabled": destination.status !== "ready" },
+              ]}
+              data-destination-card
+              data-name={destination.name.toLowerCase()}
+              data-continent={destination.continent}
+              aria-label={
+                destination.status === "ready"
+                  ? `Explorar ${destination.name}`
+                  : `${destination.name}, próximamente`
+              }
+              data-ready={destination.status === "ready" ? "true" : "false"}
+            >
+              <span class="destination-result-number">{destination.number}</span>
+              <span class="destination-result-copy">
+                <strong>{destination.name}</strong>
+                <small>{destination.continent}</small>
+              </span>
+              <span class="destination-result-status">
+                {destination.status === "ready" ? "Explorar ↗" : "Próximamente"}
+              </span>
+            </a>
+          ))}
+        </div>
+
+        <p class="destination-no-results" data-no-results hidden>
+          No encontramos ese destino todavía. Prueba con otro nombre o explora un continente.
+        </p>
+      </div>
+    </section>
+
+    <section class="popular-destinations" data-popular-section>
+      <div class="popular-inner">
+        <div class="popular-heading">
+          <div>
+            <p class="eyebrow">EN EL RADAR</p>
+            <h2>Destinos para empezar a curiosear.</h2>
+          </div>
+
+          <p>
+            Una primera selección para entrar, descubrir y empezar a decidir qué te despierta curiosidad.
+          </p>
+        </div>
+
+        <div class="popular-grid">
+          {featuredDestinations.map((destination, index) => (
+            <DestinationCard
+              destination={destination}
+              featured={index === 0}
+            />
           ))}
         </div>
       </div>
@@ -136,11 +210,11 @@ const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"])
               </div>
             </div>
 
-            <details class="destination-atlas-disclosure" open>
+            <details class="destination-atlas-disclosure">
               <summary>
                 <span>
                   {places.length > 0
-                    ? `${places.length} lugares y zonas para explorar`
+                    ? formatCount(places.length, "lugar o zona para explorar", "lugares y zonas para explorar")
                     : "Explorar el destino"}
                 </span>
                 <span class="summary-toggle" aria-hidden="true">+</span>
@@ -151,9 +225,7 @@ const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"])
                   places.map((place) => (
                     <article class="place-card">
                       <div class="place-card-topline">
-                        <span>
-                          {place.type === "region" ? "Zona" : "Lugar"}
-                        </span>
+                        <span>{place.type === "region" ? "Zona" : "Lugar"}</span>
                         <span>{place.sectionTitle}</span>
                       </div>
 
@@ -185,15 +257,13 @@ const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"])
         <div class="knowledge-copy">
           <p class="eyebrow">EL ATLAS CRECE</p>
 
-          <h2>
-            Un destino no es solo una lista de sitios.
-          </h2>
+          <h2>Un destino es mucho más que una lista de sitios.</h2>
 
           <p>
             A medida que incorporemos nuevos países iremos reuniendo aquí todo
             aquello que ayuda a entenderlos: naturaleza, playas, parques, fauna,
             cultura, pueblos, gastronomía, actividades, zonas e información
-            práctica. La planificación personalizada vendrá después.
+            práctica. El siguiente paso es convertir tus intereses en un viaje.
           </p>
         </div>
 
@@ -201,33 +271,25 @@ const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"])
           <article>
             <span>01</span>
             <h3>Lugares y zonas</h3>
-            <p>
-              Los sitios que merece la pena conocer para empezar a imaginar el destino.
-            </p>
+            <p>Los sitios que merece la pena conocer para empezar a imaginar el destino.</p>
           </article>
 
           <article>
             <span>02</span>
             <h3>Qué hacer</h3>
-            <p>
-              Naturaleza, cultura, gastronomía y experiencias disponibles en cada lugar.
-            </p>
+            <p>Naturaleza, cultura, gastronomía y experiencias disponibles en cada lugar.</p>
           </article>
 
           <article>
             <span>03</span>
             <h3>Información útil</h3>
-            <p>
-              Lo que conviene saber para llegar preparado, con fuentes y revisiones cuando corresponda.
-            </p>
+            <p>Lo que conviene saber para viajar preparado, con fuentes y revisiones cuando corresponda.</p>
           </article>
 
           <article>
             <span>04</span>
             <h3>Después, tu viaje</h3>
-            <p>
-              Cuando ya sabes qué te interesa, podemos ayudarte a convertir todo eso en un viaje pensado para ti.
-            </p>
+            <p>Cuando ya sabes qué te interesa, nosotros unimos tus preferencias en una propuesta pensada para ti.</p>
           </article>
         </div>
       </div>
@@ -237,9 +299,7 @@ const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"])
       <div class="travel-cta-inner">
         <p class="eyebrow">YA SABES QUÉ TE LLAMA</p>
 
-        <h2>
-          Ahora podemos ayudarte a convertir tus intereses en viaje.
-        </h2>
+        <h2>Ahora podemos convertir tus intereses en viaje.</h2>
 
         <p>
           Tú descubres el destino. Nosotros hacemos el trabajo de unir tus preferencias,
@@ -255,7 +315,50 @@ const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"])
   </main>
 
   <Footer />
-</Layout>
+
+  <script>
+    const searchInput = document.querySelector<HTMLInputElement>("#destination-search-input");
+    const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-continent]"));
+    const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-destination-card]"));
+    const noResults = document.querySelector<HTMLElement>("[data-no-results]");
+    const popularSection = document.querySelector<HTMLElement>("[data-popular-section]");
+
+    let activeContinent = "all";
+
+    const applyFilters = () => {
+      const query = (searchInput?.value ?? "").trim().toLowerCase();
+      let visible = 0;
+
+      cards.forEach((card) => {
+        const name = card.dataset.name ?? "";
+        const continent = card.dataset.continent ?? "";
+        const matchesQuery = !query || name.includes(query);
+        const matchesContinent = activeContinent === "all" || continent === activeContinent;
+        const show = matchesQuery && matchesContinent;
+
+        card.hidden = !show;
+        if (show) visible += 1;
+      });
+
+      if (noResults) noResults.hidden = visible > 0;
+      if (popularSection) popularSection.hidden = Boolean(query) || activeContinent !== "all";
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        activeContinent = button.dataset.continent ?? "all";
+
+        buttons.forEach((item) => {
+          item.classList.toggle("is-active", item === button);
+        });
+
+        applyFilters();
+      });
+    });
+
+    searchInput?.addEventListener("input", applyFilters);
+  </script>
+</main>
 
 <style>
 .travel-hero {
@@ -273,7 +376,7 @@ const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"])
 }
 
 .travel-hero-copy {
-  max-width: 850px;
+  max-width: 900px;
 }
 
 .eyebrow {
@@ -332,22 +435,26 @@ const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"])
   line-height: 1.5;
 }
 
-.destinations {
-  padding: 9rem 2rem;
+.destination-explorer {
+  padding: 8rem 2rem;
   background: #f7f4ef;
 }
 
-.destinations-inner {
+.explorer-inner {
   width: min(var(--content-width), 100%);
   margin: 0 auto;
 }
 
-.destinations-intro {
-  max-width: 800px;
-  margin-bottom: 6rem;
+.explorer-heading,
+.popular-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, .55fr);
+  gap: 5rem;
+  align-items: end;
 }
 
-.destinations-intro h2 {
+.explorer-heading h2,
+.popular-heading h2 {
   margin: 0;
   color: var(--color-bosque);
   font-family: var(--font-serif);
@@ -357,24 +464,199 @@ const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"])
   letter-spacing: -.035em;
 }
 
-.destinations-intro > p:last-child {
-  max-width: 700px;
-  margin-top: 2rem;
+.explorer-heading > p,
+.popular-heading > p {
+  margin: 0;
   color: #555;
-  font-size: 1.05rem;
-  line-height: 1.8;
+  font-size: 1rem;
+  line-height: 1.75;
 }
 
-.destinations-grid {
+.destination-search {
+  max-width: 760px;
+  margin-top: 4rem;
+}
+
+.destination-search label {
+  display: block;
+  margin-bottom: .7rem;
+  color: var(--color-bosque);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.destination-search-field {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid rgba(28, 48, 38, .18);
+  border-radius: 999px;
+  background: var(--color-papel);
+}
+
+.destination-search-field span {
+  color: var(--color-cobre);
+  font-size: 1.2rem;
+}
+
+.destination-search-field input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-grafito);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.destination-search-field input::placeholder {
+  color: #888;
+}
+
+.continent-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin-top: 2rem;
+}
+
+.continent-button {
+  padding: .7rem 1rem;
+  border: 1px solid rgba(28, 48, 38, .18);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-bosque);
+  cursor: pointer;
+  font: inherit;
+  font-size: .82rem;
+  transition: all .2s ease;
+}
+
+.continent-button:hover,
+.continent-button.is-active {
+  border-color: var(--color-bosque);
+  background: var(--color-bosque);
+  color: var(--color-papel);
+}
+
+.destination-results {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .9rem;
+  margin-top: 3rem;
+}
+
+.destination-result {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  min-width: 0;
+  padding: 1.2rem 1.25rem;
+  border: 1px solid rgba(28, 48, 38, .12);
+  border-radius: 18px;
+  background: var(--color-papel);
+  color: inherit;
+  text-decoration: none;
+  transition: transform .2s ease, border-color .2s ease;
+}
+
+.destination-result:hover {
+  transform: translateY(-2px);
+  border-color: rgba(28, 48, 38, .35);
+}
+
+.destination-result[hidden] {
+  display: none;
+}
+
+.destination-result--disabled {
+  cursor: default;
+  opacity: .68;
+}
+
+.destination-result--disabled:hover {
+  transform: none;
+  border-color: rgba(28, 48, 38, .12);
+}
+
+.destination-result-number {
+  color: var(--color-cobre);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.destination-result-copy {
+  min-width: 0;
+}
+
+.destination-result-copy strong {
+  display: block;
+  overflow: hidden;
+  color: var(--color-bosque);
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 400;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.destination-result-copy small {
+  display: block;
+  margin-top: .25rem;
+  color: #777;
+  font-size: .7rem;
+  text-transform: uppercase;
+}
+
+.destination-result-status {
+  color: var(--color-cobre);
+  font-size: .7rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.destination-result--disabled .destination-result-status {
+  color: #777;
+  font-weight: 500;
+}
+
+.destination-no-results {
+  margin: 2rem 0 0;
+  color: #666;
+  font-size: .95rem;
+}
+
+.popular-destinations {
+  padding: 9rem 2rem;
+  background: var(--color-papel);
+}
+
+.popular-destinations[hidden] {
+  display: none;
+}
+
+.popular-inner {
+  width: min(var(--content-width), 100%);
+  margin: 0 auto;
+}
+
+.popular-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 5rem 3rem;
-  margin-top: 6rem;
+  margin-top: 5rem;
 }
 
 .destination-atlas {
   padding: 8rem 2rem;
-  background: var(--color-papel);
+  background: #f7f4ef;
   border-top: 1px solid rgba(28, 48, 38, .08);
 }
 
@@ -543,7 +825,7 @@ const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"])
 
 .knowledge {
   padding: 9rem 2rem;
-  background: #f7f4ef;
+  background: var(--color-papel);
 }
 
 .knowledge-inner {
@@ -674,7 +956,8 @@ const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"])
     border-top: 1px solid rgba(28, 48, 38, .2);
   }
 
-  .destinations,
+  .destination-explorer,
+  .popular-destinations,
   .destination-atlas,
   .knowledge,
   .travel-cta {
@@ -682,16 +965,24 @@ const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"])
     padding-right: 1.5rem;
   }
 
-  .destinations {
+  .destination-explorer,
+  .popular-destinations {
     padding-top: 6rem;
     padding-bottom: 7rem;
   }
 
-  .destinations-intro {
-    margin-bottom: 4rem;
+  .explorer-heading,
+  .popular-heading,
+  .destination-atlas-header {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
   }
 
-  .destinations-grid {
+  .destination-results {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .popular-grid {
     gap: 4rem 2rem;
     margin-top: 4rem;
   }
@@ -699,11 +990,6 @@ const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"])
   .destination-atlas {
     padding-top: 6rem;
     padding-bottom: 6rem;
-  }
-
-  .destination-atlas-header {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
   }
 
   .places-grid {
@@ -727,10 +1013,19 @@ const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"])
 }
 
 @media (max-width: 650px) {
-  .destinations-grid,
+  .destination-results,
+  .popular-grid,
   .knowledge-grid,
   .places-grid {
     grid-template-columns: 1fr;
+  }
+
+  .destination-result {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .destination-result-status {
+    grid-column: 2;
   }
 
   .destination-atlas-disclosure summary {
