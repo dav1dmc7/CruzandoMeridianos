@@ -36,7 +36,7 @@ const COLORS = {
 
 function escapeHtml(value: unknown): string {
   return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    .replace(/>/g, "&gt;").replace(/\"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
 function getResendApiKey(): string | undefined {
@@ -92,14 +92,14 @@ export const POST: APIRoute = async ({ request }) => {
     if (data.website?.trim()) return new Response(JSON.stringify({ success: true }), { status: 201, headers: { "Content-Type": "application/json" } });
 
     const { trip, travellers, age_range, dates, budget, budget_flights, experience, transport, avoid, style, pace, anything, name, email } = data;
-    if (!trip || !travellers || !dates || !budget || !budget_flights || !experience || !avoid || !style || !pace || !name || !email) return new Response(JSON.stringify({ success: false, error: "Faltan campos obligatorios." }), { status: 400, headers: { "Content-Type": "application/json" } });
+    if (!trip || !travellers || !dates || !budget || !experience || !avoid || !style || !name || !email) return new Response(JSON.stringify({ success: false, error: "Faltan campos obligatorios." }), { status: 400, headers: { "Content-Type": "application/json" } });
 
     const cleanName = String(name).trim(), cleanEmail = String(email).trim().toLowerCase(), cleanAgeRange = age_range ? String(age_range).trim() : null;
     if (!cleanName || !cleanEmail) return new Response(JSON.stringify({ success: false, error: "Faltan datos de contacto." }), { status: 400, headers: { "Content-Type": "application/json" } });
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) return new Response(JSON.stringify({ success: false, error: "El email no es válido." }), { status: 400, headers: { "Content-Type": "application/json" } });
 
     const db = env.cruzandomeridianos_leads, id = crypto.randomUUID();
-    await db.prepare(`INSERT INTO travel_requests (id, trip, travellers, age_range, dates, budget, budget_flights, experience, transport, avoid, style, pace, anything, name, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(id, String(trip).trim(), String(travellers).trim(), cleanAgeRange, String(dates).trim(), String(budget), String(budget_flights), String(experience).trim(), JSON.stringify(transport || []), String(avoid).trim(), String(style).trim(), String(pace), anything ? String(anything).trim() : null, cleanName, cleanEmail).run();
+    await db.prepare(`INSERT INTO travel_requests (id, trip, travellers, age_range, dates, budget, budget_flights, experience, transport, avoid, style, pace, anything, name, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(id, String(trip).trim(), String(travellers).trim(), cleanAgeRange, String(dates).trim(), String(budget), String(budget_flights || ""), String(experience).trim(), JSON.stringify(transport || []), String(avoid).trim(), String(style).trim(), String(pace || ""), anything ? String(anything).trim() : null, cleanName, cleanEmail).run();
 
     const resendApiKey = getResendApiKey();
     if (!resendApiKey) {
@@ -108,7 +108,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const transportText = Array.isArray(transport) && transport.length > 0 ? transport.join(", ") : "No especificado";
-    const safeTransport = escapeHtml(transportText), safeTrip = escapeHtml(trip), safeTravellers = escapeHtml(travellers), safeAgeRange = escapeHtml(age_range || "No especificado"), safeDates = escapeHtml(dates), safeBudget = escapeHtml(budget), safeBudgetFlights = escapeHtml(budget_flights), safeExperience = escapeHtml(experience), safeAvoid = escapeHtml(avoid), safeStyle = escapeHtml(style), safePace = escapeHtml(pace), safeAnything = escapeHtml(anything || "No ha indicado nada más.");
+    const safeTransport = escapeHtml(transportText), safeTrip = escapeHtml(trip), safeTravellers = escapeHtml(travellers), safeAgeRange = escapeHtml(age_range || "No especificado"), safeDates = escapeHtml(dates), safeBudget = escapeHtml(budget), safeBudgetFlights = escapeHtml(budget_flights || "No especificado"), safeExperience = escapeHtml(experience), safeAvoid = escapeHtml(avoid), safeStyle = escapeHtml(style), safePace = escapeHtml(pace || "No especificado"), safeAnything = escapeHtml(anything || "No ha indicado nada más.");
     const replyUrl = `mailto:${encodeURIComponent(cleanEmail)}?subject=${encodeURIComponent("Tu viaje con Cruzando Meridianos")}`;
 
     const internalEmailHtml = emailLayout(`${badge("Nuevo lead")}<h1 style="margin:16px 0 10px;font-size:30px;line-height:1.2;letter-spacing:-.5px;color:${COLORS.text};">Nueva solicitud de viaje</h1><p style="margin:0 0 28px;font-size:16px;line-height:1.6;color:${COLORS.muted};">Alguien acaba de contarnos cómo le gustaría viajar. Aquí tienes toda la información de la solicitud.</p>${internalSection("Viajero", `${infoBlock("Nombre", escapeHtml(cleanName))}${infoBlock("Email", `<a href="mailto:${escapeHtml(cleanEmail)}" style="color:${COLORS.goldDark};text-decoration:none;">${escapeHtml(cleanEmail)}</a>`)}${infoBlock("Edad", safeAgeRange, { last: true })}`, true)}${internalSection("El viaje", `${infoBlock("Viaje que tiene en mente", safeTrip, { highlight: true })}${infoBlock("Viajeros", safeTravellers)}${infoBlock("Fechas", safeDates)}${infoBlock("Presupuesto total", safeBudget)}${infoBlock("Presupuesto para vuelos", safeBudgetFlights, { last: true })}`)}${internalSection("Cómo quiere viajar", `${infoBlock("Experiencia que busca", safeExperience)}${infoBlock("Transporte", safeTransport)}${infoBlock("Estilo de viaje", safeStyle)}${infoBlock("Ritmo", safePace, { last: true })}`)}${internalSection("Preferencias", infoBlock("Qué quiere evitar", safeAvoid, { last: true }))}${internalSection("Algo más que quiera contarnos", `<div style="font-size:15px;line-height:1.65;color:${COLORS.text};">${safeAnything}</div>`)}<div style="margin:28px 0 0;padding-top:24px;border-top:1px solid ${COLORS.border};">${button("Responder al viajero", replyUrl)}<p style="margin:14px 0 0;font-size:12px;line-height:1.5;color:${COLORS.lightMuted};">Al responder desde tu correo, la respuesta se enviará directamente a ${escapeHtml(cleanEmail)}.</p></div><div style="margin-top:28px;padding-top:18px;border-top:1px solid ${COLORS.border};font-size:11px;line-height:1.5;color:${COLORS.lightMuted};">ID de solicitud: ${escapeHtml(id)}</div>`, `Nueva solicitud de viaje de ${cleanName}`);
