@@ -28,23 +28,14 @@ const exploreableDestinations = destinations
       item.destination.status === "ready" &&
       item.guide?.editorial?.status === "published"
   )
-  .map(({ destination, guide }) => ({
-    destination,
-    guide: guide!,
-  }));
+  .map(({ destination, guide }) => ({ destination, guide: guide! }));
 
-const getPlaceEntries = (guide: typeof exploreableDestinations[number]["guide"]) =>
+const getPlaceEntries = (guide: (typeof exploreableDestinations)[number]["guide"]) =>
   guide.sections.flatMap((section) =>
     (section.blocks ?? [])
       .filter((block: GuideBlock) => block.type === "place" || block.type === "region")
-      .map((block: GuideBlock) => ({
-        ...block,
-        sectionTitle: section.title,
-      }))
+      .map((block: GuideBlock) => ({ ...block, sectionTitle: section.title }))
   );
-
-const formatCount = (count: number, singular: string, plural: string) =>
-  `${count} ${count === 1 ? singular : plural}`;
 ---
 
 <Layout
@@ -59,27 +50,17 @@ const formatCount = (count: number, singular: string, plural: string) =>
       <div class="travel-hero-inner">
         <div class="travel-hero-copy">
           <p class="eyebrow">VIAJES</p>
-
-          <h1>
-            Primero conoce el lugar.
-            <em> Después decide el viaje.</em>
-          </h1>
-
+          <h1>Primero conoce el lugar.<em> Después decide el viaje.</em></h1>
           <p class="travel-hero-description">
-            Este es nuestro atlas de destinos: una forma de reunir en un mismo
-            sitio qué puedes encontrar en cada país, qué experiencias ofrece,
-            qué lugares despiertan interés y qué información conviene conocer
-            antes de empezar a planificar.
+            Este es nuestro atlas de destinos: una forma de reunir en un mismo sitio qué puedes
+            encontrar en cada país, qué experiencias ofrece, qué lugares despiertan interés y qué
+            información conviene conocer antes de empezar a planificar.
           </p>
         </div>
 
         <div class="travel-hero-note">
           <span>Qué encontrarás</span>
-
-          <p>
-            Lugares, naturaleza, cultura, actividades e información práctica.
-            La planificación del viaje viene después.
-          </p>
+          <p>Lugares, naturaleza, cultura, actividades e información práctica. La planificación del viaje viene después.</p>
         </div>
       </div>
     </section>
@@ -91,39 +72,21 @@ const formatCount = (count: number, singular: string, plural: string) =>
             <p class="eyebrow">EXPLORADOR DE DESTINOS</p>
             <h2>¿Dónde te gustaría viajar?</h2>
           </div>
-
-          <p>
-            Busca un país directamente o explora por continente. Aquí iremos
-            incorporando todos los destinos que vayamos investigando.
-          </p>
+          <p>Busca un país directamente o explora por continente. Aquí iremos incorporando todos los destinos que vayamos investigando.</p>
         </div>
 
         <div class="destination-search">
           <label for="destination-search-input">Buscar un destino</label>
           <div class="destination-search-field">
             <span aria-hidden="true">⌕</span>
-            <input
-              id="destination-search-input"
-              type="search"
-              autocomplete="off"
-              placeholder="Escribe un país…"
-            />
+            <input id="destination-search-input" type="search" autocomplete="off" placeholder="Escribe un país…" />
           </div>
         </div>
 
         <div class="continent-filter" role="group" aria-label="Filtrar por continente">
-          <button type="button" class="continent-button is-active" data-continent="all">
-            Todos
-          </button>
-
+          <button type="button" class="continent-button is-active" data-continent="all">Todos</button>
           {continents.map((continent) => (
-            <button
-              type="button"
-              class="continent-button"
-              data-continent={continent}
-            >
-              {continent}
-            </button>
+            <button type="button" class="continent-button" data-continent={continent}>{continent}</button>
           ))}
         </div>
 
@@ -131,19 +94,12 @@ const formatCount = (count: number, singular: string, plural: string) =>
           {destinations.map((destination) => (
             <a
               href={destination.status === "ready" ? `/viajes/${destination.slug}` : "#"}
-              class:list={[
-                "destination-result",
-                { "destination-result--disabled": destination.status !== "ready" },
-              ]}
+              class:list={["destination-result", { "destination-result--disabled": destination.status !== "ready" }]}
               data-destination-card
               data-name={destination.name.toLowerCase()}
               data-continent={destination.continent}
-              aria-label={
-                destination.status === "ready"
-                  ? `Explorar ${destination.name}`
-                  : `${destination.name}, próximamente`
-              }
               data-ready={destination.status === "ready" ? "true" : "false"}
+              aria-label={destination.status === "ready" ? `Explorar ${destination.name}` : `${destination.name}, próximamente`}
             >
               <span class="destination-result-number">{destination.number}</span>
               <span class="destination-result-copy">
@@ -170,18 +126,12 @@ const formatCount = (count: number, singular: string, plural: string) =>
             <p class="eyebrow">EN EL RADAR</p>
             <h2>Destinos para empezar a curiosear.</h2>
           </div>
-
-          <p>
-            Una primera selección para entrar, descubrir y empezar a decidir qué te despierta curiosidad.
-          </p>
+          <p>Una primera selección para entrar, descubrir y empezar a decidir qué te despierta curiosidad.</p>
         </div>
 
         <div class="popular-grid">
           {featuredDestinations.map((destination, index) => (
-            <DestinationCard
-              destination={destination}
-              featured={index === 0}
-            />
+            <DestinationCard destination={destination} featured={index === 0} />
           ))}
         </div>
       </div>
@@ -189,61 +139,40 @@ const formatCount = (count: number, singular: string, plural: string) =>
 
     {exploreableDestinations.map(({ destination, guide }) => {
       const places = getPlaceEntries(guide);
-
       return (
-        <section
-          class="destination-atlas"
-          id={`atlas-${destination.slug}`}
-        >
+        <section class="destination-atlas" id={`atlas-${destination.slug}`}>
           <div class="destination-atlas-inner">
             <div class="destination-atlas-header">
               <div>
                 <p class="eyebrow">EXPLORAR DESTINO</p>
                 <h2>{destination.name}</h2>
               </div>
-
               <div class="destination-atlas-intro">
                 <p>{guide.subtitle}</p>
-                <a href={`/viajes/${destination.slug}`}>
-                  Abrir guía completa <span aria-hidden="true">↗</span>
-                </a>
+                <a href={`/viajes/${destination.slug}`}>Abrir guía completa <span aria-hidden="true">↗</span></a>
               </div>
             </div>
 
             <details class="destination-atlas-disclosure">
               <summary>
-                <span>
-                  {places.length > 0
-                    ? formatCount(places.length, "lugar o zona para explorar", "lugares y zonas para explorar")
-                    : "Explorar el destino"}
-                </span>
+                <span>{places.length > 0 ? `${places.length} lugares y zonas para explorar` : "Explorar el destino"}</span>
                 <span class="summary-toggle" aria-hidden="true">+</span>
               </summary>
-
               <div class="places-grid">
-                {places.length > 0 ? (
-                  places.map((place) => (
-                    <article class="place-card">
-                      <div class="place-card-topline">
-                        <span>{place.type === "region" ? "Zona" : "Lugar"}</span>
-                        <span>{place.sectionTitle}</span>
-                      </div>
-
-                      {place.title && <h3>{place.title}</h3>}
-
-                      {place.content && <p>{place.content}</p>}
-
-                      {place.items && place.items.length > 0 && (
-                        <ul>
-                          {place.items.map((item) => <li>{item}</li>)}
-                        </ul>
-                      )}
-                    </article>
-                  ))
-                ) : (
-                  <p class="places-empty">
-                    Estamos incorporando los lugares y experiencias de este destino.
-                  </p>
+                {places.length > 0 ? places.map((place) => (
+                  <article class="place-card">
+                    <div class="place-card-topline">
+                      <span>{place.type === "region" ? "Zona" : "Lugar"}</span>
+                      <span>{place.sectionTitle}</span>
+                    </div>
+                    {place.title && <h3>{place.title}</h3>}
+                    {place.content && <p>{place.content}</p>}
+                    {place.items && place.items.length > 0 && (
+                      <ul>{place.items.map((item) => <li>{item}</li>)}</ul>
+                    )}
+                  </article>
+                )) : (
+                  <p class="places-empty">Estamos incorporando los lugares y experiencias de este destino.</p>
                 )}
               </div>
             </details>
@@ -256,41 +185,19 @@ const formatCount = (count: number, singular: string, plural: string) =>
       <div class="knowledge-inner">
         <div class="knowledge-copy">
           <p class="eyebrow">EL ATLAS CRECE</p>
-
           <h2>Un destino es mucho más que una lista de sitios.</h2>
-
           <p>
-            A medida que incorporemos nuevos países iremos reuniendo aquí todo
-            aquello que ayuda a entenderlos: naturaleza, playas, parques, fauna,
-            cultura, pueblos, gastronomía, actividades, zonas e información
-            práctica. El siguiente paso es convertir tus intereses en un viaje.
+            A medida que incorporemos nuevos países iremos reuniendo aquí naturaleza, playas, parques,
+            fauna, cultura, pueblos, gastronomía, actividades, zonas e información práctica. El siguiente
+            paso es convertir tus intereses en un viaje.
           </p>
         </div>
 
         <div class="knowledge-grid">
-          <article>
-            <span>01</span>
-            <h3>Lugares y zonas</h3>
-            <p>Los sitios que merece la pena conocer para empezar a imaginar el destino.</p>
-          </article>
-
-          <article>
-            <span>02</span>
-            <h3>Qué hacer</h3>
-            <p>Naturaleza, cultura, gastronomía y experiencias disponibles en cada lugar.</p>
-          </article>
-
-          <article>
-            <span>03</span>
-            <h3>Información útil</h3>
-            <p>Lo que conviene saber para viajar preparado, con fuentes y revisiones cuando corresponda.</p>
-          </article>
-
-          <article>
-            <span>04</span>
-            <h3>Después, tu viaje</h3>
-            <p>Cuando ya sabes qué te interesa, nosotros unimos tus preferencias en una propuesta pensada para ti.</p>
-          </article>
+          <article><span>01</span><h3>Lugares y zonas</h3><p>Los sitios que merece la pena conocer para empezar a imaginar el destino.</p></article>
+          <article><span>02</span><h3>Qué hacer</h3><p>Naturaleza, cultura, gastronomía y experiencias disponibles en cada lugar.</p></article>
+          <article><span>03</span><h3>Información útil</h3><p>Lo que conviene saber para viajar preparado, con fuentes y revisiones cuando corresponda.</p></article>
+          <article><span>04</span><h3>Después, tu viaje</h3><p>Cuando ya sabes qué te interesa, nosotros unimos tus preferencias en una propuesta pensada para ti.</p></article>
         </div>
       </div>
     </section>
@@ -298,18 +205,9 @@ const formatCount = (count: number, singular: string, plural: string) =>
     <section class="travel-cta">
       <div class="travel-cta-inner">
         <p class="eyebrow">YA SABES QUÉ TE LLAMA</p>
-
         <h2>Ahora podemos convertir tus intereses en viaje.</h2>
-
-        <p>
-          Tú descubres el destino. Nosotros hacemos el trabajo de unir tus preferencias,
-          tiempos y prioridades en una propuesta pensada para ti.
-        </p>
-
-        <a href="/cuentatuviaje" class="button-primary">
-          Cuéntanos tu viaje
-          <span aria-hidden="true">↗</span>
-        </a>
+        <p>Tú descubres el destino. Nosotros hacemos el trabajo de unir tus preferencias, tiempos y prioridades en una propuesta pensada para ti.</p>
+        <a href="/cuentatuviaje" class="button-primary">Cuéntanos tu viaje <span aria-hidden="true">↗</span></a>
       </div>
     </section>
   </main>
@@ -332,10 +230,8 @@ const formatCount = (count: number, singular: string, plural: string) =>
       cards.forEach((card) => {
         const name = card.dataset.name ?? "";
         const continent = card.dataset.continent ?? "";
-        const matchesQuery = !query || name.includes(query);
-        const matchesContinent = activeContinent === "all" || continent === activeContinent;
-        const show = matchesQuery && matchesContinent;
-
+        const show = (!query || name.includes(query)) &&
+          (activeContinent === "all" || continent === activeContinent);
         card.hidden = !show;
         if (show) visible += 1;
       });
@@ -347,693 +243,30 @@ const formatCount = (count: number, singular: string, plural: string) =>
     buttons.forEach((button) => {
       button.addEventListener("click", () => {
         activeContinent = button.dataset.continent ?? "all";
-
-        buttons.forEach((item) => {
-          item.classList.toggle("is-active", item === button);
-        });
-
+        buttons.forEach((item) => item.classList.toggle("is-active", item === button));
         applyFilters();
       });
     });
 
     searchInput?.addEventListener("input", applyFilters);
   </script>
-</main>
+</Layout>
 
 <style>
-.travel-hero {
-  padding: 9rem 2rem 7rem;
-  background: var(--color-papel);
-}
-
-.travel-hero-inner {
-  width: min(var(--content-width), calc(100% - 4rem));
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(220px, .6fr);
-  gap: 6rem;
-  align-items: end;
-}
-
-.travel-hero-copy {
-  max-width: 900px;
-}
-
-.eyebrow {
-  margin: 0 0 1.35rem;
-  color: var(--color-cobre);
-  font-size: .72rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-.travel-hero h1 {
-  max-width: 980px;
-  margin: 0;
-  color: var(--color-bosque);
-  font-family: var(--font-serif);
-  font-size: clamp(3.8rem, 7vw, 6.8rem);
-  font-weight: 400;
-  line-height: .96;
-  letter-spacing: -.04em;
-}
-
-.travel-hero h1 em {
-  color: var(--color-cobre);
-  font-style: italic;
-}
-
-.travel-hero-description {
-  max-width: 720px;
-  margin-top: 2.5rem;
-  color: #555;
-  font-size: 1.1rem;
-  line-height: 1.8;
-}
-
-.travel-hero-note {
-  padding-left: 2rem;
-  border-left: 1px solid rgba(28, 48, 38, .2);
-}
-
-.travel-hero-note span {
-  display: block;
-  margin-bottom: .8rem;
-  color: var(--color-cobre);
-  font-size: .7rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-.travel-hero-note p {
-  margin: 0;
-  color: #555;
-  font-family: var(--font-serif);
-  font-size: 1.25rem;
-  line-height: 1.5;
-}
-
-.destination-explorer {
-  padding: 8rem 2rem;
-  background: #f7f4ef;
-}
-
-.explorer-inner {
-  width: min(var(--content-width), 100%);
-  margin: 0 auto;
-}
-
-.explorer-heading,
-.popular-heading {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, .55fr);
-  gap: 5rem;
-  align-items: end;
-}
-
-.explorer-heading h2,
-.popular-heading h2 {
-  margin: 0;
-  color: var(--color-bosque);
-  font-family: var(--font-serif);
-  font-size: clamp(3rem, 5vw, 4.8rem);
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -.035em;
-}
-
-.explorer-heading > p,
-.popular-heading > p {
-  margin: 0;
-  color: #555;
-  font-size: 1rem;
-  line-height: 1.75;
-}
-
-.destination-search {
-  max-width: 760px;
-  margin-top: 4rem;
-}
-
-.destination-search label {
-  display: block;
-  margin-bottom: .7rem;
-  color: var(--color-bosque);
-  font-size: .78rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.destination-search-field {
-  display: flex;
-  align-items: center;
-  gap: .8rem;
-  padding: 1rem 1.2rem;
-  border: 1px solid rgba(28, 48, 38, .18);
-  border-radius: 999px;
-  background: var(--color-papel);
-}
-
-.destination-search-field span {
-  color: var(--color-cobre);
-  font-size: 1.2rem;
-}
-
-.destination-search-field input {
-  width: 100%;
-  min-width: 0;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: var(--color-grafito);
-  font: inherit;
-  font-size: 1rem;
-}
-
-.destination-search-field input::placeholder {
-  color: #888;
-}
-
-.continent-filter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .6rem;
-  margin-top: 2rem;
-}
-
-.continent-button {
-  padding: .7rem 1rem;
-  border: 1px solid rgba(28, 48, 38, .18);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--color-bosque);
-  cursor: pointer;
-  font: inherit;
-  font-size: .82rem;
-  transition: all .2s ease;
-}
-
-.continent-button:hover,
-.continent-button.is-active {
-  border-color: var(--color-bosque);
-  background: var(--color-bosque);
-  color: var(--color-papel);
-}
-
-.destination-results {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: .9rem;
-  margin-top: 3rem;
-}
-
-.destination-result {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 1rem;
-  align-items: center;
-  min-width: 0;
-  padding: 1.2rem 1.25rem;
-  border: 1px solid rgba(28, 48, 38, .12);
-  border-radius: 18px;
-  background: var(--color-papel);
-  color: inherit;
-  text-decoration: none;
-  transition: transform .2s ease, border-color .2s ease;
-}
-
-.destination-result:hover {
-  transform: translateY(-2px);
-  border-color: rgba(28, 48, 38, .35);
-}
-
-.destination-result[hidden] {
-  display: none;
-}
-
-.destination-result--disabled {
-  cursor: default;
-  opacity: .68;
-}
-
-.destination-result--disabled:hover {
-  transform: none;
-  border-color: rgba(28, 48, 38, .12);
-}
-
-.destination-result-number {
-  color: var(--color-cobre);
-  font-size: .7rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-}
-
-.destination-result-copy {
-  min-width: 0;
-}
-
-.destination-result-copy strong {
-  display: block;
-  overflow: hidden;
-  color: var(--color-bosque);
-  font-family: var(--font-serif);
-  font-size: 1.35rem;
-  font-weight: 400;
-  line-height: 1.1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.destination-result-copy small {
-  display: block;
-  margin-top: .25rem;
-  color: #777;
-  font-size: .7rem;
-  text-transform: uppercase;
-}
-
-.destination-result-status {
-  color: var(--color-cobre);
-  font-size: .7rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.destination-result--disabled .destination-result-status {
-  color: #777;
-  font-weight: 500;
-}
-
-.destination-no-results {
-  margin: 2rem 0 0;
-  color: #666;
-  font-size: .95rem;
-}
-
-.popular-destinations {
-  padding: 9rem 2rem;
-  background: var(--color-papel);
-}
-
-.popular-destinations[hidden] {
-  display: none;
-}
-
-.popular-inner {
-  width: min(var(--content-width), 100%);
-  margin: 0 auto;
-}
-
-.popular-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 5rem 3rem;
-  margin-top: 5rem;
-}
-
-.destination-atlas {
-  padding: 8rem 2rem;
-  background: #f7f4ef;
-  border-top: 1px solid rgba(28, 48, 38, .08);
-}
-
-.destination-atlas:nth-of-type(even) {
-  background: var(--color-arena);
-}
-
-.destination-atlas-inner {
-  width: min(var(--content-width), 100%);
-  margin: 0 auto;
-}
-
-.destination-atlas-header {
-  display: grid;
-  grid-template-columns: minmax(0, .9fr) minmax(280px, .7fr);
-  gap: 5rem;
-  align-items: end;
-  margin-bottom: 3rem;
-}
-
-.destination-atlas-header h2 {
-  margin: 0;
-  color: var(--color-bosque);
-  font-family: var(--font-serif);
-  font-size: clamp(3rem, 5vw, 5rem);
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -.035em;
-}
-
-.destination-atlas-intro p {
-  margin: 0;
-  color: #555;
-  font-size: 1.05rem;
-  line-height: 1.75;
-}
-
-.destination-atlas-intro a {
-  display: inline-flex;
-  gap: .6rem;
-  margin-top: 1.4rem;
-  color: var(--color-bosque);
-  font-size: .85rem;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.destination-atlas-intro a span {
-  transition: transform .2s ease;
-}
-
-.destination-atlas-intro a:hover span {
-  transform: translate(3px, -3px);
-}
-
-.destination-atlas-disclosure {
-  border-top: 1px solid rgba(28, 48, 38, .2);
-  border-bottom: 1px solid rgba(28, 48, 38, .2);
-}
-
-.destination-atlas-disclosure summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  padding: 1.5rem 0;
-  cursor: pointer;
-  list-style: none;
-  color: var(--color-bosque);
-  font-family: var(--font-serif);
-  font-size: 1.6rem;
-}
-
-.destination-atlas-disclosure summary::-webkit-details-marker {
-  display: none;
-}
-
-.summary-toggle {
-  display: grid;
-  width: 36px;
-  height: 36px;
-  place-items: center;
-  border: 1px solid rgba(28, 48, 38, .2);
-  border-radius: 999px;
-  font-family: var(--font-sans);
-  font-size: 1.2rem;
-  line-height: 1;
-  transition: transform .2s ease;
-}
-
-.destination-atlas-disclosure[open] .summary-toggle {
-  transform: rotate(45deg);
-}
-
-.places-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  padding: 0 0 2rem;
-}
-
-.place-card {
-  min-height: 100%;
-  padding: 1.5rem;
-  border: 1px solid rgba(28, 48, 38, .1);
-  border-radius: 18px;
-  background: rgba(251, 249, 245, .7);
-}
-
-.place-card-topline {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.2rem;
-  color: var(--color-cobre);
-  font-size: .64rem;
-  font-weight: 600;
-  letter-spacing: 1.3px;
-  line-height: 1.4;
-  text-transform: uppercase;
-}
-
-.place-card-topline span:last-child {
-  color: #777;
-  font-weight: 500;
-  letter-spacing: .4px;
-  text-align: right;
-  text-transform: none;
-}
-
-.place-card h3 {
-  margin: 0 0 .7rem;
-  color: var(--color-bosque);
-  font-family: var(--font-serif);
-  font-size: 1.8rem;
-  font-weight: 400;
-  line-height: 1.1;
-}
-
-.place-card p,
-.place-card li {
-  color: #555;
-  font-size: .92rem;
-  line-height: 1.7;
-}
-
-.place-card p {
-  margin: 0;
-}
-
-.place-card ul {
-  margin: .9rem 0 0;
-  padding-left: 1.1rem;
-}
-
-.place-card li + li {
-  margin-top: .35rem;
-}
-
-.places-empty {
-  margin: 0;
-  padding: 1.5rem 0 2rem;
-  color: #666;
-  line-height: 1.7;
-}
-
-.knowledge {
-  padding: 9rem 2rem;
-  background: var(--color-papel);
-}
-
-.knowledge-inner {
-  width: min(var(--content-width), 100%);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: .85fr 1.15fr;
-  gap: 8rem;
-}
-
-.knowledge-copy {
-  max-width: 540px;
-}
-
-.knowledge-copy h2 {
-  margin: 0;
-  color: var(--color-bosque);
-  font-family: var(--font-serif);
-  font-size: clamp(3rem, 4.5vw, 4.4rem);
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -.035em;
-}
-
-.knowledge-copy > p:last-child {
-  margin-top: 2rem;
-  color: #555;
-  font-size: 1rem;
-  line-height: 1.8;
-}
-
-.knowledge-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 3.5rem 3rem;
-}
-
-.knowledge-grid article {
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(28, 48, 38, .18);
-}
-
-.knowledge-grid span {
-  display: block;
-  margin-bottom: 1.1rem;
-  color: var(--color-cobre);
-  font-size: .72rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-}
-
-.knowledge-grid h3 {
-  margin: 0 0 .7rem;
-  color: var(--color-bosque);
-  font-family: var(--font-serif);
-  font-size: 1.9rem;
-  font-weight: 400;
-}
-
-.knowledge-grid p {
-  margin: 0;
-  color: #555;
-  font-size: .95rem;
-  line-height: 1.75;
-}
-
-.travel-cta {
-  padding: 9rem 2rem;
-  background: var(--color-arena);
-  text-align: center;
-}
-
-.travel-cta-inner {
-  width: min(820px, 100%);
-  margin: 0 auto;
-}
-
-.travel-cta h2 {
-  margin: 0;
-  color: var(--color-bosque);
-  font-family: var(--font-serif);
-  font-size: clamp(3rem, 5.8vw, 5.2rem);
-  font-weight: 400;
-  line-height: .98;
-  letter-spacing: -.035em;
-}
-
-.travel-cta p:not(.eyebrow) {
-  max-width: 650px;
-  margin: 2rem auto 2.5rem;
-  color: #555;
-  font-size: 1.05rem;
-  line-height: 1.75;
-}
-
-.travel-cta .button-primary {
-  gap: .6rem;
-}
-
-.travel-cta .button-primary span {
-  transition: transform .2s ease;
-}
-
-.travel-cta .button-primary:hover span {
-  transform: translate(3px, -3px);
-}
-
-@media (max-width: 900px) {
-  .travel-hero {
-    padding: 7rem 1.5rem 5rem;
-  }
-
-  .travel-hero-inner {
-    width: min(100% - 3rem, var(--content-width));
-    grid-template-columns: 1fr;
-    gap: 3rem;
-  }
-
-  .travel-hero h1 {
-    font-size: clamp(3.4rem, 10vw, 5rem);
-  }
-
-  .travel-hero-note {
-    max-width: 560px;
-    padding-left: 0;
-    padding-top: 1.5rem;
-    border-left: 0;
-    border-top: 1px solid rgba(28, 48, 38, .2);
-  }
-
-  .destination-explorer,
-  .popular-destinations,
-  .destination-atlas,
-  .knowledge,
-  .travel-cta {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-
-  .destination-explorer,
-  .popular-destinations {
-    padding-top: 6rem;
-    padding-bottom: 7rem;
-  }
-
-  .explorer-heading,
-  .popular-heading,
-  .destination-atlas-header {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
-
-  .destination-results {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .popular-grid {
-    gap: 4rem 2rem;
-    margin-top: 4rem;
-  }
-
-  .destination-atlas {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
-  }
-
-  .places-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .knowledge {
-    padding-top: 6rem;
-    padding-bottom: 7rem;
-  }
-
-  .knowledge-inner {
-    grid-template-columns: 1fr;
-    gap: 4rem;
-  }
-
-  .travel-cta {
-    padding-top: 7rem;
-    padding-bottom: 7rem;
-  }
-}
-
-@media (max-width: 650px) {
-  .destination-results,
-  .popular-grid,
-  .knowledge-grid,
-  .places-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .destination-result {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-
-  .destination-result-status {
-    grid-column: 2;
-  }
-
-  .destination-atlas-disclosure summary {
-    font-size: 1.35rem;
-  }
-
-  .travel-cta h2 {
-    font-size: 3rem;
-  }
-}
+.travel-hero{padding:9rem 2rem 7rem;background:var(--color-papel)}
+.travel-hero-inner{width:min(var(--content-width),calc(100% - 4rem));margin:0 auto;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(220px,.6fr);gap:6rem;align-items:end}
+.travel-hero-copy{max-width:900px}.eyebrow{margin:0 0 1.35rem;color:var(--color-cobre);font-size:.72rem;font-weight:600;letter-spacing:2px;text-transform:uppercase}
+.travel-hero h1{max-width:980px;margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3.8rem,7vw,6.8rem);font-weight:400;line-height:.96;letter-spacing:-.04em}.travel-hero h1 em{color:var(--color-cobre);font-style:italic}
+.travel-hero-description{max-width:720px;margin-top:2.5rem;color:#555;font-size:1.1rem;line-height:1.8}.travel-hero-note{padding-left:2rem;border-left:1px solid rgba(28,48,38,.2)}.travel-hero-note span{display:block;margin-bottom:.8rem;color:var(--color-cobre);font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase}.travel-hero-note p{margin:0;color:#555;font-family:var(--font-serif);font-size:1.25rem;line-height:1.5}
+.destination-explorer{padding:8rem 2rem;background:#f7f4ef}.explorer-inner{width:min(var(--content-width),100%);margin:0 auto}.explorer-heading,.popular-heading{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.55fr);gap:5rem;align-items:end}.explorer-heading h2,.popular-heading h2{margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3rem,5vw,4.8rem);font-weight:400;line-height:1;letter-spacing:-.035em}.explorer-heading>p,.popular-heading>p{margin:0;color:#555;font-size:1rem;line-height:1.75}
+.destination-search{max-width:760px;margin-top:4rem}.destination-search label{display:block;margin-bottom:.7rem;color:var(--color-bosque);font-size:.78rem;font-weight:600;letter-spacing:1px;text-transform:uppercase}.destination-search-field{display:flex;align-items:center;gap:.8rem;padding:1rem 1.2rem;border:1px solid rgba(28,48,38,.18);border-radius:999px;background:var(--color-papel)}.destination-search-field span{color:var(--color-cobre);font-size:1.2rem}.destination-search-field input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:var(--color-grafito);font:inherit;font-size:1rem}.destination-search-field input::placeholder{color:#888}
+.continent-filter{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:2rem}.continent-button{padding:.7rem 1rem;border:1px solid rgba(28,48,38,.18);border-radius:999px;background:transparent;color:var(--color-bosque);cursor:pointer;font:inherit;font-size:.82rem;transition:all .2s ease}.continent-button:hover,.continent-button.is-active{border-color:var(--color-bosque);background:var(--color-bosque);color:var(--color-papel)}
+.destination-results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.9rem;margin-top:3rem}.destination-result{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:1rem;align-items:center;min-width:0;padding:1.2rem 1.25rem;border:1px solid rgba(28,48,38,.12);border-radius:18px;background:var(--color-papel);color:inherit;text-decoration:none;transition:transform .2s ease,border-color .2s ease}.destination-result:hover{transform:translateY(-2px);border-color:rgba(28,48,38,.35)}.destination-result[hidden]{display:none}.destination-result--disabled{cursor:default;opacity:.68}.destination-result--disabled:hover{transform:none;border-color:rgba(28,48,38,.12)}.destination-result-number{color:var(--color-cobre);font-size:.7rem;font-weight:600;letter-spacing:1px}.destination-result-copy{min-width:0}.destination-result-copy strong{display:block;overflow:hidden;color:var(--color-bosque);font-family:var(--font-serif);font-size:1.35rem;font-weight:400;line-height:1.1;text-overflow:ellipsis;white-space:nowrap}.destination-result-copy small{display:block;margin-top:.25rem;color:#777;font-size:.7rem;text-transform:uppercase}.destination-result-status{color:var(--color-cobre);font-size:.7rem;font-weight:600;white-space:nowrap}.destination-result--disabled .destination-result-status{color:#777;font-weight:500}.destination-no-results{margin:2rem 0 0;color:#666;font-size:.95rem}
+.popular-destinations{padding:9rem 2rem;background:var(--color-papel)}.popular-destinations[hidden]{display:none}.popular-inner{width:min(var(--content-width),100%);margin:0 auto}.popular-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5rem 3rem;margin-top:5rem}
+.destination-atlas{padding:8rem 2rem;background:#f7f4ef;border-top:1px solid rgba(28,48,38,.08)}.destination-atlas:nth-of-type(even){background:var(--color-arena)}.destination-atlas-inner{width:min(var(--content-width),100%);margin:0 auto}.destination-atlas-header{display:grid;grid-template-columns:minmax(0,.9fr) minmax(280px,.7fr);gap:5rem;align-items:end;margin-bottom:3rem}.destination-atlas-header h2{margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3rem,5vw,5rem);font-weight:400;line-height:1;letter-spacing:-.035em}.destination-atlas-intro p{margin:0;color:#555;font-size:1.05rem;line-height:1.75}.destination-atlas-intro a{display:inline-flex;gap:.6rem;margin-top:1.4rem;color:var(--color-bosque);font-size:.85rem;font-weight:600;text-decoration:none}.destination-atlas-disclosure{border-top:1px solid rgba(28,48,38,.2);border-bottom:1px solid rgba(28,48,38,.2)}.destination-atlas-disclosure summary{display:flex;align-items:center;justify-content:space-between;gap:2rem;padding:1.5rem 0;cursor:pointer;list-style:none;color:var(--color-bosque);font-family:var(--font-serif);font-size:1.6rem}.destination-atlas-disclosure summary::-webkit-details-marker{display:none}.summary-toggle{display:grid;width:36px;height:36px;place-items:center;border:1px solid rgba(28,48,38,.2);border-radius:999px;font-family:var(--font-sans);font-size:1.2rem;transition:transform .2s ease}.destination-atlas-disclosure[open] .summary-toggle{transform:rotate(45deg)}
+.places-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;padding:0 0 2rem}.place-card{min-height:100%;padding:1.5rem;border:1px solid rgba(28,48,38,.1);border-radius:18px;background:rgba(251,249,245,.7)}.place-card-topline{display:flex;justify-content:space-between;gap:1rem;margin-bottom:1.2rem;color:var(--color-cobre);font-size:.64rem;font-weight:600;letter-spacing:1.3px;line-height:1.4;text-transform:uppercase}.place-card-topline span:last-child{color:#777;font-weight:500;letter-spacing:.4px;text-align:right;text-transform:none}.place-card h3{margin:0 0 .7rem;color:var(--color-bosque);font-family:var(--font-serif);font-size:1.8rem;font-weight:400;line-height:1.1}.place-card p,.place-card li{color:#555;font-size:.92rem;line-height:1.7}.place-card p{margin:0}.place-card ul{margin:.9rem 0 0;padding-left:1.1rem}.places-empty{margin:0;padding:1.5rem 0 2rem;color:#666;line-height:1.7}
+.knowledge{padding:9rem 2rem;background:var(--color-papel)}.knowledge-inner{width:min(var(--content-width),100%);margin:0 auto;display:grid;grid-template-columns:.85fr 1.15fr;gap:8rem}.knowledge-copy{max-width:540px}.knowledge-copy h2{margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3rem,4.5vw,4.4rem);font-weight:400;line-height:1;letter-spacing:-.035em}.knowledge-copy>p:last-child{margin-top:2rem;color:#555;font-size:1rem;line-height:1.8}.knowledge-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3.5rem 3rem}.knowledge-grid article{padding-top:1.5rem;border-top:1px solid rgba(28,48,38,.18)}.knowledge-grid span{display:block;margin-bottom:1.1rem;color:var(--color-cobre);font-size:.72rem;font-weight:600;letter-spacing:2px}.knowledge-grid h3{margin:0 0 .7rem;color:var(--color-bosque);font-family:var(--font-serif);font-size:1.9rem;font-weight:400}.knowledge-grid p{margin:0;color:#555;font-size:.95rem;line-height:1.75}
+.travel-cta{padding:9rem 2rem;background:var(--color-arena);text-align:center}.travel-cta-inner{width:min(820px,100%);margin:0 auto}.travel-cta h2{margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3rem,5.8vw,5.2rem);font-weight:400;line-height:.98;letter-spacing:-.035em}.travel-cta p:not(.eyebrow){max-width:650px;margin:2rem auto 2.5rem;color:#555;font-size:1.05rem;line-height:1.75}.travel-cta .button-primary{gap:.6rem}
+@media (max-width:900px){.travel-hero{padding:7rem 1.5rem 5rem}.travel-hero-inner{width:min(100% - 3rem,var(--content-width));grid-template-columns:1fr;gap:3rem}.travel-hero h1{font-size:clamp(3.4rem,10vw,5rem)}.travel-hero-note{max-width:560px;padding-left:0;padding-top:1.5rem;border-left:0;border-top:1px solid rgba(28,48,38,.2)}.destination-explorer,.popular-destinations,.destination-atlas,.knowledge,.travel-cta{padding-left:1.5rem;padding-right:1.5rem}.explorer-heading,.popular-heading,.destination-atlas-header{grid-template-columns:1fr;gap:2.5rem}.destination-results{grid-template-columns:repeat(2,minmax(0,1fr))}.popular-grid{gap:4rem 2rem;margin-top:4rem}.places-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.knowledge-inner{grid-template-columns:1fr;gap:4rem}}
+@media (max-width:650px){.destination-results,.popular-grid,.knowledge-grid,.places-grid{grid-template-columns:1fr}.destination-result{grid-template-columns:auto minmax(0,1fr)}.destination-result-status{grid-column:2}.destination-atlas-disclosure summary{font-size:1.35rem}.travel-cta h2{font-size:3rem}}
 </style>
