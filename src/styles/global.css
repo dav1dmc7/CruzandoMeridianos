@@ -242,7 +242,7 @@
     position: sticky;
     top: 78px;
     z-index: 5;
-    padding: 1rem 0 1.4rem;
+    padding: 1rem 0 3.8rem;
     background: color-mix(in srgb, var(--color-arena) 90%, transparent);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
@@ -318,7 +318,7 @@
   @media (max-width: 800px) {
     .journey-page .journey-progress {
       top: 64px;
-      padding: .8rem 0 1.1rem;
+      padding: .8rem 0 3rem;
     }
 
     .journey-page .question-block {
