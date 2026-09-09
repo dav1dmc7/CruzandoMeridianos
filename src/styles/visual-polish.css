@@ -1,31 +1,127 @@
 /* =========================================================
-   CRUZANDO MERIDIANOS — POLISH VISUAL
-   Capa editorial sobre las páginas de viaje.
+   CRUZANDO MERIDIANOS — DIRECCIÓN VISUAL EDITORIAL
+   La crónica debe sentirse como una pieza de revista, no como
+   una sucesión de bloques de contenido.
 ========================================================= */
 
-.trip-page .trip-photo-break {
-  padding: clamp(1.25rem, 2.8vw, 2.25rem) 0 0;
+.trip-page {
+  --trip-gutter: clamp(1.25rem, 4vw, 4rem);
+  --trip-reading: 760px;
 }
 
-.trip-page .trip-photo-break-figure {
-  width: min(1060px, calc(100% - 5rem));
+/* ---------------------------------------------------------
+   RITMO GENERAL
+--------------------------------------------------------- */
+.trip-page > section {
+  position: relative;
+}
+
+.trip-page .trip-hero-inner,
+.trip-page .trip-introduction-inner,
+.trip-page .trip-section-inner,
+.trip-page .trip-wanted-inner,
+.trip-page .trip-photo-story-inner,
+.trip-page .trip-decisions-inner,
+.trip-page .trip-fauna-inner,
+.trip-page .trip-extra-metrics-inner {
+  width: min(1200px, calc(100% - 3rem));
   margin-inline: auto;
 }
 
+/* ---------------------------------------------------------
+   FOTO RÍO + PLAYA — protagonista, pero con aire editorial
+--------------------------------------------------------- */
+.trip-page .trip-photo-break {
+  padding: clamp(2.75rem, 7vw, 7rem) 0 clamp(1.5rem, 3vw, 2.5rem);
+  background:
+    linear-gradient(to bottom,
+      var(--color-papel) 0%,
+      var(--color-papel) 72%,
+      var(--color-arena) 72%,
+      var(--color-arena) 100%);
+}
+
+.trip-page .trip-photo-break-figure {
+  position: relative;
+  width: min(940px, calc(100% - 6rem));
+  margin: 0 auto;
+}
+
+.trip-page .trip-photo-break-figure::before {
+  content: "";
+  position: absolute;
+  inset: 1rem -1rem -1rem 1rem;
+  border: 1px solid rgba(194, 125, 56, 0.22);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .trip-page .trip-photo-break-figure img {
-  height: min(58vh, 600px);
-  border-radius: 2px;
-  box-shadow: 0 22px 60px rgba(28, 48, 38, 0.10);
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: min(54vh, 520px);
+  min-height: 340px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 1px;
+  box-shadow: 0 28px 70px rgba(28, 48, 38, 0.16);
 }
 
 .trip-page .trip-photo-break-figure figcaption {
-  width: 100%;
-  padding: 0.8rem 0.1rem 0;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  width: fit-content;
+  margin: -0.1rem 0 0 auto;
+  padding: .85rem 0 0;
+  color: rgba(26, 26, 26, .58);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
 }
 
-/* La tira de datos debe contar hechos, no placeholders. */
+.trip-page .trip-photo-break-figure figcaption::before {
+  content: "";
+  width: 30px;
+  height: 1px;
+  background: var(--color-cobre);
+}
+
+/* ---------------------------------------------------------
+   MÉTRICAS — más limpias, menos "dashboard"
+--------------------------------------------------------- */
+.trip-page .trip-metrics {
+  padding: clamp(2.5rem, 5vw, 4.5rem) 0;
+  background: var(--color-bosque);
+}
+
 .trip-page .trip-metrics-inner {
+  width: min(980px, calc(100% - 4rem));
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+}
+
+.trip-page .trip-metric {
+  min-height: 108px;
+  padding: .75rem clamp(1rem, 3vw, 2.5rem);
+  border-right: 1px solid rgba(244, 241, 234, .16);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.trip-page .trip-metric:first-child {
+  padding-left: 0;
+}
+
+.trip-page .trip-metric:nth-child(2) {
+  border-right: 1px solid rgba(244, 241, 234, .16);
 }
 
 .trip-page .trip-metric:nth-child(3),
@@ -35,12 +131,27 @@
 }
 
 .trip-page .trip-metric:nth-child(5) {
-  display: block;
+  display: flex;
+  border-right: 0;
+  padding-right: 0;
 }
 
-.trip-page .trip-metric:nth-child(5) .trip-metric-value {
-  font-size: clamp(1.35rem, 2.2vw, 2rem);
-  line-height: 1.15;
+.trip-page .trip-metric-value {
+  color: var(--color-papel);
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  font-weight: 400;
+  letter-spacing: -.045em;
+  line-height: .98;
+}
+
+.trip-page .trip-metric-label {
+  margin-top: .65rem;
+  color: rgba(244, 241, 234, .56);
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
 }
 
 .trip-page .trip-metric:nth-child(5) .trip-metric-value {
@@ -51,11 +162,11 @@
   content: "11–24 mayo 2026";
   display: block;
   color: var(--color-papel);
-  font-family: var(--font-serif, Georgia, serif);
-  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  font-family: var(--font-serif);
+  font-size: clamp(1.45rem, 2.6vw, 2.2rem);
   font-weight: 400;
-  letter-spacing: -0.035em;
-  line-height: 1.15;
+  letter-spacing: -.04em;
+  line-height: 1.05;
 }
 
 .trip-page .trip-metric:nth-child(5) .trip-metric-label {
@@ -65,78 +176,281 @@
 .trip-page .trip-metric:nth-child(5) .trip-metric-label::before {
   content: "fechas del viaje";
   display: block;
-  color: rgba(244, 241, 234, 0.58);
-  font-family: var(--font-sans, sans-serif);
-  font-size: 0.64rem;
+  color: rgba(244, 241, 234, .56);
+  font-family: var(--font-sans);
+  font-size: .64rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: .12em;
   line-height: 1.4;
   text-transform: uppercase;
 }
 
-/* En móvil, conserva aire lateral y evita una foto protagonista demasiado alta. */
-@media (max-width: 900px) {
-  .trip-page .trip-photo-break-figure {
-    width: min(680px, calc(100% - 3rem));
-  }
-
-  .trip-page .trip-metrics-inner {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .trip-page .trip-metric:nth-child(5) {
-    padding-left: 1rem;
-    border-left: 1px solid rgba(244, 241, 234, 0.2);
-  }
+/* ---------------------------------------------------------
+   INTRO — más anchura de lectura y contraste tipográfico
+--------------------------------------------------------- */
+.trip-page .trip-introduction-content {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  column-gap: clamp(2rem, 7vw, 8rem);
 }
 
-@media (max-width: 700px) {
-  .trip-page .trip-photo-break {
-    padding: 1rem 0 0;
-  }
-
-  .trip-page .trip-photo-break-figure {
-    width: calc(100% - 2.5rem);
-  }
-
-  .trip-page .trip-photo-break-figure img {
-    height: min(48vh, 430px);
-    min-height: 300px;
-  }
-
-  .trip-page .trip-photo-break-figure figcaption {
-    padding-top: 0.7rem;
-  }
-
-  .trip-page .trip-metrics-inner {
-    grid-template-columns: 1fr;
-    row-gap: 0;
-  }
-
-  .trip-page .trip-metric:nth-child(5) {
-    padding-left: 0;
-    border-left: 0;
-  }
+.trip-page .trip-introduction-content h2 {
+  max-width: 9ch;
+  text-wrap: balance;
 }
 
-/* Render progresivo: la parte inferior de la crónica no compite con el primer viewport. */
-.trip-page > section:not(.trip-hero):not(.trip-introduction):not(.trip-photo-break) {
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 720px;
+.trip-page .trip-introduction-copy {
+  max-width: var(--trip-reading);
+  font-size: clamp(1.05rem, 1.45vw, 1.23rem);
+  line-height: 1.85;
 }
 
+/* ---------------------------------------------------------
+   GALERÍA NATURALEZA — jerarquía, no cuadrícula plana
+--------------------------------------------------------- */
+.trip-page .trip-photo-story {
+  overflow: hidden;
+  background: var(--color-arena);
+}
+
+.trip-page .trip-photo-story-inner {
+  padding-block: clamp(5rem, 9vw, 9rem);
+}
+
+.trip-page .trip-photo-story-copy {
+  max-width: 780px;
+  margin-bottom: clamp(3rem, 7vw, 6.5rem);
+}
+
+.trip-page .trip-photo-story-copy h2 {
+  max-width: 11ch;
+  margin-bottom: 1.5rem;
+  font-size: clamp(2.7rem, 5vw, 5rem);
+  letter-spacing: -.05em;
+  text-wrap: balance;
+}
+
+.trip-page .trip-photo-story-copy > p:last-child {
+  max-width: 640px;
+  font-size: 1.06rem;
+  line-height: 1.8;
+}
+
+.trip-page .trip-photo-story-grid {
+  align-items: end;
+  row-gap: clamp(1.5rem, 3vw, 2.75rem);
+}
+
+.trip-page .trip-story-photo-large {
+  transform: translateY(-1.5rem);
+}
+
+.trip-page .trip-story-photo img,
+.trip-page .trip-fauna-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trip-page .trip-story-photo figcaption,
+.trip-page .trip-fauna-photo figcaption {
+  padding-top: .7rem;
+  color: rgba(26, 26, 26, .55);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------
+   DECISIONES — tarjetas con más presencia
+--------------------------------------------------------- */
+.trip-page .trip-decision-card {
+  position: relative;
+  padding: clamp(1.5rem, 3vw, 2.6rem);
+  background: rgba(244, 241, 234, .55);
+  border-top: 1px solid rgba(28, 48, 38, .16);
+  transition: transform 350ms ease, background 350ms ease;
+}
+
+.trip-page .trip-decision-card:hover {
+  transform: translateY(-4px);
+  background: var(--color-arena);
+}
+
+.trip-page .trip-decision-number {
+  display: block;
+  margin-bottom: 3.5rem;
+  color: var(--color-cobre);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+/* ---------------------------------------------------------
+   FAUNA — galería tipo contacto editorial
+--------------------------------------------------------- */
+.trip-page .trip-fauna {
+  background: var(--color-bosque);
+  color: var(--color-papel);
+}
+
+.trip-page .trip-fauna-header {
+  max-width: 720px;
+}
+
+.trip-page .trip-fauna-header h2 {
+  max-width: 9ch;
+  margin-bottom: 1.2rem;
+  font-size: clamp(3rem, 6vw, 6rem);
+  letter-spacing: -.055em;
+  text-wrap: balance;
+}
+
+.trip-page .trip-fauna-header > p:last-child {
+  max-width: 560px;
+  color: rgba(244, 241, 234, .7);
+}
+
+.trip-page .trip-fauna-grid {
+  align-items: end;
+  margin-top: clamp(3rem, 7vw, 6rem);
+}
+
+.trip-page .trip-fauna-photo:nth-child(2),
+.trip-page .trip-fauna-photo:nth-child(3),
+.trip-page .trip-fauna-photo:nth-child(4) {
+  transform: translateY(-1rem);
+}
+
+.trip-page .trip-fauna-photo figcaption {
+  color: rgba(244, 241, 234, .46);
+}
+
+/* ---------------------------------------------------------
+   HOVER / ENTRADA — visible, elegante, nunca estridente
+--------------------------------------------------------- */
 @media (prefers-reduced-motion: no-preference) {
   .trip-page .trip-photo-break-figure,
   .trip-page .trip-story-photo,
   .trip-page .trip-fauna-photo {
-    transition: transform 450ms cubic-bezier(0.2, 0.65, 0.25, 1), box-shadow 450ms ease;
+    transition: transform 600ms cubic-bezier(.2, .65, .25, 1), box-shadow 500ms ease;
   }
 
   .trip-page .trip-photo-break-figure:hover {
-    transform: translateY(-2px);
+    transform: translateY(-5px);
   }
 
   .trip-page .trip-photo-break-figure:hover img {
-    box-shadow: 0 30px 80px rgba(28, 48, 38, 0.14);
+    box-shadow: 0 36px 90px rgba(28, 48, 38, .2);
   }
+
+  .trip-page .trip-story-photo:hover {
+    transform: translateY(-5px);
+  }
+
+  .trip-page .trip-fauna-photo:hover {
+    transform: translateY(-6px);
+  }
+}
+
+/* ---------------------------------------------------------
+   MOBILE — mantener aire y evitar efectos amontonados
+--------------------------------------------------------- */
+@media (max-width: 900px) {
+  .trip-page .trip-hero-inner,
+  .trip-page .trip-introduction-inner,
+  .trip-page .trip-section-inner,
+  .trip-page .trip-wanted-inner,
+  .trip-page .trip-photo-story-inner,
+  .trip-page .trip-decisions-inner,
+  .trip-page .trip-fauna-inner,
+  .trip-page .trip-extra-metrics-inner {
+    width: min(100% - 2rem, 760px);
+  }
+
+  .trip-page .trip-photo-break {
+    padding-block: 2rem 1.25rem;
+  }
+
+  .trip-page .trip-photo-break-figure {
+    width: min(620px, calc(100% - 1rem));
+  }
+
+  .trip-page .trip-photo-break-figure::before {
+    inset: .65rem -.65rem -.65rem .65rem;
+  }
+
+  .trip-page .trip-photo-break-figure img {
+    height: min(58vw, 430px);
+    min-height: 280px;
+  }
+
+  .trip-page .trip-metrics-inner {
+    width: min(100% - 2rem, 680px);
+  }
+
+  .trip-page .trip-metric {
+    min-height: 92px;
+    padding-inline: 1rem;
+  }
+
+  .trip-page .trip-metric:first-child {
+    padding-left: 0;
+  }
+
+  .trip-page .trip-metric:nth-child(5) {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .trip-page .trip-photo-break-figure {
+    width: calc(100% - 1.5rem);
+  }
+
+  .trip-page .trip-photo-break-figure img {
+    height: 58vw;
+    min-height: 245px;
+  }
+
+  .trip-page .trip-photo-break-figure figcaption {
+    margin-top: .2rem;
+  }
+
+  .trip-page .trip-metrics-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .trip-page .trip-metric,
+  .trip-page .trip-metric:nth-child(5) {
+    min-height: 0;
+    padding: 1.1rem 0;
+    border-right: 0;
+    border-bottom: 1px solid rgba(244, 241, 234, .14);
+  }
+
+  .trip-page .trip-metric:last-child {
+    border-bottom: 0;
+  }
+
+  .trip-page .trip-metric:nth-child(2) {
+    border-right: 0;
+  }
+
+  .trip-page .trip-story-photo-large {
+    transform: none;
+  }
+
+  .trip-page .trip-fauna-photo:nth-child(2),
+  .trip-page .trip-fauna-photo:nth-child(3),
+  .trip-page .trip-fauna-photo:nth-child(4) {
+    transform: none;
+  }
+}
+
+/* Render progresivo para que la parte inferior no penalice el primer viewport. */
+.trip-page > section:not(.trip-hero):not(.trip-introduction):not(.trip-photo-break) {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 720px;
 }
