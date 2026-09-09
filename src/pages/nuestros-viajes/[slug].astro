@@ -39,6 +39,19 @@ const formatDate = (date: string) =>
     year: "numeric",
   });
 
+const formatBudgetCategory = (category: string) => {
+  const labels: Record<string, string> = {
+    flights: "Vuelos",
+    car: "Coche de alquiler",
+    fuel: "Combustible",
+    accommodation: "Alojamiento",
+    activities: "Actividades",
+    transport: "Transporte",
+  };
+
+  return labels[category] ?? category;
+};
+
 const visitedPlaces = trip.places.filter(
   (place) => place.status === "visited",
 );
@@ -574,20 +587,10 @@ const plannedPlaces = trip.plannedButNotVisited;
             </span>
 
             <span class="trip-extra-label">
-              países
+              {metrics.countries === 1 ? "país" : "países"}
             </span>
           </div>
-
-          <div class="trip-extra-item">
-            <span class="trip-extra-value">
-              {formatNumber(visitedPlaces.length)}
-            </span>
-
-            <span class="trip-extra-label">
-              lugares visitados
-            </span>
-          </div>
-        </div>
+</div>
       </div>
     </section>
 
@@ -704,7 +707,7 @@ const plannedPlaces = trip.plannedButNotVisited;
               {trip.budget.map((item) => (
                 <article class="trip-budget-item">
                   <div class="trip-budget-category">
-                    {item.category}
+                    {formatBudgetCategory(item.category)}
                   </div>
 
                   <div class="trip-budget-description">
