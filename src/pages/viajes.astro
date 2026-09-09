@@ -63,66 +63,50 @@ const continents: DestinationContinent[] = [
           <label for="destination-search-input">Buscar un destino</label>
           <div class="destination-search-field">
             <span aria-hidden="true">⌕</span>
-            <input
-              id="destination-search-input"
-              type="search"
-              autocomplete="off"
-              placeholder="Escribe un país…"
-            />
+            <input id="destination-search-input" type="search" autocomplete="off" placeholder="Escribe un país…" />
           </div>
         </div>
 
         <div class="continent-filter" role="group" aria-label="Filtrar por continente">
           <button type="button" class="continent-button is-active" data-continent="all">Todos</button>
           {continents.map((continent) => (
-            <button type="button" class="continent-button" data-continent={continent}>
-              {continent}
-            </button>
+            <button type="button" class="continent-button" data-continent={continent}>{continent}</button>
           ))}
         </div>
 
         <div class="destination-results" data-destination-results>
-          {destinations.map((destination) => (
-            <article
-              class:list={[
-                "destination-result",
-                { "destination-result--disabled": destination.status !== "ready" },
-              ]}
-              data-destination-card
-              data-name={destination.name.toLowerCase()}
-              data-continent={destination.continent}
-            >
-              {destination.status === "ready" ? (
-                <a
-                  href={`/viajes/${destination.slug}`}
-                  class="destination-result-link"
-                  aria-label={`Explorar ${destination.name}`}
-                >
-                  <span class="destination-result-number">{destination.number}</span>
-                  <span class="destination-result-copy">
-                    <strong>{destination.name}</strong>
-                    <small>{destination.continent}</small>
-                  </span>
-                  <span class="destination-result-image" aria-hidden="true">
-                    <Image src={destination.image} alt="" loading="lazy" />
-                  </span>
-                  <span class="destination-result-status">Explorar ↗</span>
-                </a>
-              ) : (
-                <div class="destination-result-link" aria-disabled="true">
-                  <span class="destination-result-number">{destination.number}</span>
-                  <span class="destination-result-copy">
-                    <strong>{destination.name}</strong>
-                    <small>{destination.continent}</small>
-                  </span>
-                  <span class="destination-result-image" aria-hidden="true">
-                    <Image src={destination.image} alt="" loading="lazy" />
-                  </span>
-                  <span class="destination-result-status">Próximamente</span>
-                </div>
-              )}
-            </article>
-          ))}
+          {destinations.map((destination) => {
+            const isReady = destination.status === "ready";
+            return (
+              <article class:list={["destination-result", { "destination-result--disabled": !isReady }]} data-destination-card data-name={destination.name.toLowerCase()} data-continent={destination.continent}>
+                {isReady ? (
+                  <a href={`/viajes/${destination.slug}`} class="destination-result-link" aria-label={`Explorar ${destination.name}`}>
+                    <span class="destination-result-number">{destination.number}</span>
+                    <span class="destination-result-copy">
+                      <strong>{destination.name}</strong>
+                      <small>{destination.continent}</small>
+                    </span>
+                    <span class="destination-result-image" aria-hidden="true">
+                      <Image src={destination.image} alt="" loading="lazy" />
+                    </span>
+                    <span class="destination-result-status">Explorar ↗</span>
+                  </a>
+                ) : (
+                  <div class="destination-result-link" aria-disabled="true">
+                    <span class="destination-result-number">{destination.number}</span>
+                    <span class="destination-result-copy">
+                      <strong>{destination.name}</strong>
+                      <small>{destination.continent}</small>
+                    </span>
+                    <span class="destination-result-image" aria-hidden="true">
+                      <Image src={destination.image} alt="" loading="lazy" />
+                    </span>
+                    <span class="destination-result-status">Próximamente</span>
+                  </div>
+                )}
+              </article>
+            );
+          })}
         </div>
 
         <p class="destination-no-results" data-no-results hidden>
@@ -138,9 +122,7 @@ const continents: DestinationContinent[] = [
             <p class="eyebrow">EN EL RADAR</p>
             <h2>Destinos para empezar a curiosear.</h2>
           </div>
-          <p>
-            Una primera selección para descubrir qué te llama antes de pensar en la ruta.
-          </p>
+          <p>Una primera selección para descubrir qué te llama antes de pensar en la ruta.</p>
         </div>
 
         <div class="popular-grid">
@@ -164,26 +146,10 @@ const continents: DestinationContinent[] = [
         </div>
 
         <div class="knowledge-grid">
-          <article>
-            <span>01</span>
-            <h3>Descubrir</h3>
-            <p>Qué existe, qué merece tu atención y qué rincones despiertan curiosidad.</p>
-          </article>
-          <article>
-            <span>02</span>
-            <h3>Entender</h3>
-            <p>Regiones, naturaleza, cultura y actividades para ver el destino como un conjunto.</p>
-          </article>
-          <article>
-            <span>03</span>
-            <h3>Comprobar</h3>
-            <p>Fuentes y revisiones para que la información importante tenga contexto y fecha.</p>
-          </article>
-          <article>
-            <span>04</span>
-            <h3>Decidir</h3>
-            <p>Cuando ya sabes qué te interesa, podemos convertirlo en un viaje pensado para ti.</p>
-          </article>
+          <article><span>01</span><h3>Descubrir</h3><p>Qué existe, qué merece tu atención y qué rincones despiertan curiosidad.</p></article>
+          <article><span>02</span><h3>Entender</h3><p>Regiones, naturaleza, cultura y actividades para ver el destino como un conjunto.</p></article>
+          <article><span>03</span><h3>Comprobar</h3><p>Fuentes y revisiones para que la información importante tenga contexto y fecha.</p></article>
+          <article><span>04</span><h3>Decidir</h3><p>Cuando ya sabes qué te interesa, podemos convertirlo en un viaje pensado para ti.</p></article>
         </div>
       </div>
     </section>
@@ -196,10 +162,7 @@ const continents: DestinationContinent[] = [
           Tú exploras el destino. Nosotros hacemos el trabajo de unir tus preferencias,
           tiempos y prioridades en una propuesta pensada para ti.
         </p>
-        <a href="/cuentatuviaje" class="button-primary">
-          Cuéntanos tu viaje
-          <span aria-hidden="true">↗</span>
-        </a>
+        <a href="/cuentatuviaje" class="button-primary">Cuéntanos tu viaje <span aria-hidden="true">↗</span></a>
       </div>
     </section>
   </main>
@@ -222,9 +185,7 @@ const continents: DestinationContinent[] = [
       cards.forEach((card) => {
         const name = card.dataset.name ?? "";
         const continent = card.dataset.continent ?? "";
-        const show = (!query || name.includes(query)) &&
-          (activeContinent === "all" || continent === activeContinent);
-
+        const show = (!query || name.includes(query)) && (activeContinent === "all" || continent === activeContinent);
         card.hidden = !show;
         if (show) visible += 1;
       });
@@ -271,18 +232,18 @@ const continents: DestinationContinent[] = [
 .continent-button{padding:.7rem 1rem;border:1px solid rgba(28,48,38,.18);border-radius:999px;background:transparent;color:var(--color-bosque);cursor:pointer;font:inherit;font-size:.82rem;transition:all .2s ease}
 .continent-button:hover,.continent-button.is-active{border-color:var(--color-bosque);background:var(--color-bosque);color:var(--color-papel)}
 .destination-results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.9rem;margin-top:3rem}
-.destination-result{min-width:0;border:1px solid rgba(28,48,38,.12);border-radius:18px;background:var(--color-papel);transition:transform .2s ease,border-color .2s ease}
-.destination-result:hover{transform:translateY(-2px);border-color:rgba(28,48,38,.3)}
+.destination-result{min-width:0;border:1px solid rgba(28,48,38,.08);border-radius:18px;background:var(--color-papel);transition:transform .2s ease,border-color .2s ease}
+.destination-result:hover{transform:translateY(-2px);border-color:rgba(28,48,38,.24)}
 .destination-result[hidden]{display:none}
-.destination-result--disabled{opacity:.68}
-.destination-result--disabled:hover{transform:none;border-color:rgba(28,48,38,.12)}
-.destination-result-link{display:grid;grid-template-columns:auto minmax(0,1fr) 76px auto;gap:.9rem;align-items:center;min-width:0;padding:1rem 1.05rem;color:inherit;text-decoration:none}
+.destination-result--disabled{opacity:.64}
+.destination-result--disabled:hover{transform:none;border-color:rgba(28,48,38,.08)}
+.destination-result-link{display:grid;grid-template-columns:auto minmax(0,1fr) 72px auto;gap:.85rem;align-items:center;min-width:0;padding:1rem 1.05rem;color:inherit;text-decoration:none}
 .destination-result-link[aria-disabled="true"]{cursor:default}
 .destination-result-number{color:var(--color-cobre);font-size:.7rem;font-weight:600;letter-spacing:1px}
 .destination-result-copy{min-width:0}
 .destination-result-copy strong{display:block;overflow:hidden;color:var(--color-bosque);font-family:var(--font-serif);font-size:1.28rem;font-weight:400;line-height:1.1;text-overflow:ellipsis;white-space:nowrap}
 .destination-result-copy small{display:block;margin-top:.25rem;color:#777;font-size:.68rem;text-transform:uppercase}
-.destination-result-image{display:block;width:76px;height:48px;overflow:hidden;border-radius:10px;background:transparent}
+.destination-result-image{display:block;width:72px;height:48px;overflow:hidden;border-radius:9px;background:transparent}
 .destination-result-image img{display:block;width:100%;height:100%;object-fit:contain;object-position:center}
 .destination-result-status{justify-self:end;color:var(--color-cobre);font-size:.68rem;font-weight:600;white-space:nowrap}
 .destination-result--disabled .destination-result-status{color:#777;font-weight:500}
@@ -309,21 +270,6 @@ const continents: DestinationContinent[] = [
 .travel-cta .button-primary{gap:.6rem}
 .travel-cta .button-primary span{transition:transform .2s ease}
 .travel-cta .button-primary:hover span{transform:translate(3px,-3px)}
-@media (max-width:900px){
-  .travel-hero{padding:7rem 1.5rem 5rem}
-  .travel-hero-inner{width:min(100% - 3rem,var(--content-width));grid-template-columns:1fr;gap:3rem}
-  .travel-hero h1{font-size:clamp(3.4rem,10vw,5rem)}
-  .travel-hero-note{max-width:560px;padding-left:0;padding-top:1.5rem;border-left:0;border-top:1px solid rgba(28,48,38,.2)}
-  .destination-explorer,.popular-destinations,.knowledge,.travel-cta{padding-left:1.5rem;padding-right:1.5rem}
-  .destination-explorer,.popular-destinations,.knowledge{padding-top:6rem;padding-bottom:7rem}
-  .explorer-heading,.popular-heading,.knowledge-inner{grid-template-columns:1fr;gap:2.5rem}
-  .destination-results{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .popular-grid{gap:4rem 2rem;margin-top:4rem}
-}
-@media (max-width:650px){
-  .destination-results,.popular-grid,.knowledge-grid{grid-template-columns:1fr}
-  .destination-result-link{grid-template-columns:auto minmax(0,1fr) 68px}
-  .destination-result-status{grid-column:2 / -1;justify-self:start}
-  .destination-result-image{width:68px;height:46px}
-  .travel-cta h2{font-size:3rem}
-}
+@media (max-width:900px){.travel-hero{padding:7rem 1.5rem 5rem}.travel-hero-inner{width:min(100% - 3rem,var(--content-width));grid-template-columns:1fr;gap:3rem}.travel-hero h1{font-size:clamp(3.4rem,10vw,5rem)}.travel-hero-note{max-width:560px;padding-left:0;padding-top:1.5rem;border-left:0;border-top:1px solid rgba(28,48,38,.2)}.destination-explorer,.popular-destinations,.knowledge,.travel-cta{padding-left:1.5rem;padding-right:1.5rem}.destination-explorer,.popular-destinations{padding-top:6rem;padding-bottom:7rem}.explorer-heading,.popular-heading,.knowledge-inner{grid-template-columns:1fr;gap:2.5rem}.destination-results{grid-template-columns:repeat(2,minmax(0,1fr))}.popular-grid{gap:4rem 2rem;margin-top:4rem}.knowledge{padding-top:6rem;padding-bottom:7rem}.travel-cta{padding-top:7rem;padding-bottom:7rem}}
+@media (max-width:650px){.destination-results,.popular-grid,.knowledge-grid{grid-template-columns:1fr}.destination-result-link{grid-template-columns:auto minmax(0,1fr) 64px}.destination-result-image{width:64px;height:46px}.destination-result-status{grid-column:2 / -1;justify-self:start}.destination-result-copy strong{font-size:1.18rem}.travel-cta h2{font-size:3rem}}
+</style>
