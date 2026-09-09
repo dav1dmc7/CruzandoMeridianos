@@ -1,0 +1,142 @@
+/* =========================================================
+   CRUZANDO MERIDIANOS — POLISH VISUAL
+   Capa editorial sobre las páginas de viaje.
+========================================================= */
+
+.trip-page .trip-photo-break {
+  padding: clamp(1.25rem, 2.8vw, 2.25rem) 0 0;
+}
+
+.trip-page .trip-photo-break-figure {
+  width: min(1060px, calc(100% - 5rem));
+  margin-inline: auto;
+}
+
+.trip-page .trip-photo-break-figure img {
+  height: min(58vh, 600px);
+  border-radius: 2px;
+  box-shadow: 0 22px 60px rgba(28, 48, 38, 0.10);
+}
+
+.trip-page .trip-photo-break-figure figcaption {
+  width: 100%;
+  padding: 0.8rem 0.1rem 0;
+}
+
+/* La tira de datos debe contar hechos, no placeholders. */
+.trip-page .trip-metrics-inner {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.trip-page .trip-metric:nth-child(3),
+.trip-page .trip-metric:nth-child(4),
+.trip-page .trip-metric:nth-child(6) {
+  display: none;
+}
+
+.trip-page .trip-metric:nth-child(5) {
+  display: block;
+}
+
+.trip-page .trip-metric:nth-child(5) .trip-metric-value {
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.15;
+}
+
+.trip-page .trip-metric:nth-child(5) .trip-metric-value {
+  font-size: 0;
+}
+
+.trip-page .trip-metric:nth-child(5) .trip-metric-value::before {
+  content: "11–24 mayo 2026";
+  display: block;
+  color: var(--color-papel);
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+}
+
+.trip-page .trip-metric:nth-child(5) .trip-metric-label {
+  font-size: 0;
+}
+
+.trip-page .trip-metric:nth-child(5) .trip-metric-label::before {
+  content: "fechas del viaje";
+  display: block;
+  color: rgba(244, 241, 234, 0.58);
+  font-family: var(--font-sans, sans-serif);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+/* En móvil, conserva aire lateral y evita una foto protagonista demasiado alta. */
+@media (max-width: 900px) {
+  .trip-page .trip-photo-break-figure {
+    width: min(680px, calc(100% - 3rem));
+  }
+
+  .trip-page .trip-metrics-inner {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .trip-page .trip-metric:nth-child(5) {
+    padding-left: 1rem;
+    border-left: 1px solid rgba(244, 241, 234, 0.2);
+  }
+}
+
+@media (max-width: 700px) {
+  .trip-page .trip-photo-break {
+    padding: 1rem 0 0;
+  }
+
+  .trip-page .trip-photo-break-figure {
+    width: calc(100% - 2.5rem);
+  }
+
+  .trip-page .trip-photo-break-figure img {
+    height: min(48vh, 430px);
+    min-height: 300px;
+  }
+
+  .trip-page .trip-photo-break-figure figcaption {
+    padding-top: 0.7rem;
+  }
+
+  .trip-page .trip-metrics-inner {
+    grid-template-columns: 1fr;
+    row-gap: 0;
+  }
+
+  .trip-page .trip-metric:nth-child(5) {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+/* Render progresivo: la parte inferior de la crónica no compite con el primer viewport. */
+.trip-page > section:not(.trip-hero):not(.trip-introduction):not(.trip-photo-break) {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 720px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .trip-page .trip-photo-break-figure,
+  .trip-page .trip-story-photo,
+  .trip-page .trip-fauna-photo {
+    transition: transform 450ms cubic-bezier(0.2, 0.65, 0.25, 1), box-shadow 450ms ease;
+  }
+
+  .trip-page .trip-photo-break-figure:hover {
+    transform: translateY(-2px);
+  }
+
+  .trip-page .trip-photo-break-figure:hover img {
+    box-shadow: 0 30px 80px rgba(28, 48, 38, 0.14);
+  }
+}
