@@ -400,3 +400,39 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
+
+
+/* ============================================================
+   CM ACCESSIBILITY
+   ============================================================ */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+.skip-link {
+  position: fixed;
+  top: .75rem;
+  left: .75rem;
+  z-index: 2000;
+  transform: translateY(-180%);
+  padding: .7rem 1rem;
+  border-radius: 999px;
+  background: var(--color-bosque);
+  color: var(--color-papel);
+  font-size: .78rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 12px 35px rgba(20, 35, 28, .18);
+  transition: transform .2s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-cobre);
+  outline-offset: 3px;
+}

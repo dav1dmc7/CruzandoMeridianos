@@ -2,7 +2,6 @@
 import { Image } from "astro:assets";
 
 import Layout from "../layouts/Layout.astro";
-import Header from "../components/layout/Header.astro";
 import Footer from "../components/layout/Footer.astro";
 import DestinationCard from "../components/sections/DestinationCard.astro";
 
@@ -24,8 +23,6 @@ const continents: DestinationContinent[] = [
   description="Explora nuestros destinos y descubre qué ver, qué hacer y qué necesitas saber en cada uno antes de decidir cómo viajar."
   canonical="/viajes"
 >
-  <Header />
-
   <main>
     <section class="travel-hero">
       <div class="travel-hero-inner">
@@ -273,4 +270,81 @@ const continents: DestinationContinent[] = [
 .travel-cta .button-primary:hover span{transform:translate(3px,-3px)}
 @media (max-width:900px){.travel-hero{padding:7rem 1.5rem 5rem}.travel-hero-inner{width:min(100% - 3rem,var(--content-width));grid-template-columns:1fr;gap:3rem}.travel-hero h1{font-size:clamp(3.4rem,10vw,5rem)}.travel-hero-note{max-width:560px;padding-left:0;padding-top:1.5rem;border-left:0;border-top:1px solid rgba(28,48,38,.2)}.destination-explorer,.popular-destinations,.knowledge,.travel-cta{padding-left:1.5rem;padding-right:1.5rem}.destination-explorer,.popular-destinations{padding-top:6rem;padding-bottom:7rem}.explorer-heading,.popular-heading,.knowledge-inner{grid-template-columns:1fr;gap:2.5rem}.destination-results{grid-template-columns:repeat(2,minmax(0,1fr))}.popular-grid{gap:4rem 2rem;margin-top:4rem}.knowledge{padding-top:6rem;padding-bottom:7rem}.travel-cta{padding-top:7rem;padding-bottom:7rem}}
 @media (max-width:650px){.destination-results,.popular-grid,.knowledge-grid{grid-template-columns:1fr}.destination-result-link{grid-template-columns:auto minmax(0,1fr) 70px}.destination-result-image{width:70px;height:70px}.destination-result-status{grid-column:2 / -1;justify-self:start}.destination-result-copy strong{font-size:1.18rem}.travel-cta h2{font-size:3rem}}
+
+/* ============================================================
+   CM EDITORIAL PASS — VIAJES
+   ============================================================ */
+
+.destination-results {
+  gap: 1rem;
+}
+
+.destination-result {
+  overflow: hidden;
+}
+
+.destination-result-link {
+  min-height: 96px;
+  grid-template-columns: auto minmax(0, 1fr) 88px auto;
+}
+
+.destination-result-image {
+  width: 88px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #e7e2d9;
+}
+
+.destination-result-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+.destination-result-status {
+  padding-right: .1rem;
+}
+
+.destination-search-field {
+  min-height: 58px;
+  box-shadow: 0 12px 35px rgba(28, 48, 38, .04);
+}
+
+.continent-button:focus-visible,
+.destination-search-field:focus-within,
+.destination-result-link:focus-visible {
+  outline: 2px solid var(--color-cobre);
+  outline-offset: 3px;
+}
+
+@media (max-width: 900px) {
+  .destination-results {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .destination-results {
+    grid-template-columns: 1fr;
+  }
+
+  .destination-result-link {
+    grid-template-columns: auto minmax(0, 1fr) 76px;
+    gap: .75rem;
+  }
+
+  .destination-result-image {
+    width: 76px;
+    height: 76px;
+  }
+
+  .destination-result-status {
+    grid-column: 2 / -1;
+    justify-self: start;
+    margin-top: -.35rem;
+  }
+}
+
 </style>

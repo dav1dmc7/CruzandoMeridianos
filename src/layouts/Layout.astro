@@ -58,6 +58,7 @@ const webPageSchema = {
 };
 
 import "../styles/global.css";
+import Header from "../components/layout/Header.astro";
 import "../styles/visual-polish.css";
 ---
 
@@ -123,6 +124,8 @@ import "../styles/visual-polish.css";
   </head>
 
   <body>
-    <slot />
+    <a class="skip-link" href="#main-content">Saltar al contenido</a>
+    <Header />
+    <div id="main-content"><slot /></div>
   </body>
 </html>

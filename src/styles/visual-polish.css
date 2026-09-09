@@ -555,3 +555,186 @@
   content-visibility: auto;
   contain-intrinsic-size: 1px 720px;
 }
+
+
+/* ============================================================
+   CM SYSTEM OVERRIDE — GLOBAL HEADER
+   ============================================================ */
+
+.site-header {
+  display: block !important;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+/* ============================================================
+   CM SYSTEM OVERRIDE — TRIP PHOTOGRAPHY
+   ============================================================ */
+
+.trip-page .trip-hero-grid {
+  grid-template-columns: minmax(0, .88fr) minmax(420px, 1.12fr) !important;
+  gap: clamp(2rem, 5vw, 5.5rem) !important;
+}
+
+.trip-page .trip-hero-figure {
+  position: relative;
+  width: 100%;
+  min-height: clamp(500px, 68vh, 720px);
+  aspect-ratio: 4 / 5 !important;
+  overflow: hidden;
+  border-radius: 0 0 0 38px;
+  background: #d8d5cc;
+  box-shadow: 0 30px 90px rgba(20, 35, 28, .13);
+}
+
+.trip-page .trip-hero-figure img {
+  display: block;
+  width: 100%;
+  height: 100% !important;
+  min-height: 100%;
+  object-fit: cover !important;
+  object-position: 50% 50% !important;
+  filter: saturate(.98) contrast(1.035);
+  transform: scale(1.012);
+  transition:
+    transform 1000ms cubic-bezier(.2,.65,.25,1),
+    filter 500ms ease;
+}
+
+.trip-page .trip-hero-figure:hover img {
+  transform: scale(1.045);
+  filter: saturate(1.045) contrast(1.045);
+}
+
+.trip-page .trip-photo-break-figure {
+  width: min(1240px, calc(100% - 4rem)) !important;
+}
+
+.trip-page .trip-photo-break-figure img {
+  display: block;
+  width: 100%;
+  height: min(70vh, 720px) !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  border-radius: 30px 0 30px 0;
+  box-shadow: 0 24px 75px rgba(20, 35, 28, .11);
+}
+
+.trip-page .trip-story-photo,
+.trip-page .trip-fauna-photo {
+  position: relative;
+  overflow: hidden;
+  border-radius: 26px;
+  background: #d8d5cc;
+}
+
+.trip-page .trip-story-photo img,
+.trip-page .trip-fauna-photo img {
+  display: block;
+  width: 100%;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  filter: saturate(.98) contrast(1.03);
+  transform: scale(1.008);
+  transition:
+    transform 900ms cubic-bezier(.2,.65,.25,1),
+    filter 500ms ease;
+}
+
+.trip-page .trip-story-photo:hover img,
+.trip-page .trip-fauna-photo:hover img {
+  transform: scale(1.055);
+  filter: saturate(1.045) contrast(1.04);
+}
+
+.trip-page .trip-final-photo-inner {
+  width: min(1380px, calc(100% - 2rem)) !important;
+}
+
+.trip-page .trip-final-photo img {
+  display: block;
+  width: 100%;
+  height: min(78vh, 860px) !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  border-radius: 34px 0 0 0;
+  box-shadow: 0 30px 90px rgba(20, 35, 28, .14);
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .trip-page .trip-hero-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .trip-page .trip-hero-figure {
+    min-height: 460px;
+    aspect-ratio: 4 / 3 !important;
+    border-radius: 0 0 0 28px;
+  }
+
+  .trip-page .trip-photo-break-figure {
+    width: calc(100% - 2rem) !important;
+  }
+
+  .trip-page .trip-photo-break-figure img {
+    height: min(62vh, 560px) !important;
+    border-radius: 24px 0 24px 0;
+  }
+}
+
+@media (max-width: 680px) {
+  .destination .destination-image,
+  .destination .destination-featured .destination-image {
+    min-height: 300px;
+  }
+
+  .destination .destination-image img {
+    object-position: center center !important;
+  }
+
+  .trip-page .trip-hero {
+    padding-top: 2.5rem;
+  }
+
+  .trip-page .trip-hero-figure {
+    min-height: 360px;
+    aspect-ratio: 4 / 3 !important;
+    border-radius: 0 0 0 22px;
+  }
+
+  .trip-page .trip-photo-break-figure {
+    width: calc(100% - 1rem) !important;
+  }
+
+  .trip-page .trip-photo-break-figure img,
+  .trip-page .trip-final-photo img {
+    height: min(56vh, 500px) !important;
+    border-radius: 20px 0 20px 0;
+  }
+
+  .trip-page .trip-story-photo,
+  .trip-page .trip-fauna-photo {
+    border-radius: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .destination .destination-image img,
+  .trip-page .trip-hero-figure img,
+  .trip-page .trip-story-photo img,
+  .trip-page .trip-fauna-photo img {
+    transition: none;
+    transform: none;
+  }
+}

@@ -25,9 +25,51 @@ const destinationUrl = Astro.url.pathname.startsWith("/nuestros-viajes")
   ]}
 >
   <div class="destination-content">
-    <div class="destination-copy">
-      <span class="destination-number">
+    <div class="destination-image">
+      {isReady ? (
+        <a
+          href={destinationUrl}
+          class="destination-image-link"
+          aria-label={`Explorar ${destination.name}`}
+        >
+          <Image
+            src={destination.image}
+            alt={destination.imageAlt}
+            loading={featured ? "eager" : "lazy"}
+            sizes={featured ? "(min-width: 1000px) 58vw, 100vw" : "(min-width: 1000px) 55vw, 100vw"}
+          />
+        </a>
+      ) : (
+        <Image
+          src={destination.image}
+          alt={destination.imageAlt}
+          loading={featured ? "eager" : "lazy"}
+            sizes={featured ? "(min-width: 1000px) 58vw, 100vw" : "(min-width: 1000px) 55vw, 100vw"}
+        />
+      )}
+
+      <span class="destination-image-shade" aria-hidden="true"></span>
+
+      <span class="destination-number" aria-hidden="true">
         {destination.number}
+      </span>
+
+      {!isReady && (
+        <span class="destination-status">
+          En preparación
+        </span>
+      )}
+
+      {isReady && (
+        <span class="destination-image-label">
+          Explorar destino <span aria-hidden="true">↗</span>
+        </span>
+      )}
+    </div>
+
+    <div class="destination-copy">
+      <span class="destination-kicker">
+        {destination.status === "ready" ? "Guía de viaje" : "Próximamente"}
       </span>
 
       <h3>
@@ -42,41 +84,11 @@ const destinationUrl = Astro.url.pathname.startsWith("/nuestros-viajes")
 
       <p>{destination.description}</p>
 
-      {isReady ? (
+      {isReady && (
         <a href={destinationUrl} class="destination-link">
-          Explorar destino
-          <span aria-hidden="true">↗</span>
+          Descubrir {destination.name}
+          <span aria-hidden="true">→</span>
         </a>
-      ) : (
-        <span class="destination-coming">En preparación</span>
-      )}
-    </div>
-
-    <div class="destination-image">
-      {isReady ? (
-        <a
-          href={destinationUrl}
-          class="destination-image-link"
-          aria-label={`Explorar ${destination.name}`}
-        >
-          <Image
-            src={destination.image}
-            alt={destination.imageAlt}
-            loading={featured ? "eager" : "lazy"}
-          />
-        </a>
-      ) : (
-        <Image
-          src={destination.image}
-          alt={destination.imageAlt}
-          loading={featured ? "eager" : "lazy"}
-        />
-      )}
-
-      {!isReady && (
-        <span class="destination-status">
-          En preparación
-        </span>
       )}
     </div>
   </div>
@@ -88,53 +100,193 @@ const destinationUrl = Astro.url.pathname.startsWith("/nuestros-viajes")
 }
 
 .destination-content {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 168px;
-  gap: 2rem;
-  align-items: center;
-  min-height: 168px;
-  padding: 1.35rem;
+  grid-template-columns: minmax(0, 1.28fr) minmax(260px, .72fr);
+  min-height: 360px;
+  overflow: hidden;
   border: 1px solid rgba(28, 48, 38, .12);
-  border-radius: 24px;
+  border-radius: 30px;
   background: var(--color-papel);
+  box-shadow: 0 18px 55px rgba(20, 35, 28, .06);
+  transition:
+    transform .5s cubic-bezier(.2,.65,.25,1),
+    box-shadow .5s ease,
+    border-color .3s ease;
+}
+
+.destination:hover .destination-content {
+  transform: translateY(-4px);
+  border-color: rgba(28, 48, 38, .2);
+  box-shadow: 0 28px 70px rgba(20, 35, 28, .1);
 }
 
 .destination-featured .destination-content {
-  grid-template-columns: minmax(0, 1fr) 220px;
-  min-height: 210px;
-  padding: 1.5rem;
+  grid-template-columns: minmax(0, 1.45fr) minmax(300px, .55fr);
+  min-height: 500px;
+  border-radius: 34px;
 }
 
-.destination-copy {
+.destination-image {
+  position: relative;
   min-width: 0;
+  min-height: 360px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #d8d5cc;
+}
+
+.destination-featured .destination-image {
+  min-height: 500px;
+}
+
+.destination-image-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.destination-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(.96) contrast(1.02);
+  transform: scale(1.015);
+  transition:
+    transform 1.1s cubic-bezier(.2,.65,.25,1),
+    filter .6s ease;
+}
+
+.destination:hover .destination-image img {
+  transform: scale(1.055);
+  filter: saturate(1.04) contrast(1.04);
+}
+
+.destination-image-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(13, 29, 21, .08) 0%,
+      transparent 42%,
+      rgba(13, 29, 21, .5) 100%
+    );
 }
 
 .destination-number {
+  position: absolute;
+  top: 1.35rem;
+  left: 1.35rem;
+  z-index: 2;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.38);
+  border-radius: 50%;
+  background: rgba(18, 33, 26, .28);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: .7rem;
+  font-weight: 500;
+  letter-spacing: .08em;
+}
+
+.destination-image-label {
+  position: absolute;
+  right: 1.35rem;
+  bottom: 1.35rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .65rem .8rem;
+  border: 1px solid rgba(255,255,255,.32);
+  border-radius: 999px;
+  background: rgba(18, 33, 26, .34);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: .68rem;
+  font-weight: 500;
+  letter-spacing: .04em;
+  transition: background .25s ease;
+}
+
+.destination:hover .destination-image-label {
+  background: rgba(18, 33, 26, .52);
+}
+
+.destination-image-label span {
+  transition: transform .25s ease;
+}
+
+.destination:hover .destination-image-label span {
+  transform: translate(3px, -3px);
+}
+
+.destination-status {
+  position: absolute;
+  left: 1.35rem;
+  bottom: 1.35rem;
+  z-index: 2;
+  padding: .58rem .75rem;
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 999px;
+  background: rgba(251, 249, 245, .9);
+  color: var(--color-bosque);
+  backdrop-filter: blur(10px);
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+
+.destination-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(2rem, 4vw, 4.25rem);
+}
+
+.destination-featured .destination-copy {
+  padding: clamp(2.5rem, 4vw, 5rem);
+}
+
+.destination-kicker {
   display: block;
-  margin-bottom: .85rem;
+  margin-bottom: 1.1rem;
   color: var(--color-cobre);
-  font-size: .72rem;
-  letter-spacing: 2px;
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
 }
 
 .destination h3 {
-  margin: 0 0 .8rem;
+  margin: 0 0 1.15rem;
   color: var(--color-bosque);
   font-family: var(--font-serif);
-  font-size: 2rem;
+  font-size: clamp(2.35rem, 4vw, 4rem);
   font-weight: 400;
-  line-height: 1.05;
-  letter-spacing: -.02em;
+  line-height: .98;
+  letter-spacing: -.035em;
 }
 
 .destination-featured h3 {
-  font-size: 2.35rem;
+  font-size: clamp(3rem, 5vw, 5rem);
 }
 
 .destination-title-link {
   color: inherit;
   text-decoration: none;
-  transition: color .2s ease;
+  transition: color .25s ease;
 }
 
 .destination-title-link:hover {
@@ -142,188 +294,203 @@ const destinationUrl = Astro.url.pathname.startsWith("/nuestros-viajes")
 }
 
 .destination-copy p {
-  max-width: 520px;
+  max-width: 34rem;
   margin: 0;
   color: #555;
-  font-size: .92rem;
-  line-height: 1.65;
-}
-
-.destination-link,
-.destination-coming {
-  display: inline-flex;
-  align-items: center;
-  gap: .6rem;
-  margin-top: 1.1rem;
-  font-size: .8rem;
-  font-weight: 500;
+  font-size: .98rem;
+  line-height: 1.8;
 }
 
 .destination-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  width: fit-content;
+  margin-top: 1.7rem;
   color: var(--color-bosque);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .03em;
   text-decoration: none;
-  transition: color .2s ease;
-}
-
-.destination-link span {
-  transition: transform .2s ease;
+  transition: color .25s ease;
 }
 
 .destination-link:hover {
   color: var(--color-cobre);
 }
 
+.destination-link span {
+  transition: transform .25s ease;
+}
+
 .destination-link:hover span {
-  transform: translate(3px, -3px);
-}
-
-.destination-coming {
-  color: #777;
-  font-size: .76rem;
-  letter-spacing: .5px;
-}
-
-.destination-image {
-  position: relative;
-  width: 168px;
-  height: 116px;
-  overflow: hidden;
-  border-radius: 16px;
-  background: transparent;
-  isolation: isolate;
-}
-
-.destination-featured .destination-image {
-  width: 220px;
-  height: 150px;
-  border-radius: 18px;
-}
-
-.destination-image-link {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  place-items: center;
-  color: inherit;
-  text-decoration: none;
-}
-
-.destination-image img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-  transition: transform .45s ease;
-}
-
-.destination:not(.destination-disabled):hover .destination-image img {
-  transform: scale(1.025);
-}
-
-.destination-status {
-  position: absolute;
-  top: .7rem;
-  left: .7rem;
-  padding: .4rem .6rem;
-  border-radius: 999px;
-  background: rgba(251, 249, 245, .94);
-  color: var(--color-bosque);
-  font-size: .62rem;
-  font-weight: 500;
-  letter-spacing: .4px;
+  transform: translateX(4px);
 }
 
 .destination-disabled {
-  opacity: .92;
+  opacity: .95;
 }
 
 .destination:focus-within .destination-content {
   outline: 2px solid var(--color-cobre);
-  outline-offset: 4px;
+  outline-offset: 5px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .destination-content,
   .destination-featured .destination-content {
-    grid-template-columns: minmax(0, 1fr) 150px;
-    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1.12fr) minmax(240px, .88fr);
+  }
+
+  .destination-content {
+    min-height: 320px;
+  }
+
+  .destination-featured .destination-content {
+    min-height: 430px;
   }
 
   .destination-image,
   .destination-featured .destination-image {
-    width: 150px;
-    height: 108px;
+    min-height: 320px;
   }
 
-  .destination h3,
-  .destination-featured h3 {
-    font-size: 1.9rem;
+  .destination-featured .destination-image {
+    min-height: 430px;
+  }
+
+  .destination-copy,
+  .destination-featured .destination-copy {
+    padding: 2rem;
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 760px) {
   .destination-content,
   .destination-featured .destination-content {
-    grid-template-columns: minmax(0, 1fr) 122px;
+    display: flex;
+    flex-direction: column;
     min-height: 0;
-    gap: 1rem;
-    padding: 1rem;
-    border-radius: 18px;
+    border-radius: 24px;
   }
 
   .destination-image,
   .destination-featured .destination-image {
-    width: 122px;
-    height: 92px;
-    border-radius: 14px;
+    width: 100%;
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+    order: 1;
+  }
+
+  .destination-featured .destination-image {
+    aspect-ratio: 16 / 11;
+  }
+
+  .destination-copy,
+  .destination-featured .destination-copy {
+    order: 2;
+    padding: 1.8rem 1.45rem 2rem;
   }
 
   .destination h3,
   .destination-featured h3 {
-    font-size: 1.7rem;
+    margin-bottom: .9rem;
+    font-size: 2.45rem;
   }
 
   .destination-copy p {
-    font-size: .88rem;
-    line-height: 1.6;
+    font-size: .9rem;
+    line-height: 1.7;
   }
 
-  .destination-link,
-  .destination-coming {
-    margin-top: .9rem;
+  .destination-number,
+  .destination-status,
+  .destination-image-label {
+    top: auto;
+    bottom: 1rem;
+  }
+
+  .destination-number {
+    top: 1rem;
+    bottom: auto;
+    left: 1rem;
+  }
+
+  .destination-status {
+    left: 1rem;
+  }
+
+  .destination-image-label {
+    right: 1rem;
   }
 }
 
 @media (max-width: 480px) {
   .destination-content,
   .destination-featured .destination-content {
-    grid-template-columns: 1fr;
+    border-radius: 20px;
   }
 
   .destination-image,
   .destination-featured .destination-image {
-    width: 100%;
-    height: 140px;
-    order: 2;
+    aspect-ratio: 1 / .82;
   }
 
-  .destination-copy {
-    order: 1;
+  .destination-featured .destination-image {
+    aspect-ratio: 1 / .78;
+  }
+
+  .destination-copy,
+  .destination-featured .destination-copy {
+    padding: 1.5rem 1.2rem 1.7rem;
+  }
+
+  .destination-kicker {
+    margin-bottom: .85rem;
+    font-size: .64rem;
   }
 
   .destination h3,
   .destination-featured h3 {
-    font-size: 1.85rem;
+    font-size: 2.15rem;
+  }
+
+  .destination-number {
+    width: 38px;
+    height: 38px;
+    top: .8rem;
+    left: .8rem;
+  }
+
+  .destination-status,
+  .destination-image-label {
+    right: .8rem;
+    bottom: .8rem;
+    left: auto;
+    padding: .52rem .68rem;
+    font-size: .62rem;
+  }
+
+  .destination-status {
+    left: .8rem;
+    right: auto;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .destination-title-link,
+  .destination-content,
+  .destination-image img,
+  .destination-image-label,
+  .destination-image-label span,
   .destination-link,
-  .destination-link span,
-  .destination-image img {
+  .destination-link span {
     transition: none;
+  }
+
+  .destination:hover .destination-content,
+  .destination:hover .destination-image img,
+  .destination:hover .destination-image-label span {
+    transform: none;
   }
 }
 </style>

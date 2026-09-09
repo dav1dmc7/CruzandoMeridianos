@@ -2,7 +2,6 @@
 import { Image } from "astro:assets";
 
 import Layout from "../../layouts/Layout.astro";
-import Header from "../../components/layout/Header.astro";
 import Footer from "../../components/layout/Footer.astro";
 
 import { destinations } from "../../data/destinations";
@@ -526,11 +525,6 @@ const travelerData =
     type="application/ld+json"
     set:html={JSON.stringify(guideSchema)}
   />
-
-
-  <Header />
-
-
   <main
     class="guide-page"
     data-guide-slug={guide.slug}
