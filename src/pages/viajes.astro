@@ -17,221 +17,146 @@ const otherDestinations = destinations.filter(
 
 <Layout
   title="Viajes | Cruzando Meridianos"
-  description="Destinos, rutas, información práctica y experiencias para preparar tus viajes con criterio."
+  description="Descubre qué ver, qué hacer y qué necesitas saber antes de viajar a nuestros destinos, con información clara y experiencias reales."
   canonical="/viajes"
 >
-
   <Header />
 
-
   <main>
-
-    <!-- HERO -->
-
     <section class="travel-hero">
-
       <div class="travel-hero-inner">
-
         <div class="travel-hero-copy">
-
-          <p class="eyebrow">
-            VIAJES
-          </p>
+          <p class="eyebrow">VIAJES</p>
 
           <h1>
-            No solo te contamos <em> dónde ir.</em>
+            Conoce un destino antes de
+            <em> decidir cómo vivirlo.</em>
           </h1>
 
           <p class="travel-hero-description">
-            Investigamos los destinos para entenderlos de verdad:
-            qué merece la pena, cómo moverse, cuánto cuesta,
-            qué necesitas antes de viajar y cómo construir una ruta
-            que tenga sentido para ti.
+            Aquí encontrarás lo que merece la pena conocer de cada lugar:
+            qué ver, qué hacer, qué tipo de experiencias ofrece, qué zonas
+            tienen más sentido según tus intereses y la información práctica
+            que conviene tener antes de viajar.
           </p>
-
         </div>
-
 
         <div class="travel-hero-note">
-
-          <span>
-            Nuestro enfoque
-          </span>
+          <span>Nuestra idea</span>
 
           <p>
-            Información práctica, experiencias reales
-            y criterio para ayudarte a decidir.
+            Primero te ayudamos a conocer el destino. Después, si quieres,
+            nosotros nos encargamos de decidir contigo cómo convertirlo en viaje.
           </p>
-
         </div>
-
       </div>
-
     </section>
 
-
-    <!-- DESTINOS -->
-
     <section class="destinations">
-
       <div class="destinations-inner">
-
         <div class="destinations-intro">
-
-          <p class="eyebrow">
-            DESTINOS
-          </p>
+          <p class="eyebrow">DESTINOS</p>
 
           <h2>
-            Algunos lugares.<br />
-            Infinitas formas de vivirlos.
+            Todo empieza por saber
+            <br />
+            qué tiene realmente un lugar.
           </h2>
 
           <p>
-            Cada destino tiene una personalidad diferente.
-            Por eso no queremos darte una lista interminable
-            de lugares que visitar, sino ayudarte a entender
-            cómo podrías vivir cada uno de ellos.
+            No queremos que tengas que recorrer diez páginas para entender un
+            destino. Nuestra intención es reunir en un mismo sitio una visión
+            clara de lo que merece la pena descubrir y ayudarte a orientarte
+            entre todas las posibilidades.
           </p>
-
         </div>
 
-
         {featuredDestination && (
-
           <DestinationCard
             destination={featuredDestination}
             featured
           />
-
         )}
 
-
         <div class="destinations-grid">
-
           {otherDestinations.map((destination) => (
-
-            <DestinationCard
-              destination={destination}
-            />
-
+            <DestinationCard destination={destination} />
           ))}
-
         </div>
-
       </div>
-
     </section>
 
-
-    <!-- CENTRO DE CONOCIMIENTO -->
-
     <section class="knowledge">
-
       <div class="knowledge-inner">
-
         <div class="knowledge-copy">
-
-          <p class="eyebrow">
-            MÁS QUE DESTINOS
-          </p>
+          <p class="eyebrow">CENTRO DE CONOCIMIENTO</p>
 
           <h2>
-            Todo lo que necesitas
-            para preparar un viaje.
+            Lo que necesitas saber antes de decidir.
           </h2>
 
           <p>
-            Queremos que Cruzando Meridianos sea también un lugar
-            al que acudir cuando necesites resolver las preguntas
-            que aparecen antes de viajar.
+            Queremos que esta sección sea útil incluso si todavía no sabes
+            qué viaje quieres hacer. Aquí reunimos la información que te ayuda
+            a entender las posibilidades de un destino sin obligarte a copiar
+            el viaje de otra persona.
           </p>
-
         </div>
 
-
         <div class="knowledge-grid">
-
           <article>
             <span>01</span>
-
-            <h3>
-              Documentación
-            </h3>
-
+            <h3>Qué ver</h3>
             <p>
-              Qué necesitas para entrar, qué trámites hacer
-              y dónde encontrar la información oficial.
+              Lugares, paisajes y rincones que merece la pena conocer y por qué
+              pueden resultar interesantes.
             </p>
           </article>
-
 
           <article>
             <span>02</span>
-
-            <h3>
-              Cómo moverse
-            </h3>
-
+            <h3>Qué hacer</h3>
             <p>
-              Transporte, desplazamientos y las mejores formas
-              de recorrer cada destino.
+              Naturaleza, cultura, gastronomía y experiencias para entender
+              qué tipo de cosas ofrece realmente cada destino.
             </p>
           </article>
-
 
           <article>
             <span>03</span>
-
-            <h3>
-              Presupuesto
-            </h3>
-
+            <h3>Información práctica</h3>
             <p>
-              Cuánto puede costar realmente un viaje
-              y dónde merece la pena gastar.
+              Lo básico que conviene saber antes de viajar: documentación,
+              temporadas, conectividad y otros aspectos importantes.
             </p>
           </article>
-
 
           <article>
             <span>04</span>
-
-            <h3>
-              Rutas
-            </h3>
-
+            <h3>Experiencias reales</h3>
             <p>
-              Itinerarios pensados para diferentes duraciones,
-              ritmos y formas de viajar.
+              Lo que hemos visto y vivido nosotros para que puedas distinguir
+              entre una descripción de catálogo y una experiencia real.
             </p>
           </article>
-
         </div>
-
       </div>
-
     </section>
 
-
-    <!-- CTA -->
-
     <section class="travel-cta">
-
       <div class="travel-cta-inner">
-
-        <p class="eyebrow">
-          ¿NO SABES POR DÓNDE EMPEZAR?
-        </p>
+        <p class="eyebrow">¿YA SABES QUÉ DESTINO TE LLAMA?</p>
 
         <h2>
-          Tu viaje no tiene por qué
-          parecerse al de nadie.
+          Conocer las opciones es una cosa.
+          <br />
+          Elegir el viaje adecuado es otra.
         </h2>
 
         <p>
-          Cuéntanos qué tienes en mente.
-          Nosotros empezamos a investigar.
+          Si no tienes claro qué ver, qué dejar fuera, cuánto tiempo dedicarle
+          o cómo encajar todo lo que has descubierto, ahí es donde entramos
+          nosotros.
         </p>
 
         <a
@@ -241,43 +166,25 @@ const otherDestinations = destinations.filter(
           Cuéntanos tu viaje
           <span aria-hidden="true">↗</span>
         </a>
-
       </div>
-
     </section>
-
   </main>
 
-
   <Footer />
-
 </Layout>
 
-
 <style>
-
 .travel-hero {
   padding: 9rem 2rem 7rem;
-
   background: var(--color-papel);
 }
 
 .travel-hero-inner {
-  width: min(
-    var(--content-width),
-    calc(100% - 4rem)
-  );
-
+  width: min(var(--content-width), calc(100% - 4rem));
   margin: 0 auto;
-
   display: grid;
-
-  grid-template-columns:
-    minmax(0, 1.6fr)
-    minmax(220px, .6fr);
-
+  grid-template-columns: minmax(0, 1.6fr) minmax(220px, .6fr);
   gap: 6rem;
-
   align-items: end;
 }
 
@@ -285,240 +192,198 @@ const otherDestinations = destinations.filter(
   max-width: 850px;
 }
 
+.eyebrow {
+  margin: 0 0 1.35rem;
+  color: var(--color-cobre);
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
 .travel-hero h1 {
-  max-width: 850px;
-
+  max-width: 900px;
+  margin: 0;
+  color: var(--color-bosque);
+  font-family: var(--font-serif);
   font-size: clamp(3.8rem, 7vw, 6.8rem);
-
-  letter-spacing: -.03em;
+  font-weight: 400;
+  line-height: .96;
+  letter-spacing: -.04em;
 }
 
 .travel-hero h1 em {
   color: var(--color-cobre);
-
-  font-style: normal;
+  font-style: italic;
 }
 
 .travel-hero-description {
-  max-width: 650px;
-
+  max-width: 680px;
   margin-top: 2.5rem;
-
   color: #555;
-
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   line-height: 1.8;
 }
 
 .travel-hero-note {
   padding-left: 2rem;
-
-  border-left:
-    1px solid rgba(28, 48, 38, .2);
+  border-left: 1px solid rgba(28, 48, 38, .2);
 }
 
 .travel-hero-note span {
   display: block;
-
   margin-bottom: .8rem;
-
   color: var(--color-cobre);
-
   font-size: .7rem;
-  font-weight: 500;
-
+  font-weight: 600;
   letter-spacing: 2px;
-
   text-transform: uppercase;
 }
 
 .travel-hero-note p {
+  margin: 0;
   color: #555;
-
   font-family: var(--font-serif);
-
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   line-height: 1.5;
 }
 
-
-/* =========================================================
-   DESTINOS
-========================================================= */
-
 .destinations {
   padding: 9rem 2rem;
-
   background: #f7f4ef;
 }
 
 .destinations-inner {
-  width: min(
-    var(--content-width),
-    100%
-  );
-
+  width: min(var(--content-width), 100%);
   margin: 0 auto;
 }
 
 .destinations-intro {
-  max-width: 760px;
-
+  max-width: 800px;
   margin-bottom: 6rem;
 }
 
 .destinations-intro h2 {
-  font-size: 3.8rem;
-
-  letter-spacing: -.02em;
+  margin: 0;
+  color: var(--color-bosque);
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 5vw, 4.8rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -.035em;
 }
 
 .destinations-intro > p:last-child {
-  max-width: 620px;
-
+  max-width: 690px;
   margin-top: 2rem;
-
   color: #555;
-
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   line-height: 1.8;
 }
 
 .destinations-grid {
   display: grid;
-
   grid-template-columns: repeat(2, minmax(0, 1fr));
-
   gap: 5rem 3rem;
-
   margin-top: 6rem;
 }
 
-
-/* =========================================================
-   KNOWLEDGE
-========================================================= */
-
 .knowledge {
   padding: 9rem 2rem;
-
   background: var(--color-papel);
 }
 
 .knowledge-inner {
-  width: min(
-    var(--content-width),
-    100%
-  );
-
+  width: min(var(--content-width), 100%);
   margin: 0 auto;
-
   display: grid;
-
-  grid-template-columns: .9fr 1.1fr;
-
+  grid-template-columns: .85fr 1.15fr;
   gap: 8rem;
 }
 
 .knowledge-copy {
-  max-width: 480px;
+  max-width: 520px;
 }
 
 .knowledge-copy h2 {
-  font-size: 3.4rem;
-
-  letter-spacing: -.02em;
+  margin: 0;
+  color: var(--color-bosque);
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 4.5vw, 4.4rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -.035em;
 }
 
 .knowledge-copy > p:last-child {
   margin-top: 2rem;
-
   color: #555;
-
   font-size: 1rem;
   line-height: 1.8;
 }
 
 .knowledge-grid {
   display: grid;
-
   grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  gap: 4rem 3rem;
+  gap: 3.5rem 3rem;
 }
 
 .knowledge-grid article {
   padding-top: 1.5rem;
-
-  border-top:
-    1px solid rgba(28, 48, 38, .18);
+  border-top: 1px solid rgba(28, 48, 38, .18);
 }
 
 .knowledge-grid span {
   display: block;
-
-  margin-bottom: 1.2rem;
-
+  margin-bottom: 1.1rem;
   color: var(--color-cobre);
-
-  font-size: .75rem;
+  font-size: .72rem;
+  font-weight: 600;
   letter-spacing: 2px;
 }
 
 .knowledge-grid h3 {
-  margin: 0 0 .8rem;
-
-  font-size: 1.8rem;
+  margin: 0 0 .7rem;
+  color: var(--color-bosque);
+  font-family: var(--font-serif);
+  font-size: 1.9rem;
+  font-weight: 400;
 }
 
 .knowledge-grid p {
+  margin: 0;
   color: #555;
-
-  font-size: .92rem;
-  line-height: 1.7;
+  font-size: .95rem;
+  line-height: 1.75;
 }
-
-
-/* =========================================================
-   CTA
-========================================================= */
 
 .travel-cta {
   padding: 9rem 2rem;
-
   background: var(--color-arena);
-
   text-align: center;
 }
 
 .travel-cta-inner {
-  width: min(
-    800px,
-    100%
-  );
-
+  width: min(820px, 100%);
   margin: 0 auto;
 }
 
 .travel-cta h2 {
-  font-size: clamp(
-    3rem,
-    6vw,
-    5rem
-  );
-
-  letter-spacing: -.025em;
+  margin: 0;
+  color: var(--color-bosque);
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 5.8vw, 5.2rem);
+  font-weight: 400;
+  line-height: .98;
+  letter-spacing: -.035em;
 }
 
 .travel-cta p:not(.eyebrow) {
-  max-width: 550px;
-
+  max-width: 650px;
   margin: 2rem auto 2.5rem;
-
   color: #555;
-
   font-size: 1.05rem;
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
 .travel-cta .button-primary {
@@ -526,117 +391,81 @@ const otherDestinations = destinations.filter(
 }
 
 .travel-cta .button-primary span {
-  transition:
-    transform .2s ease;
+  transition: transform .2s ease;
 }
 
 .travel-cta .button-primary:hover span {
   transform: translate(3px, -3px);
 }
 
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
 @media (max-width: 900px) {
-
   .travel-hero {
-    padding:
-      7rem 1.5rem
-      5rem;
+    padding: 7rem 1.5rem 5rem;
   }
 
   .travel-hero-inner {
-    width: min(
-      100% - 3rem,
-      var(--content-width)
-    );
-
+    width: min(100% - 3rem, var(--content-width));
     grid-template-columns: 1fr;
-
     gap: 3rem;
   }
 
   .travel-hero h1 {
-    font-size: clamp(
-      3.4rem,
-      10vw,
-      5rem
-    );
+    font-size: clamp(3.4rem, 10vw, 5rem);
   }
 
   .travel-hero-note {
-    max-width: 500px;
-
+    max-width: 560px;
     padding-left: 0;
-
     padding-top: 1.5rem;
-
     border-left: 0;
+    border-top: 1px solid rgba(28, 48, 38, .2);
+  }
 
-    border-top:
-      1px solid rgba(28, 48, 38, .2);
+  .destinations,
+  .knowledge,
+  .travel-cta {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 
   .destinations {
-    padding:
-      6rem 1.5rem;
+    padding-top: 6rem;
+    padding-bottom: 7rem;
   }
 
   .destinations-intro {
     margin-bottom: 4rem;
   }
 
-  .destinations-intro h2 {
-    font-size: 2.8rem;
-  }
-
   .destinations-grid {
     gap: 4rem 2rem;
-
     margin-top: 4rem;
   }
 
   .knowledge {
-    padding:
-      6rem 1.5rem;
+    padding-top: 6rem;
+    padding-bottom: 7rem;
   }
 
   .knowledge-inner {
     grid-template-columns: 1fr;
-
     gap: 4rem;
   }
 
-  .knowledge-copy h2 {
-    font-size: 2.8rem;
-  }
-
   .travel-cta {
-    padding:
-      7rem 1.5rem;
+    padding-top: 7rem;
+    padding-bottom: 7rem;
   }
-
 }
 
-
 @media (max-width: 650px) {
-
-  .destinations-grid {
-    grid-template-columns: 1fr;
-  }
-
+  .destinations-grid,
   .knowledge-grid {
     grid-template-columns: 1fr;
-
-    gap: 3rem;
   }
 
   .travel-cta h2 {
     font-size: 3rem;
   }
-
 }
-
 </style>
