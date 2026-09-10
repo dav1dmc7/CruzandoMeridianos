@@ -42,7 +42,8 @@ const destination =
 
 if (
   !destination ||
-  destination.status !== "ready"
+  destination.status !== "ready" ||
+  !destination.image
 ) {
   return Astro.redirect("/viajes");
 }
