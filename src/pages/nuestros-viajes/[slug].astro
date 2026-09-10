@@ -13,7 +13,6 @@ import arbol from "../../assets/images/costa-rica/arbol.jpg";
 import cocodrilo from "../../assets/images/costa-rica/cocodrilo.jpg";
 import rana from "../../assets/images/costa-rica/rana.jpg";
 import mono from "../../assets/images/costa-rica/mono.jpg";
-import mono2 from "../../assets/images/costa-rica/Mono2.jpg";
 import perezoso from "../../assets/images/costa-rica/perezoso.jpg";
 
 const { slug } = Astro.params;
@@ -69,6 +68,78 @@ const cashWithdrawalsTotal = trip.slug === "costa-rica"
       .filter((item) => item.category === "cash")
       .reduce((total, item) => total + item.amount, 0)
   : 0;
+
+const budgetByCategory = (category: string) =>
+  trip.budget
+    .filter((item) => item.category === category)
+    .reduce((total, item) => total + item.amount, 0);
+
+const supermarketItems = trip.budget.filter((item) => {
+  if (item.category !== "food") return false;
+  const description = item.description.toLowerCase();
+  return description.includes("super") || description.includes("súper");
+});
+
+const restaurantItems = trip.budget.filter((item) => {
+  if (item.category !== "food") return false;
+  return !supermarketItems.includes(item);
+});
+
+const supermarketTotal = supermarketItems.reduce(
+  (total, item) => total + item.amount,
+  0
+);
+
+const restaurantTotal = restaurantItems.reduce(
+  (total, item) => total + item.amount,
+  0
+);
+
+const budgetGroups =
+  trip.slug === "costa-rica"
+    ? [
+        {
+          label: "Vuelos",
+          total: budgetByCategory("flights"),
+          details: "Vuelos internacionales",
+        },
+        {
+          label: "Coche de alquiler",
+          total: budgetByCategory("car"),
+          details: "Alquiler del coche",
+        },
+        {
+          label: "Combustible",
+          total: budgetByCategory("fuel"),
+          details: "Gasolina de todo el viaje",
+        },
+        {
+          label: "Alojamientos",
+          total: budgetByCategory("accommodation"),
+          details: "Todos los alojamientos registrados",
+        },
+        {
+          label: "Actividades",
+          total: budgetByCategory("activities"),
+          details: "Parques, reservas y excursiones",
+        },
+        {
+          label: "Transporte",
+          total: budgetByCategory("transport"),
+          details: "Uber y otros desplazamientos",
+        },
+        {
+          label: "Alimentación",
+          total: budgetByCategory("food"),
+          details: `${formatNumber(supermarketTotal)} € en supermercados · ${formatNumber(restaurantTotal)} € fuera de casa`,
+        },
+        {
+          label: "Otros",
+          total: budgetByCategory("other"),
+          details: "eSIM y gimnasio",
+        },
+      ]
+    : [];
 ---
 
 <Layout title={title} description={description}>
@@ -149,23 +220,27 @@ const cashWithdrawalsTotal = trip.slug === "costa-rica"
     </section>
 
     <!-- =========================================================
-         FOTO — RÍO Y PLAYA
+         PAISAJE — FOTO INTEGRADA EN EL RELATO
     ========================================================== -->
-    <section
-      class="trip-photo-break"
-      aria-label="Paisaje de Costa Rica"
-    >
-      <figure class="trip-photo-break-figure">
+    <section class="trip-editorial-intro-photo">
+      <div class="trip-editorial-intro-copy">
+        <p class="trip-eyebrow">El paisaje</p>
+        <h2>Selva, carretera y mar. Todo forma parte del recorrido.</h2>
+        <p>
+          En Costa Rica, el paisaje cambia constantemente. A veces
+          el destino es una reserva o una playa. Otras veces es
+          simplemente la carretera que une una cosa con la siguiente.
+        </p>
+      </div>
+
+      <figure class="trip-editorial-intro-figure">
         <Image
           src={rioPlaya}
           alt="Río desembocando en una playa de Costa Rica"
           loading="lazy"
-          sizes="100vw"
+          sizes="(max-width: 900px) 100vw, 58vw"
         />
-
-        <figcaption>
-          Río y playa · Costa Rica
-        </figcaption>
+        <figcaption>Río y playa · Costa Rica</figcaption>
       </figure>
     </section>
 
@@ -329,69 +404,85 @@ const cashWithdrawalsTotal = trip.slug === "costa-rica"
     </section>
 
     <!-- =========================================================
-         NATURALEZA — BLOQUE FOTOGRÁFICO
+         NATURALEZA — RELATO VISUAL
     ========================================================== -->
-    <section class="trip-photo-story">
-      <div class="trip-photo-story-inner">
-        <div class="trip-photo-story-copy">
-          <p class="trip-eyebrow">
-            El paisaje
-          </p>
-
-          <h2>
-            La naturaleza no era el escenario.
-            Era parte del viaje.
-          </h2>
-
-          <p>
-            En Costa Rica, muchas de las decisiones de la ruta
-            acababan teniendo que ver con lo que había alrededor:
-            un bosque, una cascada, un río o simplemente una carretera
-            que merecía la pena recorrer despacio.
-          </p>
-        </div>
-
-        <div class="trip-photo-story-grid">
-          <figure class="trip-story-photo trip-story-photo-large">
-            <Image
-              src={bosqueCascada}
-              alt="Cascada entre el bosque tropical"
-              loading="lazy"
-              sizes="(max-width: 700px) 100vw, 55vw"
-            />
-
-            <figcaption>
-              Bosque y cascada
-            </figcaption>
-          </figure>
-
-          <figure class="trip-story-photo">
-            <Image
-              src={cascada}
-              alt="Cascada en un entorno de bosque"
-              loading="lazy"
-              sizes="(max-width: 700px) 100vw, 30vw"
-            />
-
-            <figcaption>
-              Agua y bosque
-            </figcaption>
-          </figure>
-
-          <figure class="trip-story-photo">
-            <Image
-              src={arbol}
-              alt="Árbol en el bosque tropical"
-              loading="lazy"
-              sizes="(max-width: 700px) 100vw, 30vw"
-            />
-
-            <figcaption>
-              El bosque
-            </figcaption>
-          </figure>
-        </div>
+    <section class="trip-editorial-story">
+      <div class="trip-editorial-story-heading">
+        <p class="trip-eyebrow">El paisaje</p>
+        <h2>La naturaleza no era el escenario. Era parte del viaje.</h2>
+        <p>
+          En Costa Rica, muchas decisiones de la ruta acababan teniendo
+          que ver con lo que había alrededor: un bosque, una cascada,
+          un río o simplemente una carretera que merecía la pena recorrer
+          despacio.
+        </p>
       </div>
+
+      <article class="trip-editorial-row">
+        <figure>
+          <Image
+            src={bosqueCascada}
+            alt="Cascada entre el bosque tropical"
+            loading="lazy"
+            sizes="(max-width: 900px) 100vw, 52vw"
+          />
+          <figcaption>Bosque y cascada</figcaption>
+        </figure>
+
+        <div>
+          <span class="trip-editorial-index">01</span>
+          <h3>Cuando el paisaje decide por ti</h3>
+          <p>
+            Había momentos en los que el plan dejaba de importar.
+            Una cascada, un cambio de vegetación o una parada inesperada
+            acababan marcando el ritmo del día.
+          </p>
+        </div>
+      </article>
+
+      <article class="trip-editorial-row trip-editorial-row-reverse">
+        <figure>
+          <Image
+            src={cascada}
+            alt="Cascada en un entorno de bosque"
+            loading="lazy"
+            sizes="(max-width: 900px) 100vw, 48vw"
+          />
+          <figcaption>Agua y bosque</figcaption>
+        </figure>
+
+        <div>
+          <span class="trip-editorial-index">02</span>
+          <h3>Parar también era parte del viaje</h3>
+          <p>
+            No todo tenía que estar optimizado. Algunas de las mejores
+            decisiones fueron sencillamente detener el coche y mirar
+            lo que teníamos delante.
+          </p>
+        </div>
+      </article>
+
+      <article class="trip-editorial-row">
+        <figure>
+          <Image
+            src={arbol}
+            alt="Árbol entre la vegetación del bosque"
+            loading="lazy"
+            sizes="(max-width: 900px) 100vw, 48vw"
+          />
+          <figcaption>El bosque</figcaption>
+        </figure>
+
+        <div>
+          <span class="trip-editorial-index">03</span>
+          <h3>El bosque estaba presente todo el tiempo</h3>
+          <p>
+            Incluso cuando no había una actividad concreta que hacer,
+            el entorno ya era suficiente motivo para seguir recorriendo
+            la ruta.
+          </p>
+        </div>
+      </article>
     </section>
 
     <!-- =========================================================
@@ -467,94 +558,99 @@ const cashWithdrawalsTotal = trip.slug === "costa-rica"
     </section>
 
     <!-- =========================================================
-         FAUNA
+         FAUNA — ENCUENTROS
     ========================================================== -->
-    <section class="trip-fauna">
-      <div class="trip-fauna-inner">
-        <div class="trip-fauna-header">
-          <p class="trip-eyebrow">
-            Encuentros inesperados
-          </p>
-
-          <h2>
-            Y luego están los animales.
-          </h2>
-
-          <p>
-            Parte de lo que hace especial un viaje por Costa Rica
-            es que la naturaleza aparece cuando menos te lo esperas.
-          </p>
-        </div>
-
-        <div class="trip-fauna-grid">
-          <figure
-            class="trip-fauna-photo trip-fauna-featured"
-          >
-            <Image
-              src={mono}
-              alt="Mono entre la vegetación tropical"
-              loading="lazy"
-              sizes="(max-width: 700px) 100vw, 50vw"
-            />
-
-            <figcaption>
-              Mono · entre la vegetación tropical
-            </figcaption>
-          </figure>
-
-          <figure class="trip-fauna-photo">
-            <Image
-              src={perezoso}
-              alt="Perezoso entre la vegetación tropical"
-              loading="lazy"
-              sizes="(max-width: 700px) 25vw"
-            />
-
-            <figcaption>
-              Perezoso · quietud en el bosque
-            </figcaption>
-          </figure>
-
-          <figure class="trip-fauna-photo">
-            <Image
-              src={cocodrilo}
-              alt="Cocodrilo en Costa Rica"
-              loading="lazy"
-              sizes="(max-width: 700px) 25vw"
-            />
-
-            <figcaption>
-              Cocodrilo · junto al agua
-            </figcaption>
-          </figure>
-
-          <figure class="trip-fauna-photo">
-            <Image
-              src={rana}
-              alt="Rana entre la vegetación tropical"
-              loading="lazy"
-              sizes="(max-width: 700px) 25vw"
-            />
-
-            <figcaption>
-              Rana · escondida entre el verde
-            </figcaption>
-          </figure>
-
-          <figure class="trip-fauna-photo trip-fauna-wide">
-            <Image
-              src={mono2}
-              alt="Mono en la vegetación tropical"
-              loading="lazy"
-              sizes="(max-width: 700px) 50vw"
-            />
-
-            <figcaption>
-              Otro encuentro · naturaleza a pie de ruta
-            </figcaption>
-          </figure>
-        </div>
+    <section class="trip-editorial-wildlife">
+      <div class="trip-editorial-wildlife-heading">
+        <p class="trip-eyebrow">Encuentros inesperados</p>
+        <h2>Y luego están los animales.</h2>
+        <p>
+          Parte de lo especial de viajar por Costa Rica es que la
+          naturaleza aparece cuando menos te lo esperas.
+        </p>
       </div>
+
+      <article class="trip-wildlife-row">
+        <figure>
+          <Image
+            src={mono}
+            alt="Mono entre la vegetación tropical"
+            loading="lazy"
+            sizes="(max-width: 900px) 100vw, 45vw"
+          />
+          <figcaption>Mono · entre la vegetación tropical</figcaption>
+        </figure>
+        <div>
+          <span class="trip-editorial-index">01</span>
+          <h3>Los animales no estaban en el guion.</h3>
+          <p>
+            Eran parte de esos momentos en los que el viaje se sale
+            de la ruta prevista y aparece algo que no habías ido a buscar.
+          </p>
+        </div>
+      </article>
+
+      <article class="trip-wildlife-row trip-wildlife-row-reverse">
+        <figure>
+          <Image
+            src={perezoso}
+            alt="Perezoso entre la vegetación tropical"
+            loading="lazy"
+            sizes="(max-width: 900px) 100vw, 42vw"
+          />
+          <figcaption>Perezoso · quietud en el bosque</figcaption>
+        </figure>
+        <div>
+          <span class="trip-editorial-index">02</span>
+          <h3>La paciencia también forma parte de viajar.</h3>
+          <p>
+            Algunos encuentros duran unos segundos. Otros obligan
+            a quedarse un poco más y observar.
+          </p>
+        </div>
+      </article>
+
+      <article class="trip-wildlife-row">
+        <figure>
+          <Image
+            src={cocodrilo}
+            alt="Cocodrilo junto al agua en Costa Rica"
+            loading="lazy"
+            sizes="(max-width: 900px) 100vw, 48vw"
+          />
+          <figcaption>Cocodrilo · junto al agua</figcaption>
+        </figure>
+        <div>
+          <span class="trip-editorial-index">03</span>
+          <h3>Y algunas escenas imponían respeto.</h3>
+          <p>
+            La fauna no siempre tiene apariencia amable. También forma
+            parte de la experiencia encontrarte con especies que
+            recuerdan lo salvaje que sigue siendo el entorno.
+          </p>
+        </div>
+      </article>
+
+      <article class="trip-wildlife-row trip-wildlife-row-reverse">
+        <figure>
+          <Image
+            src={rana}
+            alt="Rana entre la vegetación tropical"
+            loading="lazy"
+            sizes="(max-width: 900px) 100vw, 42vw"
+          />
+          <figcaption>Rana · escondida entre el verde</figcaption>
+        </figure>
+        <div>
+          <span class="trip-editorial-index">04</span>
+          <h3>Lo pequeño también merece una parada.</h3>
+          <p>
+            La memoria del viaje no se queda solo con los grandes
+            paisajes. A veces se queda con una escena diminuta que
+            apareció en el sitio menos esperado.
+          </p>
+        </div>
+      </article>
     </section>
 
     <!-- =========================================================
@@ -624,7 +720,9 @@ const cashWithdrawalsTotal = trip.slug === "costa-rica"
 
               <p>
                 Un viaje también se construye con los lugares que
-                decidimos dejar fuera.
+                decidimos dejar fuera. En nuestro mapa quedaron muchas
+                ideas y paradas posibles; aquí solo contamos como visita
+                lo que podemos sostener con nuestros registros.
               </p>
             </div>
 
@@ -705,54 +803,99 @@ const cashWithdrawalsTotal = trip.slug === "costa-rica"
           <div class="trip-budget-inner">
             <div class="trip-section-header">
               <div>
-                <p class="trip-eyebrow">
-                  El coste real
-                </p>
-
-                <h2>
-                  Presupuesto del viaje.
-                </h2>
+                <p class="trip-eyebrow">El coste real</p>
+                <h2>¿Cuánto costó realmente el viaje?</h2>
               </div>
             </div>
 
-            <div class="trip-budget-summary">
-              <div class="trip-budget-total">
-                <span>Gasto identificado</span>
-                <strong>{formatNumber(identifiedBudgetTotal)} <small>EUR</small></strong>
-              </div>
+            <div class="trip-budget-hero">
               <div>
-                <span>Efectivo retirado aparte</span>
-                <strong>{formatNumber(cashWithdrawalsTotal)} <small>EUR</small></strong>
+                <span class="trip-budget-kicker">Gasto registrado</span>
+                <strong>{formatNumber(identifiedBudgetTotal)} <small>€</small></strong>
+                <p>
+                  Es el total que podemos reconstruir con los gastos que
+                  tenemos registrados para este viaje.
+                </p>
+              </div>
+
+              <div class="trip-budget-cash-box">
+                <span>Dinero retirado en efectivo</span>
+                <strong>{formatNumber(cashWithdrawalsTotal)} <small>€</small></strong>
+                <p>
+                  Lo dejamos fuera del total hasta poder conciliarlo y
+                  evitar contar dos veces un mismo gasto.
+                </p>
               </div>
             </div>
 
-            <p class="trip-budget-note">
-              Reconstruido con los gastos de Tricount facilitados para este viaje.
-              Las retiradas de efectivo no se suman al total para evitar duplicidades.
-            </p>
+            <div class="trip-budget-groups">
+              {
+                budgetGroups.map((group, index) => (
+                  <article class="trip-budget-group">
+                    <div class="trip-budget-group-number">
+                      {String(index + 1).padStart(2, "0")}
+                    </div>
 
-            <div class="trip-budget-list">
-              {trip.budget.map((item) => (
-                <article class:list={[
-                  "trip-budget-item",
-                  { "trip-budget-item-cash": item.category === "cash" }
-                ]}>
-                  <div class="trip-budget-category">
-                    {formatBudgetCategory(item.category)}
-                  </div>
+                    <div class="trip-budget-group-copy">
+                      <h3>{group.label}</h3>
+                      <p>{group.details}</p>
+                    </div>
 
-                  <div class="trip-budget-description">
-                    {item.description}
-                    {item.notes && <small>{item.notes}</small>}
-                  </div>
-
-                  <div class="trip-budget-amount">
-                    {formatNumber(item.amount)}
-                    <span>{item.currency}</span>
-                  </div>
-                </article>
-              ))}
+                    <strong class="trip-budget-group-total">
+                      {formatNumber(group.total)} <small>€</small>
+                    </strong>
+                  </article>
+                ))
+              }
             </div>
+
+            {
+              trip.slug === "costa-rica" && (
+                <div class="trip-budget-food">
+                  <div>
+                    <span>Alimentación</span>
+                    <strong>{formatNumber(budgetByCategory("food"))} €</strong>
+                  </div>
+
+                  <div>
+                    <span>Supermercados</span>
+                    <strong>{formatNumber(supermarketTotal)} €</strong>
+                  </div>
+
+                  <div>
+                    <span>Restaurantes y comidas</span>
+                    <strong>{formatNumber(restaurantTotal)} €</strong>
+                  </div>
+                </div>
+              )
+            }
+
+            <details class="trip-budget-detail">
+              <summary>Ver el detalle de los gastos registrados</summary>
+
+              <div class="trip-budget-list">
+                {trip.budget.map((item) => (
+                  <article class:list={[
+                    "trip-budget-item",
+                    { "trip-budget-item-cash": item.category === "cash" }
+                  ]}>
+                    <div class="trip-budget-category">
+                      {formatBudgetCategory(item.category)}
+                    </div>
+
+                    <div class="trip-budget-description">
+                      {item.description}
+                      {item.notes && <small>{item.notes}</small>}
+                    </div>
+
+                    <div class="trip-budget-amount">
+                      {formatNumber(item.amount)}
+                      <span>{item.currency}</span>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </details>
           </div>
         </section>
       )
@@ -2665,5 +2808,427 @@ const cashWithdrawalsTotal = trip.slug === "costa-rica"
       grid-template-columns: 1fr;
     }
   }
+
+
+/* ============================================================
+   AUDITORÍA VISUAL — EDITORIAL 2026
+   Sin animaciones. Sin galerías flotantes.
+============================================================ */
+
+.trip-page {
+  --editorial-max: min(1120px, calc(100% - 3rem));
+}
+
+.trip-page .trip-editorial-intro-photo,
+.trip-page .trip-editorial-story,
+.trip-page .trip-editorial-wildlife {
+  width: var(--editorial-max);
+  margin-inline: auto;
+}
+
+.trip-page .trip-editorial-intro-photo {
+  display: grid;
+  grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+  padding: clamp(4rem, 8vw, 8rem) 0;
+}
+
+.trip-page .trip-editorial-intro-copy {
+  max-width: 34rem;
+}
+
+.trip-page .trip-editorial-intro-copy h2 {
+  max-width: 14ch;
+  margin: .8rem 0 1.3rem;
+}
+
+.trip-page .trip-editorial-intro-copy p:last-child {
+  max-width: 34rem;
+  line-height: 1.8;
+}
+
+.trip-page .trip-editorial-intro-figure {
+  position: relative;
+  margin: 0;
+}
+
+.trip-page .trip-editorial-intro-figure img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 1.25rem;
+}
+
+.trip-page .trip-editorial-intro-figure figcaption,
+.trip-page .trip-editorial-row figcaption,
+.trip-page .trip-wildlife-row figcaption {
+  position: static;
+  padding-top: .65rem;
+  color: rgba(22, 40, 31, .62);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  background: none;
+}
+
+.trip-page .trip-editorial-story {
+  padding: clamp(5rem, 10vw, 9rem) 0;
+}
+
+.trip-page .trip-editorial-story-heading,
+.trip-page .trip-editorial-wildlife-heading {
+  max-width: 46rem;
+  margin-bottom: clamp(3rem, 7vw, 6rem);
+}
+
+.trip-page .trip-editorial-story-heading h2,
+.trip-page .trip-editorial-wildlife-heading h2 {
+  max-width: 16ch;
+  margin: .8rem 0 1.2rem;
+}
+
+.trip-page .trip-editorial-story-heading > p:last-child,
+.trip-page .trip-editorial-wildlife-heading > p:last-child {
+  max-width: 42rem;
+  line-height: 1.8;
+}
+
+.trip-page .trip-editorial-row,
+.trip-page .trip-wildlife-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(280px, .88fr);
+  gap: clamp(2.5rem, 7vw, 7rem);
+  align-items: center;
+  margin-top: clamp(3.5rem, 7vw, 7rem);
+}
+
+.trip-page .trip-editorial-row-reverse,
+.trip-page .trip-wildlife-row-reverse {
+  grid-template-columns: minmax(280px, .88fr) minmax(0, 1.12fr);
+}
+
+.trip-page .trip-editorial-row-reverse figure,
+.trip-page .trip-wildlife-row-reverse figure {
+  order: 2;
+}
+
+.trip-page .trip-editorial-row-reverse > div,
+.trip-page .trip-wildlife-row-reverse > div {
+  order: 1;
+}
+
+.trip-page .trip-editorial-row figure,
+.trip-page .trip-wildlife-row figure {
+  margin: 0;
+}
+
+.trip-page .trip-editorial-row img,
+.trip-page .trip-wildlife-row img {
+  display: block;
+  width: 100%;
+  max-height: 620px;
+  object-fit: contain;
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, .025);
+}
+
+.trip-page .trip-editorial-row > div,
+.trip-page .trip-wildlife-row > div {
+  max-width: 30rem;
+}
+
+.trip-page .trip-editorial-index {
+  display: inline-block;
+  margin-bottom: .8rem;
+  color: var(--color-cobre);
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+}
+
+.trip-page .trip-editorial-row h3,
+.trip-page .trip-wildlife-row h3 {
+  margin: 0 0 1rem;
+  max-width: 16ch;
+}
+
+.trip-page .trip-editorial-row p,
+.trip-page .trip-wildlife-row p {
+  margin: 0;
+  max-width: 32rem;
+  line-height: 1.85;
+}
+
+.trip-page .trip-editorial-wildlife {
+  padding: clamp(5rem, 10vw, 9rem) 0;
+}
+
+.trip-page .trip-wildlife-row img {
+  max-height: 560px;
+}
+
+.trip-page .trip-budget-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, .55fr);
+  gap: 1rem;
+  margin: 2rem 0 3rem;
+}
+
+.trip-page .trip-budget-hero > div,
+.trip-page .trip-budget-cash-box {
+  padding: clamp(1.5rem, 3vw, 2.3rem);
+  border-radius: 1.25rem;
+}
+
+.trip-page .trip-budget-hero > div {
+  background: var(--color-verde-oscuro, #173328);
+  color: white;
+}
+
+.trip-page .trip-budget-kicker,
+.trip-page .trip-budget-cash-box > span {
+  display: block;
+  margin-bottom: .55rem;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.trip-page .trip-budget-hero strong {
+  display: block;
+  font-size: clamp(3rem, 7vw, 5.4rem);
+  line-height: .95;
+}
+
+.trip-page .trip-budget-hero strong small,
+.trip-page .trip-budget-group-total small {
+  font-size: .42em;
+}
+
+.trip-page .trip-budget-hero p,
+.trip-page .trip-budget-cash-box p {
+  max-width: 38rem;
+  margin: 1rem 0 0;
+  line-height: 1.7;
+}
+
+.trip-page .trip-budget-cash-box {
+  background: rgba(22, 40, 31, .06);
+  border: 1px solid rgba(22, 40, 31, .12);
+}
+
+.trip-page .trip-budget-cash-box strong {
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  color: var(--color-cobre);
+}
+
+.trip-page .trip-budget-groups {
+  border-top: 1px solid rgba(22, 40, 31, .14);
+}
+
+.trip-page .trip-budget-group {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid rgba(22, 40, 31, .12);
+}
+
+.trip-page .trip-budget-group-number {
+  color: rgba(22, 40, 31, .42);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+}
+
+.trip-page .trip-budget-group-copy h3 {
+  margin: 0 0 .2rem;
+}
+
+.trip-page .trip-budget-group-copy p {
+  margin: 0;
+  color: rgba(22, 40, 31, .62);
+  font-size: .86rem;
+}
+
+.trip-page .trip-budget-group-total {
+  white-space: nowrap;
+  font-size: 1.15rem;
+}
+
+.trip-page .trip-budget-food {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .75rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.trip-page .trip-budget-food > div {
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(22, 40, 31, .1);
+  border-radius: .9rem;
+}
+
+.trip-page .trip-budget-food span,
+.trip-page .trip-budget-food strong {
+  display: block;
+}
+
+.trip-page .trip-budget-food span {
+  margin-bottom: .3rem;
+  color: rgba(22, 40, 31, .6);
+  font-size: .78rem;
+}
+
+.trip-page .trip-budget-detail {
+  margin-top: 2rem;
+  border-top: 1px solid rgba(22, 40, 31, .12);
+  padding-top: 1rem;
+}
+
+.trip-page .trip-budget-detail summary {
+  cursor: pointer;
+  font-weight: 700;
+  list-style-position: inside;
+}
+
+.trip-page .trip-budget-detail .trip-budget-list {
+  margin-top: 1rem;
+}
+
+.trip-page .trip-budget-description small {
+  display: block;
+  margin-top: .25rem;
+  color: rgba(22, 40, 31, .5);
+}
+
+@media (max-width: 900px) {
+  .trip-page .trip-editorial-intro-photo,
+  .trip-page .trip-editorial-row,
+  .trip-page .trip-wildlife-row,
+  .trip-page .trip-budget-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .trip-page .trip-editorial-row-reverse figure,
+  .trip-page .trip-wildlife-row-reverse figure,
+  .trip-page .trip-editorial-row-reverse > div,
+  .trip-page .trip-wildlife-row-reverse > div {
+    order: initial;
+  }
+
+  .trip-page .trip-editorial-row h3,
+  .trip-page .trip-wildlife-row h3 {
+    max-width: none;
+  }
+
+  .trip-page .trip-budget-food {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .trip-page {
+    --editorial-max: min(100% - 1.5rem, 1120px);
+  }
+
+  .trip-page .trip-editorial-intro-photo,
+  .trip-page .trip-editorial-story,
+  .trip-page .trip-editorial-wildlife {
+    padding-block: 4rem;
+  }
+
+  .trip-page .trip-budget-group {
+    grid-template-columns: 2.2rem minmax(0, 1fr);
+  }
+
+  .trip-page .trip-budget-group-total {
+    grid-column: 2;
+  }
+}
+
+/* Esta página deja de depender de animaciones para comunicar jerarquía. */
+.trip-page .trip-editorial-intro-photo *,
+.trip-page .trip-editorial-row *,
+.trip-page .trip-wildlife-row * {
+  animation: none !important;
+  transition: none !important;
+}
+
+
+/* ============================================================
+   AUDITORÍA FINAL — MOVIMIENTO
+============================================================ */
+
+.trip-page,
+.trip-page *,
+.trip-page *::before,
+.trip-page *::after {
+  animation: none !important;
+  animation-delay: 0s !important;
+  animation-duration: 0s !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+.trip-page figure {
+  overflow: hidden;
+}
+
+.trip-page .trip-editorial-row figure,
+.trip-page .trip-wildlife-row figure {
+  overflow: visible;
+}
+
+.trip-page .trip-editorial-row,
+.trip-page .trip-wildlife-row {
+  margin-bottom: clamp(2rem, 5vw, 5rem);
+}
+
+.trip-page .trip-editorial-row:last-child,
+.trip-page .trip-wildlife-row:last-child {
+  margin-bottom: 0;
+}
+
+@media (min-width: 901px) {
+  .trip-page .trip-editorial-row img,
+  .trip-page .trip-wildlife-row img {
+    max-height: 540px;
+    object-fit: contain;
+  }
+
+  .trip-page .trip-editorial-row figure,
+  .trip-page .trip-wildlife-row figure {
+    max-width: 700px;
+  }
+
+  .trip-page .trip-editorial-row-reverse figure,
+  .trip-page .trip-wildlife-row-reverse figure {
+    justify-self: end;
+  }
+}
+
+@media (max-width: 900px) {
+  .trip-page .trip-editorial-intro-photo {
+    gap: 2rem;
+  }
+
+  .trip-page .trip-editorial-row,
+  .trip-page .trip-wildlife-row {
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+    gap: 1.75rem;
+  }
+
+  .trip-page .trip-editorial-row img,
+  .trip-page .trip-wildlife-row img {
+    max-height: none;
+  }
+}
 
 </style>
