@@ -20,8 +20,7 @@
         <div class="step-content">
           <h3>Nos cuentas cómo quieres vivirlo</h3>
           <p>
-            Qué te apetece, cuánto tiempo tienes, con quién viajas, qué te preocupa y qué quieres evitar.
-            No necesitas llegar con el viaje resuelto.
+            Qué te apetece, cuánto tiempo tienes, con quién viajas y qué quieres evitar. No necesitas llegar con el viaje resuelto.
           </p>
         </div>
       </article>
@@ -31,8 +30,7 @@
         <div class="step-content">
           <h3>Investigamos y filtramos</h3>
           <p>
-            Contrastamos información, rutas, alojamientos, tiempos y experiencias. Quitamos ruido
-            y damos prioridad a lo que encaja contigo y con la realidad del destino.
+            Contrastamos rutas, alojamientos, tiempos y experiencias. Quitamos ruido y nos quedamos con lo que realmente encaja contigo y con la realidad del destino.
           </p>
         </div>
       </article>
@@ -42,8 +40,7 @@
         <div class="step-content">
           <h3>Te enseñamos las decisiones, no solo el resultado</h3>
           <p>
-            Recibes una propuesta razonada: qué recomendamos, por qué, qué alternativas existen
-            y dónde merece la pena cambiar de plan.
+            Recibes una propuesta razonada: qué recomendamos, por qué, qué alternativas tienes y dónde merece la pena cambiar de plan.
           </p>
         </div>
       </article>
@@ -54,12 +51,20 @@
       <div>
         <h3>Un viaje pensado de verdad.</h3>
         <p>
-          No una colección de enlaces. Una ruta con sentido, decisiones claras y el contexto necesario
-          para que puedas disfrutarla con tranquilidad.
+          Una propuesta clara para que sepas qué hacer, por qué lo recomendamos
+          y cómo encaja cada decisión dentro del viaje.
         </p>
+
+        <div class="deliverable-points" aria-label="Qué incluye la propuesta">
+          <span>Ruta con sentido</span>
+          <span>Alojamientos filtrados</span>
+          <span>Experiencias seleccionadas</span>
+          <span>Alternativas cuando conviene</span>
+        </div>
       </div>
+
       <a href="/cuentatuviaje" class="deliverable-link">
-        Cuéntanos tu viaje <span aria-hidden="true">↗</span>
+        Empezar mi viaje <span aria-hidden="true">↗</span>
       </a>
     </div>
 
@@ -177,6 +182,23 @@
     line-height: 1.7;
   }
 
+  .deliverable-points {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .55rem;
+    margin-top: 1.35rem;
+  }
+
+  .deliverable-points span {
+    display: inline-flex;
+    padding: .55rem .75rem;
+    border: 1px solid rgba(251, 249, 245, .16);
+    border-radius: 999px;
+    color: rgba(251, 249, 245, .76);
+    font-size: .78rem;
+    line-height: 1.3;
+  }
+
   .deliverable-link {
     display: inline-flex;
     align-items: center;
@@ -248,6 +270,14 @@
       grid-template-columns: 1fr;
       gap: .8rem;
       padding: 1.75rem 0;
+    }
+
+    .deliverable-points {
+      gap: .45rem;
+    }
+
+    .deliverable-points span {
+      font-size: .74rem;
     }
 
     .deliverable-link {
