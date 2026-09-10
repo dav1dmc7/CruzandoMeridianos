@@ -63,11 +63,6 @@ const identifiedBudgetTotal = trip.slug === "costa-rica"
       .reduce((total, item) => total + item.amount, 0)
   : 0;
 
-const cashWithdrawalsTotal = trip.slug === "costa-rica"
-  ? trip.budget
-      .filter((item) => item.category === "cash")
-      .reduce((total, item) => total + item.amount, 0)
-  : 0;
 
 const budgetByCategory = (category: string) =>
   trip.budget
@@ -186,10 +181,6 @@ const budgetGroups =
               loading="eager"
               sizes="(max-width: 900px) 100vw, 48vw"
             />
-
-            <figcaption>
-              Costa Rica · naturaleza, carretera y descubrimiento
-            </figcaption>
           </figure>
         </div>
       </div>
@@ -240,7 +231,6 @@ const budgetGroups =
           loading="lazy"
           sizes="(max-width: 900px) 100vw, 58vw"
         />
-        <figcaption>Río y playa · Costa Rica</figcaption>
       </figure>
     </section>
 
@@ -426,7 +416,6 @@ const budgetGroups =
             loading="lazy"
             sizes="(max-width: 900px) 100vw, 52vw"
           />
-          <figcaption>Bosque y cascada</figcaption>
         </figure>
 
         <div>
@@ -448,7 +437,6 @@ const budgetGroups =
             loading="lazy"
             sizes="(max-width: 900px) 100vw, 48vw"
           />
-          <figcaption>Agua y bosque</figcaption>
         </figure>
 
         <div>
@@ -470,7 +458,6 @@ const budgetGroups =
             loading="lazy"
             sizes="(max-width: 900px) 100vw, 48vw"
           />
-          <figcaption>El bosque</figcaption>
         </figure>
 
         <div>
@@ -578,7 +565,6 @@ const budgetGroups =
             loading="lazy"
             sizes="(max-width: 900px) 100vw, 45vw"
           />
-          <figcaption>Mono · entre la vegetación tropical</figcaption>
         </figure>
         <div>
           <span class="trip-editorial-index">01</span>
@@ -598,7 +584,6 @@ const budgetGroups =
             loading="lazy"
             sizes="(max-width: 900px) 100vw, 42vw"
           />
-          <figcaption>Perezoso · quietud en el bosque</figcaption>
         </figure>
         <div>
           <span class="trip-editorial-index">02</span>
@@ -618,7 +603,6 @@ const budgetGroups =
             loading="lazy"
             sizes="(max-width: 900px) 100vw, 48vw"
           />
-          <figcaption>Cocodrilo · junto al agua</figcaption>
         </figure>
         <div>
           <span class="trip-editorial-index">03</span>
@@ -639,7 +623,6 @@ const budgetGroups =
             loading="lazy"
             sizes="(max-width: 900px) 100vw, 42vw"
           />
-          <figcaption>Rana · escondida entre el verde</figcaption>
         </figure>
         <div>
           <span class="trip-editorial-index">04</span>
@@ -817,15 +800,6 @@ const budgetGroups =
                   tenemos registrados para este viaje.
                 </p>
               </div>
-
-              <div class="trip-budget-cash-box">
-                <span>Dinero retirado en efectivo</span>
-                <strong>{formatNumber(cashWithdrawalsTotal)} <small>€</small></strong>
-                <p>
-                  Lo dejamos fuera del total hasta poder conciliarlo y
-                  evitar contar dos veces un mismo gasto.
-                </p>
-              </div>
             </div>
 
             <div class="trip-budget-groups">
@@ -916,10 +890,6 @@ const budgetGroups =
             loading="lazy"
             sizes="100vw"
           />
-
-          <figcaption>
-            El viaje también termina aquí.
-          </figcaption>
         </figure>
       </div>
     </section>
@@ -2932,7 +2902,6 @@ const budgetGroups =
   max-height: 620px;
   object-fit: contain;
   border-radius: 1rem;
-  background: rgba(0, 0, 0, .025);
 }
 
 .trip-page .trip-editorial-row > div,
@@ -3178,11 +3147,6 @@ const budgetGroups =
 
 .trip-page figure {
   overflow: hidden;
-}
-
-.trip-page .trip-editorial-row figure,
-.trip-page .trip-wildlife-row figure {
-  overflow: visible;
 }
 
 .trip-page .trip-editorial-row,
