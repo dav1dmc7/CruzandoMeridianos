@@ -38,13 +38,16 @@ const destinationUrl = Astro.url.pathname.startsWith("/nuestros-viajes")
             loading={featured ? "eager" : "lazy"}
             sizes={featured ? "(min-width: 1000px) 58vw, 100vw" : "(min-width: 1000px) 55vw, 100vw"}
           />
+          <span class="destination-image-label">
+            Ver guía <span aria-hidden="true">↗</span>
+          </span>
         </a>
       ) : (
         <Image
           src={destination.image}
           alt={destination.imageAlt}
           loading={featured ? "eager" : "lazy"}
-            sizes={featured ? "(min-width: 1000px) 58vw, 100vw" : "(min-width: 1000px) 55vw, 100vw"}
+          sizes={featured ? "(min-width: 1000px) 58vw, 100vw" : "(min-width: 1000px) 55vw, 100vw"}
         />
       )}
 
@@ -59,17 +62,11 @@ const destinationUrl = Astro.url.pathname.startsWith("/nuestros-viajes")
           En preparación
         </span>
       )}
-
-      {isReady && (
-        <span class="destination-image-label">
-          Explorar destino <span aria-hidden="true">↗</span>
-        </span>
-      )}
     </div>
 
     <div class="destination-copy">
       <span class="destination-kicker">
-        {destination.status === "ready" ? "Guía de viaje" : "Próximamente"}
+        {isReady ? "Guía de viaje" : "Próximamente"}
       </span>
 
       <h3>
@@ -141,9 +138,12 @@ const destinationUrl = Astro.url.pathname.startsWith("/nuestros-viajes")
 }
 
 .destination-image-link {
+  position: relative;
   display: block;
   width: 100%;
   height: 100%;
+  color: inherit;
+  text-decoration: none;
 }
 
 .destination-image img {
@@ -174,8 +174,8 @@ const destinationUrl = Astro.url.pathname.startsWith("/nuestros-viajes")
   background:
     linear-gradient(
       180deg,
-      rgba(13, 29, 21, .08) 0%,
-      transparent 42%,
+      rgba(13, 29, 21, .06) 0%,
+      transparent 48%,
       rgba(13, 29, 21, .5) 100%
     );
 }
@@ -203,7 +203,7 @@ const destinationUrl = Astro.url.pathname.startsWith("/nuestros-viajes")
   position: absolute;
   right: 1.35rem;
   bottom: 1.35rem;
-  z-index: 2;
+  z-index: 3;
   display: inline-flex;
   align-items: center;
   gap: .45rem;
@@ -235,7 +235,7 @@ const destinationUrl = Astro.url.pathname.startsWith("/nuestros-viajes")
   position: absolute;
   left: 1.35rem;
   bottom: 1.35rem;
-  z-index: 2;
+  z-index: 3;
   padding: .58rem .75rem;
   border: 1px solid rgba(255,255,255,.3);
   border-radius: 999px;
@@ -403,17 +403,14 @@ const destinationUrl = Astro.url.pathname.startsWith("/nuestros-viajes")
     line-height: 1.7;
   }
 
-  .destination-number,
-  .destination-status,
-  .destination-image-label {
-    top: auto;
-    bottom: 1rem;
-  }
-
   .destination-number {
     top: 1rem;
-    bottom: auto;
     left: 1rem;
+  }
+
+  .destination-status,
+  .destination-image-label {
+    bottom: 1rem;
   }
 
   .destination-status {

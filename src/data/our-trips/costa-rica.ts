@@ -1112,7 +1112,6 @@ const accommodations: TripAccommodation[] = [
  */
 
 const budget: TripBudgetItem[] = [
-
   {
     category: "flights",
     amount: 1241.52,
@@ -1121,7 +1120,6 @@ const budget: TripBudgetItem[] = [
     paidBy: "Itciar",
     source: "tricount",
   },
-
   {
     category: "car",
     amount: 566.17,
@@ -1131,106 +1129,50 @@ const budget: TripBudgetItem[] = [
     source: "tricount",
   },
 
-  {
-    category: "fuel",
-    amount: 0,
-    currency: "EUR",
-    description:
-      "Combustible — pendiente de consolidar todos los pagos de gasolina.",
-    paidBy: "shared",
-    source: "revolut",
-  },
+  { category: "fuel", amount: 20.22, currency: "EUR", description: "Gasolina · 25 de mayo", paidBy: "David", source: "tricount" },
+  { category: "fuel", amount: 44.53, currency: "EUR", description: "Gasolina · 21 de mayo", paidBy: "David", source: "tricount" },
+  { category: "fuel", amount: 39.88, currency: "EUR", description: "Gasolina · 20 de mayo", paidBy: "Itciar", source: "tricount" },
+  { category: "fuel", amount: 40.42, currency: "EUR", description: "Gasolina · 15 de mayo", paidBy: "Itciar", source: "tricount" },
+  { category: "fuel", amount: 45.67, currency: "EUR", description: "Gasolina · 14 de mayo", paidBy: "Itciar", source: "tricount" },
 
-  {
-    category: "accommodation",
-    amount: 58.93,
-    currency: "EUR",
-    description: "Hotel Manuel Antonio",
-    paidBy: "David",
-    source: "tricount",
-  },
+  { category: "accommodation", amount: 32.95, currency: "EUR", description: "Hotel San José", paidBy: "David", source: "tricount" },
+  { category: "accommodation", amount: 216.57, currency: "EUR", description: "Hotel Uvita", paidBy: "David", source: "tricount" },
+  { category: "accommodation", amount: 58.93, currency: "EUR", description: "Hotel Manuel Antonio", paidBy: "David", source: "tricount" },
+  { category: "accommodation", amount: 55.93, currency: "EUR", description: "Hotel Perico en Jacó", paidBy: "David", source: "tricount" },
+  { category: "accommodation", amount: 43.08, currency: "EUR", description: "Hotel Monteverde", paidBy: "Itciar", source: "tricount" },
+  { category: "accommodation", amount: 45.50, currency: "EUR", description: "Hotel La Fortuna", paidBy: "Itciar", source: "tricount" },
+  { category: "accommodation", amount: 232.12, currency: "EUR", description: "Hotel Puerto Viejo", paidBy: "Itciar", source: "tricount" },
 
-  {
-    category: "accommodation",
-    amount: 55.93,
-    currency: "EUR",
-    description: "Hotel Perico / Jacó",
-    paidBy: "David",
-    source: "tricount",
-  },
+  { category: "activities", amount: 274.99, currency: "EUR", description: "Corcovado", paidBy: "David", source: "tricount" },
+  { category: "activities", amount: 43.65, currency: "EUR", description: "Reserva Curi Cancha", paidBy: "Itciar", source: "tricount" },
+  { category: "activities", amount: 29.16, currency: "EUR", description: "Reserva Las Pumas", paidBy: "Itciar", source: "tricount" },
+  { category: "activities", amount: 34.31, currency: "EUR", description: "Catarata La Fortuna", paidBy: "Itciar", source: "tricount" },
+  { category: "activities", amount: 9.80, currency: "EUR", description: "Parque Nacional Cahuita", paidBy: "Itciar", source: "tricount" },
+  { category: "activities", amount: 31.37, currency: "EUR", description: "Parque Nacional Manuel Antonio", paidBy: "David", source: "tricount" },
 
-  {
-    category: "accommodation",
-    amount: 216.57,
-    currency: "EUR",
-    description: "Hotel Uvita",
-    paidBy: "David",
-    source: "tricount",
-  },
+  { category: "transport", amount: 12.90, currency: "EUR", description: "Uber · 25 de mayo", paidBy: "David", source: "tricount" },
+  { category: "transport", amount: 8.95, currency: "EUR", description: "Uber aeropuerto · 10 de mayo", paidBy: "David", source: "tricount" },
 
-  {
-    category: "accommodation",
-    amount: 234.39,
-    currency: "EUR",
-    description: "Atlantida Lodge / Cahuita",
-    paidBy: "Itciar",
-    source: "revolut",
-  },
+  { category: "food", amount: 4.44, currency: "EUR", description: "Super · 21 de mayo", paidBy: "David", source: "tricount" },
+  { category: "food", amount: 16.70, currency: "EUR", description: "Super · 20 de mayo", paidBy: "Itciar", source: "tricount" },
+  { category: "food", amount: 14.53, currency: "EUR", description: "Soda Monteverde", paidBy: "Itciar", source: "tricount" },
+  { category: "food", amount: 1.61, currency: "EUR", description: "Super · 15 de mayo", paidBy: "Itciar", source: "tricount" },
+  { category: "food", amount: 10.38, currency: "EUR", description: "Super · 14 de mayo", paidBy: "Itciar", source: "tricount" },
+  { category: "food", amount: 25.40, currency: "EUR", description: "Super · 13 de mayo", paidBy: "Itciar", source: "tricount" },
+  { category: "food", amount: 17.11, currency: "EUR", description: "Soda Post Cahuita", paidBy: "Itciar", source: "tricount" },
+  { category: "food", amount: 2.80, currency: "EUR", description: "Super · 13 de mayo", paidBy: "Itciar", source: "tricount" },
+  { category: "food", amount: 15.57, currency: "EUR", description: "Comida Aromas y Sabores", paidBy: "Itciar", source: "tricount" },
+  { category: "food", amount: 2.45, currency: "EUR", description: "Super · 12 de mayo", paidBy: "Itciar", source: "tricount" },
+  { category: "food", amount: 1.78, currency: "EUR", description: "Super · 11 de mayo", paidBy: "Itciar", source: "tricount" },
+  { category: "food", amount: 32.90, currency: "EUR", description: "Súper · 11 de mayo", paidBy: "Itciar", source: "tricount" },
 
-  {
-    category: "activities",
-    amount: 274.99,
-    currency: "EUR",
-    description: "Experiencia Corcovado",
-    paidBy: "David",
-    source: "tricount",
-  },
+  { category: "other", amount: 36.30, currency: "EUR", description: "eSIM", paidBy: "Itciar", source: "tricount" },
+  { category: "other", amount: 11.78, currency: "EUR", description: "Gimnasio · 23 de mayo", paidBy: "David", source: "tricount" },
+  { category: "other", amount: 11.53, currency: "EUR", description: "Gimnasio · 21 de mayo", paidBy: "David", source: "tricount" },
 
-  {
-    category: "activities",
-    amount: 31.37,
-    currency: "EUR",
-    description: "Parque Nacional Manuel Antonio",
-    paidBy: "David",
-    source: "tricount",
-  },
-
-  {
-    category: "activities",
-    amount: 43.22,
-    currency: "EUR",
-    description: "Reserva Curi Cancha",
-    paidBy: "Itciar",
-    source: "revolut",
-  },
-
-  {
-    category: "activities",
-    amount: 34.31,
-    currency: "EUR",
-    description: "Catarata La Fortuna",
-    paidBy: "Itciar",
-    source: "tricount",
-  },
-
-  {
-    category: "activities",
-    amount: 29.16,
-    currency: "EUR",
-    description: "Reserva Las Pumas",
-    paidBy: "Itciar",
-    source: "tricount",
-  },
-
-  {
-    category: "transport",
-    amount: 34.31,
-    currency: "EUR",
-    description: "Transporte / gasto pendiente de categorizar",
-    paidBy: "Itciar",
-    source: "revolut",
-  },
-];
+  { category: "cash", amount: 17.24, currency: "EUR", description: "Retirada de efectivo · 14 de mayo", paidBy: "Itciar", source: "tricount", notes: "No incluida en el total: retirada de efectivo pendiente de conciliar." },
+  { category: "cash", amount: 37.88, currency: "EUR", description: "Retirada de dinero · 13 de mayo", paidBy: "Itciar", source: "tricount", notes: "No incluida en el total: retirada de efectivo pendiente de conciliar." },
+]
 
 
 /**
