@@ -1,0 +1,45 @@
+<section class="proof-work" aria-labelledby="proof-work-title">
+  <div class="proof-work-inner">
+    <div class="proof-work-heading">
+      <p class="eyebrow">NO TE PEDIMOS QUE NOS CREAS</p>
+      <h2 id="proof-work-title">Puedes ver cómo pensamos antes de confiarnos tu viaje.</h2>
+    </div>
+
+    <div class="proof-work-grid">
+      <a href="/viajes/costa-rica">
+        <span>01 · GUÍA</span>
+        <strong>Cómo investigamos un destino</strong>
+        <p>Una guía editorial con contexto, fuentes, avisos, decisiones y revisión.</p>
+        <span class="proof-link">Ver Costa Rica ↗</span>
+      </a>
+      <a href="/nuestros-viajes/costa-rica">
+        <span>02 · EXPERIENCIA</span>
+        <strong>Qué aprendemos cuando viajamos</strong>
+        <p>Experiencia sobre el terreno, decisiones reales y cosas que hoy haríamos de otra manera.</p>
+        <span class="proof-link">Ver nuestro viaje ↗</span>
+      </a>
+      <a href="/como-trabajamos">
+        <span>03 · MÉTODO</span>
+        <strong>Qué ocurre cuando trabajamos contigo</strong>
+        <p>El proceso completo: entender, investigar, construir y refinar.</p>
+        <span class="proof-link">Conocer el proceso ↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .proof-work { padding: 9rem 2rem; background: var(--color-bosque); color: var(--color-papel); }
+  .proof-work-inner { width: min(var(--content-width),100%); margin: 0 auto; }
+  .eyebrow { margin: 0 0 1.35rem; color: var(--color-cobre); font-size: .72rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+  .proof-work-heading { max-width: 820px; }
+  .proof-work h2 { margin: 0; font-family: var(--font-serif); font-size: clamp(3rem,5.2vw,5.3rem); font-weight: 400; line-height: .98; letter-spacing: -.04em; }
+  .proof-work-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1px; margin-top: 5rem; background: rgba(251,249,245,.14); }
+  .proof-work-grid a { min-height: 330px; padding: 2rem; background: var(--color-bosque); color: inherit; text-decoration: none; display: flex; flex-direction: column; border: 1px solid rgba(251,249,245,.14); transition: background .2s ease, transform .2s ease; }
+  .proof-work-grid a:hover { background: #244032; transform: translateY(-2px); }
+  .proof-work-grid a > span:first-child { color: var(--color-cobre); font-size: .68rem; font-weight: 600; letter-spacing: 1.6px; }
+  .proof-work strong { display: block; margin-top: 4.5rem; max-width: 360px; font-family: var(--font-serif); font-size: 2rem; font-weight: 400; line-height: 1.05; }
+  .proof-work p { margin: 1rem 0 0; color: rgba(251,249,245,.68); font-size: .95rem; line-height: 1.7; }
+  .proof-link { margin-top: auto; padding-top: 2rem; color: var(--color-papel); font-size: .85rem; font-weight: 600; }
+  @media (max-width: 900px) { .proof-work { padding: 7rem 1.5rem; } .proof-work-grid { grid-template-columns: 1fr; margin-top: 3.5rem; } .proof-work-grid a { min-height: 250px; } .proof-work strong { margin-top: 3rem; } }
+</style>
