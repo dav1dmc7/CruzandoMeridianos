@@ -113,6 +113,17 @@ import Footer from "../components/layout/Footer.astro";
           novalidate
         >
 
+          <div class="honeypot-field" aria-hidden="true">
+            <label for="website">Website</label>
+            <input
+              id="website"
+              name="website"
+              type="text"
+              tabindex="-1"
+              autocomplete="off"
+            />
+          </div>
+
           <!-- =================================================
                01 · EL VIAJE
           ================================================== -->
@@ -1177,6 +1188,15 @@ import Footer from "../components/layout/Footer.astro";
 
   .journey-page {
     background: var(--color-papel);
+  }
+
+
+  .honeypot-field {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
   }
 
 

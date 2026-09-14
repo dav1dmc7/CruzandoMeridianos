@@ -20,7 +20,7 @@ export interface Destination {
   number: string;
   description: string;
   image?: ImageMetadata;
-  imageAlt: string;
+  imageAlt?: string;
   continent: DestinationContinent;
   status: "ready" | "coming-soon";
 }

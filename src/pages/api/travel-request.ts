@@ -89,6 +89,40 @@ export const POST: APIRoute = async ({ request }) => {
     if (await isRateLimited(request)) return new Response(JSON.stringify({ success: false, error: "Has enviado varias solicitudes seguidas. Espera unos minutos antes de intentarlo de nuevo." }), { status: 429, headers: { "Content-Type": "application/json", "Retry-After": String(RATE_LIMIT_WINDOW_SECONDS) } });
 
     const data = (await request.json()) as TravelRequestData;
+
+    const limits: Record<string, number> = {
+      trip: 5000,
+      travellers: 2500,
+      age_range: 120,
+      dates: 500,
+      budget: 250,
+      budget_flights: 250,
+      experience: 3000,
+      avoid: 3000,
+      style: 3000,
+      pace: 250,
+      anything: 5000,
+      name: 160,
+      email: 320,
+    };
+
+    for (const [field, maxLength] of Object.entries(limits)) {
+      const value = data[field as keyof TravelRequestData];
+      if (typeof value === "string" && value.length > maxLength) {
+        return new Response(JSON.stringify({ success: false, error: "Alguno de los campos supera la longitud permitida." }), {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+    }
+
+    if (Array.isArray(data.transport) && data.transport.length > 10) {
+      return new Response(JSON.stringify({ success: false, error: "La selección de transporte no es válida." }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     if (data.website?.trim()) return new Response(JSON.stringify({ success: true }), { status: 201, headers: { "Content-Type": "application/json" } });
 
     const { trip, travellers, age_range, dates, budget, budget_flights, experience, transport, avoid, style, pace, anything, name, email } = data;

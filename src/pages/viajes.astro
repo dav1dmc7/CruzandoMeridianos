@@ -74,17 +74,35 @@ const continents: DestinationContinent[] = [
         <div class="destination-results" data-destination-results>
           {destinations.map((destination) => {
             const isReady = destination.status === "ready";
+
             return (
-              <article class:list={["destination-result", { "destination-result--disabled": !isReady }]} data-destination-card data-name={destination.name.toLowerCase()} data-continent={destination.continent}>
+              <article
+                class:list={["destination-result", { "destination-result--disabled": !isReady }]}
+                data-destination-card
+                data-name={destination.name.toLowerCase()}
+                data-continent={destination.continent}
+              >
                 {isReady ? (
-                  <a href={`/viajes/${destination.slug}`} class="destination-result-link" aria-label={`Explorar ${destination.name}`}>
+                  <a
+                    href={`/viajes/${destination.slug}`}
+                    class="destination-result-link"
+                    aria-label={`Explorar ${destination.name}`}
+                  >
                     <span class="destination-result-number">{destination.number}</span>
                     <span class="destination-result-copy">
                       <strong>{destination.name}</strong>
                       <small>{destination.continent}</small>
                     </span>
                     <span class="destination-result-image" aria-hidden="true">
-                      <Image src={destination.image} alt="" loading="lazy" />
+                      {destination.image ? (
+                        <Image
+                          src={destination.image}
+                          alt=""
+                          loading="lazy"
+                        />
+                      ) : (
+                        <span class="destination-result-image-placeholder">CM</span>
+                      )}
                     </span>
                     <span class="destination-result-status">Explorar ↗</span>
                   </a>
@@ -97,7 +115,11 @@ const continents: DestinationContinent[] = [
                     </span>
                     <span class="destination-result-image" aria-hidden="true">
                       {destination.image ? (
-                        <Image src={destination.image} alt="" loading="lazy" />
+                        <Image
+                          src={destination.image}
+                          alt=""
+                          loading="lazy"
+                        />
                       ) : (
                         <span class="destination-result-image-placeholder">CM</span>
                       )}
