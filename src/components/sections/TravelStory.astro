@@ -35,6 +35,10 @@ import avestruces from "../../assets/images/avestruces.jpg";
     <p class="story-highlight">
       El objetivo no es hacer más cosas. Es hacer mejores elecciones.
     </p>
+
+    <a href="/recursos" class="story-link">
+      Explorar nuestras investigaciones <span aria-hidden="true">↗</span>
+    </a>
   </div>
 </section>
 
@@ -103,6 +107,31 @@ import avestruces from "../../assets/images/avestruces.jpg";
     font-weight: 600;
   }
 
+  .story-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.75rem;
+    color: var(--color-bosque);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .story-link span {
+    transition: transform 180ms ease;
+  }
+
+  .story-link:hover,
+  .story-link:focus-visible {
+    color: var(--color-cobre);
+  }
+
+  .story-link:hover span,
+  .story-link:focus-visible span {
+    transform: translate(3px, -3px);
+  }
+
   @media (max-width: 900px) {
     .travel-story {
       grid-template-columns: 1fr;
@@ -128,6 +157,12 @@ import avestruces from "../../assets/images/avestruces.jpg";
     h2 {
       max-width: 12ch;
       font-size: clamp(2.7rem, 11vw, 4rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .story-link span {
+      transition: none;
     }
   }
 </style>
