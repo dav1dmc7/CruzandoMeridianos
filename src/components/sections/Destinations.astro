@@ -2,8 +2,17 @@
 import DestinationCard from "./DestinationCard.astro";
 import { destinations } from "../../data/destinations";
 
-const featuredDestination = destinations[0];
-const otherDestinations = destinations.slice(1);
+const featuredSlugs = [
+  "costa-rica",
+  "sudafrica",
+  "jordania",
+  "mauricio",
+  "auroras",
+];
+
+const featuredDestinations = featuredSlugs
+  .map((slug) => destinations.find((destination) => destination.slug === slug))
+  .filter(Boolean);
 ---
 
 <section class="destinations">
@@ -21,26 +30,16 @@ const otherDestinations = destinations.slice(1);
         Infinitas formas de vivirlos.
       </h2>
 
-      <p>
-        No diseñamos viajes siguiendo una fórmula.
-        Cada destino cambia cuando cambia la persona que lo recorre.
-      </p>
 
     </div>
 
 
     <div class="destinations-grid">
 
-      {featuredDestination && (
+      {featuredDestinations.map((destination, index) => (
         <DestinationCard
-          destination={featuredDestination}
-          featured
-        />
-      )}
-
-      {otherDestinations.map((destination) => (
-        <DestinationCard
-          destination={destination}
+          destination={destination!}
+          featured={index === 0}
         />
       ))}
 

@@ -96,7 +96,11 @@ const continents: DestinationContinent[] = [
                       <small>{destination.continent}</small>
                     </span>
                     <span class="destination-result-image" aria-hidden="true">
-                      <Image src={destination.image} alt="" loading="lazy" />
+                      {destination.image ? (
+                        <Image src={destination.image} alt="" loading="lazy" />
+                      ) : (
+                        <span class="destination-result-image-placeholder">CM</span>
+                      )}
                     </span>
                     <span class="destination-result-status">Próximamente</span>
                   </div>
@@ -238,10 +242,12 @@ const continents: DestinationContinent[] = [
 .destination-result-link[aria-disabled="true"]{cursor:default}
 .destination-result-number{color:var(--color-cobre);font-size:.7rem;font-weight:600;letter-spacing:1px}
 .destination-result-copy{min-width:0}
-.destination-result-copy strong{display:block;overflow:hidden;color:var(--color-bosque);font-family:var(--font-serif);font-size:1.28rem;font-weight:400;line-height:1.1;text-overflow:ellipsis;white-space:nowrap}
+.destination-result-copy strong{display:block;min-width:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:1.28rem;font-weight:400;line-height:1.08;overflow-wrap:anywhere}
 .destination-result-copy small{display:block;margin-top:.25rem;color:#777;font-size:.68rem;text-transform:uppercase}
 .destination-result-image{display:block;width:72px;height:70px;overflow:hidden;align-self:stretch;background:transparent}
+.destination-result-image-placeholder{display:grid;place-items:center;width:100%;height:100%;background:var(--color-bosque);color:var(--color-papel);font-family:var(--font-serif);font-size:1.25rem;letter-spacing:.08em}
 .destination-result-image img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;transition:transform .35s ease}
+.destination-result-image-placeholder{display:grid;width:100%;height:100%;place-items:center;border:1px solid rgba(28,48,38,.08);border-radius:12px;background:rgba(28,48,38,.05);color:var(--color-cobre);font-family:var(--font-serif);font-size:1rem}
 .destination-result:hover .destination-result-image img{transform:scale(1.04)}
 .destination-result-status{justify-self:end;color:var(--color-cobre);font-size:.68rem;font-weight:600;white-space:nowrap}
 .destination-result--disabled .destination-result-status{color:#777;font-weight:500}
