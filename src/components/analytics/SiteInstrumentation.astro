@@ -1,0 +1,66 @@
+<script>
+  type EventPayload = Record<string, unknown>;
+
+  const pushEvent = (name: string, payload: EventPayload = {}) => {
+    const event = {
+      event: name,
+      timestamp: new Date().toISOString(),
+      path: window.location.pathname,
+      ...payload,
+    };
+
+    window.dispatchEvent(new CustomEvent("cm:analytics", { detail: event }));
+
+    const dataLayer = (window as typeof window & { dataLayer?: EventPayload[] }).dataLayer ?? [];
+    dataLayer.push(event);
+    (window as typeof window & { dataLayer?: EventPayload[] }).dataLayer = dataLayer;
+  };
+
+  const trackableClick = (target: Element) => {
+    const element = target.closest<HTMLElement>("[data-track]");
+    if (!element) return;
+
+    pushEvent(element.dataset.track ?? "interaction", {
+      label: element.dataset.trackLabel ?? element.textContent?.trim() ?? "",
+      href: element.getAttribute("href") ?? null,
+    });
+  };
+
+  document.addEventListener("click", (event) => {
+    if (event.target instanceof Element) trackableClick(event.target);
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+    const link = event.target.closest<HTMLAnchorElement>('a[href="/cuentatuviaje"]');
+    if (link) {
+      pushEvent("cta_travel_request", { label: link.textContent?.trim() ?? "Cuéntanos tu viaje" });
+    }
+  });
+
+  document.addEventListener("focusin", (event) => {
+    if (!(event.target instanceof Element)) return;
+    const form = event.target.closest("#journey-form");
+    if (!form || form.hasAttribute("data-cm-form-started")) return;
+    form.setAttribute("data-cm-form-started", "true");
+    pushEvent("travel_form_start");
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+    const next = event.target.closest<HTMLButtonElement>("#journey-form .next-button");
+    if (!next) return;
+    const block = next.closest<HTMLElement>(".question-block");
+    pushEvent("travel_form_step", {
+      step: block?.dataset.step ?? null,
+      message: block?.dataset.message ?? null,
+    });
+  });
+
+  document.addEventListener("submit", (event) => {
+    const form = event.target;
+    if (form instanceof HTMLFormElement && form.id === "journey-form") {
+      pushEvent("travel_form_submit");
+    }
+  });
+</script>
