@@ -1,6 +1,16 @@
 <script>
   type EventPayload = Record<string, unknown>;
 
+  const getReferrer = () => {
+    if (!document.referrer) return null;
+    try {
+      const url = new URL(document.referrer);
+      return `${url.origin}${url.pathname}`.slice(0, 1000);
+    } catch {
+      return null;
+    }
+  };
+
   const sendEvent = (name: string, payload: EventPayload = {}) => {
     const params = new URLSearchParams(window.location.search);
     const event = {
@@ -8,7 +18,7 @@
       path: window.location.pathname,
       label: typeof payload.label === "string" ? payload.label : null,
       href: typeof payload.href === "string" ? payload.href : null,
-      referrer: document.referrer || null,
+      referrer: getReferrer(),
       utm_source: params.get("utm_source"),
       utm_medium: params.get("utm_medium"),
       utm_campaign: params.get("utm_campaign"),
