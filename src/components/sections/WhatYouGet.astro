@@ -1,0 +1,50 @@
+<section class="what-you-get" aria-labelledby="what-you-get-title">
+  <div class="what-you-get-inner">
+    <div class="what-you-get-intro">
+      <p class="eyebrow">QUÉ RECIBES</p>
+      <h2 id="what-you-get-title">No compras una lista de lugares. Compras el trabajo de unirlos bien.</h2>
+      <p>
+        Investigamos, filtramos y damos forma a una propuesta alrededor de vuestra manera de viajar para que no tengáis que convertir horas de búsqueda en decisiones una a una.
+      </p>
+    </div>
+
+    <div class="deliverables" aria-label="Qué incluye nuestro trabajo">
+      <article>
+        <span>01</span>
+        <h3>Una ruta con sentido</h3>
+        <p>Una estructura de viaje pensada para vuestros tiempos, ritmo, prioridades y límites reales.</p>
+      </article>
+      <article>
+        <span>02</span>
+        <h3>Opciones filtradas</h3>
+        <p>Alojamientos, experiencias y desplazamientos que llegan después de investigar y descartar.</p>
+      </article>
+      <article>
+        <span>03</span>
+        <h3>Decisiones explicadas</h3>
+        <p>No solo os decimos qué elegir: os ayudamos a entender por qué una opción encaja mejor que otra.</p>
+      </article>
+      <article>
+        <span>04</span>
+        <h3>Alternativas útiles</h3>
+        <p>Cuando existe una bifurcación importante, planteamos las alternativas que de verdad merece la pena valorar.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .what-you-get { padding: 9rem 2rem; background: var(--color-papel); border-top: 1px solid rgba(28,48,38,.08); }
+  .what-you-get-inner { width: min(var(--content-width), 100%); margin: 0 auto; display: grid; grid-template-columns: minmax(0,.78fr) minmax(0,1.22fr); gap: 7rem; }
+  .what-you-get-intro { max-width: 560px; }
+  .eyebrow { margin: 0 0 1.35rem; color: var(--color-cobre); font-size: .72rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+  .what-you-get h2 { margin: 0; color: var(--color-bosque); font-family: var(--font-serif); font-size: clamp(3rem,4.6vw,4.8rem); font-weight: 400; line-height: .98; letter-spacing: -.035em; }
+  .what-you-get-intro > p:last-child { margin-top: 2rem; color: #555; font-size: 1rem; line-height: 1.8; }
+  .deliverables { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 2.5rem; }
+  .deliverables article { padding: 1.7rem 0 2rem; border-top: 1px solid rgba(28,48,38,.16); }
+  .deliverables span { display: block; margin-bottom: 1.2rem; color: var(--color-cobre); font-size: .72rem; font-weight: 600; letter-spacing: 2px; }
+  .deliverables h3 { margin: 0 0 .65rem; color: var(--color-bosque); font-family: var(--font-serif); font-size: 1.9rem; font-weight: 400; line-height: 1.05; }
+  .deliverables p { margin: 0; color: #555; font-size: .94rem; line-height: 1.75; }
+  @media (max-width: 900px) { .what-you-get { padding: 7rem 1.5rem; } .what-you-get-inner { grid-template-columns: 1fr; gap: 3.5rem; } }
+  @media (max-width: 620px) { .deliverables { grid-template-columns: 1fr; } .what-you-get h2 { font-size: 3rem; } }
+</style>
