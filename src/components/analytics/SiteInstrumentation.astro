@@ -1,19 +1,38 @@
 <script>
   type EventPayload = Record<string, unknown>;
 
-  const pushEvent = (name: string, payload: EventPayload = {}) => {
+  const sendEvent = (name: string, payload: EventPayload = {}) => {
+    const params = new URLSearchParams(window.location.search);
     const event = {
-      event: name,
-      timestamp: new Date().toISOString(),
+      event_name: name,
       path: window.location.pathname,
-      ...payload,
+      label: typeof payload.label === "string" ? payload.label : null,
+      href: typeof payload.href === "string" ? payload.href : null,
+      referrer: document.referrer || null,
+      utm_source: params.get("utm_source"),
+      utm_medium: params.get("utm_medium"),
+      utm_campaign: params.get("utm_campaign"),
+      step: typeof payload.step === "number" ? payload.step : null,
     };
 
     window.dispatchEvent(new CustomEvent("cm:analytics", { detail: event }));
 
     const analyticsWindow = window as typeof window & { dataLayer?: EventPayload[] };
     analyticsWindow.dataLayer = analyticsWindow.dataLayer ?? [];
-    analyticsWindow.dataLayer.push(event);
+    analyticsWindow.dataLayer.push({ event: name, ...event });
+
+    const body = JSON.stringify(event);
+
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon("/api/analytics/events", new Blob([body], { type: "application/json" }));
+    } else {
+      void fetch("/api/analytics/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body,
+        keepalive: true,
+      });
+    }
   };
 
   document.addEventListener("click", (event) => {
@@ -21,7 +40,7 @@
 
     const element = event.target.closest<HTMLElement>("[data-track]");
     if (element) {
-      pushEvent(element.dataset.track ?? "interaction", {
+      sendEvent(element.dataset.track ?? "interaction", {
         label: element.dataset.trackLabel ?? element.textContent?.trim() ?? "",
         href: element.getAttribute("href") ?? null,
       });
@@ -29,17 +48,19 @@
 
     const link = event.target.closest<HTMLAnchorElement>('a[href="/cuentatuviaje"]');
     if (link) {
-      pushEvent("cta_travel_request", {
+      sendEvent("cta_travel_request", {
         label: link.textContent?.trim() ?? "Cuéntanos tu viaje",
+        href: "/cuentatuviaje",
       });
     }
 
     const next = event.target.closest<HTMLButtonElement>("#journey-form .next-button");
     if (next) {
       const block = next.closest<HTMLElement>(".question-block");
-      pushEvent("travel_form_step", {
-        step: block?.dataset.step ?? null,
-        message: block?.dataset.message ?? null,
+      const step = Number(block?.dataset.step);
+      sendEvent("travel_form_step", {
+        step: Number.isInteger(step) ? step : null,
+        label: block?.dataset.message ?? null,
       });
     }
   });
@@ -51,13 +72,13 @@
     if (!form || form.hasAttribute("data-cm-form-started")) return;
 
     form.setAttribute("data-cm-form-started", "true");
-    pushEvent("travel_form_start");
+    sendEvent("travel_form_start");
   });
 
   document.addEventListener("submit", (event) => {
     const form = event.target;
     if (form instanceof HTMLFormElement && form.id === "journey-form") {
-      pushEvent("travel_form_submit");
+      sendEvent("travel_form_submit");
     }
   });
 </script>
