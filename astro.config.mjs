@@ -15,6 +15,11 @@ export default defineConfig({
       customPages: [
         'https://www.cruzandomeridianos.com/viajes/costa-rica',
         'https://www.cruzandomeridianos.com/nuestros-viajes/costa-rica',
+        'https://www.cruzandomeridianos.com/viajes/costa-rica/mejor-epoca',
+        'https://www.cruzandomeridianos.com/viajes/costa-rica/parques-nacionales',
+        'https://www.cruzandomeridianos.com/viajes/costa-rica/alquilar-coche',
+        'https://www.cruzandomeridianos.com/viajes/costa-rica/caribe-o-pacifico',
+        'https://www.cruzandomeridianos.com/viajes/costa-rica/cuanto-tiempo',
       ],
     }),
   ],
