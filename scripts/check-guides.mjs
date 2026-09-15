@@ -22,7 +22,8 @@ const extractReadySlugs = (source) => {
 
 const readySlugs = extractReadySlugs(destinations);
 const additionalSlugs = [...guides.matchAll(/slug:\s*"([^"]+)"\s*,\s*name:/g)].map((match) => match[1]);
-const registryUsesAdditional = /additionalGuides/.test(registry) && /\.\.\.additionalGuides/.test(registry);
+const registryUsesAdditional = /additionalGuides/.test(registry) &&
+  ( /\.\.\.Object\.fromEntries\(additionalGuides/.test(registry) || /\.\.\.additionalGuides/.test(registry) );
 
 const failures = [];
 
