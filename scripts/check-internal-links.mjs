@@ -4,7 +4,9 @@ import process from "node:process";
 
 const root = process.cwd();
 const sourceRoots = [path.join(root, "src")];
+const publicRoot = path.join(root, "public");
 const pendingRoutes = new Set(["/privacidad", "/aviso-legal", "/cookies"]);
+const generatedRoutes = new Set(["/sitemap-index.xml"]);
 const ignoredExtensions = new Set([".d.ts", ".map"]);
 
 const walk = async (directory) => {
@@ -61,10 +63,29 @@ const hrefPattern = /href\s*=\s*["']([^"'#]+)(?:[#][^"']*)?["']/g;
 const problems = [];
 const pending = new Map();
 
-const existsRoute = (route) => route === "/" || routeMatchers.some(({ route: known, dynamicPrefix }) => {
-  if (dynamicPrefix) return route.startsWith(dynamicPrefix) && route.slice(dynamicPrefix.length).length > 0 && !route.slice(dynamicPrefix.length).includes("/");
-  return route === known;
-});
+const publicFileExists = async (route) => {
+  const relativePath = route.replace(/^\//, "");
+  if (!relativePath || relativePath.includes("..")) return false;
+  try {
+    const stat = await fs.stat(path.join(publicRoot, relativePath));
+    return stat.isFile();
+  } catch {
+    return false;
+  }
+};
+
+const existsRoute = async (route) => {
+  if (route === "/" || generatedRoutes.has(route)) return true;
+  if (routeMatchers.some(({ route: known, dynamicPrefix }) => {
+    if (dynamicPrefix) {
+      return route.startsWith(dynamicPrefix)
+        && route.slice(dynamicPrefix.length).length > 0
+        && !route.slice(dynamicPrefix.length).includes("/");
+    }
+    return route === known;
+  })) return true;
+  return publicFileExists(route);
+};
 
 for (const file of sourceFiles) {
   const content = await fs.readFile(file, "utf8");
@@ -75,7 +96,7 @@ for (const file of sourceFiles) {
     if (href.includes("${") || href.includes("{")) continue;
 
     const route = href.split("?")[0].replace(/\/$/, "") || "/";
-    if (existsRoute(route)) continue;
+    if (await existsRoute(route)) continue;
 
     const relative = path.relative(root, file).replace(/\\/g, "/");
     const line = content.slice(0, match.index).split("\n").length;
