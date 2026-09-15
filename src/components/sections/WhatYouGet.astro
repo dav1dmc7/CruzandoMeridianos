@@ -30,6 +30,17 @@
         <p>Cuando existe una bifurcación importante, planteamos las alternativas que de verdad merece la pena valorar.</p>
       </article>
     </div>
+
+    <div class="service-boundary" aria-label="Qué hacemos y qué no hacemos">
+      <div>
+        <span class="boundary-label">NUESTRO TRABAJO</span>
+        <strong>Investigar · comparar · filtrar · diseñar · explicar</strong>
+      </div>
+      <div>
+        <span class="boundary-label">LA DECISIÓN SIGUE SIENDO VUESTRA</span>
+        <strong>Os damos criterio y estructura para reservar con claridad y libertad.</strong>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -45,6 +56,9 @@
   .deliverables span { display: block; margin-bottom: 1.2rem; color: var(--color-cobre); font-size: .72rem; font-weight: 600; letter-spacing: 2px; }
   .deliverables h3 { margin: 0 0 .65rem; color: var(--color-bosque); font-family: var(--font-serif); font-size: 1.9rem; font-weight: 400; line-height: 1.05; }
   .deliverables p { margin: 0; color: #555; font-size: .94rem; line-height: 1.75; }
-  @media (max-width: 900px) { .what-you-get { padding: 7rem 1.5rem; } .what-you-get-inner { grid-template-columns: 1fr; gap: 3.5rem; } }
+  .service-boundary { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 2rem; margin-top: 1rem; padding-top: 2rem; border-top: 1px solid rgba(28,48,38,.16); }
+  .boundary-label { display: block; margin-bottom: .7rem; color: var(--color-cobre); font-size: .68rem; font-weight: 700; letter-spacing: 1.7px; text-transform: uppercase; }
+  .service-boundary strong { display: block; max-width: 520px; color: var(--color-bosque); font-family: var(--font-serif); font-size: 1.45rem; font-weight: 400; line-height: 1.35; }
+  @media (max-width: 900px) { .what-you-get { padding: 7rem 1.5rem; } .what-you-get-inner { grid-template-columns: 1fr; gap: 3.5rem; } .service-boundary { grid-template-columns: 1fr; } }
   @media (max-width: 620px) { .deliverables { grid-template-columns: 1fr; } .what-you-get h2 { font-size: 3rem; } }
 </style>
