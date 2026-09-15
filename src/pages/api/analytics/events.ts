@@ -6,6 +6,7 @@ const ALLOWED_EVENTS = new Set([
   "travel_form_start",
   "travel_form_step",
   "travel_form_submit",
+  "proof_of_work",
   "interaction",
 ]);
 
@@ -62,7 +63,12 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(null, { status: 413 });
     }
 
-    const body = (await request.json()) as Record<string, unknown>;
+    const rawBody = await request.text();
+    if (new TextEncoder().encode(rawBody).byteLength > MAX_BODY) {
+      return new Response(null, { status: 413 });
+    }
+
+    const body = JSON.parse(rawBody) as Record<string, unknown>;
     const eventName = clean(body.event_name, 80);
     const path = clean(body.path, 500);
 
