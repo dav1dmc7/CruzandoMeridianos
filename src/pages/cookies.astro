@@ -1,0 +1,83 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Footer from "../components/layout/Footer.astro";
+---
+
+<Layout
+  title="Política de cookies | Cruzando Meridianos"
+  description="Información sobre las cookies y tecnologías similares utilizadas por Cruzando Meridianos."
+  canonical="/cookies"
+>
+  <main class="legal-page">
+    <section class="legal-hero">
+      <div class="legal-inner">
+        <p class="eyebrow">COOKIES</p>
+        <h1>Preferimos medir lo necesario. No seguirte por seguirte.</h1>
+        <p>
+          Esta política describe el uso actual de cookies y tecnologías similares en cruzandomeridianos.com.
+        </p>
+      </div>
+    </section>
+
+    <section class="legal-content">
+      <div class="legal-inner legal-copy">
+        <aside class="legal-notice" role="note">
+          <strong>Situación actual</strong>
+          <p>
+            En el código actual de la web no se ha detectado una implementación propia de cookies de analítica, publicidad o personalización mediante <code>document.cookie</code>, localStorage o sessionStorage. La medición se realiza mediante eventos enviados al servidor.
+          </p>
+        </aside>
+
+        <h2>1. Qué es una cookie</h2>
+        <p>
+          Una cookie es un pequeño archivo que un sitio web puede almacenar en el dispositivo de una persona usuaria. Puede utilizarse, entre otros fines, para recordar preferencias, mantener sesiones, medir audiencia o personalizar publicidad.
+        </p>
+
+        <h2>2. Cookies utilizadas actualmente</h2>
+        <p>
+          Según la implementación actual, Cruzando Meridianos no utiliza cookies propias no necesarias para registrar actividad publicitaria o identificar individualmente a quienes navegan por la web.
+        </p>
+        <p>
+          La web sí utiliza servicios técnicos de terceros necesarios para su funcionamiento o entrega, como la infraestructura de alojamiento y distribución de Cloudflare y las fuentes web de Google Fonts. La configuración efectiva de estos servicios debe revisarse periódicamente por si sus proveedores introducen cambios.
+        </p>
+
+        <h2>3. Analítica propia</h2>
+        <p>
+          La medición actual se realiza mediante peticiones al endpoint propio de analítica. Se registran eventos como clics en llamadas a la acción, inicio y avance del formulario, envíos y navegación entre contenidos. Estos eventos no necesitan una cookie para funcionar.
+        </p>
+
+        <h2>4. Consentimiento</h2>
+        <p>
+          Cuando se incorporen cookies no necesarias que requieran consentimiento, la web deberá obtener un consentimiento válido antes de instalarlas y ofrecer mecanismos equivalentes para aceptar y rechazar. La AEPD indica que aceptar y rechazar deben presentarse al mismo tiempo, al mismo nivel y con la misma visibilidad. citeturn813747search2
+        </p>
+
+        <h2>5. Cómo cambiar tus preferencias</h2>
+        <p>
+          Mientras no se incorporen cookies no necesarias, no existe un panel de preferencias específico que gestionar. Además, las opciones del navegador permiten bloquear o eliminar cookies almacenadas por los sitios que visites.
+        </p>
+
+        <h2>6. Actualizaciones</h2>
+        <p>
+          Esta política se actualizará cuando cambien las tecnologías utilizadas, se incorporen nuevas herramientas de analítica o publicidad o sea necesario adaptar la información a la normativa vigente.
+        </p>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+.legal-hero{padding:8rem 2rem 6rem;background:var(--color-papel)}
+.legal-content{padding:6rem 2rem 8rem;background:var(--color-arena)}
+.legal-inner{width:min(960px,100%);margin:0 auto}
+.eyebrow{margin:0 0 1.4rem;color:var(--color-cobre);font-size:.72rem;font-weight:600;letter-spacing:2px;text-transform:uppercase}
+.legal-hero h1{max-width:850px;margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3.4rem,7vw,6rem);font-weight:400;line-height:.98;letter-spacing:-.04em}
+.legal-hero p:not(.eyebrow){max-width:700px;margin:2rem 0 0;color:#555;font-size:1.1rem;line-height:1.8}
+.legal-copy{color:#4c4c4c;font-size:1rem;line-height:1.8}
+.legal-copy h2{margin:3.2rem 0 1rem;color:var(--color-bosque);font-family:var(--font-serif);font-size:2rem;font-weight:400;line-height:1.1}
+.legal-copy p{margin:0 0 1.15rem}
+.legal-notice{margin:0 0 3rem;padding:1.4rem 1.5rem;border:1px solid rgba(194,125,56,.4);border-radius:16px;background:rgba(194,125,56,.08)}
+.legal-notice strong{display:block;margin-bottom:.4rem;color:var(--color-bosque)}
+.legal-notice p{margin:0;color:#5a5148}
+@media(max-width:700px){.legal-hero{padding:6rem 1.5rem 5rem}.legal-content{padding:5rem 1.5rem 6rem}.legal-hero h1{font-size:3.4rem}}
+</style>
