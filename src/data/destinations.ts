@@ -39,7 +39,6 @@ export const destinations: Destination[] = [
     country: "Costa Rica",
     status: "ready",
   },
-
   {
     name: "Sudáfrica",
     slug: "sudafrica",
@@ -50,9 +49,8 @@ export const destinations: Destination[] = [
     imageAlt: "Leonas durante un safari en Sudáfrica",
     continent: "África",
     country: "Sudáfrica",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Jordania",
     slug: "jordania",
@@ -63,9 +61,8 @@ export const destinations: Destination[] = [
     imageAlt: "Petra, Jordania",
     continent: "Asia",
     country: "Jordania",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Grecia",
     slug: "grecia",
@@ -76,9 +73,8 @@ export const destinations: Destination[] = [
     imageAlt: "Paisaje costero de Corfú, Grecia",
     continent: "Europa",
     country: "Grecia",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Auroras",
     slug: "auroras",
@@ -89,9 +85,8 @@ export const destinations: Destination[] = [
     imageAlt: "Auroras boreales sobre un paisaje nórdico",
     continent: "Europa",
     country: "Varios destinos",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Polonia",
     slug: "polonia",
@@ -100,9 +95,8 @@ export const destinations: Destination[] = [
       "Ciudades con historia, patrimonio, gastronomía y una Europa central que merece descubrirse con calma.",
     continent: "Europa",
     country: "Polonia",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Italia",
     slug: "italia",
@@ -111,9 +105,8 @@ export const destinations: Destination[] = [
       "Historia, arte, comida y paisajes. Un país enorme para plantear viajes muy diferentes.",
     continent: "Europa",
     country: "Italia",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Viena",
     slug: "viena",
@@ -122,9 +115,8 @@ export const destinations: Destination[] = [
       "Arquitectura imperial, cafés, música y una de las grandes capitales culturales de Europa.",
     continent: "Europa",
     country: "Austria",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Praga",
     slug: "praga",
@@ -133,9 +125,8 @@ export const destinations: Destination[] = [
       "Una ciudad para caminar, descubrir barrios, arquitectura, historia y rincones que cambian con cada paseo.",
     continent: "Europa",
     country: "Chequia",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Budapest",
     slug: "budapest",
@@ -144,9 +135,8 @@ export const destinations: Destination[] = [
       "El Danubio, arquitectura, termas y una ciudad con mucha personalidad.",
     continent: "Europa",
     country: "Hungría",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Ámsterdam",
     slug: "amsterdam",
@@ -155,9 +145,8 @@ export const destinations: Destination[] = [
       "Canales, barrios, museos y una ciudad que se entiende mejor cuando sales de los recorridos de siempre.",
     continent: "Europa",
     country: "Países Bajos",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "París",
     slug: "paris",
@@ -166,9 +155,8 @@ export const destinations: Destination[] = [
       "Mucho más que una lista de monumentos: barrios, paseos, cultura, gastronomía y pequeñas decisiones que cambian el viaje.",
     continent: "Europa",
     country: "Francia",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Sur de Francia",
     slug: "sur-de-francia",
@@ -177,9 +165,8 @@ export const destinations: Destination[] = [
       "Pueblos, costa, carreteras secundarias, mercados y paisajes mediterráneos para recorrer sin prisas.",
     continent: "Europa",
     country: "Francia",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Nueva York",
     slug: "nueva-york",
@@ -188,9 +175,8 @@ export const destinations: Destination[] = [
       "Una ciudad enorme que pide planificación: barrios, miradores, comida, cultura y mucho que decidir antes de llegar.",
     continent: "América",
     country: "Estados Unidos",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Washington",
     slug: "washington",
@@ -199,9 +185,8 @@ export const destinations: Destination[] = [
       "Museos, historia, arquitectura y una capital estadounidense que merece algo más que una visita rápida.",
     continent: "América",
     country: "Estados Unidos",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Egipto",
     slug: "egipto",
@@ -210,9 +195,8 @@ export const destinations: Destination[] = [
       "Historia, desierto, templos y un viaje donde la planificación puede cambiar completamente la experiencia.",
     continent: "África",
     country: "Egipto",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Mauricio",
     slug: "mauricio",
@@ -221,9 +205,8 @@ export const destinations: Destination[] = [
       "Una isla que nosotros vivimos dentro de un viaje combinado con Sudáfrica. Naturaleza, costa y una parte del viaje muy distinta.",
     continent: "África",
     country: "Mauricio",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Malta",
     slug: "malta",
@@ -232,9 +215,8 @@ export const destinations: Destination[] = [
       "Historia, calas, pueblos y Mediterráneo en una isla pequeña pero llena de posibilidades.",
     continent: "Europa",
     country: "Malta",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Tenerife",
     slug: "tenerife",
@@ -244,9 +226,8 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "España",
     region: "Canarias",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Gran Canaria",
     slug: "gran-canaria",
@@ -256,9 +237,8 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "España",
     region: "Canarias",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Lanzarote",
     slug: "lanzarote",
@@ -268,9 +248,8 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "España",
     region: "Canarias",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "Fuerteventura",
     slug: "fuerteventura",
@@ -280,9 +259,8 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "España",
     region: "Canarias",
-    status: "coming-soon",
+    status: "ready",
   },
-
   {
     name: "El Hierro",
     slug: "el-hierro",
@@ -292,6 +270,6 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "España",
     region: "Canarias",
-    status: "coming-soon",
+    status: "ready",
   },
 ];
