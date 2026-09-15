@@ -50,11 +50,13 @@ const destinationUrl = Astro.url.pathname.startsWith("/nuestros-viajes")
           sizes={featured ? "(min-width: 1000px) 58vw, 100vw" : "(min-width: 1000px) 55vw, 100vw"}
         />
       ) : (
-        <div class="destination-image-placeholder">
-          <span>{destination.number}</span>
-          <strong>{destination.name}</strong>
-          <small>Fotografía próximamente</small>
-        </div>
+        <a href={isReady ? destinationUrl : undefined} class="destination-image-link" aria-label={isReady ? `Explorar ${destination.name}` : undefined}>
+          <div class="destination-image-placeholder">
+            <span>{destination.number}</span>
+            <strong>{destination.name}</strong>
+            <small>{isReady ? "Guía disponible" : "Fotografía próximamente"}</small>
+          </div>
+        </a>
       )}
 
       <span class="destination-image-shade" aria-hidden="true"></span>
