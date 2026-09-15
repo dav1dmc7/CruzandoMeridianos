@@ -33,6 +33,9 @@ jobs:
           OPENAI_MODEL: gpt-5.6-luna
         run: node scripts/monitor-travel-intelligence.mjs
 
+      - name: Discard timestamp-only updates
+        run: node scripts/normalize-travel-intelligence-diff.mjs
+
       - name: Show generated diff
         run: git diff -- src/data/live/travel-intelligence.generated.ts
 
@@ -42,7 +45,7 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add src/data/live/travel-intelligence.generated.ts
           if git diff --cached --quiet; then
-            echo "No traveler-impacting source changes detected."
+            echo "No meaningful traveler-intelligence changes detected."
             exit 0
           fi
           git commit -m "chore: refresh travel intelligence"
