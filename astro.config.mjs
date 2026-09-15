@@ -3,6 +3,32 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import cloudflare from '@astrojs/cloudflare';
 
+const destinationSlugs = [
+  'costa-rica',
+  'sudafrica',
+  'jordania',
+  'grecia',
+  'auroras',
+  'polonia',
+  'italia',
+  'viena',
+  'praga',
+  'budapest',
+  'amsterdam',
+  'paris',
+  'sur-de-francia',
+  'nueva-york',
+  'washington',
+  'egipto',
+  'mauricio',
+  'malta',
+  'tenerife',
+  'gran-canaria',
+  'lanzarote',
+  'fuerteventura',
+  'el-hierro',
+];
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://www.cruzandomeridianos.com',
@@ -13,7 +39,9 @@ export default defineConfig({
       // forman parte del listado estático del sitemap. Las declaramos aquí
       // para que también puedan descubrirse desde buscadores.
       customPages: [
-        'https://www.cruzandomeridianos.com/viajes/costa-rica',
+        ...destinationSlugs.map(
+          (slug) => `https://www.cruzandomeridianos.com/viajes/${slug}`,
+        ),
         'https://www.cruzandomeridianos.com/nuestros-viajes/costa-rica',
         'https://www.cruzandomeridianos.com/viajes/costa-rica/mejor-epoca',
         'https://www.cruzandomeridianos.com/viajes/costa-rica/parques-nacionales',
