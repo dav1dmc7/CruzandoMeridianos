@@ -35,5 +35,8 @@ jobs:
       - name: Analytics event audit
         run: npm run audit:analytics
 
+      - name: Guide registry audit
+        run: npm run audit:guides
+
       - name: Production build
         run: npm run build
