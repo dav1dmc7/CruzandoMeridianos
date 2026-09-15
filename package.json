@@ -9,6 +9,7 @@
     "dev": "astro dev",
     "check": "astro check",
     "build": "astro build",
+    "audit:links": "node scripts/check-internal-links.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "generate-types": "wrangler types"
