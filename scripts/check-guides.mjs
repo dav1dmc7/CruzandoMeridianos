@@ -46,10 +46,39 @@ if (additionalSlugs.length === 0) {
   failures.push("No additional guides found.");
 }
 
+const reviewedMatch = guides.match(/const REVIEWED_AT = "(\d{4}-\d{2}-\d{2})";/);
+const nextReviewMatch = guides.match(/const NEXT_REVIEW = "(\d{4}-\d{2}-\d{2})";/);
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const parseIsoDate = (value) => {
+  const date = new Date(`${value}T00:00:00Z`);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+const reviewedAt = reviewedMatch ? parseIsoDate(reviewedMatch[1]) : null;
+const nextReview = nextReviewMatch ? parseIsoDate(nextReviewMatch[1]) : null;
+
+if (!reviewedAt || !reviewedMatch) {
+  failures.push("Guide dataset is missing a valid REVIEWED_AT date.");
+} else if (reviewedAt > today) {
+  failures.push(`REVIEWED_AT (${reviewedMatch[1]}) cannot be in the future.`);
+}
+
+if (!nextReview || !nextReviewMatch) {
+  failures.push("Guide dataset is missing a valid NEXT_REVIEW date.");
+} else if (nextReview <= today) {
+  failures.push(`NEXT_REVIEW (${nextReviewMatch[1]}) is due or overdue.`);
+}
+
+if (reviewedAt && nextReview && nextReview <= reviewedAt) {
+  failures.push(`NEXT_REVIEW (${nextReviewMatch[1]}) must be after REVIEWED_AT (${reviewedMatch[1]}).`);
+}
+
 if (failures.length) {
   console.error("Guide audit failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log(`Guide audit passed: ${readySlugs.length} ready destinations, ${additionalSlugs.length} additional guides.`);
+console.log(`Guide audit passed: ${readySlugs.length} ready destinations, ${additionalSlugs.length} additional guides; reviewed ${reviewedMatch[1]}, next review ${nextReviewMatch[1]}.`);
