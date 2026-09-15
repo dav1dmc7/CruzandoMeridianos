@@ -9,7 +9,6 @@ const root = process.cwd();
 const generatedPath = path.join(root, "src/data/live/travel-intelligence.generated.ts");
 const today = new Date().toISOString().slice(0, 10);
 const checkedAt = new Date().toISOString();
-const openAiModel = process.env.OPENAI_MODEL || "gpt-5.6-luna";
 
 const sha256 = (value) => crypto.createHash("sha256").update(value).digest("hex");
 
@@ -25,11 +24,166 @@ const stripHtml = (html) => html
   .replace(/\s+/g, " ")
   .trim();
 
+const RULES = [
+  {
+    type: "carretera",
+    severity: "high",
+    patterns: [
+      /road\s+(is\s+)?closed/i,
+      /road\s+closure/i,
+      /carretera[s]?\s+(cerrada|cerrado|cerradas|cerrados)/i,
+      /via[s]?\s+(cerrada|cerrado|cerradas|cerrados)/i,
+      /deslizamiento[s]?/i,
+      /landslide[s]?/i,
+      /bridge\s+(is\s+)?closed/i,
+      /puente\s+(cerrad|afectad)/i,
+    ],
+  },
+  {
+    type: "clima",
+    severity: "high",
+    patterns: [
+      /flooding/i,
+      /flood\s+warning/i,
+      /inundacion(?:es)?/i,
+      /inundación(?:es)?/i,
+      /tormenta[s]?\s+(severa|fuerte|tropical)/i,
+      /severe\s+(weather|storm|rain)/i,
+      /tropical\s+storm/i,
+      /hurricane/i,
+      /cicl[oó]n/i,
+      /huracan/i,
+      /huracán/i,
+      /aviso\s+meteorologic/i,
+      /weather\s+warning/i,
+    ],
+  },
+  {
+    type: "parque",
+    severity: "medium",
+    patterns: [
+      /park\s+(is\s+)?closed/i,
+      /national\s+park\s+closed/i,
+      /parque\s+nacional.*cerrad/i,
+      /cerrad[oa].*parque/i,
+      /trail\s+(is\s+)?closed/i,
+      /sendero.*cerrad/i,
+    ],
+  },
+  {
+    type: "transporte",
+    severity: "high",
+    patterns: [
+      /airport\s+(is\s+)?closed/i,
+      /airport\s+disruption/i,
+      /flight\s+disruption/i,
+      /ferry\s+(is\s+)?cancelled/i,
+      /strike\s+(will\s+)?affect/i,
+      /huelga/i,
+      /cancelaciones?/i,
+      /cancelled\s+services?/i,
+      /transport\s+disruption/i,
+    ],
+  },
+  {
+    type: "entrada",
+    severity: "high",
+    patterns: [
+      /entry\s+requirements?\s+(have\s+)?changed/i,
+      /visa\s+requirements?.*(change|new|introduced|updated)/i,
+      /entry\s+permit/i,
+      /visado.*(cambio|nuevo|obligatorio)/i,
+      /visado.*(cambiado|actualizado)/i,
+      /permiso.*entrada/i,
+      /permit.*entry/i,
+    ],
+  },
+  {
+    type: "seguridad",
+    severity: "high",
+    patterns: [
+      /do\s+not\s+travel/i,
+      /avoid\s+all\s+travel/i,
+      /avoid\s+travel/i,
+      /reconsider\s+travel/i,
+      /travel\s+advisory/i,
+      /no\s+se\s+recomienda\s+viajar/i,
+      /se\s+desaconseja\s+el\s+viaje/i,
+      /aplazar\s+el\s+viaje/i,
+      /evitar\s+viajes?/i,
+      /estado\s+de\s+emergencia/i,
+      /emergency\s+state/i,
+    ],
+  },
+  {
+    type: "salud",
+    severity: "medium",
+    patterns: [
+      /health\s+alert/i,
+      /health\s+restriction/i,
+      /outbreak/i,
+      /epidemic/i,
+      /sanitary\s+measures?/i,
+      /alerta\s+sanitaria/i,
+      /brote/i,
+      /medidas\s+sanitarias?/i,
+    ],
+  },
+  {
+    type: "volcan",
+    severity: "high",
+    patterns: [
+      /volcanic\s+activity/i,
+      /volcano\s+alert/i,
+      /erupcion/i,
+      /erupción/i,
+      /actividad\s+volcanica/i,
+      /actividad\s+volcánica/i,
+    ],
+  },
+];
+
+const sentenceCandidates = (text) => text
+  .split(/(?<=[.!?])\s+/)
+  .map((sentence) => sentence.trim())
+  .filter((sentence) => sentence.length >= 45 && sentence.length <= 600);
+
+const classifyText = (text, source) => {
+  const sentences = sentenceCandidates(text);
+  const alerts = [];
+
+  for (const rule of RULES) {
+    const hit = sentences.find((sentence) =>
+      rule.patterns.some((pattern) => pattern.test(sentence)),
+    );
+
+    if (!hit) continue;
+
+    alerts.push({
+      id: `live-${sha256(`${source.id}|${rule.type}|${hit}`).slice(0, 16)}`,
+      date: today,
+      type: rule.type,
+      severity: rule.severity,
+      title: `${rule.type.charAt(0).toUpperCase()}${rule.type.slice(1)} — información detectada`,
+      description: hit,
+      source: source.url,
+      sourceLabel: `${source.label} (${source.audience})`,
+      sourceType: "official",
+      active: true,
+      checkedAt,
+      affectedAreas: [],
+      travelerAction: "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte.",
+    });
+  }
+
+  return alerts;
+};
+
 const fetchSource = async (source) => {
   const response = await fetch(source.url, {
     headers: {
       "User-Agent": "CruzandoMeridianos-TravelIntelligence/1.0 (+https://www.cruzandomeridianos.com)",
-      Accept: "text/html,application/xhtml+xml",
+      Accept: "text/html,application/xhtml+xml,text/plain,application/xml,text/xml",
     },
     signal: AbortSignal.timeout(25_000),
   });
@@ -37,82 +191,10 @@ const fetchSource = async (source) => {
   if (!response.ok) throw new Error(`${source.id}: HTTP ${response.status}`);
 
   const html = await response.text();
-  const text = stripHtml(html).slice(0, 18_000);
+  const text = stripHtml(html).slice(0, 25_000);
   if (text.length < 120) throw new Error(`${source.id}: source returned insufficient text`);
 
   return { ...source, fingerprint: sha256(text), text };
-};
-
-const outputSchema = {
-  type: "object",
-  additionalProperties: false,
-  properties: {
-    alerts: {
-      type: "array",
-      items: {
-        type: "object",
-        additionalProperties: false,
-        properties: {
-          sourceId: { type: "string" },
-          date: { type: "string" },
-          type: { type: "string", enum: ["carretera", "clima", "parque", "transporte", "entrada", "seguridad", "salud", "volcan", "otro"] },
-          severity: { type: "string", enum: ["critical", "high", "medium", "low"] },
-          title: { type: "string" },
-          description: { type: "string" },
-          travelerAction: { type: "string" },
-          affectedAreas: { type: "array", items: { type: "string" } },
-          expiresAt: { type: ["string", "null"] },
-        },
-        required: ["sourceId", "date", "type", "severity", "title", "description", "travelerAction", "affectedAreas", "expiresAt"],
-      },
-    },
-  },
-  required: ["alerts"],
-};
-
-const extractResponseText = (data) => {
-  if (typeof data.output_text === "string") return data.output_text;
-  const message = (data.output ?? []).find((item) => item.type === "message");
-  const textPart = message?.content?.find((part) => part.type === "output_text");
-  if (typeof textPart?.text === "string") return textPart.text;
-  throw new Error("OpenAI response did not contain output text");
-};
-
-const generateAlerts = async (destination, sources) => {
-  if (!process.env.OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is required to generate traveler alerts");
-
-  const sourcePack = sources.map((source) =>
-    `SOURCE_ID: ${source.id}\nAUDIENCE: ${source.audience}\nSOURCE: ${source.label}\nURL: ${source.url}\nCONTENT:\n${source.text}`,
-  ).join("\n\n---\n\n");
-
-  const prompt = `You are the editorial safety layer for Cruzando Meridianos.\nCurrent date: ${today}.\nDestination: ${destination.label}.\n\nRead only the supplied source material. Produce traveler alerts only when the source contains a concrete, current fact that can materially affect a traveler during planning or travel: road closures, severe weather, floods, volcanic activity, airport or border disruption, entry/visa changes, official security warnings, health restrictions, closures, permits, strikes or other operational restrictions.\n\nRules:\n- Never invent facts.\n- Never infer a closure, visa requirement or travel ban from a generic page.\n- Prefer explicit current statements and recent dates.\n- Do not repeat evergreen background information unless it creates a current traveler action.\n- Severity must reflect the explicit source wording. Use critical/high only for urgent or materially restrictive situations.\n- If a source is an official government travel advisory, preserve its recommendation faithfully.\n- Do not merge different nationalities into one requirement. A source tagged ES, UK or US applies primarily to that market.\n- If several sources describe the same event, create one alert and choose the strongest authoritative source as sourceId.\n- If no concrete current traveler-impacting fact is found, return an empty alerts array.\n- The description must be concise and factual. travelerAction must say what a traveler should do.\n\nReturn JSON matching the schema exactly.`;
-
-  const response = await fetch("https://api.openai.com/v1/responses", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: openAiModel,
-      store: false,
-      input: [
-        { role: "system", content: prompt },
-        { role: "user", content: sourcePack.slice(0, 60_000) },
-      ],
-      text: {
-        format: {
-          type: "json_schema",
-          name: "travel_alerts",
-          strict: true,
-          schema: outputSchema,
-        },
-      },
-    }),
-  });
-
-  if (!response.ok) throw new Error(`OpenAI HTTP ${response.status}: ${await response.text()}`);
-  return JSON.parse(extractResponseText(await response.json()));
 };
 
 const loadPrevious = async () => {
@@ -126,29 +208,12 @@ const loadPrevious = async () => {
 const dedupeAlerts = (alerts) => {
   const seen = new Set();
   return alerts.filter((alert) => {
-    const key = [alert.type, alert.title.toLowerCase(), alert.source, alert.date].join("|");
+    const key = [alert.type, alert.source, alert.description].join("|");
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
   });
 };
-
-const normalizeAlert = (alert, source) => ({
-  id: `live-${sha256(`${source.id}|${alert.title}|${alert.date}`).slice(0, 16)}`,
-  date: alert.date || today,
-  type: alert.type,
-  severity: alert.severity,
-  title: alert.title.trim(),
-  description: alert.description.trim(),
-  source: source.url,
-  sourceLabel: `${source.label} (${source.audience})`,
-  sourceType: "official",
-  active: true,
-  expiresAt: alert.expiresAt || undefined,
-  checkedAt,
-  affectedAreas: alert.affectedAreas,
-  travelerAction: alert.travelerAction.trim(),
-});
 
 const previousModule = await loadPrevious();
 const previous = previousModule.liveGuideUpdates ?? {};
@@ -170,19 +235,22 @@ for (const destination of TRAVEL_INTELLIGENCE_SOURCES) {
   }
 
   const previousUpdate = previous[destination.slug];
-  const changed = fetched.filter((source) => previousUpdate?.sourceFingerprints?.[source.id] !== source.fingerprint);
+  const changed = fetched.filter(
+    (source) => previousUpdate?.sourceFingerprints?.[source.id] !== source.fingerprint,
+  );
+
   let alerts = previousUpdate?.alerts ?? [];
 
   if (changed.length > 0) {
-    const aiResult = await generateAlerts(destination, fetched);
-    const validSourceIds = new Set(fetched.map((source) => source.id));
-    const newAlerts = (aiResult.alerts ?? [])
-      .filter((alert) => validSourceIds.has(alert.sourceId))
-      .map((alert) => normalizeAlert(alert, fetched.find((source) => source.id === alert.sourceId)));
-    alerts = dedupeAlerts(newAlerts);
+    alerts = dedupeAlerts(changed.flatMap((source) => classifyText(source.text, source)));
   }
 
-  generated[destination.slug] = { checkedAt, sourceFingerprints: fingerprints, alerts, sourceFailures: failures };
+  generated[destination.slug] = {
+    checkedAt,
+    sourceFingerprints: fingerprints,
+    alerts,
+    sourceFailures: failures,
+  };
 
   if (failures.length) console.warn(`[${destination.slug}] source failures: ${failures.join(" | ")}`);
 }
