@@ -28,7 +28,9 @@ La monitorización descarga únicamente las fuentes configuradas, calcula una hu
 
 El proyecto es público, por lo que los runners estándar de GitHub Actions son gratuitos e ilimitados. El monitor no utiliza una API de IA de pago, así que esta capa no requiere API key ni método de pago. citeturn937986search0turn937986search3
 
-La aplicación existente sigue pudiendo funcionar sobre los servicios gratuitos de Cloudflare dentro de sus límites; Workers Free y D1 Free incluyen cuotas diarias sin necesidad de pasar al plan de pago. citeturn937986search2turn937986search5
+La aplicación existente puede seguir funcionando con los servicios gratuitos actuales mientras permanezca dentro de sus límites. Cloudflare Workers y D1 tienen planes Free con cuotas diarias; si alcanzamos un límite gratuito, el diseño debe degradar de forma segura antes de activar cualquier servicio de pago. citeturn937986search2turn937986search5
+
+Resend, que ya forma parte del proyecto para el correo transaccional, mantiene un plan Free de 3.000 emails/mes, 100 al día y sin tarjeta de crédito. Por tanto, no necesitamos activar un plan de pago para el volumen inicial. citeturn499129search0turn499129search1
 
 ## Frecuencia
 
