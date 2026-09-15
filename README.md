@@ -16,6 +16,18 @@ La web está planteada como una herramienta editorial y comercial para mostrar d
 * Resend
 * Git / GitHub
 
+## Inteligencia de viaje automática
+
+Las guías pueden incorporar una capa gratuita de actualidad diaria que comprueba fuentes oficiales de seguridad, entrada, meteorología, transporte, carreteras, parques y emergencias.
+
+El monitor se ejecuta con GitHub Actions y no requiere una API de IA de pago. Detecta cambios en las fuentes y busca señales explícitas de impacto para el viajero. La arquitectura permite añadir una capa de IA más adelante, cuando el proyecto tenga presupuesto, sin hacerla necesaria para el funcionamiento básico.
+
+La documentación completa está en:
+
+```text
+docs/automatic-travel-intelligence.md
+```
+
 ## Requisitos
 
 * Node.js `>=22.12.0`
@@ -100,6 +112,7 @@ Estructura principal:
 │   │
 │   ├── data/
 │   │   ├── guides/
+│   │   ├── live/
 │   │   ├── our-trips/
 │   │   ├── resources/
 │   │   └── destinations.ts
@@ -197,8 +210,6 @@ El sistema está preparado para gestionar:
 * ventajas
 * limitaciones
 * disclosure
-
-Los recursos pueden mostrarse de forma global o contextual dentro de determinadas guías.
 
 Los enlaces de recomendación o afiliación deben identificarse de forma transparente y no deben incorporarse enlaces comerciales sin verificar previamente que el programa y sus condiciones sean válidos.
 
