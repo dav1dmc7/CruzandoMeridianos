@@ -27,7 +27,6 @@
   "overrides": {
     "@cloudflare/vite-plugin": "1.54.9",
     "js-yaml": "4.3.2",
-    "miniflare": "5.20260911.0-alpha",
     "sharp": "0.35.4",
     "svgo": "4.1.0"
   }
