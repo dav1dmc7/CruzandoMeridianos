@@ -5,6 +5,7 @@ import Layout from "../layouts/Layout.astro";
 import Footer from "../components/layout/Footer.astro";
 import DestinationCard from "../components/sections/DestinationCard.astro";
 import DestinationHierarchy from "../components/sections/DestinationHierarchy.astro";
+import TravelStart from "../components/sections/TravelStart.astro";
 
 import { destinations, type DestinationContinent } from "../data/destinations";
 
@@ -44,45 +45,60 @@ const continents: DestinationContinent[] = [
       </div>
     </section>
 
+    <TravelStart />
+
     <DestinationHierarchy />
 
-    <section class="destination-explorer" id="explorador">
+    <section class="destination-explorer" id="explorador" aria-labelledby="explorer-title">
       <div class="explorer-inner">
         <div class="explorer-heading">
           <div>
             <p class="eyebrow">EXPLORADOR DE DESTINOS</p>
-            <h2>¿Dónde te gustaría viajar?</h2>
+            <h2 id="explorer-title">¿Dónde te gustaría viajar?</h2>
           </div>
           <p>
-            Busca un país directamente o explora por continente. Cada destino tiene su
-            propio espacio para descubrirlo a fondo.
+            Busca por destino, país, región o continente. Cada resultado tiene su propio
+            espacio para descubrirlo a fondo.
           </p>
         </div>
 
-        <div class="destination-search">
+        <div class="destination-search" role="search">
           <label for="destination-search-input">Buscar un destino</label>
           <div class="destination-search-field">
             <span aria-hidden="true">⌕</span>
-            <input id="destination-search-input" type="search" autocomplete="off" placeholder="Escribe un país…" />
+            <input
+              id="destination-search-input"
+              type="search"
+              autocomplete="off"
+              placeholder="Busca un país, ciudad o destino…"
+              enterkeyhint="search"
+            />
           </div>
+          <p class="destination-results-meta" data-results-count aria-live="polite">
+            {destinations.length} destinos para explorar
+          </p>
         </div>
 
         <div class="continent-filter" role="group" aria-label="Filtrar por continente">
-          <button type="button" class="continent-button is-active" data-continent="all">Todos</button>
+          <button type="button" class="continent-button is-active" data-continent="all" aria-pressed="true">Todos</button>
           {continents.map((continent) => (
-            <button type="button" class="continent-button" data-continent={continent}>{continent}</button>
+            <button type="button" class="continent-button" data-continent={continent} aria-pressed="false">{continent}</button>
           ))}
         </div>
 
         <div class="destination-results" data-destination-results>
           {destinations.map((destination) => {
             const isReady = destination.status === "ready";
+            const searchText = [destination.name, destination.country, destination.region, destination.continent]
+              .filter(Boolean)
+              .join(" ")
+              .toLowerCase();
 
             return (
               <article
                 class:list={["destination-result", { "destination-result--disabled": !isReady }]}
                 data-destination-card
-                data-name={destination.name.toLowerCase()}
+                data-search={searchText}
                 data-continent={destination.continent}
               >
                 {isReady ? (
@@ -96,7 +112,7 @@ const continents: DestinationContinent[] = [
                     <span class="destination-result-number">{destination.number}</span>
                     <span class="destination-result-copy">
                       <strong>{destination.name}</strong>
-                      <small>{destination.continent}</small>
+                      <small>{destination.country ?? destination.continent} · {destination.continent}</small>
                     </span>
                     <span class="destination-result-image" aria-hidden="true">
                       {destination.image ? (
@@ -138,17 +154,17 @@ const continents: DestinationContinent[] = [
         </div>
 
         <p class="destination-no-results" data-no-results hidden>
-          No encontramos ese destino todavía. Prueba con otro nombre o explora un continente.
+          No encontramos ese destino todavía. Prueba con otro nombre, país, región o continente.
         </p>
       </div>
     </section>
 
-    <section class="popular-destinations" data-popular-section>
+    <section class="popular-destinations" id="radar" data-popular-section aria-labelledby="popular-title">
       <div class="popular-inner">
         <div class="popular-heading">
           <div>
             <p class="eyebrow">EN EL RADAR</p>
-            <h2>Destinos para empezar a curiosear.</h2>
+            <h2 id="popular-title">Destinos para empezar a curiosear.</h2>
           </div>
           <p>Una primera selección para descubrir qué te llama antes de pensar en la ruta.</p>
         </div>
@@ -203,21 +219,29 @@ const continents: DestinationContinent[] = [
     const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-destination-card]"));
     const noResults = document.querySelector<HTMLElement>("[data-no-results]");
     const popularSection = document.querySelector<HTMLElement>("[data-popular-section]");
+    const resultsCount = document.querySelector<HTMLElement>("[data-results-count]");
+    const searchStart = document.querySelector<HTMLAnchorElement>('[data-travel-start="search"]');
 
     let activeContinent = "all";
+
+    const updateResultsCount = (visible: number) => {
+      if (!resultsCount) return;
+      resultsCount.textContent = visible === 1 ? "1 destino para explorar" : `${visible} destinos para explorar`;
+    };
 
     const applyFilters = () => {
       const query = (searchInput?.value ?? "").trim().toLowerCase();
       let visible = 0;
 
       cards.forEach((card) => {
-        const name = card.dataset.name ?? "";
+        const searchText = card.dataset.search ?? "";
         const continent = card.dataset.continent ?? "";
-        const show = (!query || name.includes(query)) && (activeContinent === "all" || continent === activeContinent);
+        const show = (!query || searchText.includes(query)) && (activeContinent === "all" || continent === activeContinent);
         card.hidden = !show;
         if (show) visible += 1;
       });
 
+      updateResultsCount(visible);
       if (noResults) noResults.hidden = visible > 0;
       if (popularSection) popularSection.hidden = Boolean(query) || activeContinent !== "all";
     };
@@ -225,12 +249,20 @@ const continents: DestinationContinent[] = [
     buttons.forEach((button) => {
       button.addEventListener("click", () => {
         activeContinent = button.dataset.continent ?? "all";
-        buttons.forEach((item) => item.classList.toggle("is-active", item === button));
+        buttons.forEach((item) => {
+          const isActive = item === button;
+          item.classList.toggle("is-active", isActive);
+          item.setAttribute("aria-pressed", String(isActive));
+        });
         applyFilters();
       });
     });
 
     searchInput?.addEventListener("input", applyFilters);
+
+    searchStart?.addEventListener("click", () => {
+      window.setTimeout(() => searchInput?.focus({ preventScroll: true }), 300);
+    });
   </script>
 </Layout>
 
@@ -256,6 +288,7 @@ const continents: DestinationContinent[] = [
 .destination-search-field span{color:var(--color-cobre);font-size:1.2rem}
 .destination-search-field input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:var(--color-grafito);font:inherit;font-size:1rem}
 .destination-search-field input::placeholder{color:#888}
+.destination-results-meta{margin:.7rem 0 0 .1rem;color:#777;font-size:.76rem;line-height:1.5}
 .continent-filter{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:2rem}
 .continent-button{padding:.7rem 1rem;border:1px solid rgba(28,48,38,.18);border-radius:999px;background:transparent;color:var(--color-bosque);cursor:pointer;font:inherit;font-size:.82rem;transition:all .2s ease}
 .continent-button:hover,.continent-button.is-active{border-color:var(--color-bosque);background:var(--color-bosque);color:var(--color-papel)}
@@ -308,9 +341,7 @@ const continents: DestinationContinent[] = [
    CM EDITORIAL PASS — VIAJES
    ============================================================ */
 
-.destination-results {
-  gap: 1rem;
-}
+.destination-results { gap: 1rem; }
 
 .destination-result {
   overflow: hidden;
