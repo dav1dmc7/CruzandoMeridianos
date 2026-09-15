@@ -23,7 +23,7 @@ interface ResendResponse { id?: string; message?: string; }
 
 const FROM_EMAIL = "Cruzando Meridianos <hola@cruzandomeridianos.com>";
 const INTERNAL_EMAIL = "hola@cruzandomeridianos.com";
-const WEBSITE_URL = "https://cruzandomeridianos.com";
+const WEBSITE_URL = "https://www.cruzandomeridianos.com";
 const LOGO_URL = `${WEBSITE_URL}/email-logo.png`;
 const RATE_LIMIT_WINDOW_SECONDS = 15 * 60;
 const RATE_LIMIT_MAX_REQUESTS = 3;
@@ -158,6 +158,6 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify({ success: true, id, emailSent: internalResult.status === "fulfilled" && customerResult.status === "fulfilled" }), { status: 201, headers: { "Content-Type": "application/json" } });
   } catch (error) {
     console.error("Error procesando solicitud de viaje:", error);
-    return new Response(JSON.stringify({ success: false, error: "No se ha podido procesar la solicitud." }), { status: 500, headers: { "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ success: false, error: "No se ha podido procesar la solicitud." } ), { status: 500, headers: { "Content-Type": "application/json" } });
   }
 };
