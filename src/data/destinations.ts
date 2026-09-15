@@ -5,6 +5,7 @@ import sudafrica from "../assets/images/leonas.jpg";
 import jordania from "../assets/images/petra.jpg";
 import grecia from "../assets/images/corfu.jpg";
 import auroras from "../assets/images/aurora.jpg";
+import atlasGuideFallback from "../assets/images/atlas-guide-fallback.svg";
 
 export type DestinationContinent =
   | "Europa"
@@ -93,6 +94,8 @@ export const destinations: Destination[] = [
     number: "06",
     description:
       "Ciudades con historia, patrimonio, gastronomía y una Europa central que merece descubrirse con calma.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Polonia",
     continent: "Europa",
     country: "Polonia",
     status: "ready",
@@ -103,6 +106,8 @@ export const destinations: Destination[] = [
     number: "07",
     description:
       "Historia, arte, comida y paisajes. Un país enorme para plantear viajes muy diferentes.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Italia",
     continent: "Europa",
     country: "Italia",
     status: "ready",
@@ -113,6 +118,8 @@ export const destinations: Destination[] = [
     number: "08",
     description:
       "Arquitectura imperial, cafés, música y una de las grandes capitales culturales de Europa.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Viena",
     continent: "Europa",
     country: "Austria",
     status: "ready",
@@ -123,6 +130,8 @@ export const destinations: Destination[] = [
     number: "09",
     description:
       "Una ciudad para caminar, descubrir barrios, arquitectura, historia y rincones que cambian con cada paseo.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Praga",
     continent: "Europa",
     country: "Chequia",
     status: "ready",
@@ -133,6 +142,8 @@ export const destinations: Destination[] = [
     number: "10",
     description:
       "El Danubio, arquitectura, termas y una ciudad con mucha personalidad.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Budapest",
     continent: "Europa",
     country: "Hungría",
     status: "ready",
@@ -143,6 +154,8 @@ export const destinations: Destination[] = [
     number: "11",
     description:
       "Canales, barrios, museos y una ciudad que se entiende mejor cuando sales de los recorridos de siempre.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Ámsterdam",
     continent: "Europa",
     country: "Países Bajos",
     status: "ready",
@@ -153,6 +166,8 @@ export const destinations: Destination[] = [
     number: "12",
     description:
       "Mucho más que una lista de monumentos: barrios, paseos, cultura, gastronomía y pequeñas decisiones que cambian el viaje.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para París",
     continent: "Europa",
     country: "Francia",
     status: "ready",
@@ -163,6 +178,8 @@ export const destinations: Destination[] = [
     number: "13",
     description:
       "Pueblos, costa, carreteras secundarias, mercados y paisajes mediterráneos para recorrer sin prisas.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para el sur de Francia",
     continent: "Europa",
     country: "Francia",
     status: "ready",
@@ -173,6 +190,8 @@ export const destinations: Destination[] = [
     number: "14",
     description:
       "Una ciudad enorme que pide planificación: barrios, miradores, comida, cultura y mucho que decidir antes de llegar.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Nueva York",
     continent: "América",
     country: "Estados Unidos",
     status: "ready",
@@ -183,6 +202,8 @@ export const destinations: Destination[] = [
     number: "15",
     description:
       "Museos, historia, arquitectura y una capital estadounidense que merece algo más que una visita rápida.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Washington",
     continent: "América",
     country: "Estados Unidos",
     status: "ready",
@@ -193,6 +214,8 @@ export const destinations: Destination[] = [
     number: "16",
     description:
       "Historia, desierto, templos y un viaje donde la planificación puede cambiar completamente la experiencia.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Egipto",
     continent: "África",
     country: "Egipto",
     status: "ready",
@@ -203,6 +226,8 @@ export const destinations: Destination[] = [
     number: "17",
     description:
       "Una isla que nosotros vivimos dentro de un viaje combinado con Sudáfrica. Naturaleza, costa y una parte del viaje muy distinta.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Mauricio",
     continent: "África",
     country: "Mauricio",
     status: "ready",
@@ -213,6 +238,8 @@ export const destinations: Destination[] = [
     number: "18",
     description:
       "Historia, calas, pueblos y Mediterráneo en una isla pequeña pero llena de posibilidades.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Malta",
     continent: "Europa",
     country: "Malta",
     status: "ready",
@@ -223,6 +250,8 @@ export const destinations: Destination[] = [
     number: "19",
     description:
       "Volcanes, costa, montaña y paisajes muy diferentes en una de las islas más completas de Canarias.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Tenerife",
     continent: "Europa",
     country: "España",
     region: "Canarias",
@@ -234,6 +263,8 @@ export const destinations: Destination[] = [
     number: "20",
     description:
       "Playas, montaña, pueblos y carreteras con cambios de paisaje constantes.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Gran Canaria",
     continent: "Europa",
     country: "España",
     region: "Canarias",
@@ -245,6 +276,8 @@ export const destinations: Destination[] = [
     number: "21",
     description:
       "Volcanes, arquitectura, costa y paisajes que parecen de otro planeta.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Lanzarote",
     continent: "Europa",
     country: "España",
     region: "Canarias",
@@ -256,6 +289,8 @@ export const destinations: Destination[] = [
     number: "22",
     description:
       "Playas, viento, carreteras abiertas y una isla para explorar a tu propio ritmo.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Fuerteventura",
     continent: "Europa",
     country: "España",
     region: "Canarias",
@@ -267,6 +302,8 @@ export const destinations: Destination[] = [
     number: "23",
     description:
       "Naturaleza, tranquilidad, volcanes y rincones para descubrir lejos de las rutas habituales.",
+    image: atlasGuideFallback,
+    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para El Hierro",
     continent: "Europa",
     country: "España",
     region: "Canarias",
