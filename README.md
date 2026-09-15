@@ -4,18 +4,6 @@ Sitio web de **Cruzando Meridianos**, proyecto especializado en el diseño de vi
 
 La web está planteada como una herramienta editorial y comercial para mostrar destinos, investigación, experiencia real y metodología de trabajo, y para captar solicitudes de diseño de viajes personalizados.
 
-## Stack
-
-* [Astro](https://astro.build/)
-* TypeScript
-* Cloudflare Workers
-* Cloudflare D1
-* Cloudflare KV
-* Cloudflare Images
-* Cloudflare Sessions
-* Resend
-* Git / GitHub
-
 ## Inteligencia de viaje automática
 
 Las guías pueden incorporar una capa gratuita de actualidad diaria que comprueba fuentes oficiales de seguridad, entrada, meteorología, transporte, carreteras, parques y emergencias.
