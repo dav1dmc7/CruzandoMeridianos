@@ -11,8 +11,7 @@ export type DestinationContinent =
   | "África"
   | "Asia"
   | "América"
-  | "Oceanía"
-  | "Otros";
+  | "Oceanía";
 
 export interface Destination {
   name: string;
@@ -22,6 +21,8 @@ export interface Destination {
   image?: ImageMetadata;
   imageAlt?: string;
   continent: DestinationContinent;
+  country?: string;
+  region?: string;
   status: "ready" | "coming-soon";
 }
 
@@ -35,6 +36,7 @@ export const destinations: Destination[] = [
     image: costaRica,
     imageAlt: "Playa tropical en Costa Rica",
     continent: "América",
+    country: "Costa Rica",
     status: "ready",
   },
 
@@ -47,6 +49,7 @@ export const destinations: Destination[] = [
     image: sudafrica,
     imageAlt: "Leonas durante un safari en Sudáfrica",
     continent: "África",
+    country: "Sudáfrica",
     status: "coming-soon",
   },
 
@@ -59,6 +62,7 @@ export const destinations: Destination[] = [
     image: jordania,
     imageAlt: "Petra, Jordania",
     continent: "Asia",
+    country: "Jordania",
     status: "coming-soon",
   },
 
@@ -71,6 +75,7 @@ export const destinations: Destination[] = [
     image: grecia,
     imageAlt: "Paisaje costero de Corfú, Grecia",
     continent: "Europa",
+    country: "Grecia",
     status: "coming-soon",
   },
 
@@ -83,6 +88,7 @@ export const destinations: Destination[] = [
     image: auroras,
     imageAlt: "Auroras boreales sobre un paisaje nórdico",
     continent: "Europa",
+    country: "Varios destinos",
     status: "coming-soon",
   },
 
@@ -93,6 +99,7 @@ export const destinations: Destination[] = [
     description:
       "Ciudades con historia, patrimonio, gastronomía y una Europa central que merece descubrirse con calma.",
     continent: "Europa",
+    country: "Polonia",
     status: "coming-soon",
   },
 
@@ -103,6 +110,7 @@ export const destinations: Destination[] = [
     description:
       "Historia, arte, comida y paisajes. Un país enorme para plantear viajes muy diferentes.",
     continent: "Europa",
+    country: "Italia",
     status: "coming-soon",
   },
 
@@ -113,6 +121,7 @@ export const destinations: Destination[] = [
     description:
       "Arquitectura imperial, cafés, música y una de las grandes capitales culturales de Europa.",
     continent: "Europa",
+    country: "Austria",
     status: "coming-soon",
   },
 
@@ -123,6 +132,7 @@ export const destinations: Destination[] = [
     description:
       "Una ciudad para caminar, descubrir barrios, arquitectura, historia y rincones que cambian con cada paseo.",
     continent: "Europa",
+    country: "Chequia",
     status: "coming-soon",
   },
 
@@ -133,6 +143,7 @@ export const destinations: Destination[] = [
     description:
       "El Danubio, arquitectura, termas y una ciudad con mucha personalidad.",
     continent: "Europa",
+    country: "Hungría",
     status: "coming-soon",
   },
 
@@ -143,6 +154,7 @@ export const destinations: Destination[] = [
     description:
       "Canales, barrios, museos y una ciudad que se entiende mejor cuando sales de los recorridos de siempre.",
     continent: "Europa",
+    country: "Países Bajos",
     status: "coming-soon",
   },
 
@@ -153,6 +165,7 @@ export const destinations: Destination[] = [
     description:
       "Mucho más que una lista de monumentos: barrios, paseos, cultura, gastronomía y pequeñas decisiones que cambian el viaje.",
     continent: "Europa",
+    country: "Francia",
     status: "coming-soon",
   },
 
@@ -163,6 +176,7 @@ export const destinations: Destination[] = [
     description:
       "Pueblos, costa, carreteras secundarias, mercados y paisajes mediterráneos para recorrer sin prisas.",
     continent: "Europa",
+    country: "Francia",
     status: "coming-soon",
   },
 
@@ -173,6 +187,7 @@ export const destinations: Destination[] = [
     description:
       "Una ciudad enorme que pide planificación: barrios, miradores, comida, cultura y mucho que decidir antes de llegar.",
     continent: "América",
+    country: "Estados Unidos",
     status: "coming-soon",
   },
 
@@ -183,6 +198,7 @@ export const destinations: Destination[] = [
     description:
       "Museos, historia, arquitectura y una capital estadounidense que merece algo más que una visita rápida.",
     continent: "América",
+    country: "Estados Unidos",
     status: "coming-soon",
   },
 
@@ -193,6 +209,7 @@ export const destinations: Destination[] = [
     description:
       "Historia, desierto, templos y un viaje donde la planificación puede cambiar completamente la experiencia.",
     continent: "África",
+    country: "Egipto",
     status: "coming-soon",
   },
 
@@ -203,6 +220,7 @@ export const destinations: Destination[] = [
     description:
       "Una isla que nosotros vivimos dentro de un viaje combinado con Sudáfrica. Naturaleza, costa y una parte del viaje muy distinta.",
     continent: "África",
+    country: "Mauricio",
     status: "coming-soon",
   },
 
@@ -213,6 +231,7 @@ export const destinations: Destination[] = [
     description:
       "Historia, calas, pueblos y Mediterráneo en una isla pequeña pero llena de posibilidades.",
     continent: "Europa",
+    country: "Malta",
     status: "coming-soon",
   },
 
@@ -222,7 +241,9 @@ export const destinations: Destination[] = [
     number: "19",
     description:
       "Volcanes, costa, montaña y paisajes muy diferentes en una de las islas más completas de Canarias.",
-    continent: "Otros",
+    continent: "Europa",
+    country: "España",
+    region: "Canarias",
     status: "coming-soon",
   },
 
@@ -232,7 +253,9 @@ export const destinations: Destination[] = [
     number: "20",
     description:
       "Playas, montaña, pueblos y carreteras con cambios de paisaje constantes.",
-    continent: "Otros",
+    continent: "Europa",
+    country: "España",
+    region: "Canarias",
     status: "coming-soon",
   },
 
@@ -242,7 +265,9 @@ export const destinations: Destination[] = [
     number: "21",
     description:
       "Volcanes, arquitectura, costa y paisajes que parecen de otro planeta.",
-    continent: "Otros",
+    continent: "Europa",
+    country: "España",
+    region: "Canarias",
     status: "coming-soon",
   },
 
@@ -252,7 +277,9 @@ export const destinations: Destination[] = [
     number: "22",
     description:
       "Playas, viento, carreteras abiertas y una isla para explorar a tu propio ritmo.",
-    continent: "Otros",
+    continent: "Europa",
+    country: "España",
+    region: "Canarias",
     status: "coming-soon",
   },
 
@@ -262,7 +289,9 @@ export const destinations: Destination[] = [
     number: "23",
     description:
       "Naturaleza, tranquilidad, volcanes y rincones para descubrir lejos de las rutas habituales.",
-    continent: "Otros",
+    continent: "Europa",
+    country: "España",
+    region: "Canarias",
     status: "coming-soon",
   },
 ];
