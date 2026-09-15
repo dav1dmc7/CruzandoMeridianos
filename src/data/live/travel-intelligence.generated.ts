@@ -12,25 +12,4 @@ export interface LiveGuideUpdate {
   sourceFailures?: string[];
 }
 
-export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
-  "costa-rica": {
-    checkedAt: "2026-09-15T00:00:00.000Z",
-    sourceFingerprints: {},
-    alerts: [],
-  },
-  sudafrica: {
-    checkedAt: "2026-09-15T00:00:00.000Z",
-    sourceFingerprints: {},
-    alerts: [],
-  },
-  jordania: {
-    checkedAt: "2026-09-15T00:00:00.000Z",
-    sourceFingerprints: {},
-    alerts: [],
-  },
-  grecia: {
-    checkedAt: "2026-09-15T00:00:00.000Z",
-    sourceFingerprints: {},
-    alerts: [],
-  },
-};
+export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {};
