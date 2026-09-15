@@ -4,162 +4,161 @@
  * GUIDE REGISTRY
  * ============================================================
  *
- * Registro central de guías.
+ * Registro central de guías + capa de inteligencia de viaje.
  *
- * La capa de presentación no necesita conocer cómo se
- * almacenan los destinos.
- *
- * Para añadir una nueva guía:
- *
- *   1. Crear guides/nuevo-destino.ts
- *   2. Importarla aquí.
- *   3. Registrarla.
- *
- * El resto de la arquitectura permanece intacto.
+ * El contenido editorial estable vive en guides/<destino>.ts.
+ * Los avisos temporales generados por la monitorización diaria
+ * se inyectan desde ../live/travel-intelligence.generated.ts.
  * ============================================================
  */
 
 import type {
-    DestinationGuide,
-  } from "./types";
+  DestinationGuide,
+} from "./types";
 
-  import {
+import {
+  costaRicaGuide,
+} from "./costa-rica";
+
+import {
+  liveGuideUpdates,
+} from "../live/travel-intelligence.generated";
+
+
+/* ============================================================
+   REGISTRY
+   ============================================================ */
+
+const guides: Readonly<
+  Record<string, DestinationGuide>
+> = {
+  [costaRicaGuide.slug]:
     costaRicaGuide,
-  } from "./costa-rica";
+};
 
 
-  /* ============================================================
-     REGISTRY
-     ============================================================ */
+/* ============================================================
+   NORMALIZATION
+   ============================================================ */
 
-  const guides: Readonly<
-    Record<string, DestinationGuide>
-  > = {
-    [costaRicaGuide.slug]:
-      costaRicaGuide,
+const normalizeSlug = (
+  slug: string
+): string =>
+  slug
+    .trim()
+    .toLowerCase();
+
+
+/* ============================================================
+   LIVE INTELLIGENCE
+   ============================================================ */
+
+const withLiveUpdates = (
+  guide: DestinationGuide
+): DestinationGuide => {
+  const update =
+    liveGuideUpdates[guide.slug];
+
+  if (!update) {
+    return guide;
+  }
+
+  return {
+    ...guide,
+
+    alerts: [
+      ...update.alerts,
+      ...guide.alerts,
+    ],
   };
+};
 
 
-  /* ============================================================
-     NORMALIZATION
-     ============================================================ */
+/* ============================================================
+   GET BY SLUG
+   ============================================================
 
-  const normalizeSlug = (
-    slug: string
-  ): string =>
-    slug
-      .trim()
-      .toLowerCase();
-
-
-  /* ============================================================
-     GET BY SLUG
-     ============================================================ */
-
-  /**
-   * Obtiene una guía por slug.
-   *
-   * Normaliza espacios y mayúsculas para evitar fallos
-   * innecesarios en consultas internas.
-   */
-  export const getGuideBySlug = (
-    slug: string
-  ): DestinationGuide | undefined =>
+/**
+ * Obtiene una guía por slug.
+ *
+ * Incluye automáticamente los avisos temporales generados
+ * por la monitorización diaria cuando existen.
+ */
+export const getGuideBySlug = (
+  slug: string
+): DestinationGuide | undefined => {
+  const guide =
     guides[
       normalizeSlug(slug)
     ];
 
-
-  /* ============================================================
-     GET ALL
-     ============================================================ */
-
-  /**
-   * Devuelve todas las guías registradas.
-   *
-   * Útil para:
-   *
-   * - listado de destinos
-   * - sitemap
-   * - búsqueda
-   * - generación de índices
-   * - auditorías internas
-   */
-  export const getAllGuides =
-    (): DestinationGuide[] =>
-      Object.values(
-        guides
-      );
+  return guide
+    ? withLiveUpdates(guide)
+    : undefined;
+};
 
 
-  /* ============================================================
-     GET PUBLISHED
-     ============================================================ */
+/* ============================================================
+   GET ALL
+   ============================================================ */
 
-  /**
-   * Devuelve solamente las guías publicadas.
-   *
-   * "in-review" puede seguir siendo accesible internamente,
-   * pero no se considera una guía editorialmente publicada.
-   */
-  export const getPublishedGuides =
-    (): DestinationGuide[] =>
-      getAllGuides().filter(
-        (guide) =>
-          guide.editorial?.status ===
-          "published"
-      );
+export const getAllGuides =
+  (): DestinationGuide[] =>
+    Object.values(
+      guides
+    ).map(withLiveUpdates);
 
 
-  /* ============================================================
-     GET PUBLIC / NON-DRAFT
-     ============================================================ */
+/* ============================================================
+   GET PUBLISHED
+   ============================================================ */
 
-  /**
-   * Devuelve guías que no estén en estado "draft".
-   *
-   * Útil para una futura estrategia donde una guía pueda estar
-   * en revisión editorial pero ya ser accesible al público.
-   */
-  export const getPublicGuides =
-    (): DestinationGuide[] =>
-      getAllGuides().filter(
-        (guide) =>
-          guide.editorial?.status !==
-          "draft"
-      );
-
-
-  /* ============================================================
-     HAS GUIDE
-     ============================================================ */
-
-  /**
-   * Comprueba si existe una guía registrada.
-   */
-  export const hasGuide = (
-    slug: string
-  ): boolean =>
-    Boolean(
-      getGuideBySlug(slug)
+export const getPublishedGuides =
+  (): DestinationGuide[] =>
+    getAllGuides().filter(
+      (guide) =>
+        guide.editorial?.status ===
+        "published"
     );
 
 
-  /* ============================================================
-     HAS PUBLISHED GUIDE
-     ============================================================ */
+/* ============================================================
+   GET PUBLIC / NON-DRAFT
+   ============================================================ */
 
-  /**
-   * Comprueba si existe una guía editorialmente publicada.
-   */
-  export const hasPublishedGuide = (
-    slug: string
-  ): boolean => {
-    const guide =
-      getGuideBySlug(slug);
-
-    return (
-      guide?.editorial?.status ===
-      "published"
+export const getPublicGuides =
+  (): DestinationGuide[] =>
+    getAllGuides().filter(
+      (guide) =>
+        guide.editorial?.status !==
+        "draft"
     );
-  };
+
+
+/* ============================================================
+   HAS GUIDE
+   ============================================================ */
+
+export const hasGuide = (
+  slug: string
+): boolean =>
+  Boolean(
+    getGuideBySlug(slug)
+  );
+
+
+/* ============================================================
+   HAS PUBLISHED GUIDE
+   ============================================================ */
+
+export const hasPublishedGuide = (
+  slug: string
+): boolean => {
+  const guide =
+    getGuideBySlug(slug);
+
+  return (
+    guide?.editorial?.status ===
+    "published"
+  );
+};
