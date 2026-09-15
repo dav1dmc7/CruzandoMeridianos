@@ -27,10 +27,7 @@ jobs:
         with:
           node-version: 22.19.0
 
-      - name: Collect and classify traveler-impacting changes
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_MODEL: gpt-5.6-luna
+      - name: Monitor official traveler information
         run: node scripts/monitor-travel-intelligence.mjs
 
       - name: Commit generated travel intelligence
