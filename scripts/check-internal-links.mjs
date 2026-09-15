@@ -5,7 +5,6 @@ import process from "node:process";
 const root = process.cwd();
 const sourceRoots = [path.join(root, "src")];
 const publicRoot = path.join(root, "public");
-const pendingRoutes = new Set(["/privacidad", "/aviso-legal", "/cookies"]);
 const generatedRoutes = new Set(["/sitemap-index.xml"]);
 const ignoredExtensions = new Set([".d.ts", ".map"]);
 
@@ -61,7 +60,6 @@ for (const sourceRoot of sourceRoots) {
 
 const hrefPattern = /href\s*=\s*["']([^"'#]+)(?:[#][^"']*)?["']/g;
 const problems = [];
-const pending = new Map();
 
 const publicFileExists = async (route) => {
   const relativePath = route.replace(/^\//, "");
@@ -100,13 +98,7 @@ for (const file of sourceFiles) {
 
     const relative = path.relative(root, file).replace(/\\/g, "/");
     const line = content.slice(0, match.index).split("\n").length;
-    if (pendingRoutes.has(route)) {
-      const list = pending.get(route) ?? [];
-      list.push(`${relative}:${line}`);
-      pending.set(route, list);
-    } else {
-      problems.push(`${relative}:${line} → ${route}`);
-    }
+    problems.push(`${relative}:${line} → ${route}`);
   }
 }
 
@@ -117,9 +109,3 @@ if (problems.length) {
 }
 
 console.log("Internal link audit passed.");
-if (pending.size) {
-  console.warn("\nKnown pending legal routes (intentionally not failing CI):");
-  for (const [route, locations] of pending) {
-    console.warn(`- ${route}: ${locations.join(", ")}`);
-  }
-}
