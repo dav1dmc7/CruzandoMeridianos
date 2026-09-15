@@ -20,7 +20,15 @@ const isActive = (href: string) => currentPath === href;
     </div>
     <nav class="cr-decision-links" aria-label="Contenido relacionado de Costa Rica">
       {links.map(([href, label]) => (
-        <a href={href} class:list={{ active: isActive(href) }} aria-current={isActive(href) ? "page" : undefined}>{label}</a>
+        <a
+          href={href}
+          data-track="costa_rica_decision_nav"
+          data-track-label={label}
+          class:list={{ active: isActive(href) }}
+          aria-current={isActive(href) ? "page" : undefined}
+        >
+          {label}
+        </a>
       ))}
     </nav>
   </div>
