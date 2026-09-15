@@ -32,5 +32,8 @@ jobs:
       - name: Internal link audit
         run: npm run audit:links
 
+      - name: Analytics event audit
+        run: npm run audit:analytics
+
       - name: Production build
         run: npm run build
