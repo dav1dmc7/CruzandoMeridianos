@@ -82,6 +82,7 @@
     status.className = "sr-only";
     status.setAttribute("aria-live", "polite");
     status.setAttribute("aria-atomic", "true");
+    status.tabIndex = -1;
     form.prepend(status);
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -99,7 +100,7 @@
       }
       status.textContent = message || "No hemos podido completar la solicitud.";
       status.setAttribute("role", "alert");
-      status.focus?.({ preventScroll: true });
+      status.focus({ preventScroll: true });
     };
 
     const observer = new MutationObserver(() => {
