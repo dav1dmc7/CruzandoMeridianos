@@ -50,8 +50,17 @@
       "textarea:not([disabled]), input:not([disabled]), select:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex='-1'])"
     );
 
+  const getTravelForm = (): HTMLFormElement | null =>
+    document.querySelector<HTMLFormElement>("#journey-form");
+
+  const setActiveQuestionA11y = (activeQuestion: HTMLElement | null) => {
+    document.querySelectorAll<HTMLElement>("#journey-form .question-block").forEach((question) => {
+      question.setAttribute("aria-current", question === activeQuestion ? "step" : "false");
+    });
+  };
+
   const ensureTravelFormAccessibility = () => {
-    const form = document.querySelector<HTMLFormElement>("#journey-form");
+    const form = getTravelForm();
     if (!form) return;
 
     const mobilityBlock = form.querySelector<HTMLElement>("[data-step='6']");
@@ -65,9 +74,45 @@
       mobilityOptions.removeAttribute("aria-label");
     }
 
-    form.querySelectorAll<HTMLElement>(".question-block").forEach((block) => {
-      block.setAttribute("aria-current", block.classList.contains("active") ? "step" : "false");
+    form.setAttribute("aria-busy", "false");
+    setActiveQuestionA11y(form.querySelector<HTMLElement>(".question-block.active"));
+
+    const status = document.createElement("p");
+    status.id = "journey-form-status";
+    status.className = "sr-only";
+    status.setAttribute("aria-live", "polite");
+    status.setAttribute("aria-atomic", "true");
+    form.prepend(status);
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const applyMotionPreference = () => {
+      document.documentElement.dataset.reducedMotion = reducedMotion.matches ? "true" : "false";
+    };
+    applyMotionPreference();
+    reducedMotion.addEventListener?.("change", applyMotionPreference);
+
+    const originalAlert = window.alert;
+    window.alert = (message?: string) => {
+      if (!getTravelForm()) {
+        originalAlert(message);
+        return;
+      }
+      status.textContent = message || "No hemos podido completar la solicitud.";
+      status.setAttribute("role", "alert");
+      status.focus?.({ preventScroll: true });
+    };
+
+    const observer = new MutationObserver(() => {
+      setActiveQuestionA11y(form.querySelector<HTMLElement>(".question-block.active"));
     });
+    observer.observe(form, {
+      attributes: true,
+      attributeFilter: ["class"],
+      subtree: true,
+    });
+
+    const progressMessage = document.querySelector<HTMLElement>("#progress-message");
+    progressMessage?.setAttribute("aria-atomic", "true");
   };
 
   document.addEventListener("DOMContentLoaded", ensureTravelFormAccessibility, { once: true });
@@ -92,6 +137,9 @@
     }
 
     const next = event.target.closest<HTMLButtonElement>("#journey-form .next-button");
+    const back = event.target.closest<HTMLButtonElement>("#journey-form .back-button");
+    const navigationButton = next ?? back;
+
     if (next) {
       const block = next.closest<HTMLElement>(".question-block");
       const step = Number(block?.dataset.step);
@@ -99,21 +147,17 @@
         step: Number.isInteger(step) ? step : null,
         label: block?.dataset.message ?? null,
       });
+    }
 
+    if (navigationButton) {
       window.setTimeout(() => {
         const activeQuestion = document.querySelector<HTMLElement>("#journey-form .question-block.active");
-        activeQuestion?.setAttribute("aria-current", "step");
-        formSiblingsUpdate(activeQuestion);
-        getFocusable(activeQuestion ?? document.body)?.focus({ preventScroll: true });
+        setActiveQuestionA11y(activeQuestion);
+        const focusTarget = getFocusable(activeQuestion ?? document.body);
+        focusTarget?.focus({ preventScroll: true });
       }, 60);
     }
   });
-
-  const formSiblingsUpdate = (activeQuestion: HTMLElement | null) => {
-    document.querySelectorAll<HTMLElement>("#journey-form .question-block").forEach((question) => {
-      question.setAttribute("aria-current", question === activeQuestion ? "step" : "false");
-    });
-  };
 
   document.addEventListener("focusin", (event) => {
     if (!(event.target instanceof Element)) return;
@@ -129,6 +173,12 @@
     const form = event.target;
     if (form instanceof HTMLFormElement && form.id === "journey-form") {
       sendEvent("travel_form_submit");
+      form.setAttribute("aria-busy", "true");
+      const status = form.querySelector<HTMLElement>("#journey-form-status");
+      if (status) {
+        status.removeAttribute("role");
+        status.textContent = "Enviando tu solicitud…";
+      }
     }
   });
 </script>
