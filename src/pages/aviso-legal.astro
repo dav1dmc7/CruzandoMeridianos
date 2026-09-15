@@ -1,0 +1,86 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Footer from "../components/layout/Footer.astro";
+---
+
+<Layout
+  title="Aviso legal | Cruzando Meridianos"
+  description="Información legal del sitio web de Cruzando Meridianos."
+  canonical="/aviso-legal"
+>
+  <main class="legal-page">
+    <section class="legal-hero">
+      <div class="legal-inner">
+        <p class="eyebrow">AVISO LEGAL</p>
+        <h1>Información clara sobre quién está detrás de esta web.</h1>
+        <p>
+          Este aviso reúne la información general del sitio y del prestador de servicios de la sociedad de la información.
+        </p>
+      </div>
+    </section>
+
+    <section class="legal-content">
+      <div class="legal-inner legal-copy">
+        <aside class="legal-notice" role="note">
+          <strong>Falta completar un dato jurídico esencial</strong>
+          <p>
+            La normativa exige que el prestador pueda ser identificado de forma permanente, fácil, directa y gratuita. En el proyecto no consta todavía la denominación o nombre legal completo, domicilio y, en su caso, datos registrales y NIF/CIF. Esos datos deben incorporarse antes de considerar este aviso legal definitivo.
+          </p>
+        </aside>
+
+        <h2>1. Titular del sitio</h2>
+        <p>
+          Nombre o denominación legal: <strong>PENDIENTE DE COMPLETAR</strong>.<br />
+          Nombre comercial: <strong>Cruzando Meridianos</strong>.<br />
+          Correo electrónico: <a href="mailto:hola@cruzandomeridianos.com">hola@cruzandomeridianos.com</a>.<br />
+          Domicilio: <strong>PENDIENTE DE COMPLETAR</strong>.<br />
+          NIF/CIF: <strong>PENDIENTE DE COMPLETAR</strong>.<br />
+          Datos registrales, cuando procedan: <strong>PENDIENTE DE COMPLETAR</strong>.
+        </p>
+
+        <h2>2. Actividad del sitio</h2>
+        <p>
+          Cruzando Meridianos es un proyecto editorial y de servicios de diseño e investigación de viajes. La web ofrece contenidos sobre destinos, experiencias y planificación, además de un canal para solicitar ayuda personalizada para la preparación de un viaje.
+        </p>
+
+        <h2>3. Condiciones de uso</h2>
+        <p>
+          La navegación por esta web implica la aceptación de un uso lícito de sus contenidos y servicios. No se permite utilizar el sitio de forma que pueda causar daños al funcionamiento, seguridad o disponibilidad de la infraestructura o de terceros.
+        </p>
+
+        <h2>4. Propiedad intelectual</h2>
+        <p>
+          Salvo indicación distinta, los textos, elementos gráficos, código, estructura editorial, fotografías y demás contenidos propios de Cruzando Meridianos están protegidos por la normativa aplicable. La reproducción o reutilización fuera de los límites permitidos por la ley requiere autorización cuando corresponda.
+        </p>
+
+        <h2>5. Enlaces externos</h2>
+        <p>
+          Algunos contenidos pueden enlazar a webs o servicios de terceros. Cruzando Meridianos no controla de forma general sus contenidos ni sus políticas y cada tercero es responsable de su propia actividad.
+        </p>
+
+        <h2>6. Contacto</h2>
+        <p>
+          Para cuestiones generales sobre la web puedes escribir a <a href="mailto:hola@cruzandomeridianos.com">hola@cruzandomeridianos.com</a>.
+        </p>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+.legal-hero{padding:8rem 2rem 6rem;background:var(--color-papel)}
+.legal-content{padding:6rem 2rem 8rem;background:var(--color-arena)}
+.legal-inner{width:min(960px,100%);margin:0 auto}
+.eyebrow{margin:0 0 1.4rem;color:var(--color-cobre);font-size:.72rem;font-weight:600;letter-spacing:2px;text-transform:uppercase}
+.legal-hero h1{max-width:850px;margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3.4rem,7vw,6rem);font-weight:400;line-height:.98;letter-spacing:-.04em}
+.legal-hero p:not(.eyebrow){max-width:700px;margin:2rem 0 0;color:#555;font-size:1.1rem;line-height:1.8}
+.legal-copy{color:#4c4c4c;font-size:1rem;line-height:1.8}
+.legal-copy h2{margin:3.2rem 0 1rem;color:var(--color-bosque);font-family:var(--font-serif);font-size:2rem;font-weight:400;line-height:1.1}
+.legal-copy p{margin:0 0 1.15rem}
+.legal-copy a{color:var(--color-bosque);font-weight:600}
+.legal-notice{margin:0 0 3rem;padding:1.4rem 1.5rem;border:1px solid rgba(194,125,56,.4);border-radius:16px;background:rgba(194,125,56,.08)}
+.legal-notice strong{display:block;margin-bottom:.4rem;color:var(--color-bosque)}
+.legal-notice p{margin:0;color:#5a5148}
+@media(max-width:700px){.legal-hero{padding:6rem 1.5rem 5rem}.legal-content{padding:5rem 1.5rem 6rem}.legal-hero h1{font-size:3.4rem}}
+</style>
