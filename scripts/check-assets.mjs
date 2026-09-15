@@ -9,6 +9,9 @@ const assetRoots = [
 
 const WARN_BYTES = 500 * 1024;
 const FAIL_BYTES = 5 * 1024 * 1024;
+const justifiedLargeAssets = new Set([
+  "src/assets/images/costa-rica/arbol.jpg",
+]);
 const binaryExtensions = new Set([
   ".avif",
   ".gif",
@@ -57,7 +60,12 @@ for (const file of files) {
 assets.sort((a, b) => b.bytes - a.bytes);
 
 const warnings = assets.filter(({ bytes }) => bytes > WARN_BYTES);
-const failures = assets.filter(({ bytes }) => bytes > FAIL_BYTES);
+const failures = assets.filter(
+  ({ file, bytes }) => bytes > FAIL_BYTES && !justifiedLargeAssets.has(file)
+);
+const justified = assets.filter(
+  ({ file, bytes }) => bytes > FAIL_BYTES && justifiedLargeAssets.has(file)
+);
 
 console.log("Asset weight audit:");
 for (const { file, bytes } of warnings.slice(0, 15)) {
@@ -68,8 +76,15 @@ if (warnings.length === 0) {
   console.log("- No assets exceed 500 KB.");
 }
 
+if (justified.length) {
+  console.log("\nJustified large editorial masters:");
+  for (const { file, bytes } of justified) {
+    console.log(`- ${(bytes / 1024 / 1024).toFixed(2)} MB  ${file}`);
+  }
+}
+
 if (failures.length) {
-  console.error("\nAsset audit failed: files over 5 MB should be optimized or justified before production.");
+  console.error("\nAsset audit failed: files over 5 MB should be optimized or explicitly justified before production.");
   for (const { file, bytes } of failures) {
     console.error(`- ${(bytes / 1024 / 1024).toFixed(2)} MB  ${file}`);
   }
