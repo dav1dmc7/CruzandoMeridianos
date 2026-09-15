@@ -6,6 +6,20 @@ import jordania from "../assets/images/petra.jpg";
 import grecia from "../assets/images/corfu.jpg";
 import auroras from "../assets/images/aurora.jpg";
 
+export type TravelAdvisoryLevel =
+  | "standard"
+  | "caution"
+  | "postpone";
+
+export interface TravelAdvisory {
+  level: TravelAdvisoryLevel;
+  label: string;
+  summary: string;
+  sourceLabel: string;
+  sourceUrl: string;
+  reviewedAt: string;
+}
+
 export interface Destination {
   name: string;
   slug: string;
@@ -14,6 +28,7 @@ export interface Destination {
   image: ImageMetadata;
   imageAlt: string;
   status: "ready" | "coming-soon";
+  advisory?: TravelAdvisory;
 }
 
 export const destinations: Destination[] = [
@@ -26,6 +41,17 @@ export const destinations: Destination[] = [
     image: costaRica,
     imageAlt: "Playa tropical en Costa Rica",
     status: "ready",
+    advisory: {
+      level: "caution",
+      label: "Viajar con precaución",
+      summary:
+        "La recomendación oficial vigente aconseja viajar con precaución y prestar especial atención a seguridad ciudadana, conducción y fenómenos naturales.",
+      sourceLabel:
+        "Ministerio de Asuntos Exteriores de España — Costa Rica",
+      sourceUrl:
+        "https://www.exteriores.gob.es/es/ServiciosAlCiudadano/Paginas/Detalle-recomendaciones-de-viaje.aspx?trc=Costa+Rica",
+      reviewedAt: "2026-09-15",
+    },
   },
 
   {
@@ -37,6 +63,17 @@ export const destinations: Destination[] = [
     image: sudafrica,
     imageAlt: "Leonas durante un safari en Sudáfrica",
     status: "coming-soon",
+    advisory: {
+      level: "caution",
+      label: "Extremar las precauciones",
+      summary:
+        "La recomendación oficial señala un nivel muy alto de delincuencia, incluida delincuencia violenta, y aconseja extremar las precauciones y evitar determinadas zonas.",
+      sourceLabel:
+        "Ministerio de Asuntos Exteriores de España — Sudáfrica",
+      sourceUrl:
+        "https://exteriores.gob.es/es/ServiciosAlCiudadano/Paginas/Detalle-recomendaciones-de-viaje.aspx?trc=Sud%C3%A1frica",
+      reviewedAt: "2026-09-15",
+    },
   },
 
   {
@@ -48,6 +85,17 @@ export const destinations: Destination[] = [
     image: jordania,
     imageAlt: "Petra, Jordania",
     status: "coming-soon",
+    advisory: {
+      level: "postpone",
+      label: "Viaje aplazado actualmente",
+      summary:
+        "La recomendación oficial vigente aconseja aplazar el viaje a Jordania hasta nuevo aviso por el conflicto regional de Oriente Próximo.",
+      sourceLabel:
+        "Ministerio de Asuntos Exteriores de España — Jordania",
+      sourceUrl:
+        "https://exteriores.gob.es/Embajadas/amman/en/ViajarA/Paginas/Recomendaciones-de-viaje.aspx",
+      reviewedAt: "2026-09-15",
+    },
   },
 
   {
@@ -59,6 +107,17 @@ export const destinations: Destination[] = [
     image: grecia,
     imageAlt: "Paisaje costero de Corfú, Grecia",
     status: "coming-soon",
+    advisory: {
+      level: "standard",
+      label: "Sin restricciones específicas",
+      summary:
+        "La recomendación oficial vigente no establece restricciones específicas de viaje, aunque recuerda mantener las precauciones habituales y vigilar incendios, terremotos y condiciones meteorológicas.",
+      sourceLabel:
+        "Ministerio de Asuntos Exteriores de España — Grecia",
+      sourceUrl:
+        "https://www.exteriores.gob.es/es/ServiciosAlCiudadano/Paginas/Detalle-recomendaciones-de-viaje.aspx?trc=Grecia",
+      reviewedAt: "2026-09-15",
+    },
   },
 
   {
