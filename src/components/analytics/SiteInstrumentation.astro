@@ -45,6 +45,33 @@
     }
   };
 
+  const getFocusable = (container: Element): HTMLElement | null =>
+    container.querySelector<HTMLElement>(
+      "textarea:not([disabled]), input:not([disabled]), select:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex='-1'])"
+    );
+
+  const ensureTravelFormAccessibility = () => {
+    const form = document.querySelector<HTMLFormElement>("#journey-form");
+    if (!form) return;
+
+    const mobilityBlock = form.querySelector<HTMLElement>("[data-step='6']");
+    const mobilityLabel = mobilityBlock?.querySelector<HTMLElement>(".question-number + label");
+    const mobilityOptions = mobilityBlock?.querySelector<HTMLElement>(".transport-options");
+
+    if (mobilityLabel && mobilityOptions) {
+      if (!mobilityLabel.id) mobilityLabel.id = "mobility-question-label";
+      mobilityOptions.setAttribute("aria-labelledby", mobilityLabel.id);
+      mobilityOptions.setAttribute("role", "group");
+      mobilityOptions.removeAttribute("aria-label");
+    }
+
+    form.querySelectorAll<HTMLElement>(".question-block").forEach((block) => {
+      block.setAttribute("aria-current", block.classList.contains("active") ? "step" : "false");
+    });
+  };
+
+  document.addEventListener("DOMContentLoaded", ensureTravelFormAccessibility, { once: true });
+
   document.addEventListener("click", (event) => {
     if (!(event.target instanceof Element)) return;
 
@@ -72,8 +99,21 @@
         step: Number.isInteger(step) ? step : null,
         label: block?.dataset.message ?? null,
       });
+
+      window.setTimeout(() => {
+        const activeQuestion = document.querySelector<HTMLElement>("#journey-form .question-block.active");
+        activeQuestion?.setAttribute("aria-current", "step");
+        formSiblingsUpdate(activeQuestion);
+        getFocusable(activeQuestion ?? document.body)?.focus({ preventScroll: true });
+      }, 60);
     }
   });
+
+  const formSiblingsUpdate = (activeQuestion: HTMLElement | null) => {
+    document.querySelectorAll<HTMLElement>("#journey-form .question-block").forEach((question) => {
+      question.setAttribute("aria-current", question === activeQuestion ? "step" : "false");
+    });
+  };
 
   document.addEventListener("focusin", (event) => {
     if (!(event.target instanceof Element)) return;
