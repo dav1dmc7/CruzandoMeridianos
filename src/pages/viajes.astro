@@ -4,6 +4,7 @@ import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import Footer from "../components/layout/Footer.astro";
 import DestinationCard from "../components/sections/DestinationCard.astro";
+import DestinationHierarchy from "../components/sections/DestinationHierarchy.astro";
 
 import { destinations, type DestinationContinent } from "../data/destinations";
 
@@ -42,6 +43,8 @@ const continents: DestinationContinent[] = [
         </div>
       </div>
     </section>
+
+    <DestinationHierarchy />
 
     <section class="destination-explorer" id="explorador">
       <div class="explorer-inner">
@@ -87,6 +90,8 @@ const continents: DestinationContinent[] = [
                     href={`/viajes/${destination.slug}`}
                     class="destination-result-link"
                     aria-label={`Explorar ${destination.name}`}
+                    data-geo-transition
+                    data-geo-label={destination.name}
                   >
                     <span class="destination-result-number">{destination.number}</span>
                     <span class="destination-result-copy">
@@ -111,7 +116,7 @@ const continents: DestinationContinent[] = [
                     <span class="destination-result-number">{destination.number}</span>
                     <span class="destination-result-copy">
                       <strong>{destination.name}</strong>
-                      <small>{destination.continent}</small>
+                      <small>{destination.country}{destination.region ? ` · ${destination.region}` : ""}</small>
                     </span>
                     <span class="destination-result-image" aria-hidden="true">
                       {destination.image ? (
