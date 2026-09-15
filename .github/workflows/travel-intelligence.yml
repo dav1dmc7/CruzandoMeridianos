@@ -1,0 +1,49 @@
+name: Travel Intelligence
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: travel-intelligence
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22.19.0
+
+      - name: Collect and classify traveler-impacting changes
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: gpt-5.6-luna
+        run: node scripts/monitor-travel-intelligence.mjs
+
+      - name: Show generated diff
+        run: git diff -- src/data/live/travel-intelligence.generated.ts
+
+      - name: Commit generated travel intelligence
+        run: |
+          git config user.name "Cruzando Meridianos Travel Intelligence"
+          git config user.email "actions@users.noreply.github.com"
+          git add src/data/live/travel-intelligence.generated.ts
+          if git diff --cached --quiet; then
+            echo "No traveler-impacting source changes detected."
+            exit 0
+          fi
+          git commit -m "chore: refresh travel intelligence"
+          git push
