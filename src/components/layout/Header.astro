@@ -19,7 +19,15 @@ const isActive = (href: string) => {
 <header class="site-header">
   <div class="header-inner">
     <a href="/" class="brand" aria-label="Cruzando Meridianos — Inicio">
-      <img src="/logo.svg" alt="Cruzando Meridianos" class="brand-logo" />
+      <img
+        src="/logo.svg"
+        alt="Cruzando Meridianos"
+        class="brand-logo"
+        width="1536"
+        height="1024"
+        fetchpriority="high"
+        decoding="async"
+      />
     </a>
 
     <nav class="main-nav" aria-label="Navegación principal">
