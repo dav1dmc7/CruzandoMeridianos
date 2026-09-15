@@ -30,7 +30,6 @@ jobs:
         run: npm install astro@7.3.2 @astrojs/cloudflare@14.3.1 @astrojs/sitemap@3.7.4 wrangler@4.125.0 --package-lock-only --ignore-scripts
 
       - name: Commit refreshed dependencies
-        if: steps.refresh.outcome != 'failure'
         run: |
           if git diff --quiet -- package.json package-lock.json; then
             echo "No dependency changes."
