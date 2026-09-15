@@ -84,6 +84,16 @@ const organizationSchema = {
   name: "Cruzando Meridianos",
   url: `${siteUrl}/`,
   logo: new URL("/brujula.png", siteUrl).href,
+  founder: [
+    {
+      "@type": "Person",
+      name: "David",
+    },
+    {
+      "@type": "Person",
+      name: "Itciar",
+    },
+  ],
 };
 
 const webPageSchema = {
@@ -95,6 +105,11 @@ const webPageSchema = {
   inLanguage: "es",
   isPartOf: {
     "@type": "WebSite",
+    name: "Cruzando Meridianos",
+    url: `${siteUrl}/`,
+  },
+  publisher: {
+    "@type": "Organization",
     name: "Cruzando Meridianos",
     url: `${siteUrl}/`,
   },
