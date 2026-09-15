@@ -19,8 +19,8 @@ export interface Destination {
   slug: string;
   number: string;
   description: string;
-  image?: ImageMetadata;
-  imageAlt?: string;
+  image: ImageMetadata;
+  imageAlt: string;
   continent: DestinationContinent;
   country?: string;
   region?: string;
