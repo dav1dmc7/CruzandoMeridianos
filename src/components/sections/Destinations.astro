@@ -5,7 +5,7 @@ import { destinations } from "../../data/destinations";
 const featuredSlugs = [
   "costa-rica",
   "sudafrica",
-  "jordania",
+  "grecia",
   "mauricio",
   "auroras",
 ];
@@ -30,6 +30,14 @@ const featuredDestinations = featuredSlugs
         Infinitas formas de vivirlos.
       </h2>
 
+      <p>
+        No son un catálogo de viajes cerrados. Son una muestra de cómo investigamos un destino, qué decisiones merece la pena entender y dónde empieza el trabajo de diseñar un viaje a medida.
+      </p>
+
+      <a href="/viajes" class="destinations-index-link">
+        Explorar todas las guías
+        <span aria-hidden="true">↗</span>
+      </a>
 
     </div>
 
@@ -92,7 +100,7 @@ const featuredDestinations = featuredSlugs
   line-height: 1.08;
 }
 
-.destinations-intro > p:last-child {
+.destinations-intro > p {
   max-width: 620px;
 
   margin-top: 2rem;
@@ -103,10 +111,29 @@ const featuredDestinations = featuredSlugs
   line-height: 1.8;
 }
 
+.destinations-index-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  margin-top: 1.5rem;
+  color: var(--color-bosque);
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: .03em;
+  text-decoration: none;
+}
 
-/* ─────────────────────────────
-   GRID
-───────────────────────────── */
+.destinations-index-link span {
+  transition: transform .25s ease;
+}
+
+.destinations-index-link:hover {
+  color: var(--color-cobre);
+}
+
+.destinations-index-link:hover span {
+  transform: translate(3px, -3px);
+}
 
 .destinations-grid {
   display: grid;
@@ -117,20 +144,9 @@ const featuredDestinations = featuredSlugs
   gap: 5rem 3rem;
 }
 
-
-/*
- * El primer destino es el protagonista
- * de la sección.
- */
-
 .destinations-grid > :first-child {
   grid-column: 1 / -1;
 }
-
-
-/* ─────────────────────────────
-   RESPONSIVE
-───────────────────────────── */
 
 @media (max-width: 800px) {
 
@@ -158,7 +174,6 @@ const featuredDestinations = featuredSlugs
 
 }
 
-
 @media (max-width: 500px) {
 
   .destinations {
@@ -169,11 +184,17 @@ const featuredDestinations = featuredSlugs
     font-size: 2.35rem;
   }
 
-  .destinations-intro > p:last-child {
+  .destinations-intro > p {
     font-size: 1rem;
     line-height: 1.7;
   }
 
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .destinations-index-link span {
+    transition: none;
+  }
 }
 
 </style>
