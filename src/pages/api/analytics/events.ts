@@ -7,6 +7,7 @@ const ALLOWED_EVENTS = new Set([
   "travel_form_step",
   "travel_form_submit",
   "proof_of_work",
+  "costa_rica_decision_nav",
   "interaction",
 ]);
 
