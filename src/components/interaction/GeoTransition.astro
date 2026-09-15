@@ -1,0 +1,54 @@
+<div class="geo-transition" data-geo-transition aria-hidden="true">
+  <div class="geo-transition-globe" aria-hidden="true">
+    <span></span>
+    <span></span>
+  </div>
+  <div class="geo-transition-copy">
+    <span class="geo-transition-kicker">CRUZANDO MERIDIANOS</span>
+    <strong data-geo-transition-label>Hacia el destino</strong>
+  </div>
+</div>
+
+<script>
+  const transition = document.querySelector<HTMLElement>("[data-geo-transition]");
+  const label = document.querySelector<HTMLElement>("[data-geo-transition-label]");
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  document.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+    const link = event.target.closest<HTMLAnchorElement>("a[data-geo-transition]");
+    if (!link || event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    const target = new URL(link.href, window.location.href);
+    if (target.origin !== window.location.origin || target.pathname === window.location.pathname) return;
+
+    event.preventDefault();
+
+    if (label) label.textContent = link.dataset.geoLabel || link.textContent?.trim() || "Hacia el destino";
+
+    if (prefersReducedMotion || !transition) {
+      window.location.href = target.href;
+      return;
+    }
+
+    transition.classList.add("is-visible");
+    window.setTimeout(() => {
+      window.location.href = target.href;
+    }, 360);
+  });
+</script>
+
+<style>
+.geo-transition{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;gap:1.5rem;pointer-events:none;background:rgba(28,48,38,.96);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .22s ease,transform .22s ease,visibility .22s ease}
+.geo-transition.is-visible{opacity:1;visibility:visible;transform:none;pointer-events:auto}
+.geo-transition-globe{position:relative;width:78px;height:78px;border:1px solid rgba(251,249,245,.7);border-radius:50%;overflow:hidden;box-shadow:0 0 0 12px rgba(194,125,56,.08),0 0 0 24px rgba(194,125,56,.04)}
+.geo-transition-globe::before,.geo-transition-globe::after,.geo-transition-globe span{content:"";position:absolute;inset:8px;border:1px solid rgba(251,249,245,.35);border-radius:50%}
+.geo-transition-globe::before{transform:rotate(0deg) scaleX(.45)}
+.geo-transition-globe::after{transform:rotate(0deg) scaleY(.45)}
+.geo-transition-globe span:first-child{inset:18px 3px;border-left:0;border-right:0;border-radius:50%}
+.geo-transition-globe span:last-child{inset:3px 18px;border-top:0;border-bottom:0;border-radius:50%}
+.geo-transition-copy{text-align:center;color:var(--color-papel,#fbf9f5)}
+.geo-transition-kicker{display:block;margin-bottom:.55rem;color:var(--color-cobre,#c27d38);font-size:.65rem;font-weight:600;letter-spacing:2px}
+.geo-transition-copy strong{display:block;font-family:var(--font-serif,Georgia,serif);font-size:clamp(2rem,5vw,3.6rem);font-weight:400}
+@media (prefers-reduced-motion:reduce){.geo-transition{transition:none}.geo-transition-globe{box-shadow:none}}
+</style>
