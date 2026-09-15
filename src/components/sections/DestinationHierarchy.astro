@@ -1,0 +1,95 @@
+---
+import { destinations } from "../../data/destinations";
+
+const spain = destinations.filter((destination) => destination.country === "España");
+const canarias = spain.filter((destination) => destination.region === "Canarias");
+---
+
+<section class="destination-hierarchy" id="espana" aria-labelledby="destination-hierarchy-title">
+  <div class="destination-hierarchy-inner">
+    <div class="destination-hierarchy-intro">
+      <div>
+        <p class="eyebrow">ATLAS · ESPAÑA</p>
+        <h2 id="destination-hierarchy-title">Un país. Un archipiélago. Muchas formas de viajar.</h2>
+      </div>
+      <p>
+        Empezamos a ordenar el atlas por geografía real. Cuando una región reúne varios destinos,
+        primero entiendes el conjunto y después eliges la isla o el lugar que más te interesa.
+      </p>
+    </div>
+
+    <div class="destination-hierarchy-path" aria-label="Jerarquía geográfica">
+      <span>Europa</span><span aria-hidden="true">→</span><strong>España</strong><span aria-hidden="true">→</span><strong>Canarias</strong>
+    </div>
+
+    <div class="destination-hierarchy-group">
+      <div class="destination-hierarchy-heading">
+        <div>
+          <span class="destination-hierarchy-number">01</span>
+          <h3>Canarias</h3>
+        </div>
+        <p>Volcanes, costa, montaña, pueblos y ritmos muy distintos dentro de un mismo archipiélago.</p>
+      </div>
+
+      <div class="destination-hierarchy-grid">
+        {canarias.map((destination) => {
+          const isReady = destination.status === "ready";
+          const content = (
+            <>
+              <span class="destination-hierarchy-card-number">{destination.number}</span>
+              <span class="destination-hierarchy-card-copy">
+                <strong>{destination.name}</strong>
+                <small>{isReady ? "Explorar destino" : "Próximamente"}</small>
+              </span>
+              <span class="destination-hierarchy-card-arrow" aria-hidden="true">↗</span>
+            </>
+          );
+
+          return isReady ? (
+            <a
+              class="destination-hierarchy-card is-link"
+              href={`/viajes/${destination.slug}`}
+              data-geo-transition
+              data-geo-label={destination.name}
+              aria-label={`Explorar ${destination.name}`}
+            >
+              {content}
+            </a>
+          ) : (
+            <div class="destination-hierarchy-card" aria-label={`${destination.name}, próximamente`}>
+              {content}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.destination-hierarchy{padding:5.5rem 2rem;background:var(--color-bosque);color:var(--color-papel)}
+.destination-hierarchy-inner{width:min(var(--content-width),100%);margin:0 auto}
+.destination-hierarchy-intro{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(280px,.55fr);gap:5rem;align-items:end}
+.destination-hierarchy h2{max-width:800px;margin:0;color:var(--color-papel);font-family:var(--font-serif);font-size:clamp(2.8rem,5vw,4.7rem);font-weight:400;line-height:1;letter-spacing:-.035em}
+.destination-hierarchy-intro>p{margin:0;color:rgba(251,249,245,.72);font-size:1rem;line-height:1.8}
+.destination-hierarchy .eyebrow{color:var(--color-cobre)}
+.destination-hierarchy-path{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem;margin-top:3rem;color:rgba(251,249,245,.6);font-size:.74rem;letter-spacing:1px;text-transform:uppercase}
+.destination-hierarchy-path strong{color:var(--color-papel);font-weight:600}
+.destination-hierarchy-group{margin-top:3.5rem;padding-top:2rem;border-top:1px solid rgba(251,249,245,.18)}
+.destination-hierarchy-heading{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.55fr);gap:4rem;align-items:end}
+.destination-hierarchy-heading>div{display:flex;align-items:baseline;gap:1rem}
+.destination-hierarchy-number{color:var(--color-cobre);font-size:.68rem;font-weight:600;letter-spacing:2px}
+.destination-hierarchy-heading h3{margin:0;color:var(--color-papel);font-family:var(--font-serif);font-size:2.8rem;font-weight:400}
+.destination-hierarchy-heading>p{margin:0;color:rgba(251,249,245,.68);line-height:1.7}
+.destination-hierarchy-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.8rem;margin-top:2rem}
+.destination-hierarchy-card{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:end;gap:.65rem;min-height:110px;padding:1rem;border:1px solid rgba(251,249,245,.16);border-radius:16px;background:rgba(251,249,245,.05);color:inherit;text-decoration:none;transition:background .2s ease,border-color .2s ease,transform .2s ease}
+a.destination-hierarchy-card:hover{transform:translateY(-2px);border-color:rgba(194,125,56,.75);background:rgba(194,125,56,.1)}
+.destination-hierarchy-card.is-link:focus-visible{outline:2px solid var(--color-cobre);outline-offset:3px}
+.destination-hierarchy-card-number{align-self:start;color:var(--color-cobre);font-size:.65rem;font-weight:600;letter-spacing:1px}
+.destination-hierarchy-card-copy{min-width:0}
+.destination-hierarchy-card-copy strong{display:block;color:var(--color-papel);font-family:var(--font-serif);font-size:1.25rem;font-weight:400;line-height:1.05}
+.destination-hierarchy-card-copy small{display:block;margin-top:.4rem;color:rgba(251,249,245,.55);font-size:.67rem;text-transform:uppercase}
+.destination-hierarchy-card-arrow{color:var(--color-cobre);font-size:1rem}
+@media(max-width:900px){.destination-hierarchy{padding:5rem 1.5rem}.destination-hierarchy-intro,.destination-hierarchy-heading{grid-template-columns:1fr;gap:2rem}.destination-hierarchy-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.destination-hierarchy-grid{grid-template-columns:1fr}.destination-hierarchy-card{min-height:92px}}
+</style>
