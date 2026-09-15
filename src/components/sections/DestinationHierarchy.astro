@@ -34,16 +34,6 @@ const canarias = spain.filter((destination) => destination.region === "Canarias"
       <div class="destination-hierarchy-grid">
         {canarias.map((destination) => {
           const isReady = destination.status === "ready";
-          const content = (
-            <>
-              <span class="destination-hierarchy-card-number">{destination.number}</span>
-              <span class="destination-hierarchy-card-copy">
-                <strong>{destination.name}</strong>
-                <small>{isReady ? "Explorar destino" : "Próximamente"}</small>
-              </span>
-              <span class="destination-hierarchy-card-arrow" aria-hidden="true">↗</span>
-            </>
-          );
 
           return isReady ? (
             <a
@@ -53,11 +43,21 @@ const canarias = spain.filter((destination) => destination.region === "Canarias"
               data-geo-label={destination.name}
               aria-label={`Explorar ${destination.name}`}
             >
-              {content}
+              <span class="destination-hierarchy-card-number">{destination.number}</span>
+              <span class="destination-hierarchy-card-copy">
+                <strong>{destination.name}</strong>
+                <small>Explorar destino</small>
+              </span>
+              <span class="destination-hierarchy-card-arrow" aria-hidden="true">↗</span>
             </a>
           ) : (
             <div class="destination-hierarchy-card" aria-label={`${destination.name}, próximamente`}>
-              {content}
+              <span class="destination-hierarchy-card-number">{destination.number}</span>
+              <span class="destination-hierarchy-card-copy">
+                <strong>{destination.name}</strong>
+                <small>Próximamente</small>
+              </span>
+              <span class="destination-hierarchy-card-arrow" aria-hidden="true">↗</span>
             </div>
           );
         })}
