@@ -2,8 +2,17 @@
 import DestinationCard from "./DestinationCard.astro";
 import { destinations } from "../../data/destinations";
 
-const featuredDestination = destinations[0];
-const otherDestinations = destinations.slice(1);
+const featuredSlugs = [
+  "costa-rica",
+  "sudafrica",
+  "grecia",
+  "mauricio",
+  "auroras",
+];
+
+const featuredDestinations = featuredSlugs
+  .map((slug) => destinations.find((destination) => destination.slug === slug))
+  .filter((destination) => destination !== undefined);
 ---
 
 <section class="destinations">
@@ -26,21 +35,24 @@ const otherDestinations = destinations.slice(1);
         Cada destino cambia cuando cambia la persona que lo recorre.
       </p>
 
+      <p>
+        No son un catálogo de viajes cerrados. Son una muestra de cómo investigamos un destino, qué decisiones merece la pena entender y dónde empieza el trabajo de diseñar un viaje a medida.
+      </p>
+
+      <a href="/viajes" class="destinations-index-link">
+        Explorar todas las guías
+        <span aria-hidden="true">↗</span>
+      </a>
+
     </div>
 
 
     <div class="destinations-grid">
 
-      {featuredDestination && (
-        <DestinationCard
-          destination={featuredDestination}
-          featured
-        />
-      )}
-
-      {otherDestinations.map((destination) => (
+      {featuredDestinations.map((destination, index) => (
         <DestinationCard
           destination={destination}
+          featured={index === 0}
         />
       ))}
 
@@ -93,7 +105,7 @@ const otherDestinations = destinations.slice(1);
   line-height: 1.08;
 }
 
-.destinations-intro > p:last-child {
+.destinations-intro > p {
   max-width: 620px;
 
   margin-top: 2rem;
@@ -104,10 +116,29 @@ const otherDestinations = destinations.slice(1);
   line-height: 1.8;
 }
 
+.destinations-index-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  margin-top: 1.5rem;
+  color: var(--color-bosque);
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: .03em;
+  text-decoration: none;
+}
 
-/* ─────────────────────────────
-   GRID
-───────────────────────────── */
+.destinations-index-link span {
+  transition: transform .25s ease;
+}
+
+.destinations-index-link:hover {
+  color: var(--color-cobre);
+}
+
+.destinations-index-link:hover span {
+  transform: translate(3px, -3px);
+}
 
 .destinations-grid {
   display: grid;
@@ -118,20 +149,9 @@ const otherDestinations = destinations.slice(1);
   gap: 5rem 3rem;
 }
 
-
-/*
- * El primer destino es el protagonista
- * de la sección.
- */
-
 .destinations-grid > :first-child {
   grid-column: 1 / -1;
 }
-
-
-/* ─────────────────────────────
-   RESPONSIVE
-───────────────────────────── */
 
 @media (max-width: 800px) {
 
@@ -159,7 +179,6 @@ const otherDestinations = destinations.slice(1);
 
 }
 
-
 @media (max-width: 500px) {
 
   .destinations {
@@ -170,11 +189,17 @@ const otherDestinations = destinations.slice(1);
     font-size: 2.35rem;
   }
 
-  .destinations-intro > p:last-child {
+  .destinations-intro > p {
     font-size: 1rem;
     line-height: 1.7;
   }
 
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .destinations-index-link span {
+    transition: none;
+  }
 }
 
 </style>
