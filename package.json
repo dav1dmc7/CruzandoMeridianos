@@ -12,6 +12,7 @@
     "audit:links": "node scripts/check-internal-links.mjs",
     "audit:analytics": "node scripts/check-analytics-events.mjs",
     "audit:guides": "node scripts/check-guides.mjs",
+    "audit:assets": "node scripts/check-assets.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "generate-types": "wrangler types"
