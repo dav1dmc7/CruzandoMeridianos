@@ -83,7 +83,7 @@
     status.setAttribute("aria-live", "polite");
     status.setAttribute("aria-atomic", "true");
     status.tabIndex = -1;
-    form.prepend(status);
+    form.appendChild(status);
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const applyMotionPreference = () => {
