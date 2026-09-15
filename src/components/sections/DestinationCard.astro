@@ -14,6 +14,7 @@ const {
 
 const isReady = destination.status === "ready";
 const destinationUrl = `/viajes/${destination.slug}`;
+const advisory = destination.advisory;
 ---
 
 <article
@@ -83,6 +84,31 @@ const destinationUrl = `/viajes/${destination.slug}`;
     <p>
       {destination.description}
     </p>
+
+    {advisory && (
+      <aside
+        class:list={[
+          "destination-advisory",
+          `destination-advisory--${advisory.level}`,
+        ]}
+        aria-label={`Contexto de viaje: ${advisory.label}`}
+      >
+        <span class="destination-advisory__label">
+          {advisory.label}
+        </span>
+        <p>
+          {advisory.summary}
+        </p>
+        <a
+          href={advisory.sourceUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Fuente oficial
+          <span aria-hidden="true">↗</span>
+        </a>
+      </aside>
+    )}
 
     {isReady ? (
 
@@ -234,6 +260,78 @@ const destinationUrl = `/viajes/${destination.slug}`;
 
   font-size: 1rem;
   line-height: 1.7;
+}
+
+
+/* =========================================================
+   CONTEXTO DE VIAJE
+   ========================================================= */
+
+.destination-advisory {
+  max-width: 520px;
+
+  margin-top: 1.5rem;
+  padding: 1rem 1.1rem;
+
+  border: 1px solid rgba(47, 72, 56, .14);
+  border-radius: 16px;
+
+  background: rgba(255, 255, 255, .55);
+}
+
+.destination-advisory--caution {
+  border-color: rgba(154, 96, 44, .22);
+}
+
+.destination-advisory--postpone {
+  border-color: rgba(128, 49, 49, .24);
+  background: rgba(128, 49, 49, .045);
+}
+
+.destination-advisory__label {
+  display: block;
+
+  margin-bottom: .35rem;
+
+  color: var(--color-bosque);
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+.destination-advisory--postpone .destination-advisory__label {
+  color: #803131;
+}
+
+.destination-advisory p {
+  max-width: none;
+  margin: 0;
+  color: #565656;
+  font-size: .9rem;
+  line-height: 1.6;
+}
+
+.destination-advisory a {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  margin-top: .7rem;
+  color: var(--color-bosque);
+  font-size: .76rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.destination-advisory a span {
+  transition: transform .2s ease;
+}
+
+.destination-advisory a:hover {
+  color: var(--color-cobre);
+}
+
+.destination-advisory a:hover span {
+  transform: translate(2px, -2px);
 }
 
 
@@ -416,6 +514,15 @@ const destinationUrl = `/viajes/${destination.slug}`;
     line-height: 1.7;
   }
 
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .destination-image img,
+  .destination-title-link,
+  .destination-advisory a span,
+  .destination-link span {
+    transition: none;
+  }
 }
 
 </style>
