@@ -1,0 +1,106 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Footer from "../components/layout/Footer.astro";
+---
+
+<Layout
+  title="Política de privacidad | Cruzando Meridianos"
+  description="Información sobre cómo Cruzando Meridianos trata los datos personales que facilitas a través de esta web."
+  canonical="/privacidad"
+>
+  <main class="legal-page">
+    <section class="legal-hero">
+      <div class="legal-inner">
+        <p class="eyebrow">PRIVACIDAD</p>
+        <h1>Tu información no es el producto.</h1>
+        <p>
+          Esta página explica qué datos tratamos cuando utilizas la web, con qué finalidad y qué derechos puedes ejercer.
+        </p>
+      </div>
+    </section>
+
+    <section class="legal-content">
+      <div class="legal-inner legal-copy">
+        <aside class="legal-notice" role="note">
+          <strong>Dato legal pendiente de completar</strong>
+          <p>
+            Para que esta política quede jurídicamente identificada de forma completa, todavía debemos incorporar los datos exactos del responsable del tratamiento: denominación o nombre completo, domicilio y, en su caso, NIF/CIF y demás datos registrales. No se inventan aquí.
+          </p>
+        </aside>
+
+        <h2>1. Responsable del tratamiento</h2>
+        <p>
+          Responsable: <strong>Cruzando Meridianos</strong>.<br />
+          Correo electrónico de contacto: <a href="mailto:hola@cruzandomeridianos.com">hola@cruzandomeridianos.com</a>.
+        </p>
+        <p>
+          Antes de considerar este documento cerrado, deben añadirse los datos jurídicos completos del responsable del tratamiento.
+        </p>
+
+        <h2>2. Qué datos podemos tratar</h2>
+        <p>
+          Cuando utilizas nuestros formularios puedes facilitarnos datos como nombre, correo electrónico, información sobre las personas que viajan, fechas, presupuesto, preferencias, movilidad y otros detalles necesarios para entender el viaje que estás planteando.
+        </p>
+        <p>
+          La web también registra determinados eventos técnicos y de interacción para medir el funcionamiento de páginas, llamadas a la acción y pasos del formulario. En el sistema actual estos eventos se almacenan sin incluir los campos completos del formulario de viaje.
+        </p>
+
+        <h2>3. Para qué utilizamos los datos</h2>
+        <p>
+          Utilizamos los datos que nos facilitas para responder a tu solicitud, entender tus necesidades de viaje, preparar una propuesta cuando corresponda, mantener la comunicación relacionada con dicha solicitud y mejorar el funcionamiento y la conversión de la web.
+        </p>
+
+        <h2>4. Base jurídica</h2>
+        <p>
+          La base jurídica depende del tratamiento concreto. Para gestionar una solicitud de viaje puede resultar aplicable la adopción de medidas precontractuales a petición de la persona interesada. Para determinados tratamientos basados en consentimiento, este debe ser libre, informado, inequívoco y revocable.
+        </p>
+
+        <h2>5. Analítica</h2>
+        <p>
+          La web utiliza una instrumentación propia para registrar eventos como interacciones con llamadas a la acción, inicio y avance del formulario, envío de solicitudes y navegación entre contenidos. En el código actual no se utiliza una cookie propia para identificar al usuario con fines publicitarios.
+        </p>
+
+        <h2>6. Conservación</h2>
+        <p>
+          Los datos se conservarán durante el tiempo necesario para atender la solicitud y cumplir las obligaciones legales aplicables. Los plazos concretos deberán definirse atendiendo a cada categoría de tratamiento y obligación de conservación.
+        </p>
+
+        <h2>7. Tus derechos</h2>
+        <p>
+          Puedes ejercer los derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad cuando resulten aplicables, así como retirar un consentimiento previamente otorgado.
+        </p>
+        <p>
+          Para ejercerlos, escribe a <a href="mailto:hola@cruzandomeridianos.com">hola@cruzandomeridianos.com</a> indicando el derecho que deseas ejercer.
+        </p>
+
+        <h2>8. Reclamaciones</h2>
+        <p>
+          También puedes presentar una reclamación ante la Agencia Española de Protección de Datos si consideras que el tratamiento de tus datos no se ajusta a la normativa aplicable.
+        </p>
+
+        <h2>9. Cambios</h2>
+        <p>
+          Esta política podrá actualizarse cuando cambien los tratamientos, la tecnología utilizada o las obligaciones legales aplicables.
+        </p>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+.legal-hero{padding:8rem 2rem 6rem;background:var(--color-papel)}
+.legal-content{padding:6rem 2rem 8rem;background:var(--color-arena)}
+.legal-inner{width:min(960px,100%);margin:0 auto}
+.eyebrow{margin:0 0 1.4rem;color:var(--color-cobre);font-size:.72rem;font-weight:600;letter-spacing:2px;text-transform:uppercase}
+.legal-hero h1{max-width:820px;margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3.4rem,7vw,6rem);font-weight:400;line-height:.98;letter-spacing:-.04em}
+.legal-hero p:not(.eyebrow){max-width:700px;margin:2rem 0 0;color:#555;font-size:1.1rem;line-height:1.8}
+.legal-copy{color:#4c4c4c;font-size:1rem;line-height:1.8}
+.legal-copy h2{margin:3.2rem 0 1rem;color:var(--color-bosque);font-family:var(--font-serif);font-size:2rem;font-weight:400;line-height:1.1}
+.legal-copy p{margin:0 0 1.15rem}
+.legal-copy a{color:var(--color-bosque);font-weight:600}
+.legal-notice{margin:0 0 3rem;padding:1.4rem 1.5rem;border:1px solid rgba(194,125,56,.4);border-radius:16px;background:rgba(194,125,56,.08)}
+.legal-notice strong{display:block;margin-bottom:.4rem;color:var(--color-bosque)}
+.legal-notice p{margin:0;color:#5a5148}
+@media(max-width:700px){.legal-hero{padding:6rem 1.5rem 5rem}.legal-content{padding:5rem 1.5rem 6rem}.legal-hero h1{font-size:3.4rem}}
+</style>
