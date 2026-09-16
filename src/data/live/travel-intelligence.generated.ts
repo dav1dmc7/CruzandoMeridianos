@@ -15,7 +15,7 @@ export interface LiveGuideUpdate {
 
 export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
   "costa-rica": {
-    "checkedAt": "2026-09-16T13:24:50.678Z",
+    "checkedAt": "2026-09-16T13:30:26.058Z",
     "sourceFingerprints": {
       "es-maec": "e1e29da01c82bd6150a0d4df44328614037d2588543530c6a7d6e80070a24977",
       "uk-fcdo": "d647c9ccf2bdbe672744063af8e9435636bec474b47c419c0422b918cfeab75e",
@@ -69,10 +69,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
           "affectedAreas": [],
           "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
         }
-      ],
-      "uk-fcdo": [],
-      "mopt": [],
-      "imn": []
+      ]
     },
     "alerts": [
       {
@@ -127,23 +124,21 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
     ]
   },
   "sudafrica": {
-    "checkedAt": "2026-09-16T13:24:50.678Z",
+    "checkedAt": "2026-09-16T13:30:26.058Z",
     "sourceFingerprints": {
       "es-maec": "4f54e397bea7ba2a9430c246b82b4dff8eb6ab3f85327a2d78340d5123bb9683",
       "uk-fcdo": "922782fa536358c0036b7e321fd93f32ca7c4192edc71064c61210079e2c505a"
     },
-    "sourceAlerts": {
-      "es-maec": [],
-      "uk-fcdo": []
-    },
+    "sourceAlerts": {},
     "alerts": [],
     "sourceFailures": [
+      "es-maec: HTTP 503",
       "us-state: HTTP 403",
       "fetch failed"
     ]
   },
   "jordania": {
-    "checkedAt": "2026-09-16T13:24:50.678Z",
+    "checkedAt": "2026-09-16T13:30:26.058Z",
     "sourceFingerprints": {
       "es-maec": "a3802a0378d85822101322c8bee20879d6a4ea4f291b894010f35f53df467826",
       "uk-fcdo": "a3234aa21defd914bc7f06d77ee43089cf8e4bf7e219c770975c2430af2ba159"
@@ -165,8 +160,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
           "affectedAreas": [],
           "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
         }
-      ],
-      "uk-fcdo": []
+      ]
     },
     "alerts": [
       {
@@ -190,7 +184,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
     ]
   },
   "grecia": {
-    "checkedAt": "2026-09-16T13:24:50.678Z",
+    "checkedAt": "2026-09-16T13:30:26.058Z",
     "sourceFingerprints": {
       "es-maec": "9e25c01b5303432a7cb233af2ac9ed40be9da81c3be16e839556f4e21f745ef1",
       "uk-fcdo": "47efa5458f202cbd44b83ba31327d6139d2a44803bb2ee0a391b3b1164ce603a"
@@ -212,8 +206,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
           "affectedAreas": [],
           "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
         }
-      ],
-      "uk-fcdo": []
+      ]
     },
     "alerts": [
       {
