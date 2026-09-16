@@ -1,15 +1,13 @@
 ---
 import { liveGuideUpdates } from "../../data/live/travel-intelligence.generated";
-import { TRAVEL_INTELLIGENCE_SOURCES } from "../../../scripts/travel-intelligence.sources.mjs";
 
 const guideMatch = Astro.url.pathname.match(/^\/viajes\/([^/]+)\/?$/);
 const guideSlug = guideMatch?.[1];
-const sourceConfig = guideSlug
-  ? TRAVEL_INTELLIGENCE_SOURCES.find((item) => item.slug === guideSlug)
-  : undefined;
 const liveUpdate = guideSlug ? liveGuideUpdates[guideSlug] : undefined;
 
-const sourceCount = sourceConfig?.sources.length ?? 0;
+const sourceCount = liveUpdate
+  ? Object.keys(liveUpdate.sourceFingerprints).length
+  : 0;
 const failureCount = liveUpdate?.sourceFailures?.length ?? 0;
 const checkedAt = liveUpdate?.checkedAt;
 
@@ -26,7 +24,7 @@ const formatCheckedAt = (value: string): string => {
 };
 ---
 
-{guideSlug && sourceConfig && (
+{guideSlug && (
   <aside
     class:list={[
       "live-guide-status",
@@ -49,12 +47,14 @@ const formatCheckedAt = (value: string): string => {
         <span>
           {checkedAt
             ? `Última comprobación: ${formatCheckedAt(checkedAt)}`
-            : "La primera comprobación se incorporará con la actualización diaria."}
+            : "La comprobación diaria se incorporará automáticamente."}
         </span>
       </div>
 
       <span class="live-guide-status__sources">
-        {sourceCount} {sourceCount === 1 ? "fuente oficial" : "fuentes oficiales"}
+        {sourceCount > 0
+          ? `${sourceCount} ${sourceCount === 1 ? "fuente oficial" : "fuentes oficiales"}`
+          : "Fuentes oficiales en seguimiento"}
         {failureCount > 0 && ` · ${failureCount} sin respuesta`}
       </span>
     </div>
