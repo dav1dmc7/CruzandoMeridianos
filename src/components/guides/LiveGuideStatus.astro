@@ -5,10 +5,6 @@ const guideMatch = Astro.url.pathname.match(/^\/viajes\/([^/]+)\/?$/);
 const guideSlug = guideMatch?.[1];
 const liveUpdate = guideSlug ? liveGuideUpdates[guideSlug] : undefined;
 
-const sourceCount = liveUpdate
-  ? Object.keys(liveUpdate.sourceFingerprints).length
-  : 0;
-const failureCount = liveUpdate?.sourceFailures?.length ?? 0;
 const checkedAt = liveUpdate?.checkedAt;
 
 const formatCheckedAt = (value: string): string => {
@@ -17,8 +13,7 @@ const formatCheckedAt = (value: string): string => {
   if (Number.isNaN(date.getTime())) return value;
 
   return new Intl.DateTimeFormat("es-ES", {
-    dateStyle: "medium",
-    timeStyle: "short",
+    dateStyle: "long",
     timeZone: "Europe/Madrid",
   }).format(date);
 };
@@ -26,36 +21,23 @@ const formatCheckedAt = (value: string): string => {
 
 {guideSlug && (
   <aside
-    class:list={[
-      "live-guide-status",
-      { "live-guide-status--degraded": failureCount > 0 },
-    ]}
-    aria-label="Estado del seguimiento de actualidad"
+    class="live-guide-status"
+    aria-label="Verificación de la información de la guía"
   >
     <div class="live-guide-status__inner">
       <span class="live-guide-status__dot" aria-hidden="true"></span>
 
       <div class="live-guide-status__copy">
-        <strong>
-          {failureCount > 0
-            ? "Seguimiento parcialmente disponible"
-            : checkedAt
-              ? "Seguimiento comprobado"
-              : "Seguimiento diario activo"}
-        </strong>
-
+        <strong>Fuentes oficiales consultadas</strong>
         <span>
           {checkedAt
-            ? `Última comprobación: ${formatCheckedAt(checkedAt)}`
-            : "La comprobación diaria se incorporará automáticamente."}
+            ? `Última verificación: ${formatCheckedAt(checkedAt)}`
+            : "Información sensible revisada periódicamente."}
         </span>
       </div>
 
-      <span class="live-guide-status__sources">
-        {sourceCount > 0
-          ? `${sourceCount} ${sourceCount === 1 ? "fuente oficial" : "fuentes oficiales"}`
-          : "Fuentes oficiales en seguimiento"}
-        {failureCount > 0 && ` · ${failureCount} sin respuesta`}
+      <span class="live-guide-status__note">
+        Información sensible revisada periódicamente.
       </span>
     </div>
   </aside>
@@ -65,10 +47,6 @@ const formatCheckedAt = (value: string): string => {
   .live-guide-status {
     border-bottom: 1px solid rgba(24, 32, 39, 0.12);
     background: #f4f1eb;
-  }
-
-  .live-guide-status--degraded {
-    background: #f7f0e5;
   }
 
   .live-guide-status__inner {
@@ -88,10 +66,6 @@ const formatCheckedAt = (value: string): string => {
     background: #39724f;
   }
 
-  .live-guide-status--degraded .live-guide-status__dot {
-    background: #9b6b2f;
-  }
-
   .live-guide-status__copy {
     min-width: 0;
     display: flex;
@@ -106,12 +80,12 @@ const formatCheckedAt = (value: string): string => {
   }
 
   .live-guide-status__copy span,
-  .live-guide-status__sources {
+  .live-guide-status__note {
     color: rgba(24, 32, 39, 0.68);
     font-size: 0.74rem;
   }
 
-  .live-guide-status__sources {
+  .live-guide-status__note {
     white-space: nowrap;
     text-align: right;
   }
@@ -123,7 +97,7 @@ const formatCheckedAt = (value: string): string => {
       padding: 10px 0;
     }
 
-    .live-guide-status__sources {
+    .live-guide-status__note {
       grid-column: 2;
       text-align: left;
       white-space: normal;
