@@ -1,30 +1,39 @@
-import type { GuideSection } from "./types";
+import type { GuideSection, GuideSource } from "./types";
 
 const REVIEWED_AT = "2026-09-16";
 
-const visitCostaRicaSource = {
-  label: "Visit Costa Rica — Destinos, playas y parques",
+const visitCostaRicaSource: GuideSource = {
+  label: "Visit Costa Rica — Destinos y regiones",
   url: "https://es.visitcostarica.com/where-to-go",
   type: "official",
   accessedAt: REVIEWED_AT,
 };
 
-const parksSource = {
+const parksSource: GuideSource = {
   label: "SINAC — Parques Nacionales",
   url: "https://www.sinac.go.cr/ES/turismo/Paginas/parquesnacionales.aspx",
   type: "official",
   accessedAt: REVIEWED_AT,
 };
 
+const beachesSource: GuideSource = {
+  label: "Visit Costa Rica — Playas y relax",
+  url: "https://es.visitcostarica.com/things-to-do/beaches-and-relaxation",
+  type: "official",
+  accessedAt: REVIEWED_AT,
+};
+
+type SectionOverride = Omit<GuideSection, "number">;
+
 const section = (
   value: Omit<GuideSection, "number" | "reviewedAt" | "status">,
-): GuideSection => ({
+): SectionOverride => ({
   ...value,
   status: "published",
   reviewedAt: REVIEWED_AT,
 });
 
-export const costaRicaSectionOverrides: GuideSection[] = [
+export const costaRicaSectionOverrides: SectionOverride[] = [
   section({
     id: "regiones-y-zonas",
     title: "Regiones y zonas",
@@ -291,18 +300,13 @@ export const costaRicaSectionOverrides: GuideSection[] = [
       {
         type: "source",
         label: "Fuente oficial",
-        title: "Visit Costa Rica — Playas y relax",
+        title: beachesSource.label,
         content:
           "La oficina de turismo agrupa playas por regiones y actividades; usamos esa información como base y añadimos criterio sobre cómo encajan en una ruta.",
-        source: {
-          label: "Visit Costa Rica — Playas y relax",
-          url: "https://es.visitcostarica.com/things-to-do/beaches-and-relaxation",
-          type: "official",
-          accessedAt: REVIEWED_AT,
-        },
+        source: beachesSource,
       },
     ],
     closing:
-      "Cuando nos preguntes por la mejor playa, la pregunta que necesitamos devolver es: ¿mejor para hacer qué, y en qué parte de tu viaje?",
+      "La mejor playa para ti no es una posición en un ranking: es la que encaja con el resto del viaje.",
   }),
 ];
