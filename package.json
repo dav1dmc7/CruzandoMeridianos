@@ -13,6 +13,7 @@
     "audit:analytics": "node scripts/check-analytics-events.mjs",
     "audit:guides": "node scripts/check-guides.mjs",
     "audit:assets": "node scripts/check-assets.mjs",
+    "audit:travel-intelligence": "node scripts/check-travel-intelligence.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "generate-types": "wrangler types"
