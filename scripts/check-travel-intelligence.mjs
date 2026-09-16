@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
+import fs from "node:fs/promises";
 
 import {
   SUPPORTED_MARKETS,
   TRAVEL_INTELLIGENCE_SOURCES,
 } from "./travel-intelligence.sources.mjs";
-import { liveGuideUpdates } from "../src/data/live/travel-intelligence.generated.ts";
+
+const generatedPath = new URL("../src/data/live/travel-intelligence.generated.ts", import.meta.url);
 
 const fail = (message) => {
   throw new Error(`Travel intelligence audit failed: ${message}`);
@@ -30,6 +32,25 @@ for (const destination of TRAVEL_INTELLIGENCE_SOURCES) {
   }
 }
 
+const generatedSource = await fs.readFile(generatedPath, "utf8");
+const marker = "export const liveGuideUpdates: Record<string, LiveGuideUpdate> = ";
+const start = generatedSource.indexOf(marker);
+
+if (start === -1) fail("generated file is missing liveGuideUpdates export");
+
+const jsonStart = start + marker.length;
+const jsonEnd = generatedSource.lastIndexOf(";\n");
+if (jsonEnd <= jsonStart) fail("generated liveGuideUpdates payload is malformed");
+
+let liveGuideUpdates;
+try {
+  liveGuideUpdates = JSON.parse(generatedSource.slice(jsonStart, jsonEnd));
+} catch (error) {
+  fail(`generated liveGuideUpdates is not valid JSON: ${error instanceof Error ? error.message : String(error)}`);
+}
+
+assert(liveGuideUpdates && typeof liveGuideUpdates === "object", "generated liveGuideUpdates must be an object");
+
 for (const [slug, update] of Object.entries(liveGuideUpdates)) {
   const destination = TRAVEL_INTELLIGENCE_SOURCES.find((item) => item.slug === slug);
   if (!destination) fail(`generated update exists for unknown destination: ${slug}`);
@@ -37,6 +58,10 @@ for (const [slug, update] of Object.entries(liveGuideUpdates)) {
   assert(typeof update.checkedAt === "string" && update.checkedAt.length > 0, `${slug} is missing checkedAt`);
   assert(update.sourceFingerprints && typeof update.sourceFingerprints === "object", `${slug} is missing sourceFingerprints`);
   assert(Array.isArray(update.alerts), `${slug} alerts must be an array`);
+
+  if (update.sourceAlerts !== undefined) {
+    assert(typeof update.sourceAlerts === "object", `${slug} sourceAlerts must be an object`);
+  }
 
   for (const alert of update.alerts) {
     assert(alert.sourceType === "official", `${slug} contains a non-official alert`);
@@ -49,6 +74,9 @@ for (const [slug, update] of Object.entries(liveGuideUpdates)) {
   }
 }
 
+const alertCount = Object.values(liveGuideUpdates)
+  .reduce((total, update) => total + update.alerts.length, 0);
+
 console.log(
-  `Travel intelligence audit passed: ${TRAVEL_INTELLIGENCE_SOURCES.length} destinations, ${SUPPORTED_MARKETS.length} markets, ${Object.values(liveGuideUpdates).reduce((total, update) => total + update.alerts.length, 0)} alerts.`,
+  `Travel intelligence audit passed: ${TRAVEL_INTELLIGENCE_SOURCES.length} destinations, ${SUPPORTED_MARKETS.length} markets, ${alertCount} alerts.`,
 );
