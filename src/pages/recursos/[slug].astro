@@ -1,0 +1,622 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Footer from "../../components/layout/Footer.astro";
+import { destinations } from "../../data/destinations";
+import {
+  getAllTravelResources,
+  getTravelResourceById,
+} from "../../data/resources";
+import type { TravelResource } from "../../data/resources/types";
+
+export function getStaticPaths() {
+  return getAllTravelResources().map((resource) => ({
+    params: { slug: resource.id },
+    props: { resource },
+  }));
+}
+
+interface Props {
+  resource: TravelResource;
+}
+
+const { resource } = Astro.props;
+
+if (!resource || resource.status !== "active") {
+  return Astro.redirect("/recursos");
+}
+
+const relatedDestinations = (resource.relevantDestinations ?? [])
+  .map((slug) => destinations.find((destination) => destination.slug === slug))
+  .filter((destination): destination is NonNullable<typeof destination> => Boolean(destination));
+
+const relatedResources = getAllTravelResources()
+  .filter((item) => item.id !== resource.id)
+  .slice(0, 3);
+
+const categoryLabels: Record<string, string> = {
+  money: "Dinero",
+  connectivity: "Conectividad",
+  insurance: "Seguro",
+  maps: "Mapas",
+  bookings: "Reservas",
+  gear: "Equipamiento",
+  planning: "Planificación",
+  communication: "Comunicación",
+  other: "Otros",
+};
+
+const relationshipLabel = resource.relationship === "affiliate"
+  ? "Afiliación"
+  : resource.relationship === "referral"
+    ? "Enlace de referido"
+    : resource.relationship === "sponsor"
+      ? "Patrocinado"
+      : "Recomendación editorial";
+
+const pageTitle = `${resource.title}: nuestra opinión y para qué sirve | Cruzando Meridianos`;
+const pageDescription = resource.longDescription ?? resource.shortDescription;
+const canonicalPath = `/recursos/${resource.id}`;
+
+const isCommercial = ["affiliate", "referral", "sponsor"].includes(
+  resource.relationship ?? "",
+);
+
+const resourceHref = resource.trackingUrl ?? resource.url;
+const externalRel = isCommercial
+  ? "sponsored noopener noreferrer"
+  : "noopener noreferrer";
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  canonical={canonicalPath}
+>
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: pageTitle,
+      description: pageDescription,
+      url: `https://www.cruzandomeridianos.com${canonicalPath}`,
+      inLanguage: "es",
+      author: {
+        "@type": "Organization",
+        name: "Cruzando Meridianos",
+      },
+      publisher: {
+        "@type": "Organization",
+        name: "Cruzando Meridianos",
+      },
+      dateModified: resource.reviewedAt,
+      about: {
+        "@type": "Thing",
+        name: resource.title,
+      },
+    })}
+  />
+
+  <main class="resource-detail">
+    <section class="resource-detail__hero">
+      <div class="resource-shell resource-detail__hero-inner">
+        <div>
+          <a class="resource-detail__back" href="/recursos">
+            ← Todos los recursos
+          </a>
+
+          <p class="eyebrow">RECURSO DE VIAJE</p>
+
+          <div class="resource-detail__meta">
+            <span>{categoryLabels[resource.category] ?? resource.category}</span>
+            <span>{relationshipLabel}</span>
+          </div>
+
+          <h1>{resource.title}</h1>
+
+          <p class="resource-detail__lead">
+            {resource.shortDescription}
+          </p>
+        </div>
+
+        <aside class="resource-detail__trust" aria-label="Transparencia editorial">
+          <span>Revisado</span>
+          <strong>{resource.reviewedAt}</strong>
+          <p>
+            Esta página explica por qué aparece este recurso, para quién puede tener sentido
+            y qué deberías comprobar antes de utilizarlo.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="resource-detail__body">
+      <div class="resource-shell resource-detail__grid">
+        <article class="resource-detail__main">
+          <p class="eyebrow">NUESTRA LECTURA</p>
+          <h2>Para qué puede servirte</h2>
+
+          <p class="resource-detail__large">
+            {resource.longDescription ?? resource.shortDescription}
+          </p>
+
+          {resource.benefit && (
+            <section class="resource-detail__panel resource-detail__panel--benefit">
+              <span>Lo que valoramos</span>
+              <h3>Por qué lo incluimos</h3>
+              <p>{resource.benefit}</p>
+            </section>
+          )}
+
+          {resource.limitation && (
+            <section class="resource-detail__panel resource-detail__panel--limit">
+              <span>Antes de decidir</span>
+              <h3>Lo que debes tener en cuenta</h3>
+              <p>{resource.limitation}</p>
+            </section>
+          )}
+
+          {relatedDestinations.length > 0 && (
+            <section class="resource-detail__destinations">
+              <p class="eyebrow">CUÁNDO TIENE ESPECIAL SENTIDO</p>
+              <div class="resource-detail__destination-grid">
+                {relatedDestinations.map((destination) => (
+                  <a href={`/viajes/${destination.slug}`}>
+                    <span>{destination.continent}</span>
+                    <strong>{destination.name}</strong>
+                    <small>Leer la guía →</small>
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <section class="resource-detail__commercial">
+            <p class="eyebrow">TRANSPARENCIA</p>
+            <h2>¿Tenemos una relación comercial?</h2>
+            <p>
+              {resource.disclosure ??
+                "No existe una relación comercial declarada para este recurso."}
+            </p>
+            <p>
+              La existencia de una relación comercial no cambia nuestro criterio editorial:
+              también explicamos límites, condiciones y aspectos que conviene comprobar.
+            </p>
+          </section>
+        </article>
+
+        <aside class="resource-detail__aside">
+          <div class="resource-detail__action">
+            <span>Proveedor</span>
+            <strong>{resource.provider}</strong>
+            <p>
+              Consulta siempre las condiciones vigentes directamente con el proveedor antes de
+              contratar o registrarte.
+            </p>
+
+            <a
+              href={resourceHref}
+              target="_blank"
+              rel={externalRel}
+              class="button-primary"
+              data-track="interaction"
+              data-track-label={`Recurso — ${resource.title}`}
+            >
+              Visitar {resource.provider}
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <div class="resource-detail__note">
+            <span>Actualización</span>
+            <p>
+              Las promociones, precios, coberturas, funcionalidades y condiciones pueden cambiar.
+              La fecha de esta ficha indica nuestra última revisión editorial.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    {relatedResources.length > 0 && (
+      <section class="resource-detail__related">
+        <div class="resource-shell">
+          <header>
+            <p class="eyebrow">SIGUE INVESTIGANDO</p>
+            <h2>Otros recursos que pueden encajar con tu viaje.</h2>
+          </header>
+
+          <div class="resource-detail__related-grid">
+            {relatedResources.map((item) => (
+              <a href={`/recursos/${item.id}`}>
+                <span>{categoryLabels[item.category] ?? item.category}</span>
+                <strong>{item.title}</strong>
+                <p>{item.shortDescription}</p>
+                <small>Ver análisis →</small>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <section class="resource-detail__cta">
+      <div class="resource-shell">
+        <p class="eyebrow">DEL RECURSO AL VIAJE</p>
+        <h2>Una herramienta resuelve una parte. El viaje necesita todas las piezas.</h2>
+        <p>
+          Nuestros recursos sirven para ayudarte a decidir. Cuando necesitas investigar y conectar
+          todas las decisiones para un viaje concreto, puedes contarnos qué tienes en mente.
+        </p>
+        <a href="/cuentatuviaje" class="button-primary">
+          Cuéntanos tu viaje
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .resource-detail {
+    --resource-shell: var(--content-width);
+  }
+
+  .resource-shell {
+    width: min(var(--resource-shell), calc(100% - 4rem));
+    margin-inline: auto;
+  }
+
+  .resource-detail__hero {
+    padding: 8rem 0 7rem;
+    background: var(--color-bosque);
+    color: var(--color-papel);
+  }
+
+  .resource-detail__hero-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(280px, .55fr);
+    gap: 6rem;
+    align-items: end;
+  }
+
+  .resource-detail__back {
+    display: inline-flex;
+    margin-bottom: 3rem;
+    color: rgba(251,249,245,.62);
+    font-size: .78rem;
+    text-decoration: none;
+  }
+
+  .resource-detail__back:hover { color: var(--color-cobre); }
+
+  .resource-detail .eyebrow {
+    margin: 0 0 1.2rem;
+    color: var(--color-cobre);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .resource-detail__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .7rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .resource-detail__meta span {
+    padding: .45rem .65rem;
+    border: 1px solid rgba(251,249,245,.2);
+    border-radius: 999px;
+    color: rgba(251,249,245,.72);
+    font-size: .67rem;
+  }
+
+  .resource-detail h1 {
+    max-width: 900px;
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(4rem, 8vw, 8rem);
+    font-weight: 400;
+    line-height: .9;
+    letter-spacing: -.045em;
+  }
+
+  .resource-detail__lead {
+    max-width: 760px;
+    margin: 2rem 0 0;
+    color: rgba(251,249,245,.78);
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+
+  .resource-detail__trust {
+    padding-left: 1.5rem;
+    border-left: 1px solid rgba(251,249,245,.18);
+  }
+
+  .resource-detail__trust span,
+  .resource-detail__action > span,
+  .resource-detail__note > span {
+    display: block;
+    margin-bottom: .55rem;
+    color: var(--color-cobre);
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .resource-detail__trust strong {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--color-papel);
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 400;
+  }
+
+  .resource-detail__trust p {
+    margin: 0;
+    color: rgba(251,249,245,.62);
+    line-height: 1.75;
+  }
+
+  .resource-detail__body {
+    padding: 8rem 0;
+    background: var(--color-papel);
+  }
+
+  .resource-detail__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(280px, .45fr);
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .resource-detail__main h2,
+  .resource-detail__related h2,
+  .resource-detail__commercial h2 {
+    margin: 0;
+    color: var(--color-bosque);
+    font-family: var(--font-serif);
+    font-size: clamp(2.8rem, 5vw, 5rem);
+    font-weight: 400;
+    line-height: .98;
+    letter-spacing: -.035em;
+  }
+
+  .resource-detail__large {
+    max-width: 800px;
+    margin: 2rem 0 0;
+    color: #585858;
+    font-size: 1.08rem;
+    line-height: 1.85;
+  }
+
+  .resource-detail__panel {
+    margin-top: 2rem;
+    padding: 1.7rem;
+    border: 1px solid rgba(28,48,38,.13);
+    background: #f5f1e9;
+  }
+
+  .resource-detail__panel span {
+    display: block;
+    margin-bottom: .65rem;
+    color: var(--color-cobre);
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+  }
+
+  .resource-detail__panel h3 {
+    margin: 0 0 .65rem;
+    color: var(--color-bosque);
+    font-family: var(--font-serif);
+    font-size: 1.55rem;
+    font-weight: 400;
+  }
+
+  .resource-detail__panel p,
+  .resource-detail__commercial p {
+    margin: 0;
+    color: #646464;
+    line-height: 1.75;
+  }
+
+  .resource-detail__panel--limit {
+    background: #ede9e0;
+    border-left: 2px solid var(--color-cobre);
+  }
+
+  .resource-detail__destinations {
+    margin-top: 5rem;
+  }
+
+  .resource-detail__destination-grid,
+  .resource-detail__related-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: .8rem;
+    margin-top: 1.5rem;
+  }
+
+  .resource-detail__destination-grid a,
+  .resource-detail__related-grid a {
+    display: block;
+    padding: 1.3rem;
+    border: 1px solid rgba(28,48,38,.13);
+    background: #f7f4ef;
+    color: inherit;
+    text-decoration: none;
+    transition: transform .2s ease, border-color .2s ease;
+  }
+
+  .resource-detail__destination-grid a:hover,
+  .resource-detail__related-grid a:hover {
+    transform: translateY(-2px);
+    border-color: rgba(194,125,56,.65);
+  }
+
+  .resource-detail__destination-grid span,
+  .resource-detail__related-grid span,
+  .resource-detail__destination-grid small,
+  .resource-detail__related-grid small {
+    display: block;
+  }
+
+  .resource-detail__destination-grid span,
+  .resource-detail__related-grid span {
+    margin-bottom: .65rem;
+    color: var(--color-cobre);
+    font-size: .64rem;
+    font-weight: 700;
+    letter-spacing: .11em;
+    text-transform: uppercase;
+  }
+
+  .resource-detail__destination-grid strong,
+  .resource-detail__related-grid strong {
+    display: block;
+    color: var(--color-bosque);
+    font-family: var(--font-serif);
+    font-size: 1.45rem;
+    font-weight: 400;
+  }
+
+  .resource-detail__destination-grid small,
+  .resource-detail__related-grid small {
+    margin-top: 1.4rem;
+    color: #707070;
+    font-size: .72rem;
+  }
+
+  .resource-detail__commercial {
+    margin-top: 5rem;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(28,48,38,.14);
+  }
+
+  .resource-detail__commercial p + p { margin-top: 1rem; }
+
+  .resource-detail__action {
+    position: sticky;
+    top: 7rem;
+    padding: 1.7rem;
+    background: var(--color-bosque);
+    color: var(--color-papel);
+  }
+
+  .resource-detail__action strong {
+    display: block;
+    margin-bottom: .8rem;
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    font-weight: 400;
+  }
+
+  .resource-detail__action p,
+  .resource-detail__note p {
+    margin: 0;
+    color: rgba(251,249,245,.68);
+    line-height: 1.7;
+  }
+
+  .resource-detail__action .button-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: .65rem;
+    margin-top: 1.7rem;
+  }
+
+  .resource-detail__note {
+    margin-top: 1rem;
+    padding: 1.3rem;
+    background: #f3f0e9;
+  }
+
+  .resource-detail__related {
+    padding: 7rem 0 8rem;
+    background: #ece9e1;
+  }
+
+  .resource-detail__related header {
+    max-width: 820px;
+  }
+
+  .resource-detail__related-grid {
+    grid-template-columns: repeat(3, minmax(0,1fr));
+  }
+
+  .resource-detail__related-grid p {
+    margin: 1rem 0 0;
+    color: #656565;
+    font-size: .9rem;
+    line-height: 1.65;
+  }
+
+  .resource-detail__cta {
+    padding: 8rem 0;
+    background: var(--color-cobre);
+    color: var(--color-bosque);
+  }
+
+  .resource-detail__cta .eyebrow { color: var(--color-bosque); }
+
+  .resource-detail__cta h2 {
+    max-width: 920px;
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 6vw, 6rem);
+    font-weight: 400;
+    line-height: .95;
+    letter-spacing: -.04em;
+  }
+
+  .resource-detail__cta p:not(.eyebrow) {
+    max-width: 700px;
+    margin: 2rem 0 0;
+    color: rgba(28,48,38,.78);
+    line-height: 1.8;
+  }
+
+  .resource-detail__cta .button-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: .65rem;
+    margin-top: 2rem;
+    background: var(--color-bosque);
+    color: var(--color-papel);
+  }
+
+  @media (max-width: 900px) {
+    .resource-shell { width: min(var(--resource-shell), calc(100% - 3rem)); }
+    .resource-detail__hero-inner,
+    .resource-detail__grid { grid-template-columns: 1fr; gap: 3rem; }
+    .resource-detail__action { position: static; }
+    .resource-detail__related-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .resource-shell { width: calc(100% - 2rem); }
+    .resource-detail__hero,
+    .resource-detail__body,
+    .resource-detail__related,
+    .resource-detail__cta { padding: 5rem 0; }
+    .resource-detail h1 { font-size: 3.7rem; }
+    .resource-detail__destination-grid,
+    .resource-detail__related-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .resource-detail__destination-grid a,
+    .resource-detail__related-grid a { transition: none; }
+  }
+</style>
