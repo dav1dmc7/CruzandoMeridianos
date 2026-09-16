@@ -68,9 +68,9 @@ export const TRAVEL_INTELLIGENCE_RULES = [
       /entry\s+requirements?\s+(have\s+)?changed/i,
       /visa\s+requirements?.*(change|new|introduced|updated)/i,
       /entry\s+permit.*(required|new|changed|introduced)/i,
-      /visado.*(cambio|nuevo|obligatorio|cambiado|actualizado)/i,
-      /permiso.*entrada.*(obligatorio|nuevo|cambiado|actualizado)/i,
-      /permit.*entry.*(required|new|changed|updated)/i,
+      /visado.*(cambio|nuevo|obligatorio|cambiado|actualizado|introducid)/i,
+      /permiso.*entrada.*(obligatorio|nuevo|cambiado|actualizado|introducid)/i,
+      /permit.*entry.*(required|new|changed|updated|introduced)/i,
     ],
   },
   {
