@@ -132,24 +132,17 @@ import "../styles/visual-polish.css";
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>{title}</title>
-
     <meta name="description" content={description} />
     <meta name="author" content="Cruzando Meridianos" />
-
     <meta
       name="robots"
       content={noindex ? "noindex, nofollow" : "index, follow"}
     />
-
     <meta name="theme-color" content="#FBF9F5" />
-
     <link rel="canonical" href={canonicalUrl} />
     <link rel="sitemap" href="/sitemap-index.xml" />
-
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content="Cruzando Meridianos" />
     <meta property="og:locale" content="es_ES" />
@@ -158,13 +151,11 @@ import "../styles/visual-polish.css";
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:alt" content={title} />
-
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
     <meta name="twitter:image:alt" content={title} />
-
     <script
       is:inline
       type="application/ld+json"
@@ -175,10 +166,8 @@ import "../styles/visual-polish.css";
         ...(costaRicaBreadcrumbSchema ? [costaRicaBreadcrumbSchema] : []),
       ])}
     />
-
     <link rel="icon" type="image/png" href="/brujula.png" />
     <link rel="apple-touch-icon" href="/brujula.png" />
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -193,8 +182,10 @@ import "../styles/visual-polish.css";
     {isCostaRicaGuide && <CostaRicaDecisionNav />}
     <LiveGuideStatus />
     {isResourcesHub && <ResourceHubLinks />}
-    <GuideDecisionLinks />
-    <div id="main-content"><slot /></div>
+    <div id="main-content">
+      <GuideDecisionLinks />
+      <slot />
+    </div>
     <RelatedGuides />
     <GeoTransition />
     <SiteInstrumentation />
