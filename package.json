@@ -12,6 +12,7 @@
     "audit:links": "node scripts/check-internal-links.mjs",
     "audit:analytics": "node scripts/check-analytics-events.mjs",
     "audit:guides": "node scripts/check-guides.mjs",
+    "audit:seo": "node scripts/check-seo.mjs",
     "audit:assets": "node scripts/check-assets.mjs",
     "audit:travel-intelligence": "node scripts/check-travel-intelligence.mjs",
     "audit:travel-intelligence-rules": "node scripts/check-travel-intelligence-rules.mjs",
