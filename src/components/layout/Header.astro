@@ -51,7 +51,13 @@ const isActive = (href: string) => {
     </button>
   </div>
 
-  <nav id="mobile-menu" class="mobile-menu" aria-label="Navegación móvil" aria-hidden="true">
+  <nav
+    id="mobile-menu"
+    class="mobile-menu"
+    aria-label="Navegación móvil"
+    aria-hidden="true"
+    inert
+  >
     {navItems.map((item) => (
       <a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
         {item.label}
@@ -70,6 +76,7 @@ const isActive = (href: string) => {
       toggle.setAttribute("aria-expanded", "false");
       toggle.setAttribute("aria-label", "Abrir menú");
       mobileMenu.setAttribute("aria-hidden", "true");
+      mobileMenu.setAttribute("inert", "");
       mobileMenu.classList.remove("is-open");
       document.body.classList.remove("menu-open");
     };
@@ -78,6 +85,7 @@ const isActive = (href: string) => {
       toggle.setAttribute("aria-expanded", "true");
       toggle.setAttribute("aria-label", "Cerrar menú");
       mobileMenu.setAttribute("aria-hidden", "false");
+      mobileMenu.removeAttribute("inert");
       mobileMenu.classList.add("is-open");
       document.body.classList.add("menu-open");
     };
