@@ -4,6 +4,7 @@ import crypto from "node:crypto";
 import { pathToFileURL } from "node:url";
 
 import { TRAVEL_INTELLIGENCE_SOURCES } from "./travel-intelligence.sources.mjs";
+import { TRAVEL_INTELLIGENCE_RULES, findRuleMatch } from "./travel-intelligence.rules.mjs";
 
 const root = process.cwd();
 const generatedPath = path.join(root, "src/data/live/travel-intelligence.generated.ts");
@@ -24,125 +25,6 @@ const stripHtml = (html) => html
   .replace(/\s+/g, " ")
   .trim();
 
-const RULES = [
-  {
-    type: "carretera",
-    severity: "high",
-    patterns: [
-      /road\s+(is\s+)?closed/i,
-      /road\s+closure/i,
-      /carretera[s]?\s+(cerrada|cerrado|cerradas|cerrados)/i,
-      /via[s]?\s+(cerrada|cerrado|cerradas|cerrados)/i,
-      /deslizamiento[s]?/i,
-      /landslide[s]?/i,
-      /bridge\s+(is\s+)?closed/i,
-      /puente\s+(cerrad|afectad)/i,
-    ],
-  },
-  {
-    type: "clima",
-    severity: "high",
-    patterns: [
-      /flooding/i,
-      /flood\s+warning/i,
-      /inundacion(?:es)?/i,
-      /inundación(?:es)?/i,
-      /tormenta[s]?\s+(severa|fuerte|tropical)/i,
-      /severe\s+(weather|storm|rain)/i,
-      /tropical\s+storm/i,
-      /hurricane/i,
-      /cicl[oó]n/i,
-      /huracan/i,
-      /huracán/i,
-      /aviso\s+meteorologic/i,
-      /weather\s+warning/i,
-    ],
-  },
-  {
-    type: "parque",
-    severity: "medium",
-    patterns: [
-      /park\s+(is\s+)?closed/i,
-      /national\s+park\s+closed/i,
-      /parque\s+nacional.*cerrad/i,
-      /cerrad[oa].*parque/i,
-      /trail\s+(is\s+)?closed/i,
-      /sendero.*cerrad/i,
-    ],
-  },
-  {
-    type: "transporte",
-    severity: "high",
-    patterns: [
-      /airport\s+(is\s+)?closed/i,
-      /airport\s+disruption/i,
-      /flight\s+disruption/i,
-      /ferry\s+(is\s+)?cancelled/i,
-      /strike\s+(will\s+)?affect/i,
-      /huelga/i,
-      /cancelaciones?/i,
-      /cancelled\s+services?/i,
-      /transport\s+disruption/i,
-    ],
-  },
-  {
-    type: "entrada",
-    severity: "high",
-    patterns: [
-      /entry\s+requirements?\s+(have\s+)?changed/i,
-      /visa\s+requirements?.*(change|new|introduced|updated)/i,
-      /entry\s+permit/i,
-      /visado.*(cambio|nuevo|obligatorio)/i,
-      /visado.*(cambiado|actualizado)/i,
-      /permiso.*entrada/i,
-      /permit.*entry/i,
-    ],
-  },
-  {
-    type: "seguridad",
-    severity: "high",
-    patterns: [
-      /do\s+not\s+travel/i,
-      /avoid\s+all\s+travel/i,
-      /avoid\s+travel/i,
-      /reconsider\s+travel/i,
-      /travel\s+advisory/i,
-      /no\s+se\s+recomienda\s+viajar/i,
-      /se\s+desaconseja\s+el\s+viaje/i,
-      /aplazar\s+el\s+viaje/i,
-      /evitar\s+viajes?/i,
-      /estado\s+de\s+emergencia/i,
-      /emergency\s+state/i,
-    ],
-  },
-  {
-    type: "salud",
-    severity: "medium",
-    patterns: [
-      /health\s+alert/i,
-      /health\s+restriction/i,
-      /outbreak/i,
-      /epidemic/i,
-      /sanitary\s+measures?/i,
-      /alerta\s+sanitaria/i,
-      /brote/i,
-      /medidas\s+sanitarias?/i,
-    ],
-  },
-  {
-    type: "volcan",
-    severity: "high",
-    patterns: [
-      /volcanic\s+activity/i,
-      /volcano\s+alert/i,
-      /erupcion/i,
-      /erupción/i,
-      /actividad\s+volcanica/i,
-      /actividad\s+volcánica/i,
-    ],
-  },
-];
-
 const sentenceCandidates = (text) => text
   .split(/(?<=[.!?])\s+/)
   .map((sentence) => sentence.trim())
@@ -152,10 +34,8 @@ const classifyText = (text, source) => {
   const sentences = sentenceCandidates(text);
   const alerts = [];
 
-  for (const rule of RULES) {
-    const hit = sentences.find((sentence) =>
-      rule.patterns.some((pattern) => pattern.test(sentence)),
-    );
+  for (const rule of TRAVEL_INTELLIGENCE_RULES) {
+    const hit = sentences.find((sentence) => findRuleMatch(rule, sentence));
 
     if (!hit) continue;
 
