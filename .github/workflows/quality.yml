@@ -51,6 +51,9 @@ jobs:
       - name: Travel resource audit
         run: npm run audit:travel-resources
 
+      - name: Copy consistency audit
+        run: npm run audit:copy
+
       - name: Asset weight audit
         run: npm run audit:assets
 
