@@ -4,6 +4,7 @@ import { costaRicaSectionOverrides } from "./costa-rica-editorial";
 import { additionalGuides } from "./additional";
 import { southAfricaSectionOverrides } from "./sudafrica-editorial";
 import { jordaniaSectionOverrides } from "./jordania-editorial";
+import { greciaSectionOverrides } from "./grecia-editorial";
 import { liveGuideUpdates } from "../live/travel-intelligence.generated";
 
 const guides: Readonly<Record<string, DestinationGuide>> = {
@@ -95,6 +96,10 @@ const withEditorialContent = (guide: DestinationGuide): DestinationGuide => {
 
   if (withCostaRica.slug === "jordania") {
     return mergeSectionOverrides(withCostaRica, jordaniaSectionOverrides);
+  }
+
+  if (withCostaRica.slug === "grecia") {
+    return mergeSectionOverrides(withCostaRica, greciaSectionOverrides);
   }
 
   return withCostaRica;
