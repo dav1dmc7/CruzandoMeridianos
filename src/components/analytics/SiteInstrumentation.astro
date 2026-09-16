@@ -59,17 +59,7 @@
     });
   };
 
-  const refinePublicPresentation = () => {
-    document
-      .querySelectorAll<HTMLAnchorElement>('a[href="/viajes"]')
-      .forEach((link) => {
-        const insideGuideDecisions = link.closest(".guide-decisions");
-        if (insideGuideDecisions) return;
-        if (link.closest(".main-nav, #mobile-menu, .site-footer")) {
-          link.textContent = "Guías de destino";
-        }
-      });
-
+  const hideInternalEditorialStatus = () => {
     const guideEditorialStatus = document.querySelector<HTMLElement>(
       ".guide-hero__status"
     );
@@ -136,9 +126,9 @@
     progressMessage?.setAttribute("aria-atomic", "true");
   };
 
-  refinePublicPresentation();
+  hideInternalEditorialStatus();
   document.addEventListener("DOMContentLoaded", () => {
-    refinePublicPresentation();
+    hideInternalEditorialStatus();
     ensureTravelFormAccessibility();
   }, { once: true });
 
