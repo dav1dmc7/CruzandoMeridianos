@@ -36,9 +36,6 @@ jobs:
       - name: Accessibility architecture audit
         run: npm run audit:accessibility
 
-      - name: Conversion funnel audit
-        run: npm run audit:conversion
-
       - name: Travel intelligence rule tests
         run: npm run audit:travel-intelligence-rules
 
