@@ -1,5 +1,6 @@
 import type { DestinationGuide } from "./types";
 import { costaRicaGuide } from "./costa-rica";
+import { costaRicaSectionOverrides } from "./costa-rica-editorial";
 import { additionalGuides } from "./additional";
 import { liveGuideUpdates } from "../live/travel-intelligence.generated";
 
@@ -10,15 +11,60 @@ const guides: Readonly<Record<string, DestinationGuide>> = {
 
 const normalizeSlug = (slug: string): string => slug.trim().toLowerCase();
 
-const withLiveUpdates = (guide: DestinationGuide): DestinationGuide => {
-  const update = liveGuideUpdates[guide.slug];
+const mergeCostaRicaSections = (guide: DestinationGuide): DestinationGuide => {
+  if (guide.slug !== "costa-rica") return guide;
 
-  if (!update) return guide;
+  const overridesById = new Map(
+    costaRicaSectionOverrides.map((section) => [section.id, section]),
+  );
+
+  const merged = guide.sections.map(
+    (section) => overridesById.get(section.id) ?? section,
+  );
+
+  const missing = costaRicaSectionOverrides.filter(
+    (section) => !guide.sections.some((existing) => existing.id === section.id),
+  );
+
+  const volcanoes = missing.find((section) => section.id === "volcanes");
+  const remainingMissing = missing.filter((section) => section.id !== "volcanes");
+
+  const withInsertedVolcanoes = volcanoes
+    ? (() => {
+        const insertBeforeIndex = merged.findIndex(
+          (section) => section.id === "parques-nacionales",
+        );
+
+        if (insertBeforeIndex === -1) return [...merged, volcanoes];
+
+        return [
+          ...merged.slice(0, insertBeforeIndex),
+          volcanoes,
+          ...merged.slice(insertBeforeIndex),
+        ];
+      })()
+    : merged;
 
   return {
     ...guide,
-    alerts: [...update.alerts, ...guide.alerts],
+    sections: [...withInsertedVolcanoes, ...remainingMissing],
   };
+};
+
+const withEditorialContent = (guide: DestinationGuide): DestinationGuide =>
+  mergeCostaRicaSections(guide);
+
+const withLiveUpdates = (guide: DestinationGuide): DestinationGuide => {
+  const update = liveGuideUpdates[guide.slug];
+
+  const updatedGuide = update
+    ? {
+        ...guide,
+        alerts: [...update.alerts, ...guide.alerts],
+      }
+    : guide;
+
+  return withEditorialContent(updatedGuide);
 };
 
 export const getGuideBySlug = (slug: string): DestinationGuide | undefined => {
