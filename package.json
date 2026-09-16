@@ -14,6 +14,7 @@
     "audit:guides": "node scripts/check-guides.mjs",
     "audit:assets": "node scripts/check-assets.mjs",
     "audit:travel-intelligence": "node scripts/check-travel-intelligence.mjs",
+    "audit:travel-intelligence-rules": "node scripts/check-travel-intelligence-rules.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "generate-types": "wrangler types"
