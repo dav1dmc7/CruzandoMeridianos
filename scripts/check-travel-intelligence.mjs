@@ -51,27 +51,48 @@ try {
 
 assert(liveGuideUpdates && typeof liveGuideUpdates === "object", "generated liveGuideUpdates must be an object");
 
-for (const [slug, update] of Object.entries(liveGuideUpdates)) {
-  const destination = TRAVEL_INTELLIGENCE_SOURCES.find((item) => item.slug === slug);
-  if (!destination) fail(`generated update exists for unknown destination: ${slug}`);
+for (const destination of TRAVEL_INTELLIGENCE_SOURCES) {
+  const update = liveGuideUpdates[destination.slug];
+  if (!update) continue;
 
-  assert(typeof update.checkedAt === "string" && update.checkedAt.length > 0, `${slug} is missing checkedAt`);
-  assert(update.sourceFingerprints && typeof update.sourceFingerprints === "object", `${slug} is missing sourceFingerprints`);
-  assert(Array.isArray(update.alerts), `${slug} alerts must be an array`);
+  assert(typeof update.checkedAt === "string" && update.checkedAt.length > 0, `${destination.slug} is missing checkedAt`);
+  assert(update.sourceFingerprints && typeof update.sourceFingerprints === "object", `${destination.slug} is missing sourceFingerprints`);
+  assert(Array.isArray(update.alerts), `${destination.slug} alerts must be an array`);
+
+  const configuredIds = new Set(destination.sources.map((source) => source.id));
+
+  for (const sourceId of Object.keys(update.sourceFingerprints)) {
+    assert(configuredIds.has(sourceId), `${destination.slug} contains an unknown source fingerprint: ${sourceId}`);
+  }
 
   if (update.sourceAlerts !== undefined) {
-    assert(typeof update.sourceAlerts === "object", `${slug} sourceAlerts must be an object`);
+    assert(typeof update.sourceAlerts === "object", `${destination.slug} sourceAlerts must be an object`);
+    for (const sourceId of Object.keys(update.sourceAlerts)) {
+      assert(configuredIds.has(sourceId), `${destination.slug} contains unknown sourceAlerts: ${sourceId}`);
+      assert(Array.isArray(update.sourceAlerts[sourceId]), `${destination.slug}/${sourceId} sourceAlerts must be an array`);
+    }
+  }
+
+  if (update.sourceFailures !== undefined) {
+    assert(Array.isArray(update.sourceFailures), `${destination.slug} sourceFailures must be an array`);
+    for (const failure of update.sourceFailures) {
+      assert(typeof failure === "string" && failure.length > 0, `${destination.slug} contains an invalid source failure`);
+    }
   }
 
   for (const alert of update.alerts) {
-    assert(alert.sourceType === "official", `${slug} contains a non-official alert`);
-    assert(typeof alert.source === "string" && alert.source.startsWith("https://"), `${slug} contains an invalid alert source`);
-    if (!configuredSources.has(`${slug}|${alert.source}`)) {
-      fail(`${slug} alert references an unconfigured source: ${alert.source}`);
+    assert(alert.sourceType === "official", `${destination.slug} contains a non-official alert`);
+    assert(typeof alert.source === "string" && alert.source.startsWith("https://"), `${destination.slug} contains an invalid alert source`);
+    if (!configuredSources.has(`${destination.slug}|${alert.source}`)) {
+      fail(`${destination.slug} alert references an unconfigured source: ${alert.source}`);
     }
-    assert(typeof alert.description === "string" && alert.description.length >= 45, `${slug} contains an underspecified alert`);
-    assert(alert.description.length <= 600, `${slug} contains an oversized alert excerpt`);
+    assert(typeof alert.description === "string" && alert.description.length >= 45, `${destination.slug} contains an underspecified alert`);
+    assert(alert.description.length <= 600, `${destination.slug} contains an oversized alert excerpt`);
   }
+}
+
+for (const slug of Object.keys(liveGuideUpdates)) {
+  assert(TRAVEL_INTELLIGENCE_SOURCES.some((item) => item.slug === slug), `generated update exists for unknown destination: ${slug}`);
 }
 
 const alertCount = Object.values(liveGuideUpdates)
