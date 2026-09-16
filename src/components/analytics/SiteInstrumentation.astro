@@ -130,7 +130,7 @@
     }
 
     const link = event.target.closest<HTMLAnchorElement>('a[href="/cuentatuviaje"]');
-    if (link) {
+    if (link && !link.hasAttribute("data-track")) {
       sendEvent("cta_travel_request", {
         label: link.textContent?.trim() ?? "Cuéntanos tu viaje",
         href: "/cuentatuviaje",
