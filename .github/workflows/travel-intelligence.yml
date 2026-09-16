@@ -1,6 +1,12 @@
 name: Travel Intelligence
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/monitor-travel-intelligence.mjs
+      - scripts/travel-intelligence.sources.mjs
+      - .github/workflows/travel-intelligence.yml
   schedule:
     - cron: "17 5 * * *"
   workflow_dispatch:
