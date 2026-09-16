@@ -11,7 +11,13 @@ const guides: Readonly<Record<string, DestinationGuide>> = {
 
 const normalizeSlug = (slug: string): string => slug.trim().toLowerCase();
 
-const renumberSections = (sections: GuideSection[]): GuideSection[] =>
+type GuideSectionWithOptionalNumber = Omit<GuideSection, "number"> & {
+  number?: string;
+};
+
+const renumberSections = (
+  sections: GuideSectionWithOptionalNumber[],
+): GuideSection[] =>
   sections.map((section, index) => ({
     ...section,
     number: String(index + 1).padStart(2, "0"),
