@@ -36,20 +36,20 @@ const labels: Record<string, string> = {
     <div class="guide-decisions__shell">
       <div class="guide-decisions__header">
         <div>
-          <p class="eyebrow">DECISIONES DEL VIAJE</p>
-          <h2 id="guide-decisions-title">Antes de diseñar el viaje, resuelve lo que de verdad cambia la decisión.</h2>
+          <p class="eyebrow">ANTES DE RESERVAR</p>
+          <h2 id="guide-decisions-title">Lo que conviene resolver antes de dar forma al viaje.</h2>
         </div>
         <p>
           Hemos agrupado los puntos de la guía que suelen condicionar dónde ir, cuánto tiempo dedicar y qué preparar antes de reservar.
         </p>
       </div>
 
-      <nav class="guide-decisions__grid" aria-label="Decisiones importantes de esta guía">
+      <nav class="guide-decisions__grid" aria-label="Cuestiones importantes de esta guía">
         {decisionTargets.map((section) => (
           <a href={`/viajes/${guide.slug}#${section.id}`} class="guide-decision" data-track="interaction" data-track-label={`Guía — decisión — ${guide.slug} — ${section.id}`}>
-            <span>{labels[section.id] ?? (section.category === "planning" ? "Planificar" : section.category === "practical" ? "Información práctica" : "Decisión")}</span>
+            <span>{labels[section.id] ?? (section.category === "planning" ? "Planificar" : section.category === "practical" ? "Información práctica" : "A tener en cuenta")}</span>
             <strong>{section.title}</strong>
-            <small>Ir a esta decisión <span aria-hidden="true">↗</span></small>
+            <small>Ver esta cuestión <span aria-hidden="true">↗</span></small>
           </a>
         ))}
       </nav>
