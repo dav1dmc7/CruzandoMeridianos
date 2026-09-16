@@ -59,16 +59,6 @@
     });
   };
 
-  const hideInternalEditorialStatus = () => {
-    const guideEditorialStatus = document.querySelector<HTMLElement>(
-      ".guide-hero__status"
-    );
-    if (guideEditorialStatus) {
-      guideEditorialStatus.setAttribute("hidden", "");
-      guideEditorialStatus.setAttribute("aria-hidden", "true");
-    }
-  };
-
   const ensureTravelFormAccessibility = () => {
     const form = getTravelForm();
     if (!form) return;
@@ -126,9 +116,7 @@
     progressMessage?.setAttribute("aria-atomic", "true");
   };
 
-  hideInternalEditorialStatus();
   document.addEventListener("DOMContentLoaded", () => {
-    hideInternalEditorialStatus();
     ensureTravelFormAccessibility();
   }, { once: true });
 
