@@ -18,6 +18,7 @@
     "audit:travel-intelligence": "node scripts/check-travel-intelligence.mjs",
     "audit:travel-intelligence-rules": "node scripts/check-travel-intelligence-rules.mjs",
     "audit:travel-resources": "node scripts/check-travel-resources.mjs",
+    "audit:copy": "node scripts/check-copy-consistency.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "generate-types": "wrangler types"
