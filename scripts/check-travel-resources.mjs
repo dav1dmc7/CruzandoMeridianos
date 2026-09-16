@@ -42,13 +42,20 @@ if (resourceBlocks.length === 0) {
   process.exit();
 }
 
+const sharedReviewDate = registry.match(/const\s+LAST_REVIEWED\s*=\s*["'](\d{4}-\d{2}-\d{2})["']/)?.[1] ?? null;
+
+if (!sharedReviewDate) {
+  fail("the resource registry is missing an ISO LAST_REVIEWED date");
+}
+
 const resources = resourceBlocks.map((block) => ({
   id: block.match(/\bid:\s*["']([^"']+)["']/)?.[1] ?? null,
   status: block.match(/\bstatus:\s*["']([^"']+)["']/)?.[1] ?? null,
   relationship: block.match(/\brelationship:\s*["']([^"']+)["']/)?.[1] ?? null,
   trackingUrl: Boolean(block.match(/\btrackingUrl:\s*["'][^"']+["']/)),
   disclosure: Boolean(block.match(/\bdisclosure:\s*["'][^"']+["']/)),
-  reviewedAt: block.match(/\breviewedAt:\s*["'](\d{4}-\d{2}-\d{2})["']/)?.[1] ?? null,
+  reviewedAt: block.match(/\breviewedAt:\s*["'](\d{4}-\d{2}-\d{2})["']/)?.[1]
+    ?? (block.match(/\breviewedAt:\s*LAST_REVIEWED\b/) ? sharedReviewDate : null),
 }));
 
 const seenIds = new Set();
