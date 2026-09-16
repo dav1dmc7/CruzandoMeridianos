@@ -48,6 +48,9 @@ jobs:
       - name: Guide registry audit
         run: npm run audit:guides
 
+      - name: Travel resource audit
+        run: npm run audit:travel-resources
+
       - name: Asset weight audit
         run: npm run audit:assets
 
