@@ -27,8 +27,8 @@ export const TRAVEL_INTELLIGENCE_SOURCES = [
       {
         id: "mopt",
         audience: "LOCAL",
-        label: "Costa Rica MOPT",
-        url: "https://www.mopt.go.cr/",
+        label: "Costa Rica MOPT — Noticias",
+        url: "https://www.mopt.go.cr/noticias",
         trust: "official",
       },
       {
@@ -75,8 +75,8 @@ export const TRAVEL_INTELLIGENCE_SOURCES = [
       {
         id: "gov-sa",
         audience: "LOCAL",
-        label: "South African Government",
-        url: "https://www.gov.za/",
+        label: "South African Government — Media statements",
+        url: "https://www.gov.za/news/media-statements",
         trust: "official",
       },
     ],
