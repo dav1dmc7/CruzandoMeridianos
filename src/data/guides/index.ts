@@ -2,6 +2,7 @@ import type { DestinationGuide, GuideSection } from "./types";
 import { costaRicaGuide } from "./costa-rica";
 import { costaRicaSectionOverrides } from "./costa-rica-editorial";
 import { additionalGuides } from "./additional";
+import { southAfricaSectionOverrides } from "./sudafrica-editorial";
 import { liveGuideUpdates } from "../live/travel-intelligence.generated";
 
 const guides: Readonly<Record<string, DestinationGuide>> = {
@@ -22,6 +23,24 @@ const renumberSections = (
     ...section,
     number: String(index + 1).padStart(2, "0"),
   }));
+
+const mergeSectionOverrides = (
+  guide: DestinationGuide,
+  overrides: GuideSectionWithOptionalNumber[],
+): DestinationGuide => {
+  const overridesById = new Map(overrides.map((section) => [section.id, section]));
+  const merged = guide.sections.map(
+    (section) => overridesById.get(section.id) ?? section,
+  );
+  const missing = overrides.filter(
+    (section) => !guide.sections.some((existing) => existing.id === section.id),
+  );
+
+  return {
+    ...guide,
+    sections: renumberSections([...merged, ...missing]),
+  };
+};
 
 const mergeCostaRicaSections = (guide: DestinationGuide): DestinationGuide => {
   if (guide.slug !== "costa-rica") return guide;
@@ -66,8 +85,15 @@ const mergeCostaRicaSections = (guide: DestinationGuide): DestinationGuide => {
   };
 };
 
-const withEditorialContent = (guide: DestinationGuide): DestinationGuide =>
-  mergeCostaRicaSections(guide);
+const withEditorialContent = (guide: DestinationGuide): DestinationGuide => {
+  const withCostaRica = mergeCostaRicaSections(guide);
+
+  if (withCostaRica.slug === "sudafrica") {
+    return mergeSectionOverrides(withCostaRica, southAfricaSectionOverrides);
+  }
+
+  return withCostaRica;
+};
 
 const withLiveUpdates = (guide: DestinationGuide): DestinationGuide => {
   const update = liveGuideUpdates[guide.slug];
