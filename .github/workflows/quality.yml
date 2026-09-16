@@ -30,6 +30,9 @@ jobs:
       - name: Astro check
         run: npm run check
 
+      - name: SEO architecture audit
+        run: npm run audit:seo
+
       - name: Travel intelligence rule tests
         run: npm run audit:travel-intelligence-rules
 
