@@ -215,44 +215,74 @@ const dedupeAlerts = (alerts) => {
   });
 };
 
+const sourceIds = (destination) => new Set(destination.sources.map((source) => source.id));
+
+const previousAlertsBySource = (previousUpdate, source) => {
+  if (previousUpdate?.sourceAlerts?.[source.id]) {
+    return previousUpdate.sourceAlerts[source.id];
+  }
+
+  return (previousUpdate?.alerts ?? []).filter((alert) => alert.source === source.url);
+};
+
+const previousFingerprintsFor = (previousUpdate, destination) =>
+  Object.fromEntries(
+    destination.sources
+      .map((source) => [source.id, previousUpdate?.sourceFingerprints?.[source.id]])
+      .filter(([, fingerprint]) => Boolean(fingerprint)),
+  );
+
+const previousSourceAlertsFor = (previousUpdate, destination) =>
+  Object.fromEntries(
+    destination.sources
+      .map((source) => [source.id, previousAlertsBySource(previousUpdate, source)])
+      .filter(([, alerts]) => alerts.length > 0),
+  );
+
 const previousModule = await loadPrevious();
 const previous = previousModule.liveGuideUpdates ?? {};
 const generated = {};
 
 for (const destination of TRAVEL_INTELLIGENCE_SOURCES) {
-  const fetched = [];
-  const fingerprints = {};
+  const previousUpdate = previous[destination.slug];
+  const sourceFingerprints = previousFingerprintsFor(previousUpdate, destination);
+  const sourceAlerts = previousSourceAlertsFor(previousUpdate, destination);
   const failures = [];
 
   for (const source of destination.sources) {
     try {
       const current = await fetchSource(source);
-      fetched.push(current);
-      fingerprints[source.id] = current.fingerprint;
+      const previousFingerprint = sourceFingerprints[source.id];
+
+      sourceFingerprints[source.id] = current.fingerprint;
+
+      if (current.fingerprint !== previousFingerprint) {
+        sourceAlerts[source.id] = classifyText(current.text, source);
+      }
     } catch (error) {
       failures.push(error instanceof Error ? error.message : String(error));
     }
   }
 
-  const previousUpdate = previous[destination.slug];
-  const changed = fetched.filter(
-    (source) => previousUpdate?.sourceFingerprints?.[source.id] !== source.fingerprint,
+  const configuredIds = sourceIds(destination);
+  const activeSourceFingerprints = Object.fromEntries(
+    Object.entries(sourceFingerprints).filter(([id]) => configuredIds.has(id)),
   );
-
-  let alerts = previousUpdate?.alerts ?? [];
-
-  if (changed.length > 0) {
-    alerts = dedupeAlerts(changed.flatMap((source) => classifyText(source.text, source)));
-  }
+  const activeSourceAlerts = Object.fromEntries(
+    Object.entries(sourceAlerts).filter(([id]) => configuredIds.has(id)),
+  );
 
   generated[destination.slug] = {
     checkedAt,
-    sourceFingerprints: fingerprints,
-    alerts,
+    sourceFingerprints: activeSourceFingerprints,
+    sourceAlerts: activeSourceAlerts,
+    alerts: dedupeAlerts(Object.values(activeSourceAlerts).flat()),
     sourceFailures: failures,
   };
 
-  if (failures.length) console.warn(`[${destination.slug}] source failures: ${failures.join(" | ")}`);
+  if (failures.length) {
+    console.warn(`[${destination.slug}] source failures: ${failures.join(" | ")}`);
+  }
 }
 
 const comparable = (value) => {
@@ -266,7 +296,23 @@ if (comparable(previous) === comparable(generated)) {
   process.exit(0);
 }
 
-const file = `/**\n * GENERATED FILE — do not edit by hand.\n * Updated by scripts/monitor-travel-intelligence.mjs.\n */\n\nimport type { TravelAlert } from "../guides/types";\n\nexport interface LiveGuideUpdate {\n  checkedAt: string;\n  sourceFingerprints: Record<string, string>;\n  alerts: TravelAlert[];\n  sourceFailures?: string[];\n}\n\nexport const liveGuideUpdates: Record<string, LiveGuideUpdate> = ${JSON.stringify(generated, null, 2)};\n`;
+const file = `/**
+ * GENERATED FILE — do not edit by hand.
+ * Updated by scripts/monitor-travel-intelligence.mjs.
+ */
+
+import type { TravelAlert } from "../guides/types";
+
+export interface LiveGuideUpdate {
+  checkedAt: string;
+  sourceFingerprints: Record<string, string>;
+  sourceAlerts: Record<string, TravelAlert[]>;
+  alerts: TravelAlert[];
+  sourceFailures?: string[];
+}
+
+export const liveGuideUpdates: Record<string, LiveGuideUpdate> = ${JSON.stringify(generated, null, 2)};
+`;
 
 await fs.mkdir(path.dirname(generatedPath), { recursive: true });
 await fs.writeFile(generatedPath, file, "utf8");
