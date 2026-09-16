@@ -1,0 +1,132 @@
+---
+import { liveGuideUpdates } from "../../data/live/travel-intelligence.generated";
+import { TRAVEL_INTELLIGENCE_SOURCES } from "../../../scripts/travel-intelligence.sources.mjs";
+
+const guideMatch = Astro.url.pathname.match(/^\/viajes\/([^/]+)\/?$/);
+const guideSlug = guideMatch?.[1];
+const sourceConfig = guideSlug
+  ? TRAVEL_INTELLIGENCE_SOURCES.find((item) => item.slug === guideSlug)
+  : undefined;
+const liveUpdate = guideSlug ? liveGuideUpdates[guideSlug] : undefined;
+
+const sourceCount = sourceConfig?.sources.length ?? 0;
+const failureCount = liveUpdate?.sourceFailures?.length ?? 0;
+const checkedAt = liveUpdate?.checkedAt;
+
+const formatCheckedAt = (value: string): string => {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return value;
+
+  return new Intl.DateTimeFormat("es-ES", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "Europe/Madrid",
+  }).format(date);
+};
+---
+
+{guideSlug && sourceConfig && (
+  <aside
+    class:list={[
+      "live-guide-status",
+      { "live-guide-status--degraded": failureCount > 0 },
+    ]}
+    aria-label="Estado del seguimiento de actualidad"
+  >
+    <div class="live-guide-status__inner">
+      <span class="live-guide-status__dot" aria-hidden="true"></span>
+
+      <div class="live-guide-status__copy">
+        <strong>
+          {failureCount > 0
+            ? "Seguimiento parcialmente disponible"
+            : checkedAt
+              ? "Seguimiento comprobado"
+              : "Seguimiento diario activo"}
+        </strong>
+
+        <span>
+          {checkedAt
+            ? `Última comprobación: ${formatCheckedAt(checkedAt)}`
+            : "La primera comprobación se incorporará con la actualización diaria."}
+        </span>
+      </div>
+
+      <span class="live-guide-status__sources">
+        {sourceCount} {sourceCount === 1 ? "fuente oficial" : "fuentes oficiales"}
+        {failureCount > 0 && ` · ${failureCount} sin respuesta`}
+      </span>
+    </div>
+  </aside>
+)}
+
+<style>
+  .live-guide-status {
+    border-bottom: 1px solid rgba(24, 32, 39, 0.12);
+    background: #f4f1eb;
+  }
+
+  .live-guide-status--degraded {
+    background: #f7f0e5;
+  }
+
+  .live-guide-status__inner {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+    min-height: 52px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .live-guide-status__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #39724f;
+  }
+
+  .live-guide-status--degraded .live-guide-status__dot {
+    background: #9b6b2f;
+  }
+
+  .live-guide-status__copy {
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 7px;
+  }
+
+  .live-guide-status__copy strong {
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+  }
+
+  .live-guide-status__copy span,
+  .live-guide-status__sources {
+    color: rgba(24, 32, 39, 0.68);
+    font-size: 0.74rem;
+  }
+
+  .live-guide-status__sources {
+    white-space: nowrap;
+    text-align: right;
+  }
+
+  @media (max-width: 720px) {
+    .live-guide-status__inner {
+      width: min(100% - 28px, 1180px);
+      grid-template-columns: auto minmax(0, 1fr);
+      padding: 10px 0;
+    }
+
+    .live-guide-status__sources {
+      grid-column: 2;
+      text-align: left;
+      white-space: normal;
+    }
+  }
+</style>
