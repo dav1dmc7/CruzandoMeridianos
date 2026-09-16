@@ -1,4 +1,4 @@
-import type { DestinationGuide } from "./types";
+import type { DestinationGuide, GuideSection } from "./types";
 import { costaRicaGuide } from "./costa-rica";
 import { costaRicaSectionOverrides } from "./costa-rica-editorial";
 import { additionalGuides } from "./additional";
@@ -10,6 +10,12 @@ const guides: Readonly<Record<string, DestinationGuide>> = {
 };
 
 const normalizeSlug = (slug: string): string => slug.trim().toLowerCase();
+
+const renumberSections = (sections: GuideSection[]): GuideSection[] =>
+  sections.map((section, index) => ({
+    ...section,
+    number: String(index + 1).padStart(2, "0"),
+  }));
 
 const mergeCostaRicaSections = (guide: DestinationGuide): DestinationGuide => {
   if (guide.slug !== "costa-rica") return guide;
@@ -47,7 +53,10 @@ const mergeCostaRicaSections = (guide: DestinationGuide): DestinationGuide => {
 
   return {
     ...guide,
-    sections: [...withInsertedVolcanoes, ...remainingMissing],
+    sections: renumberSections([
+      ...withInsertedVolcanoes,
+      ...remainingMissing,
+    ]),
   };
 };
 
