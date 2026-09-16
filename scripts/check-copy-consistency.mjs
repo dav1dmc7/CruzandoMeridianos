@@ -24,7 +24,7 @@ const pluralSecondPerson = /\b(?:vuestra|vuestro|vuestros|vuestras|vosotros|voso
 const publicTerminologyChecks = [
   {
     file: "src/components/layout/Header.astro",
-    pattern: /href="\/viajes"[^\n]*label:\s*"Guías de destino"/u,
+    pattern: /href:\s*"\/viajes",\s*label:\s*"Guías de destino"/u,
     label: 'Header: “Guías de destino”',
   },
   {
