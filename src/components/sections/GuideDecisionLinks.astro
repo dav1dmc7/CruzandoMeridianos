@@ -12,7 +12,15 @@ const decisionTargets = guide
       guide.sections.find((section) => section.category === "practical"),
       guide.sections.find((section) => section.category === "updates"),
       guide.sections.find((section) => section.id === "preguntas-frecuentes"),
-    ].filter((section, index, sections) => section && sections.findIndex((item) => item?.id === section.id) === index).slice(0, 4)
+    ]
+      .filter(
+        (section): section is NonNullable<typeof section> => Boolean(section),
+      )
+      .filter(
+        (section, index, sections) =>
+          sections.findIndex((item) => item.id === section.id) === index,
+      )
+      .slice(0, 4)
   : [];
 
 const labels: Record<string, string> = {
