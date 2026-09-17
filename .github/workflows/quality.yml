@@ -57,6 +57,9 @@ jobs:
       - name: Internal link audit
         run: npm run audit:links
 
+      - name: External link health audit
+        run: npm run audit:external-links
+
       - name: Analytics event audit
         run: npm run audit:analytics
 
