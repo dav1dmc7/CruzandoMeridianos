@@ -45,6 +45,9 @@ jobs:
       - name: Layout composition audit
         run: npm run audit:layout
 
+      - name: Travel form privacy audit
+        run: npm run audit:form-privacy
+
       - name: Travel intelligence rule tests
         run: npm run audit:travel-intelligence-rules
 
