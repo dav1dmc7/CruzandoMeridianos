@@ -13,11 +13,24 @@
   const transition = document.querySelector<HTMLElement>("[data-geo-transition-overlay]");
   const label = document.querySelector<HTMLElement>("[data-geo-transition-label]");
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let navigationTimer: number | null = null;
+
+  const resetTransition = () => {
+    if (navigationTimer !== null) {
+      window.clearTimeout(navigationTimer);
+      navigationTimer = null;
+    }
+
+    transition?.classList.remove("is-visible");
+    transition?.setAttribute("aria-hidden", "true");
+  };
 
   const isDestinationRoot = (pathname: string) => {
     const parts = pathname.split("/").filter(Boolean);
     return parts.length === 2 && (parts[0] === "viajes" || parts[0] === "nuestros-viajes");
   };
+
+  window.addEventListener("pageshow", resetTransition);
 
   document.addEventListener("click", (event) => {
     if (!(event.target instanceof Element)) return;
@@ -40,8 +53,11 @@
       return;
     }
 
+    resetTransition();
     transition.classList.add("is-visible");
-    window.setTimeout(() => {
+    transition.setAttribute("aria-hidden", "false");
+    navigationTimer = window.setTimeout(() => {
+      navigationTimer = null;
       window.location.href = target.href;
     }, 360);
   });
