@@ -60,6 +60,9 @@ jobs:
       - name: External link health audit
         run: npm run audit:external-links
 
+      - name: Route/data contract audit
+        run: npm run audit:route-contracts
+
       - name: Analytics event audit
         run: npm run audit:analytics
 
