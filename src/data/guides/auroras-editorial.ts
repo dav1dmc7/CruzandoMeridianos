@@ -30,6 +30,34 @@ const noaaAuroraSource: GuideSource = {
   accessedAt: REVIEWED_AT,
 };
 
+const myAuroraForecastSource: GuideSource = {
+  label: "My Aurora Forecast & Alerts",
+  url: "https://play.google.com/store/apps/details?id=com.jrustonapps.myauroraforecast",
+  type: "primary",
+  accessedAt: REVIEWED_AT,
+};
+
+const helloAuroraSource: GuideSource = {
+  label: "Hello Aurora — Aurora Forecast",
+  url: "https://hello-aurora.com/feature/aurora-forecast",
+  type: "primary",
+  accessedAt: REVIEWED_AT,
+};
+
+const spaceWeatherLiveSource: GuideSource = {
+  label: "SpaceWeatherLive — Aurora Alerts",
+  url: "https://www.spaceweatherlive.com/en/aurora-alerts.html",
+  type: "primary",
+  accessedAt: REVIEWED_AT,
+};
+
+const meteoblueSource: GuideSource = {
+  label: "meteoblue — Astronomy Seeing",
+  url: "https://content.meteoblue.com/en/private-customers/website-help/outdoor-and-sports/astronomy-seeing",
+  type: "primary",
+  accessedAt: REVIEWED_AT,
+};
+
 type SectionOverride = Omit<GuideSection, "number">;
 
 const section = (
@@ -218,6 +246,38 @@ export const aurorasSectionOverrides: SectionOverride[] = [
         content:
           "Usamos NOAA para explicar el ciclo solar, el horizonte de previsión de la actividad auroral y la diferencia entre predicciones a largo y corto plazo.",
         source: noaaAuroraSource,
+      },
+      {
+        type: "source",
+        label: "Herramienta",
+        title: "My Aurora Forecast & Alerts",
+        content:
+          "Puede mostrar actividad auroral, previsiones y alertas para decidir cuándo merece la pena salir a observar.",
+        source: myAuroraForecastSource,
+      },
+      {
+        type: "source",
+        label: "Herramienta",
+        title: "Hello Aurora",
+        content:
+          "Combina actividad geomagnética con condiciones locales, incluida la nubosidad, para estimar las posibilidades de observación.",
+        source: helloAuroraSource,
+      },
+      {
+        type: "source",
+        label: "Herramienta",
+        title: "SpaceWeatherLive",
+        content:
+          "Permite configurar alertas de actividad geomagnética y otros eventos de clima espacial.",
+        source: spaceWeatherLiveSource,
+      },
+      {
+        type: "source",
+        label: "Meteorología del cielo",
+        title: "meteoblue Astronomy Seeing",
+        content:
+          "Ayuda a revisar la cobertura de nubes por capas y otras condiciones de visibilidad del cielo. Windy es otra alternativa útil para consultar nubes y cobertura local.",
+        source: meteoblueSource,
       },
     ],
     closing:
