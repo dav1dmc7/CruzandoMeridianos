@@ -31,6 +31,16 @@ requirePattern(
   "GeoTransition must remain a short navigation effect rather than a persistent animation.",
 );
 requirePattern(
+  transition,
+  /window\.addEventListener\("pageshow",\s*resetTransition\)/,
+  "GeoTransition must reset when a page is restored through browser history or the back-forward cache.",
+);
+requirePattern(
+  transition,
+  /clearTimeout\(navigationTimer\)/,
+  "GeoTransition must cancel pending navigation timers when the transition is reset.",
+);
+requirePattern(
   hero,
   /@media\s*\(prefers-reduced-motion:\s*no-preference\)/,
   "Hero decorative animation must be opt-in for users without reduced-motion preference.",
@@ -52,4 +62,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("Motion architecture audit passed: decorative movement is scoped, brief and respects reduced-motion preferences.");
+console.log("Motion architecture audit passed: decorative movement is scoped, reversible on history restore and respects reduced-motion preferences.");
