@@ -42,6 +42,9 @@ jobs:
       - name: Accessibility architecture audit
         run: npm run audit:accessibility
 
+      - name: Layout composition audit
+        run: npm run audit:layout
+
       - name: Travel intelligence rule tests
         run: npm run audit:travel-intelligence-rules
 
