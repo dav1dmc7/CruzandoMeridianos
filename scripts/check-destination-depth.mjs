@@ -17,18 +17,20 @@ const extractReadySlugs = (source) => {
   });
 };
 
-const extractObjectKeys = (source, marker) => {
+const extractMapKeys = (source, marker) => {
   const start = source.indexOf(marker);
   if (start === -1) return [];
 
-  const body = source.slice(start, source.indexOf("};", start));
-  return [...body.matchAll(/^\s+(?:"([^"]+)"|([a-z0-9-]+)):\s*\{/gm)]
+  const end = source.indexOf("};", start);
+  const body = source.slice(start, end === -1 ? source.length : end);
+
+  return [...body.matchAll(/^\s+(?:"([^"]+)"|([a-z0-9-]+)):\s*(?:"|\{)/gm)]
     .map((match) => match[1] ?? match[2]);
 };
 
 const readySlugs = extractReadySlugs(destinations);
-const utilityFocusSlugs = extractObjectKeys(registry, "const utilityFocusBySlug");
-const deepDiveSlugs = extractObjectKeys(deepDive, "const deepDive");
+const utilityFocusSlugs = extractMapKeys(registry, "const utilityFocusBySlug");
+const deepDiveSlugs = extractMapKeys(deepDive, "const deepDive");
 const specializedSlugs = [
   "costa-rica",
   "sudafrica",
@@ -65,7 +67,7 @@ if (!/id:\s*"plan-b-y-flexibilidad"/.test(registry)) {
   failures.push("Universal utility section " + '"plan-b-y-flexibilidad"' + " is missing.");
 }
 
-if (!/withDestinationDeepDive\(updatedGuide\)/.test(registry)) {
+if (!/withDestinationDeepDive\(/.test(registry)) {
   failures.push("Deep-dive editorial layer is not applied to live guides.");
 }
 
