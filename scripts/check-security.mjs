@@ -46,8 +46,10 @@ requirePattern(travelRequest, /RESEND_TIMEOUT_MS\s*=\s*8000/, "Outbound travel-r
 requirePattern(travelRequest, /new AbortController\(\)[\s\S]*RESEND_TIMEOUT_MS[\s\S]*signal:\s*controller\.signal/, "Outbound travel-request email calls must be abortable.");
 requirePattern(travelRequest, /request\.headers\.get\("content-type"\)[\s\S]*application\/json/, "Travel requests must require application/json payloads.");
 requirePattern(travelRequest, /content-length[\s\S]*MAX_BODY_BYTES/, "Travel requests must reject oversized Content-Length values before parsing the body.");
-requirePattern(travelRequest, /try\s*\{\s*data\s*=\s*\(await request\.json\(\)\)/, "Travel requests must convert malformed JSON into a client error instead of a server error.");
-requirePattern(travelRequest, /!data \|\| typeof data !== "object" \|\| Array\.isArray\(data\)/, "Travel requests must validate that the JSON body is an object.");
+requirePattern(travelRequest, /try\s*\{\s*rawData\s*=\s*await request\.json\(\)/, "Travel requests must convert malformed JSON into a client error instead of a server error.");
+requirePattern(travelRequest, /isRecord\(rawData\)/, "Travel requests must validate that the JSON body is a plain object.");
+requirePattern(travelRequest, /typeof value !== "string"/, "Travel requests must reject non-string scalar field values before coercion.");
+requirePattern(travelRequest, /Array\.isArray\(data\.transport\)[\s\S]*typeof value !== "string"/, "Travel requests must reject non-string transport options.");
 requirePattern(travelRequest, /data\.website\?\.trim\(\)/, "Travel requests must keep the honeypot spam control.");
 requirePattern(travelRequest, /escapeHtml\(/, "Travel request emails must HTML-escape user-controlled values.");
 requirePattern(travelRequest, /INSERT INTO travel_requests/, "Travel requests must persist leads before sending email.");
@@ -61,4 +63,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("Security architecture audit passed: global headers, security contact, request payload limits, malformed-input handling, form rate limiting, outbound email timeout, escaping and dependency gate are present.");
+console.log("Security architecture audit passed: global headers, security contact, request payload limits, malformed-input handling, typed form validation, rate limiting, outbound email timeout, escaping and dependency gate are present.");
