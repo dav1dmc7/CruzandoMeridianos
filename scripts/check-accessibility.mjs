@@ -33,10 +33,44 @@ requirePattern(formPage, /aria-live="polite"\s+id="progress-message"/, "Travel f
 requirePattern(formPage, /<label\s+for="trip">/, "The first travel-form field must use an explicit label association.");
 requirePattern(formPage, /<label\s+for="website">/, "The honeypot field must remain correctly labelled for markup validity.");
 
+const formIds = new Set(
+  [...formPage.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]),
+);
+const labelPattern = /<label\b([^>]*)>([\s\S]*?)<\/label>/gi;
+
+let labelMatch;
+while ((labelMatch = labelPattern.exec(formPage))) {
+  const attributes = labelMatch[1] ?? "";
+  const content = labelMatch[2] ?? "";
+  const forMatch = attributes.match(/\bfor="([^"]+)"/i);
+  const wrapsControl = /<(?:input|select|textarea)\b/i.test(content);
+
+  if (!forMatch && !wrapsControl) {
+    failures.push("Every form label must target a control with `for` or wrap a form control.");
+    break;
+  }
+
+  if (forMatch && !formIds.has(forMatch[1])) {
+    failures.push(`Form label target "${forMatch[1]}" does not match an element id.`);
+    break;
+  }
+}
+
+const duplicatedIds = new Set();
+const seenIds = new Set();
+for (const match of formPage.matchAll(/\bid="([^"]+)"/g)) {
+  const id = match[1];
+  if (seenIds.has(id)) duplicatedIds.add(id);
+  seenIds.add(id);
+}
+if (duplicatedIds.size) {
+  failures.push(`The travel form contains duplicated ids: ${[...duplicatedIds].join(", ")}.`);
+}
+
 if (failures.length) {
   console.error("Accessibility architecture audit failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
 }
 
-console.log("Accessibility architecture audit passed: language, skip link, navigation, mobile menu and travel-form accessibility contracts are present.");
+console.log("Accessibility architecture audit passed: language, skip link, navigation, mobile menu, form labels and travel-form accessibility contracts are present.");
