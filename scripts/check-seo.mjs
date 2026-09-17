@@ -59,6 +59,12 @@ requirePattern(astroConfig, /site:\s*'https:\/\/www\.cruzandomeridianos\.com'/, 
 requirePattern(astroConfig, /sitemap\(/, "Astro must keep the sitemap integration enabled.");
 requirePattern(astroConfig, /customPages:/, "The sitemap must explicitly include server-rendered destination pages.");
 
+requirePattern(
+  journeyPage,
+  /class="privacy-note"[\s\S]*href="\/privacidad"/,
+  "The journey form privacy note must link directly to /privacidad."
+);
+
 warnIfPattern(
   guidePage,
   /name:\s*"Viajes"\s*,\s*item:\s*"https:\/\/www\.cruzandomeridianos\.com\/viajes"/,
@@ -68,11 +74,6 @@ warnIfPattern(
   guidePage,
   /Estado editorial|Última revisión:/,
   "Guide pages still expose internal editorial-status wording; migrate the public copy toward visitor-facing freshness language."
-);
-warnIfPattern(
-  journeyPage,
-  /class="privacy-note"/,
-  "The journey form has a privacy note but no detected /privacidad link yet."
 );
 
 if (failures.length) {
