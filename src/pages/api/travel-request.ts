@@ -27,6 +27,7 @@ const WEBSITE_URL = "https://www.cruzandomeridianos.com";
 const LOGO_URL = `${WEBSITE_URL}/email-logo.png`;
 const RATE_LIMIT_WINDOW_SECONDS = 15 * 60;
 const RATE_LIMIT_MAX_REQUESTS = 3;
+const MAX_BODY_BYTES = 64 * 1024;
 
 const COLORS = {
   background: "#f5f2eb", white: "#ffffff", cream: "#fbf9f4", text: "#292722",
@@ -86,9 +87,23 @@ function button(text: string, href: string): string { return `<table role="prese
 export const POST: APIRoute = async ({ request }) => {
   try {
     if (request.method !== "POST") return new Response(JSON.stringify({ success: false, error: "Método no permitido." }), { status: 405, headers: { "Content-Type": "application/json" } });
+
+    const contentType = request.headers.get("content-type")?.split(";", 1)[0]?.trim().toLowerCase();
+    if (contentType !== "application/json") return new Response(JSON.stringify({ success: false, error: "La solicitud debe usar JSON." }), { status: 415, headers: { "Content-Type": "application/json" } });
+
+    const contentLength = Number(request.headers.get("content-length"));
+    if (Number.isFinite(contentLength) && contentLength > MAX_BODY_BYTES) return new Response(JSON.stringify({ success: false, error: "La solicitud es demasiado grande." }), { status: 413, headers: { "Content-Type": "application/json" } });
+
     if (await isRateLimited(request)) return new Response(JSON.stringify({ success: false, error: "Has enviado varias solicitudes seguidas. Espera unos minutos antes de intentarlo de nuevo." }), { status: 429, headers: { "Content-Type": "application/json", "Retry-After": String(RATE_LIMIT_WINDOW_SECONDS) } });
 
-    const data = (await request.json()) as TravelRequestData;
+    let data: TravelRequestData;
+    try {
+      data = (await request.json()) as TravelRequestData;
+    } catch {
+      return new Response(JSON.stringify({ success: false, error: "La solicitud no contiene un JSON válido." }), { status: 400, headers: { "Content-Type": "application/json" } });
+    }
+
+    if (!data || typeof data !== "object" || Array.isArray(data)) return new Response(JSON.stringify({ success: false, error: "El cuerpo de la solicitud no es válido." }), { status: 400, headers: { "Content-Type": "application/json" } });
 
     const limits: Record<string, number> = {
       trip: 5000,
