@@ -33,6 +33,12 @@ jobs:
       - name: SEO architecture audit
         run: npm run audit:seo
 
+      - name: Security architecture audit
+        run: npm run audit:security
+
+      - name: Sitemap consistency audit
+        run: npm run audit:sitemap
+
       - name: Accessibility architecture audit
         run: npm run audit:accessibility
 
@@ -49,7 +55,7 @@ jobs:
         run: npm run audit:guides
 
       - name: Destination depth audit
-        run: node scripts/check-destination-depth.mjs
+        run: npm run audit:destination-depth
 
       - name: Travel resource audit
         run: npm run audit:travel-resources
