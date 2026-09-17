@@ -24,7 +24,7 @@ const extractMapKeys = (source, marker) => {
   const end = source.indexOf("};", start);
   const body = source.slice(start, end === -1 ? source.length : end);
 
-  return [...body.matchAll(/^\s+(?:"([^"]+)"|([a-z0-9-]+)):\s*(?:"|\{)/gm)]
+  return [...body.matchAll(/^  (?:"([^"]+)"|([a-z0-9-]+)):\s*(?:"|\{)/gm)]
     .map((match) => match[1] ?? match[2]);
 };
 
