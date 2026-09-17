@@ -255,9 +255,24 @@ const withLiveUpdates = (guide: DestinationGuide): DestinationGuide => {
   return withUniversalUtility(withDestinationDeepDive(withEditorialContent(updatedGuide)));
 };
 
-export const getGuideBySlug = (slug: string): DestinationGuide | undefined => {
+const toPublicGuide = (guide: DestinationGuide): DestinationGuide => ({
+  ...guide,
+  editorial: undefined,
+  sections: guide.sections.map(({ status, reviewedAt, ...section }) => section),
+});
+
+const getInternalGuideBySlug = (
+  slug: string,
+): DestinationGuide | undefined => {
   const guide = guides[normalizeSlug(slug)];
   return guide ? withLiveUpdates(guide) : undefined;
+};
+
+export const getGuideBySlug = (
+  slug: string,
+): DestinationGuide | undefined => {
+  const guide = getInternalGuideBySlug(slug);
+  return guide ? toPublicGuide(guide) : undefined;
 };
 
 export const getAllGuides = (): DestinationGuide[] =>
@@ -267,9 +282,12 @@ export const getPublishedGuides = (): DestinationGuide[] =>
   getAllGuides().filter((guide) => guide.editorial?.status === "published");
 
 export const getPublicGuides = (): DestinationGuide[] =>
-  getAllGuides().filter((guide) => guide.editorial?.status !== "draft");
+  getAllGuides()
+    .filter((guide) => guide.editorial?.status !== "draft")
+    .map(toPublicGuide);
 
-export const hasGuide = (slug: string): boolean => Boolean(getGuideBySlug(slug));
+export const hasGuide = (slug: string): boolean =>
+  Boolean(getInternalGuideBySlug(slug));
 
 export const hasPublishedGuide = (slug: string): boolean =>
-  getGuideBySlug(slug)?.editorial?.status === "published";
+  getInternalGuideBySlug(slug)?.editorial?.status === "published";
