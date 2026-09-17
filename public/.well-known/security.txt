@@ -1,0 +1,4 @@
+Contact: mailto:hola@cruzandomeridianos.com
+Expires: 2027-09-17T00:00:00Z
+Preferred-Languages: es, en
+Canonical: https://www.cruzandomeridianos.com/.well-known/security.txt
