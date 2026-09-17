@@ -1,0 +1,104 @@
+import fs from "node:fs/promises";
+import path from "node:path";
+
+const root = process.cwd();
+
+const read = (relativePath) =>
+  fs.readFile(path.join(root, relativePath), "utf8");
+
+const walk = async (directory) => {
+  const entries = await fs.readdir(directory, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const fullPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...(await walk(fullPath)));
+    else files.push(fullPath);
+  }
+  return files;
+};
+
+const failures = [];
+
+const destinations = await read("src/data/destinations.ts");
+const additionalGuides = await read("src/data/guides/additional.ts");
+const guideRegistry = await read("src/data/guides/index.ts");
+const destinationCard = await read("src/components/sections/DestinationCard.astro");
+const ourTripsRoot = path.join(root, "src/data/our-trips");
+const guideFiles = (await walk(path.join(root, "src/data/guides")))
+  .filter((file) => file.endsWith(".ts"));
+
+const readyDestinationSlugs = new Set(
+  [...destinations.matchAll(
+    /\{[\s\S]*?slug:\s*["']([^"']+)["'][\s\S]*?status:\s*["']ready["'][\s\S]*?\}/g,
+  )].map((match) => match[1]),
+);
+
+const additionalGuideSlugs = new Set(
+  [...additionalGuides.matchAll(/slug:\s*"([^"]+)"\s*,\s*name:/g)].map((match) => match[1]),
+);
+
+const guideSlugs = new Set(["costa-rica", ...additionalGuideSlugs]);
+
+const ourTripSlugs = new Set();
+for (const file of await walk(ourTripsRoot)) {
+  if (!file.endsWith(".ts")) continue;
+  const content = await fs.readFile(file, "utf8");
+  for (const match of content.matchAll(/\bslug:\s*["']([^"']+)["']/g)) {
+    ourTripSlugs.add(match[1]);
+  }
+}
+
+for (const slug of readyDestinationSlugs) {
+  if (!guideSlugs.has(slug)) {
+    failures.push(`Ready destination "${slug}" has no matching guide registry entry.`);
+  }
+}
+
+for (const slug of guideSlugs) {
+  if (!readyDestinationSlugs.has(slug)) {
+    failures.push(`Guide "${slug}" has no matching ready destination.`);
+  }
+}
+
+for (const file of guideFiles) {
+  const content = await fs.readFile(file, "utf8");
+  for (const match of content.matchAll(/relatedTripSlug:\s*["']([^"']+)["']/g)) {
+    if (!ourTripSlugs.has(match[1])) {
+      failures.push(`${path.relative(root, file).replace(/\\/g, "/")} → relatedTripSlug "${match[1]}" does not exist in src/data/our-trips.`);
+    }
+  }
+}
+
+for (const slug of ourTripSlugs) {
+  if (!readyDestinationSlugs.has(slug)) {
+    failures.push(`Lived trip "${slug}" does not match a ready destination.`);
+  }
+}
+
+if (!guideRegistry.includes("additionalGuides")) {
+  failures.push("Guide registry is not consuming additionalGuides.");
+}
+
+if (!destinationCard.includes('import { ourTrips } from "../../data/our-trips";')) {
+  failures.push("DestinationCard must use lived-trip data before generating /nuestros-viajes routes.");
+}
+
+if (!destinationCard.includes("ourTrips.some((trip) => trip.slug === destination.slug)")) {
+  failures.push("DestinationCard must guard lived-trip links against known our-trip slugs.");
+}
+
+console.log("\nRoute/data contract audit");
+console.log("=========================");
+console.log(`- Ready destinations: ${readyDestinationSlugs.size}`);
+console.log(`- Registered guides: ${guideSlugs.size}`);
+console.log(`- Lived trips: ${ourTripSlugs.size}`);
+console.log("- relatedTripSlug targets: checked");
+console.log("- DestinationCard lived-trip route guard: checked");
+
+if (failures.length) {
+  console.error("\nRoute/data contract audit failed:");
+  for (const failure of failures) console.error(`- ${failure}`);
+  process.exit(1);
+}
+
+console.log("\nRoute/data contract audit passed.");
