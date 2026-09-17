@@ -41,6 +41,11 @@ if (!expiresMatch) {
 requirePattern(travelRequest, /RATE_LIMIT_MAX_REQUESTS\s*=\s*3/, "Travel requests must keep a server-side request limit.");
 requirePattern(travelRequest, /RATE_LIMIT_WINDOW_SECONDS\s*=\s*15\s*\*\s*60/, "Travel request rate limiting must use a finite window.");
 requirePattern(travelRequest, /CF-Connecting-IP/, "Travel request rate limiting must use the Cloudflare client IP when available.");
+requirePattern(travelRequest, /MAX_BODY_BYTES\s*=\s*64\s*\*\s*1024/, "Travel requests must cap the request body size.");
+requirePattern(travelRequest, /request\.headers\.get\("content-type"\)[\s\S]*application\/json/, "Travel requests must require application/json payloads.");
+requirePattern(travelRequest, /content-length[\s\S]*MAX_BODY_BYTES/, "Travel requests must reject oversized Content-Length values before parsing the body.");
+requirePattern(travelRequest, /try\s*\{\s*data\s*=\s*\(await request\.json\(\)\)/, "Travel requests must convert malformed JSON into a client error instead of a server error.");
+requirePattern(travelRequest, /data && typeof data === "object" && !Array\.isArray\(data\)|!data \|\| typeof data !== "object" \|\| Array\.isArray\(data)/, "Travel requests must validate that the JSON body is an object.");
 requirePattern(travelRequest, /data\.website\?\.trim\(\)/, "Travel requests must keep the honeypot spam control.");
 requirePattern(travelRequest, /escapeHtml\(/, "Travel request emails must HTML-escape user-controlled values.");
 requirePattern(travelRequest, /INSERT INTO travel_requests/, "Travel requests must persist leads before sending email.");
@@ -54,4 +59,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("Security architecture audit passed: global headers, security contact, form rate limiting, escaping and dependency gate are present.");
+console.log("Security architecture audit passed: global headers, security contact, request payload limits, malformed-input handling, form rate limiting, escaping and dependency gate are present.");
