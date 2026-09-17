@@ -618,9 +618,12 @@ import Footer from "../components/layout/Footer.astro";
 
             <span class="question-number">06</span>
 
-            <label>
+            <p
+              id="transport-question-label"
+              class="question-label"
+            >
               ¿Cómo os gusta moveros y descubrir un destino?
-            </label>
+            </p>
 
             <p class="question-help">
               Podéis elegir varias. Y si depende del destino,
@@ -630,7 +633,7 @@ import Footer from "../components/layout/Footer.astro";
             <div
               class="transport-options"
               role="group"
-              aria-label="Preferencias de movilidad y servicios"
+              aria-labelledby="transport-question-label"
             >
 
               <label class="choice-card checkbox-card">
@@ -1402,6 +1405,7 @@ import Footer from "../components/layout/Footer.astro";
   }
 
   .question-block > label,
+  .question-block > .question-label,
   .question-block > .final-question-title,
   .choice-fieldset > legend {
     display: block;
