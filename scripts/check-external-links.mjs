@@ -7,6 +7,7 @@ const srcRoot = path.join(root, "src");
 const ignoredDirectories = new Set(["node_modules", ".astro", "dist"]);
 const sourceExtensions = new Set([".astro", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".md", ".mdx"]);
 const ownHosts = new Set(["cruzandomeridianos.com", "www.cruzandomeridianos.com"]);
+const preconnectOrigins = new Set(["fonts.googleapis.com", "fonts.gstatic.com"]);
 const requestTimeoutMs = 8000;
 const concurrency = 5;
 
@@ -41,6 +42,8 @@ for (const file of sourceFiles) {
   while ((match = urlPattern.exec(content))) {
     const candidate = match[0].replace(trailingPunctuation, "");
 
+    if (candidate.includes("${") || candidate.includes("{{")) continue;
+
     let parsed;
     try {
       parsed = new URL(candidate);
@@ -50,6 +53,7 @@ for (const file of sourceFiles) {
 
     if (!/^https?:$/.test(parsed.protocol)) continue;
     if (ownHosts.has(parsed.hostname.toLowerCase())) continue;
+    if (preconnectOrigins.has(parsed.hostname.toLowerCase()) && parsed.pathname === "/" && !parsed.search && !parsed.hash) continue;
 
     const relative = path.relative(root, file).replace(/\\/g, "/");
     const line = content.slice(0, match.index).split("\n").length;
@@ -148,6 +152,7 @@ console.log(`- Unique external URLs checked: ${urls.length}`);
 console.log("- Redirects followed: yes");
 console.log("- 404/410 responses: blocking");
 console.log("- 429/5xx/network restrictions: warnings");
+console.log("- Template URLs and font preconnect origins: excluded from live checks");
 
 if (warnings.length) {
   console.warn("\nExternal link warnings:");
