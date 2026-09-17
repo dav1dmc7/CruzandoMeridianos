@@ -9,8 +9,8 @@ if (!/<p class=["']privacy-note["']>[\s\S]*<a href=["']\/privacidad["']>polític
   failures.push("The travel form must link its privacy notice directly to /privacidad.");
 }
 
-if (!/<title>Política de privacidad \| Cruzando Meridianos<\/title>/.test(privacyPage)) {
-  failures.push("The privacy destination page must remain available with its canonical public title.");
+if (!/title=["']Política de privacidad \| Cruzando Meridianos["']/.test(privacyPage)) {
+  failures.push("The privacy destination page must keep its canonical public title prop.");
 }
 
 if (failures.length) {
