@@ -19,6 +19,7 @@ const binaryExtensions = new Set([
   ".jpeg",
   ".jpg",
   ".png",
+  ".svg",
   ".webp",
   ".woff",
   ".woff2",
