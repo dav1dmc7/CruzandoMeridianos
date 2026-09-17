@@ -23,6 +23,7 @@
     "audit:sitemap": "node scripts/check-sitemap-consistency.mjs",
     "audit:security": "node scripts/check-security.mjs",
     "audit:layout": "node scripts/check-layout-contracts.mjs",
+    "audit:form-privacy": "node scripts/check-form-privacy.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "generate-types": "wrangler types"
