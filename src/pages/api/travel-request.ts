@@ -38,7 +38,11 @@ const COLORS = {
 
 function escapeHtml(value: unknown): string {
   return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;").replace(/\"/g, "&quot;").replace(/'/g, "&#039;");
+    .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 function getResendApiKey(): string | undefined {
@@ -114,16 +118,57 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (await isRateLimited(request)) return new Response(JSON.stringify({ success: false, error: "Has enviado varias solicitudes seguidas. Espera unos minutos antes de intentarlo de nuevo." }), { status: 429, headers: { "Content-Type": "application/json", "Retry-After": String(RATE_LIMIT_WINDOW_SECONDS) } });
 
-    let data: TravelRequestData;
+    let rawData: unknown;
     try {
-      data = (await request.json()) as TravelRequestData;
+      rawData = await request.json();
     } catch {
       return new Response(JSON.stringify({ success: false, error: "La solicitud no contiene un JSON válido." }), { status: 400, headers: { "Content-Type": "application/json" } });
     }
 
-    if (!data || typeof data !== "object" || Array.isArray(data)) return new Response(JSON.stringify({ success: false, error: "El cuerpo de la solicitud no es válido." }), { status: 400, headers: { "Content-Type": "application/json" } });
+    if (!isRecord(rawData)) return new Response(JSON.stringify({ success: false, error: "El cuerpo de la solicitud no es válido." }), { status: 400, headers: { "Content-Type": "application/json" } });
 
-    const limits: Record<string, number> = {
+    const data = rawData as Partial<TravelRequestData>;
+    const stringFields: Array<keyof TravelRequestData> = [
+      "trip",
+      "travellers",
+      "age_range",
+      "dates",
+      "budget",
+      "budget_flights",
+      "experience",
+      "avoid",
+      "style",
+      "pace",
+      "anything",
+      "name",
+      "email",
+      "website",
+    ];
+
+    for (const field of stringFields) {
+      const value = data[field];
+      if (value !== undefined && typeof value !== "string") {
+        return new Response(JSON.stringify({ success: false, error: "El formato de alguno de los campos no es válido." }), {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+    }
+
+    if (
+      data.transport !== undefined &&
+      (
+        !Array.isArray(data.transport) ||
+        data.transport.some((value) => typeof value !== "string")
+      )
+    ) {
+      return new Response(JSON.stringify({ success: false, error: "La selección de transporte no es válida." }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const limits: Partial<Record<Exclude<keyof TravelRequestData, "transport">, number>> = {
       trip: 5000,
       travellers: 2500,
       age_range: 120,
@@ -137,6 +182,7 @@ export const POST: APIRoute = async ({ request }) => {
       anything: 5000,
       name: 160,
       email: 320,
+      website: 500,
     };
 
     for (const [field, maxLength] of Object.entries(limits)) {
@@ -149,7 +195,13 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    if (Array.isArray(data.transport) && data.transport.length > 10) {
+    if (
+      Array.isArray(data.transport) &&
+      (
+        data.transport.length > 10 ||
+        data.transport.some((value) => value.length > 120)
+      )
+    ) {
       return new Response(JSON.stringify({ success: false, error: "La selección de transporte no es válida." }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
@@ -191,6 +243,6 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify({ success: true, id, emailSent: internalResult.status === "fulfilled" && customerResult.status === "fulfilled" }), { status: 201, headers: { "Content-Type": "application/json" } });
   } catch (error) {
     console.error("Error procesando solicitud de viaje:", error);
-    return new Response(JSON.stringify({ success: false, error: "No se ha podido procesar la solicitud." } ), { status: 500, headers: { "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ success: false, error: "No se ha podido procesar la solicitud." }), { status: 500, headers: { "Content-Type": "application/json" } });
   }
 };
