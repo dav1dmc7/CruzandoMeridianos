@@ -28,6 +28,7 @@ const LOGO_URL = `${WEBSITE_URL}/email-logo.png`;
 const RATE_LIMIT_WINDOW_SECONDS = 15 * 60;
 const RATE_LIMIT_MAX_REQUESTS = 3;
 const MAX_BODY_BYTES = 64 * 1024;
+const RESEND_TIMEOUT_MS = 8000;
 
 const COLORS = {
   background: "#f5f2eb", white: "#ffffff", cream: "#fbf9f4", text: "#292722",
@@ -64,12 +65,29 @@ async function isRateLimited(request: Request): Promise<boolean> {
 }
 
 async function sendEmail(apiKey: string, payload: { from: string; to: string[]; subject: string; html: string; reply_to?: string; }): Promise<ResendResponse> {
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST", headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" }, body: JSON.stringify(payload),
-  });
-  const result = (await response.json()) as ResendResponse;
-  if (!response.ok) throw new Error(`Resend error ${response.status}: ${result.message || "Error enviando el correo"}`);
-  return result;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), RESEND_TIMEOUT_MS);
+
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+
+    let result: ResendResponse = {};
+    try {
+      result = (await response.json()) as ResendResponse;
+    } catch {
+      result = {};
+    }
+
+    if (!response.ok) throw new Error(`Resend error ${response.status}: ${result.message || "Error enviando el correo"}`);
+    return result;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function emailLayout(content: string, preheader = ""): string {
@@ -145,7 +163,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const cleanName = String(name).trim(), cleanEmail = String(email).trim().toLowerCase(), cleanAgeRange = age_range ? String(age_range).trim() : null;
     if (!cleanName || !cleanEmail) return new Response(JSON.stringify({ success: false, error: "Faltan datos de contacto." }), { status: 400, headers: { "Content-Type": "application/json" } });
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) return new Response(JSON.stringify({ success: false, error: "El email no es válido." }), { status: 400, headers: { "Content-Type": "application/json" } });
+    if (!/^\S+@\S+\.\S+$/.test(cleanEmail)) return new Response(JSON.stringify({ success: false, error: "El email no es válido." }), { status: 400, headers: { "Content-Type": "application/json" } });
 
     const db = env.cruzandomeridianos_leads, id = crypto.randomUUID();
     await db.prepare(`INSERT INTO travel_requests (id, trip, travellers, age_range, dates, budget, budget_flights, experience, transport, avoid, style, pace, anything, name, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(id, String(trip).trim(), String(travellers).trim(), cleanAgeRange, String(dates).trim(), String(budget), String(budget_flights || ""), String(experience).trim(), JSON.stringify(transport || []), String(avoid).trim(), String(style).trim(), String(pace || ""), anything ? String(anything).trim() : null, cleanName, cleanEmail).run();
