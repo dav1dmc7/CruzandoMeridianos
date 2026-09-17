@@ -7,6 +7,7 @@ import { jordaniaSectionOverrides } from "./jordania-editorial";
 import { greciaSectionOverrides } from "./grecia-editorial";
 import { aurorasSectionOverrides } from "./auroras-editorial";
 import { tenerifeSectionOverrides } from "./tenerife-editorial";
+import { destinationDeepDiveOverrides } from "./destination-deep-dive";
 import { liveGuideUpdates } from "../live/travel-intelligence.generated";
 
 const guides: Readonly<Record<string, DestinationGuide>> = {
@@ -236,6 +237,11 @@ const withEditorialContent = (guide: DestinationGuide): DestinationGuide => {
   return withCostaRica;
 };
 
+const withDestinationDeepDive = (guide: DestinationGuide): DestinationGuide => {
+  const overrides = destinationDeepDiveOverrides[guide.slug];
+  return overrides ? mergeSectionOverrides(guide, overrides) : guide;
+};
+
 const withLiveUpdates = (guide: DestinationGuide): DestinationGuide => {
   const update = liveGuideUpdates[guide.slug];
 
@@ -246,7 +252,7 @@ const withLiveUpdates = (guide: DestinationGuide): DestinationGuide => {
       }
     : guide;
 
-  return withUniversalUtility(withEditorialContent(updatedGuide));
+  return withUniversalUtility(withDestinationDeepDive(withEditorialContent(updatedGuide)));
 };
 
 export const getGuideBySlug = (slug: string): DestinationGuide | undefined => {
