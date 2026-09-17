@@ -48,6 +48,9 @@ jobs:
       - name: Guide registry audit
         run: npm run audit:guides
 
+      - name: Destination depth audit
+        run: node scripts/check-destination-depth.mjs
+
       - name: Travel resource audit
         run: npm run audit:travel-resources
 
