@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import type { Destination } from "../../data/destinations";
+import { ourTrips } from "../../data/our-trips";
 
 interface Props {
   destination: Destination;
@@ -10,7 +11,9 @@ interface Props {
 const { destination, featured = false } = Astro.props;
 
 const isReady = destination.status === "ready";
-const destinationUrl = Astro.url.pathname.startsWith("/nuestros-viajes")
+const isOurTripsPage = Astro.url.pathname.startsWith("/nuestros-viajes");
+const hasLivedTrip = ourTrips.some((trip) => trip.slug === destination.slug);
+const destinationUrl = isOurTripsPage && hasLivedTrip
   ? `/nuestros-viajes/${destination.slug}`
   : `/viajes/${destination.slug}`;
 ---
