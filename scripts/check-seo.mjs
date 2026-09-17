@@ -9,13 +9,19 @@ const read = (relativePath) =>
 const layout = read("src/layouts/Layout.astro");
 const guidePage = read("src/pages/viajes/[slug].astro");
 const guidesIndex = read("src/pages/viajes.astro");
+const journeyPage = read("src/pages/cuentatuviaje.astro");
 const robots = read("public/robots.txt");
 const astroConfig = read("astro.config.mjs");
 
 const failures = [];
+const warnings = [];
 
 const requirePattern = (source, pattern, label) => {
   if (!pattern.test(source)) failures.push(label);
+};
+
+const warnIfPattern = (source, pattern, label) => {
+  if (pattern.test(source)) warnings.push(label);
 };
 
 requirePattern(layout, /<html\s+lang="es">/, "Layout must declare the Spanish document language.");
@@ -53,10 +59,31 @@ requirePattern(astroConfig, /site:\s*'https:\/\/www\.cruzandomeridianos\.com'/, 
 requirePattern(astroConfig, /sitemap\(/, "Astro must keep the sitemap integration enabled.");
 requirePattern(astroConfig, /customPages:/, "The sitemap must explicitly include server-rendered destination pages.");
 
+warnIfPattern(
+  guidePage,
+  /name:\s*"Viajes"\s*,\s*item:\s*"https:\/\/www\.cruzandomeridianos\.com\/viajes"/,
+  "Guide breadcrumb structured data still uses the legacy public label \"Viajes\"; align it with \"Guías de destino\"."
+);
+warnIfPattern(
+  guidePage,
+  /Estado editorial|Última revisión:/,
+  "Guide pages still expose internal editorial-status wording; migrate the public copy toward visitor-facing freshness language."
+);
+warnIfPattern(
+  journeyPage,
+  /class="privacy-note"/,
+  "The journey form has a privacy note but no detected /privacidad link yet."
+);
+
 if (failures.length) {
   console.error("SEO audit failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);
+}
+
+if (warnings.length) {
+  console.warn("SEO audit warnings:");
+  for (const warning of warnings) console.warn(`- ${warning}`);
 }
 
 console.log("SEO architecture audit passed: metadata, canonical, robots, sitemap, JSON-LD and public destination terminology contracts are present.");
