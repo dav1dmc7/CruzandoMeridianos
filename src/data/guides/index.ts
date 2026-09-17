@@ -89,6 +89,127 @@ const mergeCostaRicaSections = (guide: DestinationGuide): DestinationGuide => {
   };
 };
 
+const utilityFocusBySlug: Readonly<Record<string, string>> = {
+  "costa-rica": "parques y reservas, estado de carreteras, lluvia, reservas de acceso y tiempos reales entre regiones",
+  sudafrica: "reservas de safari, seguridad de cada zona, vuelos internos, conducción y distancias reales",
+  jordania: "situación regional, pasos fronterizos, horarios de Petra y otros enclaves, calor y conducción",
+  grecia: "ferris y puertos, viento y estado del mar, aperturas estacionales, alquiler de coche y conexiones",
+  auroras: "actividad solar, nubosidad, oscuridad, previsión de corto plazo y condiciones de conducción invernal",
+  polonia: "trenes, horarios de museos, reservas de visitas, clima y movilidad entre ciudades",
+  italia: "trenes, reservas con hora, zonas ZTL, aparcamiento y condiciones de carretera o montaña",
+  viena: "eventos, museos con reserva, transporte público, horarios estacionales y excursiones",
+  praga: "transporte público, reservas de monumentos, horarios, eventos y excursiones cercanas",
+  budapest: "termas, horarios de museos, transporte, eventos y posibles reservas con antelación",
+  amsterdam: "museos con franja horaria, transporte, bicicletas, agenda cultural y excursiones",
+  paris: "reservas de museos y monumentos, transporte, agenda cultural y barrios donde conviene dormir",
+  "sur-de-francia": "mercados y eventos, horarios, carreteras, aparcamiento, ferris y clima por costa/interior",
+  "nueva-york": "reservas de miradores y espectáculos, transporte, eventos, meteorología y tiempos entre barrios",
+  washington: "reservas de museos o monumentos, horarios, transporte, agenda y excursiones regionales",
+  egipto: "horarios de templos, temperatura, navegación si procede, traslados internos y recomendaciones oficiales",
+  mauricio: "meteorología por costa, estado del mar, excursiones, conducción y reservas de actividades",
+  malta: "ferris a Gozo/Comino, estado del mar, horarios de patrimonio, aparcamiento y transporte",
+  tenerife: "reservas y avisos del Teide, carreteras, meteorología por vertiente y aparcamiento",
+  "gran-canaria": "microclimas, carreteras de montaña, playas, senderos, aparcamiento y excursiones",
+  lanzarote: "viento, carreteras, horarios de centros, acceso a espacios naturales y excursiones",
+  fuerteventura: "viento, estado del mar, carreteras, playas, senderos y excursiones entre zonas",
+  "el-hierro": "estado del mar, carreteras, senderos, alojamientos, conectividad y meteorología",
+};
+
+const getUtilityFocus = (guide: DestinationGuide): string =>
+  utilityFocusBySlug[guide.slug] ?? "meteorología, movilidad, horarios, reservas, eventos y fuentes oficiales del destino";
+
+const buildUtilitySections = (
+  guide: DestinationGuide,
+): GuideSectionWithOptionalNumber[] => [
+  {
+    id: "herramientas-y-comprobaciones",
+    title: "Herramientas para comprobar el viaje",
+    category: "practical",
+    intro:
+      "Antes de reservar y durante el viaje conviene separar lo que sabemos del destino de lo que puede cambiar esta semana o incluso este mismo día.",
+    paragraphs: [
+      `Para ${guide.title.replace(/^Guía de /, "").replace(/ \|.*$/, "").toLowerCase()}, las comprobaciones que más pueden cambiar el plan son: ${getUtilityFocus(guide)}.`,
+      "La regla práctica es sencilla: usa la fuente oficial para normas, accesos y horarios; una fuente meteorológica fiable para las condiciones; la web o app oficial de transporte cuando exista; y mapas para calcular tiempos reales antes de comprometer una ruta.",
+      "Para actividades con cupo, hora concreta o acceso condicionado, comprueba disponibilidad y restricciones justo antes de cerrar el resto del día. Un enlace guardado hace semanas no sustituye una comprobación actual.",
+    ],
+    highlights: [
+      {
+        title: "Fuente oficial primero",
+        description:
+          "Documentación, avisos, cierres, reservas, parques, transporte y normas deben contrastarse con quien gestiona el servicio.",
+        type: "important",
+      },
+      {
+        title: "Meteorología por zonas",
+        description:
+          "En destinos grandes o con relieve, no basta con mirar una previsión general de la ciudad o del aeropuerto.",
+        type: "tip",
+      },
+      {
+        title: "Comprueba el día real",
+        description:
+          "La última revisión debe hacerse antes de desplazarte a un parque, puerto, monumento, carretera de montaña o actividad con horario.",
+        type: "decision",
+      },
+      {
+        title: "Mapas para medir tiempos",
+        description:
+          "Usa rutas reales y márgenes razonables; no diseñes jornadas a partir de distancias en línea recta.",
+        type: "tip",
+      },
+    ],
+    blocks: [
+      {
+        type: "source",
+        label: "Fuentes de la guía",
+        title: "Puntos de referencia que conviene revisar",
+        content:
+          "La guía parte de fuentes oficiales del destino y añade información práctica orientada a decidir qué merece una comprobación antes de reservar o desplazarse.",
+        items: guide.sources?.map((source) => source.label) ?? [],
+      },
+    ],
+    closing:
+      "La utilidad de una guía no está en fingir que todo es estable, sino en decirte exactamente qué debes volver a comprobar.",
+  },
+  {
+    id: "plan-b-y-flexibilidad",
+    title: "Qué hacer si el plan cambia",
+    category: "planning",
+    intro:
+      "Un viaje sólido no depende de que todo salga exactamente como estaba previsto.",
+    paragraphs: [
+      "Deja identificada al menos una alternativa para los días más sensibles a meteorología, transporte, reservas o cierres. Así un cambio de condiciones modifica el día, pero no rompe toda la ruta.",
+      "Cuando una experiencia sea el motivo principal del desplazamiento, evita colocar después otra actividad crítica con una hora rígida. El margen también es parte del diseño del viaje.",
+      "Y cuando el destino admita varias formas de disfrutarlo, prioriza primero lo que solo puede hacerse en unas fechas o con unas condiciones concretas; deja lo intercambiable para los días más flexibles.",
+    ],
+    highlights: [
+      {
+        title: "Ten una segunda opción",
+        description:
+          "Especialmente importante en parques, barcos, montaña, fenómenos naturales y actividades al aire libre.",
+        type: "tip",
+      },
+      {
+        title: "No encadenes reservas críticas",
+        description:
+          "Un retraso pequeño no debería hacerte perder dos experiencias importantes el mismo día.",
+        type: "important",
+      },
+      {
+        title: "Guarda las fuentes útiles",
+        description:
+          "Tener a mano avisos, horarios, mapas y canales oficiales reduce muchísimo el tiempo perdido cuando aparece un imprevisto.",
+        type: "decision",
+      },
+    ],
+    closing:
+      "La planificación personalizada empieza justo aquí: en decidir qué debe quedar cerrado y qué conviene mantener abierto para poder reaccionar sin perder calidad.",
+  },
+];
+
+const withUniversalUtility = (guide: DestinationGuide): DestinationGuide =>
+  mergeSectionOverrides(guide, buildUtilitySections(guide));
+
 const withEditorialContent = (guide: DestinationGuide): DestinationGuide => {
   const withCostaRica = mergeCostaRicaSections(guide);
 
@@ -125,7 +246,7 @@ const withLiveUpdates = (guide: DestinationGuide): DestinationGuide => {
       }
     : guide;
 
-  return withEditorialContent(updatedGuide);
+  return withUniversalUtility(withEditorialContent(updatedGuide));
 };
 
 export const getGuideBySlug = (slug: string): DestinationGuide | undefined => {
