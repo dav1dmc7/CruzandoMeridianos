@@ -1050,6 +1050,8 @@ import Footer from "../components/layout/Footer.astro";
             <p class="privacy-note">
               Utilizaremos estos datos para responder a tu solicitud
               y hablar contigo sobre tu viaje.
+              Puedes consultar cómo tratamos estos datos en nuestra
+              <a href="/privacidad">política de privacidad</a>.
             </p>
 
 
@@ -1815,6 +1817,16 @@ import Footer from "../components/layout/Footer.astro";
     font-size: .75rem;
     line-height: 1.6;
     color: #777;
+  }
+
+  .privacy-note a {
+    color: var(--color-bosque);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .privacy-note a:hover {
+    color: var(--color-cobre);
   }
 
 
