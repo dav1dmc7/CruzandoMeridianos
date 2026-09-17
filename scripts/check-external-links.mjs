@@ -41,8 +41,11 @@ for (const file of sourceFiles) {
 
   while ((match = urlPattern.exec(content))) {
     const candidate = match[0].replace(trailingPunctuation, "");
+    const lineStart = content.lastIndexOf("\n", match.index) + 1;
+    const lineText = content.slice(lineStart, content.indexOf("\n", match.index) === -1 ? content.length : content.indexOf("\n", match.index));
 
     if (candidate.includes("${") || candidate.includes("{{")) continue;
+    if (/\bfetch\s*\(\s*["']https?:\/\//.test(lineText)) continue;
 
     let parsed;
     try {
@@ -66,6 +69,7 @@ for (const file of sourceFiles) {
 const urls = [...urlLocations.keys()].sort();
 const failures = [];
 const warnings = [];
+const redirects = [];
 
 const checkUrl = async (url) => {
   const controller = new AbortController();
@@ -96,6 +100,7 @@ const checkUrl = async (url) => {
     return {
       status: response.status,
       finalUrl: response.url,
+      redirected: response.redirected || response.url !== url,
     };
   } finally {
     clearTimeout(timeout);
@@ -132,6 +137,19 @@ for (const result of results.sort((a, b) => a.url.localeCompare(b.url))) {
     continue;
   }
 
+  if (result.redirected) {
+    redirects.push(`${result.url} → ${result.finalUrl}`);
+    try {
+      const sourceHost = new URL(result.url).hostname.toLowerCase();
+      const finalHost = new URL(result.finalUrl).hostname.toLowerCase();
+      if (sourceHost !== finalHost) {
+        warnings.push(`${result.url} → redirected to different host ${result.finalUrl}; ${locations.join(", ")}`);
+      }
+    } catch {
+      warnings.push(`${result.url} → redirected to malformed final URL ${result.finalUrl}; ${locations.join(", ")}`);
+    }
+  }
+
   if ([404, 410].includes(result.status)) {
     failures.push(`${result.url} → HTTP ${result.status}; ${locations.join(", ")}`);
     continue;
@@ -149,10 +167,15 @@ for (const result of results.sort((a, b) => a.url.localeCompare(b.url))) {
 console.log("\nExternal link health audit");
 console.log("==========================");
 console.log(`- Unique external URLs checked: ${urls.length}`);
-console.log("- Redirects followed: yes");
+console.log(`- Redirects followed: ${redirects.length}`);
 console.log("- 404/410 responses: blocking");
 console.log("- 429/5xx/network restrictions: warnings");
-console.log("- Template URLs and font preconnect origins: excluded from live checks");
+console.log("- API fetch endpoints, template URLs and font preconnect origins: excluded from live link checks");
+
+if (redirects.length) {
+  console.log("\nRedirects detected:");
+  for (const redirect of redirects) console.log(`- ${redirect}`);
+}
 
 if (warnings.length) {
   console.warn("\nExternal link warnings:");
