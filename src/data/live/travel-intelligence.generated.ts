@@ -15,18 +15,18 @@ export interface LiveGuideUpdate {
 
 export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
   "costa-rica": {
-    "checkedAt": "2026-09-16T13:30:26.058Z",
+    "checkedAt": "2026-09-17T10:01:08.509Z",
     "sourceFingerprints": {
-      "es-maec": "e1e29da01c82bd6150a0d4df44328614037d2588543530c6a7d6e80070a24977",
-      "uk-fcdo": "d647c9ccf2bdbe672744063af8e9435636bec474b47c419c0422b918cfeab75e",
-      "mopt": "2990d76fe0c88c3faadca7f16b200cb68f7eeb08aed1abb278e5e2f64a314226",
-      "imn": "c85450e0ae020a2cfeccd26b69a7dcb0726dab92968269b2ba9318eaf2cd236f"
+      "es-maec": "90d88755c7dc25919e7a97a5e962e78ddfbbdfdd71a7604bc4f65fa6e7de32fc",
+      "uk-fcdo": "cf52efb9694454469e2e255453874733be1ba243ad2c1483fc9f7163e12138f2",
+      "mopt": "d95fe4d423a3d6d25ff957e506de3349fe22a2e33a5494a3df396482f33b4dc6",
+      "imn": "7532563a1f3a875030b5d29474ea32ce5da154853d009f2ef9bf77dabeee680a"
     },
     "sourceAlerts": {
       "es-maec": [
         {
           "id": "live-0f617f2aad7c2995",
-          "date": "2026-09-16",
+          "date": "2026-09-17",
           "type": "carretera",
           "severity": "high",
           "title": "Carretera — información detectada",
@@ -35,46 +35,19 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
           "sourceLabel": "España — Recomendaciones de viaje (ES)",
           "sourceType": "official",
           "active": true,
-          "checkedAt": "2026-09-16T13:24:50.678Z",
-          "affectedAreas": [],
-          "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
-        },
-        {
-          "id": "live-c44257f359bd2ea0",
-          "date": "2026-09-16",
-          "type": "clima",
-          "severity": "high",
-          "title": "Clima — información detectada",
-          "description": "Producir inundaciones o deslizamientos de tierra.",
-          "source": "https://www.exteriores.gob.es/es/ServiciosAlCiudadano/Paginas/Detalle-recomendaciones-de-viaje.aspx?trc=Costa+Rica",
-          "sourceLabel": "España — Recomendaciones de viaje (ES)",
-          "sourceType": "official",
-          "active": true,
-          "checkedAt": "2026-09-16T13:24:50.678Z",
-          "affectedAreas": [],
-          "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
-        },
-        {
-          "id": "live-3d536958d2d6c1d4",
-          "date": "2026-09-16",
-          "type": "volcan",
-          "severity": "high",
-          "title": "Volcan — información detectada",
-          "description": "En caso de terremotos o erupciones volcánicas, resulta esencial respetar en todo momento las indicaciones de seguridad que puedan establecer las autoridades locales, y seguir el desarrollo de la situación en los vínculos mencionados y en los medios de comunicación local.",
-          "source": "https://www.exteriores.gob.es/es/ServiciosAlCiudadano/Paginas/Detalle-recomendaciones-de-viaje.aspx?trc=Costa+Rica",
-          "sourceLabel": "España — Recomendaciones de viaje (ES)",
-          "sourceType": "official",
-          "active": true,
-          "checkedAt": "2026-09-16T13:24:50.678Z",
+          "checkedAt": "2026-09-17T10:01:08.509Z",
           "affectedAreas": [],
           "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
         }
-      ]
+      ],
+      "uk-fcdo": [],
+      "mopt": [],
+      "imn": []
     },
     "alerts": [
       {
         "id": "live-0f617f2aad7c2995",
-        "date": "2026-09-16",
+        "date": "2026-09-17",
         "type": "carretera",
         "severity": "high",
         "title": "Carretera — información detectada",
@@ -83,37 +56,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
         "sourceLabel": "España — Recomendaciones de viaje (ES)",
         "sourceType": "official",
         "active": true,
-        "checkedAt": "2026-09-16T13:24:50.678Z",
-        "affectedAreas": [],
-        "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
-      },
-      {
-        "id": "live-c44257f359bd2ea0",
-        "date": "2026-09-16",
-        "type": "clima",
-        "severity": "high",
-        "title": "Clima — información detectada",
-        "description": "Producir inundaciones o deslizamientos de tierra.",
-        "source": "https://www.exteriores.gob.es/es/ServiciosAlCiudadano/Paginas/Detalle-recomendaciones-de-viaje.aspx?trc=Costa+Rica",
-        "sourceLabel": "España — Recomendaciones de viaje (ES)",
-        "sourceType": "official",
-        "active": true,
-        "checkedAt": "2026-09-16T13:24:50.678Z",
-        "affectedAreas": [],
-        "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
-      },
-      {
-        "id": "live-3d536958d2d6c1d4",
-        "date": "2026-09-16",
-        "type": "volcan",
-        "severity": "high",
-        "title": "Volcan — información detectada",
-        "description": "En caso de terremotos o erupciones volcánicas, resulta esencial respetar en todo momento las indicaciones de seguridad que puedan establecer las autoridades locales, y seguir el desarrollo de la situación en los vínculos mencionados y en los medios de comunicación local.",
-        "source": "https://www.exteriores.gob.es/es/ServiciosAlCiudadano/Paginas/Detalle-recomendaciones-de-viaje.aspx?trc=Costa+Rica",
-        "sourceLabel": "España — Recomendaciones de viaje (ES)",
-        "sourceType": "official",
-        "active": true,
-        "checkedAt": "2026-09-16T13:24:50.678Z",
+        "checkedAt": "2026-09-17T10:01:08.509Z",
         "affectedAreas": [],
         "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
       }
@@ -124,76 +67,63 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
     ]
   },
   "sudafrica": {
-    "checkedAt": "2026-09-16T13:30:26.058Z",
+    "checkedAt": "2026-09-17T10:01:08.509Z",
     "sourceFingerprints": {
-      "es-maec": "4f54e397bea7ba2a9430c246b82b4dff8eb6ab3f85327a2d78340d5123bb9683",
-      "uk-fcdo": "922782fa536358c0036b7e321fd93f32ca7c4192edc71064c61210079e2c505a"
+      "es-maec": "8b2f3532d960b24ece9ff6beeefa2a42a2adc5240f191a12832cb8bd459813fc",
+      "uk-fcdo": "35f9fdf50a2c82ea7c162c35b7d7969de8bcf5f2b9553082933f799d18014d90",
+      "gov-sa": "c3db0db0687c587cf1909f5f19641451dbacf45a70c0397c1c5d4e201f038a71"
     },
-    "sourceAlerts": {},
+    "sourceAlerts": {
+      "es-maec": [],
+      "uk-fcdo": [],
+      "gov-sa": []
+    },
     "alerts": [],
     "sourceFailures": [
-      "es-maec: HTTP 503",
-      "us-state: HTTP 403",
-      "fetch failed"
+      "us-state: HTTP 403"
     ]
   },
   "jordania": {
-    "checkedAt": "2026-09-16T13:30:26.058Z",
+    "checkedAt": "2026-09-17T10:01:08.509Z",
     "sourceFingerprints": {
-      "es-maec": "a3802a0378d85822101322c8bee20879d6a4ea4f291b894010f35f53df467826",
-      "uk-fcdo": "a3234aa21defd914bc7f06d77ee43089cf8e4bf7e219c770975c2430af2ba159"
+      "es-maec": "b564ad4cce561888c47269966bee26382363d994e86bc01b09938babac1ae2cf",
+      "uk-fcdo": "923a47a8dc92d20a1a251b4980856df2cc8281cf12bd3748eab7f01e28e769be"
     },
     "sourceAlerts": {
-      "es-maec": [
-        {
-          "id": "live-309aabe6945b530e",
-          "date": "2026-09-16",
-          "type": "clima",
-          "severity": "high",
-          "title": "Clima — información detectada",
-          "description": "Desastres naturales &#160; Jordania es un país de riesgo bajo en materia de desastres naturales.&#160;&#160;Sin embargo, conviene tener presente que en las pocas ocasiones en las que se producen lluvias intensas o nevadas, estas pueden ocasionar riadas o pequeñas inundaciones de algunos tramos de carreteras, y lo que es más peligroso, anegar rápidamente cañones y valles frecuentados por turistas.",
-          "source": "https://exteriores.gob.es/Embajadas/amman/en/ViajarA/Paginas/Recomendaciones-de-viaje.aspx",
-          "sourceLabel": "España — Recomendaciones de viaje (ES)",
-          "sourceType": "official",
-          "active": true,
-          "checkedAt": "2026-09-16T13:24:50.678Z",
-          "affectedAreas": [],
-          "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
-        }
-      ]
+      "es-maec": [],
+      "uk-fcdo": []
     },
-    "alerts": [
-      {
-        "id": "live-309aabe6945b530e",
-        "date": "2026-09-16",
-        "type": "clima",
-        "severity": "high",
-        "title": "Clima — información detectada",
-        "description": "Desastres naturales &#160; Jordania es un país de riesgo bajo en materia de desastres naturales.&#160;&#160;Sin embargo, conviene tener presente que en las pocas ocasiones en las que se producen lluvias intensas o nevadas, estas pueden ocasionar riadas o pequeñas inundaciones de algunos tramos de carreteras, y lo que es más peligroso, anegar rápidamente cañones y valles frecuentados por turistas.",
-        "source": "https://exteriores.gob.es/Embajadas/amman/en/ViajarA/Paginas/Recomendaciones-de-viaje.aspx",
-        "sourceLabel": "España — Recomendaciones de viaje (ES)",
-        "sourceType": "official",
-        "active": true,
-        "checkedAt": "2026-09-16T13:24:50.678Z",
-        "affectedAreas": [],
-        "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
-      }
-    ],
+    "alerts": [],
     "sourceFailures": [
       "us-state: HTTP 403"
     ]
   },
   "grecia": {
-    "checkedAt": "2026-09-16T13:30:26.058Z",
+    "checkedAt": "2026-09-17T10:01:08.509Z",
     "sourceFingerprints": {
-      "es-maec": "9e25c01b5303432a7cb233af2ac9ed40be9da81c3be16e839556f4e21f745ef1",
-      "uk-fcdo": "47efa5458f202cbd44b83ba31327d6139d2a44803bb2ee0a391b3b1164ce603a"
+      "es-maec": "6a7a060568fe8462b556f9a07bb78ea94b8525dac44200abdc56e7ba7a91ddb9",
+      "uk-fcdo": "5f7e75c7c03b60a653be29d3af11f05afcd30e90113a67978352429bd89cb510"
     },
     "sourceAlerts": {
       "es-maec": [
         {
+          "id": "live-f50f63f4aea5f407",
+          "date": "2026-09-17",
+          "type": "carretera",
+          "severity": "high",
+          "title": "Carretera — información detectada",
+          "description": "D urante el verano en Grecia aumenta considerablemente el riesgo y número de incendios forestales, la situación sobre el terreno puede cambiar rápid amente y a veces provocan el cierre de carreteras.",
+          "source": "https://www.exteriores.gob.es/es/ServiciosAlCiudadano/Paginas/Detalle-recomendaciones-de-viaje.aspx?trc=Grecia",
+          "sourceLabel": "España — Recomendaciones de viaje (ES)",
+          "sourceType": "official",
+          "active": true,
+          "checkedAt": "2026-09-17T10:01:08.509Z",
+          "affectedAreas": [],
+          "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
+        },
+        {
           "id": "live-97b180b4ede9a642",
-          "date": "2026-09-16",
+          "date": "2026-09-17",
           "type": "transporte",
           "severity": "high",
           "title": "Transporte — información detectada",
@@ -202,16 +132,32 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
           "sourceLabel": "España — Recomendaciones de viaje (ES)",
           "sourceType": "official",
           "active": true,
-          "checkedAt": "2026-09-16T13:24:50.678Z",
+          "checkedAt": "2026-09-17T10:01:08.509Z",
           "affectedAreas": [],
           "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
         }
-      ]
+      ],
+      "uk-fcdo": []
     },
     "alerts": [
       {
+        "id": "live-f50f63f4aea5f407",
+        "date": "2026-09-17",
+        "type": "carretera",
+        "severity": "high",
+        "title": "Carretera — información detectada",
+        "description": "D urante el verano en Grecia aumenta considerablemente el riesgo y número de incendios forestales, la situación sobre el terreno puede cambiar rápid amente y a veces provocan el cierre de carreteras.",
+        "source": "https://www.exteriores.gob.es/es/ServiciosAlCiudadano/Paginas/Detalle-recomendaciones-de-viaje.aspx?trc=Grecia",
+        "sourceLabel": "España — Recomendaciones de viaje (ES)",
+        "sourceType": "official",
+        "active": true,
+        "checkedAt": "2026-09-17T10:01:08.509Z",
+        "affectedAreas": [],
+        "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
+      },
+      {
         "id": "live-97b180b4ede9a642",
-        "date": "2026-09-16",
+        "date": "2026-09-17",
         "type": "transporte",
         "severity": "high",
         "title": "Transporte — información detectada",
@@ -220,7 +166,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
         "sourceLabel": "España — Recomendaciones de viaje (ES)",
         "sourceType": "official",
         "active": true,
-        "checkedAt": "2026-09-16T13:24:50.678Z",
+        "checkedAt": "2026-09-17T10:01:08.509Z",
         "affectedAreas": [],
         "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
       }
