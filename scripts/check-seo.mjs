@@ -8,6 +8,7 @@ const read = (relativePath) =>
 
 const layout = read("src/layouts/Layout.astro");
 const guidePage = read("src/pages/viajes/[slug].astro");
+const guidesIndex = read("src/pages/viajes.astro");
 const robots = read("public/robots.txt");
 const astroConfig = read("astro.config.mjs");
 
@@ -40,6 +41,10 @@ requirePattern(guidePage, /about:\s*\{/, "Guide Article schema must identify the
 requirePattern(guidePage, /<h1>\s*\{guide\.title\}\s*<\/h1>/, "Guide pages must have a single primary H1 driven by the guide title.");
 requirePattern(guidePage, /canonical=\{`\/viajes\/\$\{destination\.slug\}`\}/, "Guide pages must provide a stable canonical path.");
 
+requirePattern(guidesIndex, /title="Guías de destino \| Cruzando Meridianos"/, "The destination index must use the public " + '"Guías de destino"' + " terminology in its title.");
+requirePattern(guidesIndex, /<p class="eyebrow">GUÍAS DE DESTINO<\/p>/, "The destination index must use the public " + '"Guías de destino"' + " terminology in its hero.");
+requirePattern(guidesIndex, /canonical="\/viajes"/, "The destination index must keep a stable canonical /viajes path.");
+
 requirePattern(robots, /User-agent:\s*\*/, "robots.txt must define a wildcard crawler policy.");
 requirePattern(robots, /Allow:\s*\//, "robots.txt must allow public crawling.");
 requirePattern(robots, /Sitemap:\s*https:\/\/www\.cruzandomeridianos\.com\/sitemap-index\.xml/, "robots.txt must point crawlers to the sitemap index.");
@@ -54,4 +59,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("SEO architecture audit passed: metadata, canonical, robots, sitemap, JSON-LD and guide schema contracts are present.");
+console.log("SEO architecture audit passed: metadata, canonical, robots, sitemap, JSON-LD and public destination terminology contracts are present.");
