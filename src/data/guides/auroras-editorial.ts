@@ -189,6 +189,14 @@ export const aurorasSectionOverrides: SectionOverride[] = [
     blocks: [
       {
         type: "source",
+        label: "Fuente oficial",
+        title: visitSwedenSource.label,
+        content:
+          "Visit Sweden respalda la comparación de Abisko y Kiruna y sus condiciones de observación y acceso en el norte de Suecia.",
+        source: visitSwedenSource,
+      },
+      {
+        type: "source",
         label: "Fuentes oficiales",
         title: "Visit Norway, Visit Sweden y Visit Finland",
         content:
