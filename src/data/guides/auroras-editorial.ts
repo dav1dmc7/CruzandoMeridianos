@@ -23,6 +23,13 @@ const visitFinlandSource: GuideSource = {
   accessedAt: REVIEWED_AT,
 };
 
+const noaaAuroraSource: GuideSource = {
+  label: "NOAA / Space Weather Prediction Center — Aurora",
+  url: "https://www.spaceweather.gov/content/aurora-tutorial",
+  type: "official",
+  accessedAt: REVIEWED_AT,
+};
+
 type SectionOverride = Omit<GuideSection, "number">;
 
 const section = (
@@ -163,6 +170,58 @@ export const aurorasSectionOverrides: SectionOverride[] = [
     ],
     closing:
       "El viaje gana cuando cada día tiene interés propio y la aurora se convierte en el gran extra que puede aparecer por la noche.",
+  }),
+
+  section({
+    id: "aumentar-las-probabilidades",
+    title: "Cómo aumentar las probabilidades de ver auroras",
+    category: "planning",
+    intro:
+      "No puedes controlar la aurora, pero sí puedes diseñar el viaje para tener más oportunidades y leer mejor las condiciones cuando estés allí.",
+    paragraphs: [
+      "No pienses en una regla fija de diez años. El ciclo solar dura aproximadamente 11 años y su duración puede variar; alrededor del máximo solar aumenta la actividad del Sol y, con ella, suelen darse más episodios de actividad geomagnética y auroral. Aun así, el propio NOAA recuerda que el ciclo no garantiza una temporada concreta y que también puede haber auroras moderadas durante el mínimo solar.",
+      "Las previsiones tampoco sirven todas para lo mismo. NOAA explica que una parte de la actividad puede anticiparse con alrededor de un día y que existe una referencia aproximada de 27 días relacionada con la rotación solar; cuanto más cerca estás del momento de observar, más útil resulta combinar la previsión de actividad geomagnética con las condiciones locales.",
+      "Para el viaje, conviene usar varias herramientas en lugar de confiar en una sola. My Aurora Forecast ofrece índices y alertas; Hello Aurora combina actividad geomagnética y nubosidad local; SpaceWeatherLive permite recibir alertas de actividad espacial; y para las nubes puedes contrastar Meteoblue Astronomy Seeing o Windy, especialmente la cobertura de nubes y la previsión por capas. Son ayudas para decidir cuándo salir, no garantías de avistamiento.",
+      "Una rutina sencilla funciona mejor: durante la planificación larga mira la actividad solar como contexto; al acercarte al viaje vigila las previsiones de varios días; y cada noche cruza actividad auroral, nubosidad, oscuridad y tu ubicación. NOAA dispone además de un pronóstico auroral de corto plazo basado en OVATION para aproximadamente los siguientes 30 a 90 minutos.",
+    ],
+    highlights: [
+      {
+        title: "El ciclo solar es contexto, no calendario",
+        description:
+          "El máximo solar puede favorecer más actividad auroral, pero no significa que cada once años tengas una semana garantizada de auroras.",
+        type: "important",
+      },
+      {
+        title: "Las nubes pueden arruinar una buena previsión",
+        description:
+          "Una actividad geomagnética excelente sirve de poco si una capa de nubes tapa el cielo; revisa la cobertura local antes de salir.",
+        type: "decision",
+      },
+      {
+        title: "Combina fuentes",
+        description:
+          "Una app para la aurora y otra previsión meteorológica te dan una lectura más útil que mirar solo el Kp.",
+        type: "tip",
+      },
+      {
+        title: "Reserva varias noches",
+        description:
+          "Tener varias oportunidades reduce la dependencia de una única noche y permite reaccionar mejor si cambia la nubosidad.",
+        type: "decision",
+      },
+    ],
+    blocks: [
+      {
+        type: "source",
+        label: "Fuente oficial",
+        title: "NOAA / Space Weather Prediction Center",
+        content:
+          "Usamos NOAA para explicar el ciclo solar, el horizonte de previsión de la actividad auroral y la diferencia entre predicciones a largo y corto plazo.",
+        source: noaaAuroraSource,
+      },
+    ],
+    closing:
+      "La clave no es encontrar una app que diga que habrá aurora, sino cruzar actividad solar, cielo despejado, oscuridad y tiempo suficiente para intentarlo varias noches.",
   }),
 
   section({
