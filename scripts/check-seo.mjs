@@ -37,6 +37,11 @@ requirePattern(layout, /name="twitter:description"\s+content=\{description\}/, "
 requirePattern(layout, /type="application\/ld\+json"/, "Layout must emit JSON-LD structured data.");
 requirePattern(layout, /"@type": "WebSite"/, "Layout must emit WebSite structured data.");
 requirePattern(layout, /"@type": "Organization"/, "Layout must emit Organization structured data.");
+requirePattern(
+  layout,
+  /costaRicaBreadcrumbLabel\s*&&\s*currentPath\s*!==\s*"\/viajes\/costa-rica"/,
+  "Layout must not emit the secondary Costa Rica breadcrumb schema on the guide root, where the guide page already provides its own breadcrumb.",
+);
 
 requirePattern(guidePage, /const breadcrumbSchema = \{/, "Guide pages must define breadcrumb structured data.");
 requirePattern(guidePage, /"@type":\s*"Article"/, "Guide pages must emit Article structured data.");
