@@ -38,36 +38,33 @@ const costaRicaDecisionLabels: Record<string, string> = {
 };
 
 const costaRicaBreadcrumbLabel = costaRicaDecisionLabels[currentPath];
-const costaRicaBreadcrumbSchema = costaRicaBreadcrumbLabel
-  ? {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Inicio",
-          item: `${siteUrl}/`,
-        },
-        ...(currentPath === "/viajes/costa-rica"
-          ? []
-          : [
-              {
-                "@type": "ListItem",
-                position: 2,
-                name: "Guía de Costa Rica",
-                item: `${siteUrl}/viajes/costa-rica`,
-              },
-              {
-                "@type": "ListItem",
-                position: 3,
-                name: costaRicaBreadcrumbLabel,
-                item: canonicalUrl,
-              },
-            ]),
-      ],
-    }
-  : null;
+const costaRicaBreadcrumbSchema =
+  costaRicaBreadcrumbLabel && currentPath !== "/viajes/costa-rica"
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Inicio",
+            item: `${siteUrl}/`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Guía de Costa Rica",
+            item: `${siteUrl}/viajes/costa-rica`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: costaRicaBreadcrumbLabel,
+            item: canonicalUrl,
+          },
+        ],
+      }
+    : null;
 
 const websiteSchema = {
   "@context": "https://schema.org",
