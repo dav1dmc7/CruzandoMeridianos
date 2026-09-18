@@ -931,6 +931,31 @@ const travelerData =
       )
     }
 
+    {
+      destination.slug === "sudafrica" && (
+        <section class="guide-kruger-callout" aria-labelledby="guide-kruger-title">
+          <div class="guide-shell guide-kruger-callout__grid">
+            <div>
+              <p class="eyebrow">SAFARI · KRUGER</p>
+              <h2 id="guide-kruger-title">La parte del viaje que merece su propia guía.</h2>
+            </div>
+
+            <div class="guide-kruger-callout__copy">
+              <p>
+                Kruger tiene suficiente complejidad como para no esconderlo dentro de la guía general:
+                puertas, campamentos, coche, safaris guiados y ritmo propio.
+              </p>
+
+              <a href="/viajes/sudafrica/kruger">
+                Cómo organizar un safari en Kruger
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        </section>
+      )
+    }
+
 
     <!-- =====================================================
          TOC
@@ -5917,6 +5942,56 @@ summary::after {
   .guide-lived-trip-link:focus-visible {
     outline: 2px solid var(--color-cobre);
     outline-offset: 4px;
+  }
+
+
+  .guide-kruger-callout {
+    padding: clamp(5rem, 9vw, 8rem) 0;
+    background: #f3f0e9;
+  }
+
+  .guide-kruger-callout__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, .62fr);
+    gap: 4rem;
+    align-items: end;
+  }
+
+  .guide-kruger-callout h2 {
+    max-width: 760px;
+    margin: .7rem 0 0;
+    color: var(--color-bosque);
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: 400;
+    line-height: .97;
+    letter-spacing: -.04em;
+  }
+
+  .guide-kruger-callout__copy p {
+    margin: 0 0 1.4rem;
+    color: rgba(28,54,42,.7);
+    line-height: 1.8;
+  }
+
+  .guide-kruger-callout__copy a {
+    display: inline-flex;
+    align-items: center;
+    gap: .7rem;
+    color: var(--color-bosque);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .guide-kruger-callout__copy a:hover {
+    color: var(--color-cobre);
+  }
+
+  @media (max-width: 900px) {
+    .guide-kruger-callout__grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
   }
 
 </style>
