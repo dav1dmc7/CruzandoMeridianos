@@ -22,9 +22,19 @@ const applySecurityHeaders = (response: Response): Response => {
 export const onRequest = defineMiddleware(async (context, next) => {
   const requestUrl = new URL(context.request.url);
 
-  if (requestUrl.hostname.toLowerCase() === "cruzandomeridianos.com") {
+  const hostRedirect =
+    requestUrl.hostname.toLowerCase() === "cruzandomeridianos.com";
+
+  const trailingSlashRedirect =
+    requestUrl.pathname.length > 1 && requestUrl.pathname.endsWith("/");
+
+  if (hostRedirect || trailingSlashRedirect) {
     requestUrl.hostname = "www.cruzandomeridianos.com";
     requestUrl.protocol = "https:";
+
+    if (trailingSlashRedirect) {
+      requestUrl.pathname = requestUrl.pathname.replace(/\/+$/, "");
+    }
 
     return applySecurityHeaders(
       Response.redirect(requestUrl.href, 301),
