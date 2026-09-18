@@ -72,11 +72,23 @@ if (!/export const keyPlacesBySlug/.test(placeCatalog)) {
   failures.push("Key places catalog is missing.");
 }
 
+const placeEntries = [...placeCatalog.matchAll(
+  /^\s*(?:"([^"]+)"|([a-z0-9-]+)):\s*\[([\s\S]*?)^\s*\],/gm,
+)];
+
+const placeCounts = new Map(
+  placeEntries.map((match) => [
+    match[1] ?? match[2],
+    (match[3].match(/\bp\(/g) ?? []).length,
+  ]),
+);
+
 for (const slug of readySlugs) {
-  const placeCountMatch = placeCatalog.match(new RegExp(`"${slug}": \\[([\\s\\S]*?)\\]\\,`));
-  const placeCount = placeCountMatch ? [...placeCountMatch[1].matchAll(/\\bp\(/g)].length : 0;
+  const placeCount = placeCounts.get(slug) ?? 0;
   if (placeCount < 5) {
-    failures.push(`Ready destination "${slug}" must have at least five curated key places.`);
+    failures.push(
+      'Ready destination "' + slug + '" must have at least five curated key places.',
+    );
   }
 }
 
