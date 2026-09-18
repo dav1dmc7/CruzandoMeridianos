@@ -10,7 +10,10 @@ import TravelStart from "../components/sections/TravelStart.astro";
 import { destinations, type Destination, type DestinationContinent } from "../data/destinations";
 import { editorialGuideEntries } from "../data/editorial-guide-index";
 
-const featuredDestinations = destinations.slice(0, 4);
+const featuredSlugs = ["costa-rica", "sudafrica", "mauricio", "grecia"] as const;
+const featuredDestinations = featuredSlugs
+  .map((slug) => destinations.find((destination) => destination.slug === slug))
+  .filter((destination): destination is Destination => Boolean(destination));
 
 const continents: DestinationContinent[] = [
   "Europa",
