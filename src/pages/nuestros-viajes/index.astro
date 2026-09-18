@@ -3,13 +3,18 @@ import Layout from "../../layouts/Layout.astro";
 import Footer from "../../components/layout/Footer.astro";
 import DestinationCard from "../../components/sections/DestinationCard.astro";
 import { destinations } from "../../data/destinations";
+import { ourTrips } from "../../data/our-trips";
 
 const readyDestinations = destinations.filter(
   (destination) => destination.status === "ready",
 );
 
-const comingSoonDestinations = destinations.filter(
-  (destination) => destination.status === "coming-soon",
+const livedTripSlugs = new Set(
+  ourTrips.map((trip) => trip.slug),
+);
+
+const livedDestinations = readyDestinations.filter(
+  (destination) => livedTripSlugs.has(destination.slug),
 );
 
 const title = "Nuestros viajes | Cruzando Meridianos";
@@ -76,7 +81,7 @@ const description =
       </div>
     </section>
 
-    {readyDestinations.length > 0 && (
+    {livedDestinations.length > 0 && (
       <section class="trips-destinations" id="vividos">
         <div class="section-frame">
           <div class="section-heading">
@@ -93,7 +98,7 @@ const description =
           </div>
 
           <div class="lived-destinations">
-            {readyDestinations.map((destination, index) => (
+            {livedDestinations.map((destination, index) => (
               <DestinationCard destination={destination} featured={index === 0} />
             ))}
           </div>
@@ -101,35 +106,33 @@ const description =
       </section>
     )}
 
-    {comingSoonDestinations.length > 0 && (
-      <section class="trips-coming">
-        <div class="section-frame">
-          <div class="coming-panel">
-            <div class="coming-heading">
-              <p class="eyebrow">En preparación</p>
-              <h2>
-                Estamos dando los últimos detalles a
-                <em> algunos destinos.</em>
-              </h2>
-            </div>
-            <div class="coming-copy">
-              <p>
-                Estamos terminando de investigar, ordenar y contrastar qué merece
-                entrar en la web. Preferimos publicar menos y hacerlo bien.
-              </p>
-              <span class="coming-note">Próximamente, nuevos viajes.</span>
-            </div>
-          </div>
-
-          <div class="coming-grid">
-            {comingSoonDestinations.map((destination) => (
-              <DestinationCard destination={destination} />
-            ))}
-          </div>
+    <section class="trips-guide-bridge">
+      <div class="section-frame trips-guide-bridge-frame">
+        <div>
+          <p class="eyebrow">Guías de destino</p>
+          <h2>
+            Lo que hemos vivido nosotros
+            <em>es una cosa. Lo que hemos investigado, otra.</em>
+          </h2>
         </div>
-      </section>
-    )}
 
+        <div class="trips-guide-bridge-copy">
+          <p>
+            Ahora mismo tenemos
+            {livedDestinations.length}
+            viaje vivido publicado y
+            {Math.max(readyDestinations.length - livedDestinations.length, 0)}
+            destinos con guía editorial.
+            No los presentamos como si hubiéramos estado en todos ellos.
+          </p>
+
+          <a href="/viajes" class="cta-link">
+            Explorar las guías de destino
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
     <section class="trips-philosophy">
       <div class="section-frame philosophy-frame">
         <div class="philosophy-index">02</div>
@@ -224,7 +227,6 @@ const description =
   }
 
   .trips-hero h1 em,
-  .coming-heading h2 em,
   .cta-frame h2 em {
     color: var(--color-cobre);
     font-style: italic;
@@ -382,21 +384,20 @@ const description =
     gap: 4rem;
   }
 
-  .trips-coming {
+  .trips-guide-bridge {
     padding: clamp(5.5rem, 9vw, 8rem) 0;
     background: #f2efe8;
   }
 
-  .coming-panel {
+  .trips-guide-bridge-frame {
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(260px, .85fr);
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, .75fr);
     gap: 4rem;
     align-items: end;
-    margin-bottom: 4rem;
   }
 
-  .coming-heading h2 {
-    max-width: 800px;
+  .trips-guide-bridge-frame h2 {
+    max-width: 820px;
     margin: 0;
     color: var(--color-bosque);
     font-family: var(--font-serif);
@@ -406,26 +407,17 @@ const description =
     letter-spacing: -.04em;
   }
 
-  .coming-copy p {
+  .trips-guide-bridge-frame h2 em {
+    color: var(--color-cobre);
+    font-style: italic;
+  }
+
+  .trips-guide-bridge-copy p {
     max-width: 520px;
-    margin: 0;
+    margin: 0 0 1.75rem;
     color: rgba(20,45,35,.62);
     font-size: .98rem;
     line-height: 1.8;
-  }
-
-  .coming-note {
-    display: inline-block;
-    margin-top: 1.3rem;
-    color: var(--color-bosque);
-    font-family: var(--font-serif);
-    font-size: 1.1rem;
-  }
-
-  .coming-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0,1fr));
-    gap: 2rem;
   }
 
   .trips-philosophy {
@@ -522,7 +514,7 @@ const description =
     .trips-hero-inner,
     .introduction-grid,
     .section-heading,
-    .coming-panel,
+    .trips-guide-bridge-frame,
     .cta-frame {
       grid-template-columns: 1fr;
       gap: 2.75rem;
@@ -530,11 +522,6 @@ const description =
 
     .hero-aside {
       max-width: 430px;
-    }
-
-    .coming-grid {
-      grid-template-columns: 1fr;
-      gap: 2rem;
     }
 
     .philosophy-frame {
@@ -582,7 +569,7 @@ const description =
 
     .trips-introduction,
     .trips-destinations,
-    .trips-coming,
+    .trips-guide-bridge,
     .trips-philosophy,
     .trips-cta {
       padding-top: 5rem;
@@ -595,7 +582,7 @@ const description =
 
     .introduction-grid h2,
     .section-heading h2,
-    .coming-heading h2 {
+    .trips-guide-bridge-frame h2 {
       font-size: clamp(2.75rem, 12vw, 4rem);
     }
 
@@ -605,11 +592,6 @@ const description =
 
     .lived-destinations {
       gap: 2rem;
-    }
-
-    .coming-panel {
-      gap: 2rem;
-      margin-bottom: 3rem;
     }
 
     .philosophy-frame {
