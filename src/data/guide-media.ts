@@ -11,6 +11,7 @@ import rana from "../assets/images/costa-rica/rana.jpg";
 import mono from "../assets/images/costa-rica/mono.jpg";
 import perezoso from "../assets/images/costa-rica/perezoso.jpg";
 import mauricioFirstHand from "../assets/images/mauricio.jpg";
+import sudafricaFirstHandCover from "../assets/images/sudafrica.jpg";
 import bufaloKruger from "../assets/images/animales-kruger/bufalo.jpg";
 import cocodriloKruger from "../assets/images/animales-kruger/cocodrilo.jpg";
 import elefanteKruger from "../assets/images/animales-kruger/elefante.jpg";
@@ -112,9 +113,9 @@ export const firstHandMediaBySlug: Readonly<
   },
   "sudafrica": {
     cover: {
-      src: leopardoKruger,
-      alt: "Leopardo fotografiado durante nuestro viaje por la zona de Kruger, Sudáfrica",
-      caption: "Una de las escenas de fauna que forman parte de nuestro viaje por Sudáfrica.",
+      src: sudafricaFirstHandCover,
+      alt: "Fotografía propia de Sudáfrica durante nuestro viaje",
+      caption: "Una fotografía propia de nuestro viaje por Sudáfrica.",
     },
     gallery: [
       {
