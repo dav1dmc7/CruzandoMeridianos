@@ -13,6 +13,12 @@ const { destination, featured = false } = Astro.props;
 const isReady = destination.status === "ready";
 const isOurTripsPage = Astro.url.pathname.startsWith("/nuestros-viajes");
 const hasLivedTrip = ourTrips.some((trip) => trip.slug === destination.slug);
+const experienceLabel = destination.experience === "first-hand"
+  ? "Experiencia propia"
+  : "Guía investigada";
+const destinationKicker = hasLivedTrip
+  ? "Viaje vivido · experiencia propia"
+  : experienceLabel;
 const destinationUrl = isOurTripsPage && hasLivedTrip
   ? `/nuestros-viajes/${destination.slug}`
   : `/viajes/${destination.slug}`;
@@ -77,7 +83,7 @@ const destinationUrl = isOurTripsPage && hasLivedTrip
 
     <div class="destination-copy">
       <span class="destination-kicker">
-        {isReady ? "Guía de viaje" : "Próximamente"}
+        {isReady ? destinationKicker : "Próximamente"}
       </span>
 
       <h3>

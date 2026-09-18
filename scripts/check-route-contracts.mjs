@@ -28,10 +28,17 @@ const ourTripsRoot = path.join(root, "src/data/our-trips");
 const guideFiles = (await walk(path.join(root, "src/data/guides")))
   .filter((file) => file.endsWith(".ts"));
 
+const destinationBlocks = [...destinations.matchAll(/\n  \{\n([\s\S]*?)\n  \},\n/g)].map((match) => match[1]);
+const destinationEntries = destinationBlocks.flatMap((block) => {
+  const slug = block.match(/slug:\s*["']([^"']+)["']/)?.[1];
+  const status = block.match(/status:\s*["']([^"']+)["']/)?.[1];
+  const experience = block.match(/experience:\s*["']([^"']+)["']/)?.[1];
+  const publishedTripSlug = block.match(/publishedTripSlug:\s*["']([^"']+)["']/)?.[1];
+  return slug ? [{ slug, status, experience, publishedTripSlug }] : [];
+});
+
 const readyDestinationSlugs = new Set(
-  [...destinations.matchAll(
-    /\{[\s\S]*?slug:\s*["']([^"']+)["'][\s\S]*?status:\s*["']ready["'][\s\S]*?\}/g,
-  )].map((match) => match[1]),
+  destinationEntries.filter((entry) => entry.status === "ready").map((entry) => entry.slug),
 );
 
 const additionalGuideSlugs = new Set(
@@ -49,8 +56,16 @@ for (const file of await walk(ourTripsRoot)) {
   }
 }
 
-for (const slug of readyDestinationSlugs) {
-  if (!guideSlugs.has(slug)) {
+for (const entry of destinationEntries.filter((item) => item.status === "ready")) {
+  if (entry.experience !== "first-hand") {
+    failures.push(`Ready destination "${entry.slug}" must declare experience: "first-hand".`);
+  }
+
+  if (entry.publishedTripSlug && !ourTripSlugs.has(entry.publishedTripSlug)) {
+    failures.push(`Destination "${entry.slug}" points to missing publishedTripSlug "${entry.publishedTripSlug}".`);
+  }
+
+  if (!guideSlugs.has(entry.slug)) {
     failures.push(`Ready destination "${slug}" has no matching guide registry entry.`);
   }
 }
@@ -73,6 +88,11 @@ for (const file of guideFiles) {
 for (const slug of ourTripSlugs) {
   if (!readyDestinationSlugs.has(slug)) {
     failures.push(`Lived trip "${slug}" does not match a ready destination.`);
+  }
+
+  const matchingDestination = destinationEntries.find((entry) => entry.slug === slug);
+  if (matchingDestination?.publishedTripSlug !== slug) {
+    failures.push(`Lived trip "${slug}" must be linked from its destination using publishedTripSlug: "${slug}".`);
   }
 }
 
@@ -107,6 +127,8 @@ if (/readyDestinations\.map\(/.test(livedTripsPage)) {
 console.log("\nRoute/data contract audit");
 console.log("=========================");
 console.log(`- Ready destinations: ${readyDestinationSlugs.size}`);
+console.log(`- First-hand ready destinations: ${destinationEntries.filter((entry) => entry.status === "ready" && entry.experience === "first-hand").length}`);
+console.log(`- Published lived-trip mappings: ${destinationEntries.filter((entry) => entry.publishedTripSlug).length}`);
 console.log(`- Registered guides: ${guideSlugs.size}`);
 console.log(`- Lived trips: ${ourTripSlugs.size}`);
 console.log("- relatedTripSlug targets: checked");
