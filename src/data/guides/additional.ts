@@ -218,10 +218,43 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
       status: "published",
       reviewedAt: REVIEWED_AT,
     },
+    {
+      id: "preguntas-frecuentes",
+      title: "Preguntas frecuentes",
+      category: "practical",
+      intro: `Preguntas concretas que suelen aparecer al planificar un viaje a ${spec.name}.`,
+      paragraphs: [
+        "Aquí respondemos dudas de planificación que ayudan a decidir fechas, duración, transporte y ritmo antes de reservar.",
+        "Las respuestas se apoyan en la propia guía y, cuando una cuestión puede cambiar, en las fuentes que indicamos en ella.",
+      ],
+      status: "published",
+      reviewedAt: REVIEWED_AT,
+    },
   ];
 
   const durationOptions: GuideDurationOption[] = spec.durations.map(([days, title, description, featured]) => ({ days, title, description, featured }));
-  const faq: FAQItem[] = spec.faqs.map(([question, answer]) => ({ question, answer, category: "planning", reviewedAt: REVIEWED_AT }));
+  const [firstDuration] = spec.durations;
+  const lastDuration = spec.durations[spec.durations.length - 1];
+  const searchFaqs: Array<[string, string]> = [
+    [
+      `¿Cuántos días necesito para viajar a ${spec.name}?`,
+      `Como referencia, esta guía plantea opciones desde ${firstDuration[0]} días (${firstDuration[1].toLowerCase()}) hasta ${lastDuration[0]} días (${lastDuration[1].toLowerCase()}). La duración adecuada depende de las zonas que quieras combinar y del ritmo que quieras llevar.`,
+    ],
+    [
+      `¿Cuál es la mejor época para viajar a ${spec.name}?`,
+      spec.season,
+    ],
+    [
+      `¿Cómo moverse por ${spec.name}?`,
+      spec.transport,
+    ],
+  ];
+  const faqPairs = [...spec.faqs, ...searchFaqs]
+    .filter((entry, index, entries) =>
+      entries.findIndex(([question]) => question === entry[0]) === index,
+    )
+    .slice(0, 5);
+  const faq: FAQItem[] = faqPairs.map(([question, answer]) => ({ question, answer, category: "planning", reviewedAt: REVIEWED_AT }));
 
   const monitoring: GuideMonitoringConfig = {
     enabled: true,
