@@ -61,6 +61,11 @@ if (!guide) {
   return Astro.redirect("/viajes");
 }
 
+const publicGuideTitle =
+  guide.title
+    .replace(/\s*\|\s*Cruzando Meridianos\s*$/, "")
+    .trim();
+
 
 /* =========================================================
    CURRENT DATE
@@ -340,35 +345,11 @@ const errorsSectionId =
 
 
 /* =========================================================
-   EDITORIAL STATUS
-   ========================================================= */
-
-const getEditorialStatus =
-  (
-    status:
-      NonNullable<DestinationGuide["editorial"]>["status"]
-  ): string => {
-
-    switch (status) {
-      case "published":
-        return "Publicada";
-
-      case "in-review":
-        return "En revisión";
-
-      case "draft":
-      default:
-        return "En investigación";
-    }
-  };
-
-
-/* =========================================================
    SEO
    ========================================================= */
 
 const pageTitle =
-  `${guide.title} | Cruzando Meridianos`;
+  `${publicGuideTitle} | Cruzando Meridianos`;
 
 const pageDescription =
   guide.subtitle;
@@ -394,7 +375,7 @@ const breadcrumbSchema = {
     {
       "@type": "ListItem",
       position: 2,
-      name: "Viajes",
+      name: "Guías de destino",
       item: "https://www.cruzandomeridianos.com/viajes",
     },
     {
@@ -414,7 +395,7 @@ const guideSchema = {
     "Article",
 
   headline:
-    guide.title,
+    publicGuideTitle,
 
   description:
     guide.subtitle,
@@ -425,10 +406,10 @@ const guideSchema = {
   inLanguage:
     "es",
 
-  ...(guide.editorial?.updatedAt
+  ...(guide.publicFreshness?.updatedAt
     ? {
         dateModified:
-          guide.editorial.updatedAt,
+          guide.publicFreshness.updatedAt,
       }
     : {}),
 
@@ -616,7 +597,7 @@ const travelerData =
 
 
         <h1>
-          {guide.title}
+          {publicGuideTitle}
         </h1>
 
 
@@ -625,46 +606,6 @@ const travelerData =
         >
           {guide.subtitle}
         </p>
-
-
-        <div
-          class="guide-hero__status"
-        >
-
-          <span>
-            Estado editorial
-          </span>
-
-          <strong>
-            {
-              guide.editorial
-                ? getEditorialStatus(
-                    guide.editorial.status
-                  )
-                : "En investigación"
-            }
-          </strong>
-
-        </div>
-
-
-        {
-          guide.editorial?.updatedAt && (
-
-            <div
-              class="guide-hero__updated"
-            >
-
-              Última revisión:
-
-              <strong>
-                {guide.editorial.updatedAt}
-              </strong>
-
-            </div>
-
-          )
-        }
 
 
         <a
@@ -717,13 +658,13 @@ const travelerData =
           </span>
 
           {
-            guide.editorial?.factsCheckedAt && (
+            guide.publicFreshness?.factsCheckedAt && (
 
               <span
                 class="guide-introduction__checked"
               >
                 Datos sensibles comprobados:
-                {guide.editorial.factsCheckedAt}
+                {guide.publicFreshness.factsCheckedAt}
               </span>
 
             )
@@ -1227,7 +1168,6 @@ const travelerData =
               <section
                 id={section.id}
                 data-section-category={section.category ?? "overview"}
-                data-section-status={section.status ?? "draft"}
                 class:list={[
                   "guide-section",
 
@@ -1319,18 +1259,6 @@ const travelerData =
                             {section.intro}
                           </p>
 
-                        )
-                      }
-
-                      {
-                        section.status === "reviewed" && (
-                          <div
-                            class="guide-section__verified"
-                            aria-label="Contenido revisado"
-                          >
-                            <span aria-hidden="true">✓</span>
-                            Información revisada
-                          </div>
                         )
                       }
 
