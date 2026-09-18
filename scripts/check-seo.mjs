@@ -45,6 +45,8 @@ requirePattern(guidePage, /guide\.publicFreshness\?\.updatedAt/, "Guide Article 
 requirePattern(guidePage, /about:\s*\{/, "Guide Article schema must identify the destination entity.");
 requirePattern(guidePage, /<h1>\s*\{publicGuideTitle\}\s*<\/h1>/, "Guide pages must have a single primary H1 driven by the public guide title.");
 requirePattern(guidePage, /canonical=\{`\/viajes\/\$\{destination\.slug\}`\}/, "Guide pages must provide a stable canonical path.");
+requirePattern(guidePage, /section\.id ===\s*faqSectionId/, "Guide pages must render a visible FAQ section when FAQ data is available.");
+requirePattern(guidePage, /guide\.faq\.map/, "Guide pages must render the guide FAQ items in the page content.");
 
 requirePattern(guidesIndex, /title="Guías de destino \| Cruzando Meridianos"/, "The destination index must use the public " + '"Guías de destino"' + " terminology in its title.");
 requirePattern(guidesIndex, /<p class="eyebrow">GUÍAS DE DESTINO<\/p>/, "The destination index must use the public " + '"Guías de destino"' + " terminology in its hero.");
