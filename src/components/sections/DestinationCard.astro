@@ -6,9 +6,10 @@ import { ourTrips } from "../../data/our-trips";
 interface Props {
   destination: Destination;
   featured?: boolean;
+  displayNumber?: string;
 }
 
-const { destination, featured = false } = Astro.props;
+const { destination, featured = false, displayNumber = destination.number } = Astro.props;
 
 const isReady = destination.status === "ready";
 const isOurTripsPage = Astro.url.pathname.startsWith("/nuestros-viajes");
@@ -74,7 +75,7 @@ const destinationUrl = isOurTripsPage && hasLivedTrip && publishedTripSlug
       <span class="destination-image-shade" aria-hidden="true"></span>
 
       <span class="destination-number" aria-hidden="true">
-        {destination.number}
+        {displayNumber}
       </span>
 
       {!isReady && (
