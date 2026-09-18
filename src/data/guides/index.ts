@@ -1,4 +1,5 @@
 import type { DestinationGuide, GuideSection } from "./types";
+import { keyPlacesBySlug } from "./key-places";
 import { costaRicaGuide } from "./costa-rica";
 import { costaRicaSectionOverrides } from "./costa-rica-editorial";
 import { additionalGuides } from "./additional";
@@ -16,6 +17,11 @@ const guides: Readonly<Record<string, DestinationGuide>> = {
 };
 
 const normalizeSlug = (slug: string): string => slug.trim().toLowerCase();
+
+const withKeyPlaces = (guide: DestinationGuide): DestinationGuide => ({
+  ...guide,
+  places: keyPlacesBySlug[guide.slug] ?? guide.places,
+});
 
 type GuideSectionWithOptionalNumber = Omit<GuideSection, "number"> & {
   number?: string;
@@ -252,7 +258,9 @@ const withLiveUpdates = (guide: DestinationGuide): DestinationGuide => {
       }
     : guide;
 
-  return withUniversalUtility(withDestinationDeepDive(withEditorialContent(updatedGuide)));
+  return withKeyPlaces(
+    withUniversalUtility(withDestinationDeepDive(withEditorialContent(updatedGuide))),
+  );
 };
 
 const toPublicGuide = (guide: DestinationGuide): DestinationGuide => ({
