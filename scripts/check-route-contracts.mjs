@@ -66,7 +66,7 @@ for (const entry of destinationEntries.filter((item) => item.status === "ready")
   }
 
   if (!guideSlugs.has(entry.slug)) {
-    failures.push(`Ready destination "${slug}" has no matching guide registry entry.`);
+    failures.push(`Ready destination "${entry.slug}" has no matching guide registry entry.`);
   }
 }
 
