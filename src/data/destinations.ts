@@ -63,6 +63,7 @@ export const destinations: Destination[] = [
     status: "ready",
     coverKind: "existing-editorial",
     experience: "first-hand",
+    publishedTripSlug: "sudafrica-mauricio",
   },
   {
     name: "Jordania",
@@ -273,6 +274,7 @@ export const destinations: Destination[] = [
     status: "ready",
     coverKind: "placeholder",
     experience: "first-hand",
+    publishedTripSlug: "sudafrica-mauricio",
   },
   {
     name: "Malta",
