@@ -24,7 +24,7 @@ const { media }: Props = Astro.props;
     </div>
 
     <div class="guide-first-hand__grid">
-      {media.gallery.map((item, index) => (
+      {media.gallery.slice(0, 6).map((item, index) => (
         <figure class:list={["guide-first-hand__item", { "guide-first-hand__item--large": index === 0 || index === 3 }]}>
           <Image
             src={item.src}
