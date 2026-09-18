@@ -5,6 +5,7 @@ import {
   SUPPORTED_MARKETS,
   TRAVEL_INTELLIGENCE_SOURCES,
 } from "./travel-intelligence.sources.mjs";
+import { TRAVEL_INTELLIGENCE_RULESET_VERSION } from "./travel-intelligence.rules.mjs";
 
 const generatedPath = new URL("../src/data/live/travel-intelligence.generated.ts", import.meta.url);
 
@@ -56,6 +57,10 @@ for (const destination of TRAVEL_INTELLIGENCE_SOURCES) {
   if (!update) continue;
 
   assert(typeof update.checkedAt === "string" && update.checkedAt.length > 0, `${destination.slug} is missing checkedAt`);
+  assert(
+    update.rulesetVersion === TRAVEL_INTELLIGENCE_RULESET_VERSION,
+    `${destination.slug} was generated with an outdated travel-intelligence ruleset`,
+  );
   assert(update.sourceFingerprints && typeof update.sourceFingerprints === "object", `${destination.slug} is missing sourceFingerprints`);
   assert(Array.isArray(update.alerts), `${destination.slug} alerts must be an array`);
 
