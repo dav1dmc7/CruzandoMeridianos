@@ -206,7 +206,7 @@ const continents: DestinationContinent[] = [
 
   <script>
     const searchInput = document.querySelector<HTMLInputElement>("#destination-search-input");
-    const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-continent]"));
+    const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>(".continent-button[data-continent]"));
     const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-destination-card]"));
     const noResults = document.querySelector<HTMLElement>("[data-no-results]");
     const popularSection = document.querySelector<HTMLElement>("[data-popular-section]");
