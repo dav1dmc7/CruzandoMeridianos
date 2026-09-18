@@ -96,7 +96,7 @@ if (!explorerSource.includes('{ type: "destination", destination: getDestination
 if (!explorerSource.includes('{ type: "guide", guide: krugerGuide }')) {
   failures.push('Destination explorer must expose the curated "sudafrica/kruger" guide after Costa Rica.');
 }
-if (!explorerSource.includes("...prioritySlugs.slice(1)")) {
+if (!/\.\.\.prioritySlugs\s*\.slice\(1\)\s*\.map\(\(slug\)\s*=>/.test(explorerSource)) {
   failures.push("Destination explorer must render the remaining curated destinations from prioritySlugs after Kruger.");
 }
 
