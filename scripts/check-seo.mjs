@@ -56,6 +56,7 @@ requirePattern(guidePage, /guide\.faq\.map/, "Guide pages must render the guide 
 
 requirePattern(guidesIndex, /title="Guías de destino \| Cruzando Meridianos"/, "The destination index must use the public " + '"Guías de destino"' + " terminology in its title.");
 requirePattern(guidesIndex, /<p class="eyebrow">GUÍAS DE DESTINO<\/p>/, "The destination index must use the public " + '"Guías de destino"' + " terminology in its hero.");
+requirePattern(guidesIndex, /data-result-type="guide"/, "The destination index must render standalone editorial guides inside the destination explorer.");
 requirePattern(guidesIndex, /editorialGuideEntries/, "The destination index must surface the standalone editorial guide registry.");
 requirePattern(guidesIndex, /id="guias-especificas"/, "The destination index must expose a dedicated section for standalone editorial guides.");
 requirePattern(editorialGuideIndex, /slug:\s*"sudafrica\/kruger"/, "The standalone editorial guide index must include the Kruger guide.");
