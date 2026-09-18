@@ -582,42 +582,48 @@ import type {
         "experience",
 
       intro:
-        "La naturaleza es uno de los principales motivos para viajar a Costa Rica, pero observarla no funciona como una atracción programada.",
+        "La fauna es uno de los grandes argumentos para viajar a Costa Rica, pero la experiencia cambia mucho según el ecosistema, la hora y la forma de buscarla.",
 
       paragraphs: [
-        "La posibilidad de ver animales depende de la zona, el ecosistema, la época, el horario y la actividad elegida. También existe un componente inevitable de azar.",
-        "Explicaremos no solo dónde ir, sino qué tipo de experiencia puede esperarse realmente y qué decisiones pueden aumentar las posibilidades de disfrutarla.",
-        "Seremos especialmente cuidadosos con cualquier afirmación del tipo aquí verás X. La fauna salvaje no funciona con garantías.",
+        "No conviene construir una ruta pensando en una lista de animales que tienen que aparecer. La mejor decisión suele ser elegir ecosistemas y experiencias que aumenten las oportunidades de observar naturaleza sin convertir cada día en una persecución.",
+        "Bosque nuboso, selva, humedales, costa y zonas de montaña ofrecen experiencias diferentes. También cambia mucho si haces una caminata, un recorrido con guía, una actividad nocturna o simplemente dejas tiempo para observar.",
+        "La fotografía y la observación de aves requieren otra relación con el tiempo que una excursión rápida. Si esa es una prioridad real, tiene sentido proteger horas de calidad en lugar de llenar la ruta de cambios de zona.",
+        "La regla editorial será sencilla: hablar de posibilidades y contexto, no prometer avistamientos.",
       ],
 
       highlights: [
         {
           title:
-            "No prometemos avistamientos",
+            "El animal no es el único objetivo",
 
           description:
-            "La fauna es naturaleza, no un espectáculo garantizado. Explicaremos posibilidades y contexto, no certezas.",
-
-          type:
-            "important",
-        },
-
-        {
-          title:
-            "El lugar importa",
-
-          description:
-            "Elegir la región y el tipo de experiencia puede ser tan importante como elegir una actividad concreta.",
+            "Elegir bien el ecosistema, el tipo de actividad y el ritmo puede mejorar mucho más la experiencia que perseguir una especie concreta.",
 
           type:
             "experience",
         },
+
+        {
+          title:
+            "Deja margen",
+
+          description:
+            "La naturaleza recompensa tener tiempo para parar, escuchar y observar. Un calendario demasiado cerrado puede jugar en contra.",
+
+          type:
+            "decision",
+        },
       ],
 
-      status:
-        "draft",
-    },
+      closing:
+        "La pregunta útil no es «¿dónde veo este animal?», sino «¿qué tipo de experiencia de naturaleza quiero vivir y cuánto espacio necesita?»",
 
+      status:
+        "published",
+
+      reviewedAt:
+        LAST_REVIEWED,
+    },
 
     /* ----------------------------------------------------------
        07
@@ -634,17 +640,48 @@ import type {
         "experience",
 
       intro:
-        "La fama de un parque no debería ser el único criterio para incluirlo.",
+        "Un parque puede ser un destino en sí mismo o una pieza de una ruta. La decisión depende de lo que quieras vivir allí y del coste de llegar.",
 
       paragraphs: [
-        "Accesibilidad, tiempo necesario, condiciones meteorológicas, experiencia de visita, biodiversidad y encaje dentro de la ruta son variables que deben analizarse conjuntamente.",
-        "También debemos distinguir entre un parque que merece una jornada completa y otro que puede tener sentido como parte de un recorrido más amplio.",
+        "Antes de incluir un parque, conviene mirar cuatro variables juntas: qué aporta, cuánto tiempo requiere, cómo se llega y qué otras experiencias puedes combinar alrededor.",
+        "La fama no siempre coincide con el mejor encaje. Un parque puede ser magnífico y aun así no compensar un desvío en una ruta corta si otra zona ofrece el tipo de naturaleza que buscas con mucha menos fricción.",
+        "También hay que distinguir entre un parque que funciona como jornada completa y una visita que puedes integrar en un día de desplazamiento o de costa.",
+        "Las condiciones de acceso, senderos y recomendaciones concretas deben comprobarse cerca de la fecha en las fuentes oficiales antes de viajar.",
       ],
 
-      status:
-        "draft",
-    },
+      highlights: [
+        {
+          title:
+            "No colecciones parques",
 
+          description:
+            "Elegir dos parques que aportan ecosistemas distintos puede tener más sentido que intentar encadenar muchos.",
+
+          type:
+            "decision",
+        },
+
+        {
+          title:
+            "El acceso también forma parte del parque",
+
+          description:
+            "La experiencia real incluye desplazamiento, aparcamiento, senderos, calor, lluvia y tiempo de regreso.",
+
+          type:
+            "important",
+        },
+      ],
+
+      closing:
+        "Un buen parque es el que aporta algo que tu ruta necesita, no simplemente el que aparece en más listas.",
+
+      status:
+        "published",
+
+      reviewedAt:
+        LAST_REVIEWED,
+    },
 
     /* ----------------------------------------------------------
        08
@@ -655,23 +692,54 @@ import type {
         "playas",
 
       title:
-        "Playas",
+        "Playas y costas",
 
       category:
         "experience",
 
       intro:
-        "Costa Rica tiene dos costas y muchas formas diferentes de vivirlas.",
+        "Costa Rica permite elegir entre dos costas con personalidades diferentes; la dificultad está precisamente en decidir cuánto quieres dedicarles.",
 
       paragraphs: [
-        "No buscamos declarar una única playa como la mejor. Una playa puede ser interesante por paisaje, fauna, surf, ambiente, accesibilidad, tranquilidad o por su relación con el resto de la ruta.",
-        "La decisión debería partir de lo que quieres conseguir durante esos días de costa y de cómo encaja la zona en el recorrido completo.",
+        "No buscamos una clasificación de playas. Para una planificación útil importan cosas distintas según el viajero: baño, surf, fauna, paisaje, tranquilidad, ambiente, acceso y relación con el resto de la ruta.",
+        "En un viaje corto, intentar incluir Pacífico y Caribe puede consumir demasiadas horas de desplazamiento. Con más días, el contraste entre ambas costas puede convertirse en uno de los grandes atractivos del viaje.",
+        "También hay que decidir si la costa será un destino protagonista o una parte final de la ruta. Esa elección cambia completamente cuántas noches y qué tipo de alojamiento tienen sentido.",
+        "El estado del mar, la temporada y las condiciones locales deben revisarse antes de planificar actividades específicas en el agua.",
       ],
 
-      status:
-        "draft",
-    },
+      highlights: [
+        {
+          title:
+            "Una costa puede ser suficiente",
 
+          description:
+            "En viajes cortos, elegir bien una costa suele producir un viaje más agradable que dividir pocos días entre las dos.",
+
+          type:
+            "decision",
+        },
+
+        {
+          title:
+            "Playa no significa solo descansar",
+
+          description:
+            "Fauna, surf, paseos, gastronomía y paisaje pueden convertir la costa en una parte muy diferente según la zona.",
+
+          type:
+            "experience",
+        },
+      ],
+
+      closing:
+        "La pregunta no es qué costa es mejor. Es qué costa aporta al viaje que estás intentando construir.",
+
+      status:
+        "published",
+
+      reviewedAt:
+        LAST_REVIEWED,
+    },
 
     /* ----------------------------------------------------------
        09
@@ -861,17 +929,48 @@ import type {
         "experience",
 
       intro:
-        "La gastronomía también forma parte de cómo se conoce un destino.",
+        "La gastronomía funciona como una forma muy sencilla de cambiar el ritmo del viaje y conocer una parte menos turística del destino.",
 
       paragraphs: [
-        "Aquí reuniremos platos, tipos de establecimientos, experiencias gastronómicas y recomendaciones que podamos contrastar.",
-        "Cuando demos precios o recomendaciones concretas, deberán llevar fecha o fuente para evitar presentar como permanentes datos que cambian.",
+        "Para entender Costa Rica merece la pena dejar espacio a restaurantes locales, sodas y mercados, no solo a los establecimientos pensados para visitantes. La comida puede ser una actividad en sí misma o una pausa útil entre experiencias de naturaleza.",
+        "Hay platos y productos que cambian según la región y el contexto. Gallo pinto, casados, ceviche, café, frutas y productos del Caribe pueden aparecer en viajes muy distintos, pero la experiencia de comerlos depende también del lugar donde lo hagas.",
+        "No hace falta diseñar el viaje alrededor de reservas gastronómicas. Suele ser más interesante decidir qué momentos justifican una comida buscada y cuáles conviene dejar abiertos para descubrir sobre la marcha.",
+        "Los precios, horarios y establecimientos concretos cambian; cuando demos recomendaciones específicas, convendrá acompañarlas de fecha de revisión y fuente.",
       ],
 
-      status:
-        "draft",
-    },
+      highlights: [
+        {
+          title:
+            "Come donde tiene sentido",
 
+          description:
+            "Una comida local puede formar parte de la lectura de una zona y no solo de la logística entre dos actividades.",
+
+          type:
+            "experience",
+        },
+
+        {
+          title:
+            "No conviertas todo en reserva",
+
+          description:
+            "En un viaje de naturaleza, algunos de los mejores momentos gastronómicos aparecen precisamente cuando no has llenado cada hueco.",
+
+          type:
+            "tip",
+        },
+      ],
+
+      closing:
+        "La gastronomía no necesita protagonizar el viaje para mejorar muchísimo cómo se recuerda.",
+
+      status:
+        "published",
+
+      reviewedAt:
+        LAST_REVIEWED,
+    },
 
     /* ----------------------------------------------------------
        13
@@ -1099,17 +1198,48 @@ import type {
         "practical",
 
       intro:
-        "La seguridad debe explicarse de forma práctica, concreta y sin alarmismo.",
+        "La seguridad se entiende mejor con hábitos concretos que con una lista genérica de peligros.",
 
       paragraphs: [
-        "Nos centraremos en los riesgos que realmente pueden afectar a un viajero: vehículo, aparcamiento, pertenencias, conducción, desplazamientos nocturnos, zonas aisladas y actividades de naturaleza.",
-        "Cuando una recomendación provenga de nuestra experiencia, la diferenciaremos claramente de una advertencia oficial.",
+        "En un viaje por Costa Rica conviene pensar especialmente en conducción, aparcamiento, pertenencias, desplazamientos después de anochecer, senderos y actividades de naturaleza. El contexto cambia según la zona y la situación.",
+        "La regla más útil para un viaje en coche es sencilla: no dejar equipaje visible, elegir bien dónde aparcar y evitar improvisar desplazamientos o rutas aisladas cuando las condiciones no sean claras.",
+        "En naturaleza, seguir indicaciones de guías y gestores de los espacios, respetar senderos y condiciones meteorológicas y no acercarse innecesariamente a fauna son decisiones tan importantes como el equipo que lleves.",
+        "Cuando una advertencia dependa de una zona concreta o de una situación temporal, debe prevalecer la recomendación oficial más reciente.",
       ],
 
-      status:
-        "draft",
-    },
+      highlights: [
+        {
+          title:
+            "Seguridad práctica",
 
+          description:
+            "Más que memorizar una lista de riesgos, interesa saber qué hábitos reducen problemas durante conducción, aparcamiento y actividades.",
+
+          type:
+            "important",
+        },
+
+        {
+          title:
+            "La fuente puede cambiar",
+
+          description:
+            "Las recomendaciones de seguridad son de las partes que más merece la pena revisar cerca de la fecha del viaje.",
+
+          type:
+            "decision",
+        },
+      ],
+
+      closing:
+        "Prepararse bien no significa viajar con miedo; significa saber qué hábitos sencillos cambian la experiencia.",
+
+      status:
+        "published",
+
+      reviewedAt:
+        LAST_REVIEWED,
+    },
 
     /* ----------------------------------------------------------
        19
@@ -1153,17 +1283,48 @@ import type {
         "practical",
 
       intro:
-        "Pequeños detalles que pueden cambiar mucho la experiencia.",
+        "Los pequeños detalles pesan mucho en un país donde el clima, la carretera y la naturaleza forman parte del propio viaje.",
 
       paragraphs: [
-        "Aquí iremos concentrando aprendizajes contrastados que no encajan necesariamente en una sola región o actividad.",
-        "La prioridad será que cada consejo responda a una situación real y aporte algo que el viajero pueda aplicar.",
+        "Planifica con margen. Un trayecto que parece cómodo puede ocupar más tiempo real del previsto y dejarte menos energía para una actividad de naturaleza.",
+        "Lleva el equipo pensando en cambios de temperatura, lluvia y actividades concretas, pero evita preparar una maleta enorme para cada escenario posible. La ruta también debe determinar el equipaje.",
+        "Conviene tener una estrategia sencilla para el móvil: mapas disponibles sin conexión, batería suficiente y acceso a la documentación del viaje. Son pequeños detalles que cobran valor cuando sales de las zonas más urbanas.",
+        "Y, sobre todo, no intentes controlar todo el viaje. Dejar algo de margen es una forma de adaptarte al clima, a la fauna y a esos momentos que no estaban en el plan original.",
       ],
 
-      status:
-        "draft",
-    },
+      highlights: [
+        {
+          title:
+            "Planifica margen, no agujeros",
 
+          description:
+            "Un hueco libre tiene valor cuando permite absorber retrasos, lluvia o una actividad que se alarga.",
+
+          type:
+            "tip",
+        },
+
+        {
+          title:
+            "El equipaje sigue a la ruta",
+
+          description:
+            "No prepares la maleta antes de saber qué tipo de viaje vas a hacer: coche, senderismo, costa y montaña no necesitan exactamente lo mismo.",
+
+          type:
+            "decision",
+        },
+      ],
+
+      closing:
+        "Los mejores consejos prácticos suelen ser los que evitan pequeñas molestias que, sumadas, terminan cambiando el ritmo del viaje.",
+
+      status:
+        "published",
+
+      reviewedAt:
+        LAST_REVIEWED,
+    },
 
     /* ----------------------------------------------------------
        21
