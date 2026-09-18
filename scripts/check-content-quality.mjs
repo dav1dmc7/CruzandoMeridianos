@@ -30,9 +30,9 @@ const warnings = [];
 
 const placeholderPatterns = [
   /lorem ipsum/iu,
-  /\bTODO\b/iu,
-  /\bFIXME\b/iu,
-  /\bTBD\b/iu,
+  /\bTODO\b/u,
+  /\bFIXME\b/u,
+  /\bTBD\b/u,
   /coming soon/iu,
 ];
 
@@ -82,29 +82,32 @@ const expectedPriority = [
   "auroras",
 ];
 
-const explorerSource = viajes.match(/const explorerItems: ExplorerItem\[\] = \[([\s\S]*?)\n\];/m)?.[1] ?? "";
-for (const slug of expectedPriority) {
-  if (!explorerSource.includes(slug === "sudafrica/kruger" ? "krugerGuide" : slug)) {
-    failures.push(`Destination explorer is missing curated priority item "${slug}".`);
-  }
-}
-
-const priorityMarkers = [
-  'getDestination("costa-rica")',
-  'krugerGuide',
-  'getDestination("sudafrica")',
-  'getDestination("mauricio")',
-  'getDestination("grecia")',
-  'getDestination("jordania")',
-  'getDestination("auroras")',
+const prioritySource = viajes.match(/const prioritySlugs = \[([\s\S]*?)\]\s+as const;/m)?.[1] ?? "";
+const prioritySlugs = [...prioritySource.matchAll(/"([^"]+)"/g)].map((match) => match[1]);
+const expectedDestinationPriority = [
+  "costa-rica",
+  "sudafrica",
+  "mauricio",
+  "grecia",
+  "jordania",
+  "auroras",
 ];
 
-let lastIndex = -1;
-for (const marker of priorityMarkers) {
-  const index = explorerSource.indexOf(marker);
-  if (index === -1) continue;
-  if (index < lastIndex) failures.push(`Curated destination order is inconsistent near "${marker}".`);
-  lastIndex = index;
+if (JSON.stringify(prioritySlugs) !== JSON.stringify(expectedDestinationPriority)) {
+  failures.push(
+    `Destination explorer priority should be ${expectedDestinationPriority.join(", ")}; found ${prioritySlugs.join(", ")}.`,
+  );
+}
+
+const explorerSource = viajes.match(/const explorerItems: ExplorerItem\[\] = \[([\s\S]*?)\n\];/m)?.[1] ?? "";
+if (!explorerSource.includes('{ type: "destination", destination: getDestination("costa-rica") }')) {
+  failures.push('Destination explorer must start with the curated "costa-rica" destination.');
+}
+if (!explorerSource.includes('{ type: "guide", guide: krugerGuide }')) {
+  failures.push('Destination explorer must expose the curated "sudafrica/kruger" guide after Costa Rica.');
+}
+if (!explorerSource.includes("...prioritySlugs.slice(1)")) {
+  failures.push("Destination explorer must render the remaining curated destinations from prioritySlugs after Kruger.");
 }
 
 if (!viajes.includes('destination.region === "Canarias"') || !viajes.includes('href: "/viajes/canarias"')) {
