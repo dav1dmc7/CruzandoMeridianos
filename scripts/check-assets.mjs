@@ -159,6 +159,12 @@ const coverKindMismatches = destinationCoverInventory.filter((destination) => {
   return usesFallback !== (destination.coverKind === "placeholder");
 });
 
+const destinationExperienceMismatches = destinationCoverInventory.filter(
+  (destination) =>
+    mediaRegistrySlugs.has(destination.slug) &&
+    destination.coverKind !== "first-hand",
+);
+
 if (coverKindMismatches.length) {
   for (const destination of coverKindMismatches) {
     console.error(
@@ -166,6 +172,15 @@ if (coverKindMismatches.length) {
     );
   }
   process.exit(1);
+}
+
+if (destinationExperienceMismatches.length) {
+  console.warn("\nFirst-hand cover warnings:");
+  for (const destination of destinationExperienceMismatches) {
+    console.warn(
+      `- "${destination.slug}" has a first-hand media registry entry but its coverKind is "${destination.coverKind}".`,
+    );
+  }
 }
 
 console.log("\nDestination cover inventory:");
