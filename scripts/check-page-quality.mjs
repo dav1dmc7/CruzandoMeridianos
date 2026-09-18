@@ -72,8 +72,11 @@ if (!/ogImage=\{destination\.image\.src\}/.test(guidePage)) {
 }
 
 const livedTripsPage = await read("src/pages/nuestros-viajes/[slug].astro");
-if (!/ogImage=\{trip\.slug === "costa-rica"/.test(livedTripsPage)) {
+if (!/const socialImage\s*=/.test(livedTripsPage) || !/ogImage=\{socialImage\}/.test(livedTripsPage)) {
   failures.push("Lived-trip pages must provide a route-specific social image.");
+}
+if (/\/brujula\.png/.test(livedTripsPage) || !/Missing route-specific social image for lived trip/.test(livedTripsPage)) {
+  failures.push("Lived-trip pages must fail clearly instead of falling back to the generic compass image.");
 }
 
 const canarias = await read("src/pages/viajes/canarias/index.astro");
