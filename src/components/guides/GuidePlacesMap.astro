@@ -121,6 +121,9 @@ const markers = projected.map((place, index) => ({
             type="button"
             class="guide-place"
             data-place-id={place.id}
+            aria-pressed="false"
+            data-track="interaction"
+            data-track-label={`Guide places · ${place.name}`}
           >
             <span class="guide-place__number">{String(index + 1).padStart(2, "0")}</span>
             <span class="guide-place__copy">
@@ -158,6 +161,9 @@ const markers = projected.map((place, index) => ({
                 class="guide-place-marker"
                 data-place-id={place.id}
                 aria-label={`Ver ${place.name}`}
+                aria-pressed="false"
+                data-track="interaction"
+                data-track-label={`Guide places · mapa · ${place.name}`}
                 style={`left:${place.left};top:${place.top};--marker-index:${place.index};`}
               >
                 <span>{String(place.index + 1).padStart(2, "0")}</span>
@@ -190,7 +196,9 @@ const markers = projected.map((place, index) => ({
 
     const activatePlace = (id: string) => {
       placeControls.forEach((control) => {
-        control.classList.toggle("is-active", control.dataset.placeId === id);
+        const isActive = control.dataset.placeId === id;
+        control.classList.toggle("is-active", isActive);
+        control.setAttribute("aria-pressed", String(isActive));
       });
     };
 
