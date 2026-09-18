@@ -8,6 +8,10 @@ const livedTripSlugs = [
   'sudafrica-mauricio',
 ];
 
+const editorialGuidePages = [
+  'sudafrica/kruger',
+];
+
 const destinationSlugs = [
   'costa-rica',
   'sudafrica',
@@ -49,6 +53,9 @@ export default defineConfig({
         ),
         ...livedTripSlugs.map(
           (slug) => `https://www.cruzandomeridianos.com/nuestros-viajes/${slug}`,
+        ),
+        ...editorialGuidePages.map(
+          (slug) => `https://www.cruzandomeridianos.com/viajes/${slug}`,
         ),
         'https://www.cruzandomeridianos.com/viajes/costa-rica/mejor-epoca',
         'https://www.cruzandomeridianos.com/viajes/costa-rica/parques-nacionales',
