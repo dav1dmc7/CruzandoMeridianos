@@ -78,11 +78,18 @@ const continents: DestinationContinent[] = [
         </div>
 
         <div class="destination-results" data-destination-results>
-          {destinations.map((destination) => {
+          {destinations.flatMap((destination) => {
             const isReady = destination.status === "ready";
             const searchText = [destination.name, destination.country, destination.region, destination.continent].filter(Boolean).join(" ").toLowerCase();
-            return (
-              <article class:list={["destination-result", { "destination-result--disabled": !isReady }]} data-destination-card data-search={searchText} data-continent={destination.continent}>
+
+            const destinationCard = (
+              <article
+                class:list={["destination-result", { "destination-result--disabled": !isReady }]} 
+                data-destination-card
+                data-result-type="destination"
+                data-search={searchText}
+                data-continent={destination.continent}
+              >
                 {isReady ? (
                   <a href={`/viajes/${destination.slug}`} class="destination-result-link" aria-label={`Explorar ${destination.name}`} data-geo-transition data-geo-label={destination.name}>
                     <span class="destination-result-number">{destination.number}</span>
@@ -104,49 +111,45 @@ const continents: DestinationContinent[] = [
                 )}
               </article>
             );
+
+            const relatedGuides = editorialGuideEntries
+              .filter((guide) => guide.parentSlug === destination.slug)
+              .map((guide) => (
+                <article
+                  class="destination-result destination-result--guide"
+                  data-destination-card
+                  data-result-type="guide"
+                  data-search={`${guide.name} ${guide.parentName} safari kruger`.toLowerCase()}
+                  data-continent="África"
+                >
+                  <a
+                    href={guide.href}
+                    class="destination-result-link"
+                    aria-label={`Explorar ${guide.name}`}
+                    data-geo-transition
+                    data-geo-label={guide.name}
+                  >
+                    <span class="destination-result-number">GUÍA</span>
+                    <span class="destination-result-copy">
+                      <strong>{guide.name}</strong>
+                      <small>{guide.parentName} · guía específica</small>
+                    </span>
+                    <span class="destination-result-image" aria-hidden="true">
+                      <Image src={guide.image} alt="" loading="lazy" />
+                    </span>
+                    <span class="destination-result-status">Explorar ↗</span>
+                  </a>
+                </article>
+              ));
+
+            return [destinationCard, ...relatedGuides];
           })}
+        </div>
         </div>
 
         <p class="destination-no-results" data-no-results hidden>
           No encontramos ese destino todavía. Prueba con otro nombre, país, región o continente.
         </p>
-      </div>
-    </section>
-
-    <section class="special-guides" id="guias-especificas" aria-labelledby="special-guides-title">
-      <div class="special-guides-inner">
-        <div class="special-guides-heading">
-          <div>
-            <p class="eyebrow">GUÍAS ESPECÍFICAS</p>
-            <h2 id="special-guides-title">Partes del viaje que merecen un espacio propio.</h2>
-          </div>
-          <p>
-            No son países nuevos dentro del atlas. Son lugares o experiencias con tanta
-            personalidad y decisiones propias que tienen su propia guía, aunque formen
-            parte de un destino mayor.
-          </p>
-        </div>
-
-        <div class="special-guides-list">
-          {editorialGuideEntries.map((guide) => (
-            <article class="special-guide-card">
-              <a href={guide.href} class="special-guide-media" aria-label={`Abrir ${guide.name}`} data-geo-transition data-geo-label={guide.name}>
-                <Image src={guide.image} alt={guide.imageAlt} loading="lazy" />
-                <span class="special-guide-media-label">Abrir guía <span aria-hidden="true">↗</span></span>
-              </a>
-
-              <div class="special-guide-copy">
-                <p class="special-guide-parent">{guide.eyebrow}</p>
-                <h3><a href={guide.href}>{guide.name}</a></h3>
-                <p>{guide.description}</p>
-                <a href={guide.href} class="special-guide-link">
-                  Explorar {guide.name}
-                  <span aria-hidden="true">→</span>
-                </a>
-              </div>
-            </article>
-          ))}
-        </div>
       </div>
     </section>
 
@@ -212,23 +215,45 @@ const continents: DestinationContinent[] = [
     const searchStart = document.querySelector<HTMLAnchorElement>('[data-travel-start="search"]');
     let activeContinent = "all";
 
-    const updateResultsCount = (visible: number) => {
-      if (!resultsCount) return;
-      resultsCount.textContent = visible === 1 ? "1 destino para explorar" : `${visible} destinos para explorar`;
-    };
-
     const applyFilters = () => {
       const query = (searchInput?.value ?? "").trim().toLowerCase();
-      let visible = 0;
+      let visibleDestinations = 0;
+      let visibleGuides = 0;
+
       cards.forEach((card) => {
         const searchText = card.dataset.search ?? "";
         const continent = card.dataset.continent ?? "";
+        const resultType = card.dataset.resultType ?? "destination";
         const show = (!query || searchText.includes(query)) && (activeContinent === "all" || continent === activeContinent);
         card.hidden = !show;
-        if (show) visible += 1;
+
+        if (show && resultType === "destination") visibleDestinations += 1;
+        if (show && resultType === "guide") visibleGuides += 1;
       });
-      updateResultsCount(visible);
-      if (noResults) noResults.hidden = visible > 0;
+
+      if (resultsCount) {
+        const isDefaultView = !query && activeContinent === "all";
+
+        if (isDefaultView) {
+          resultsCount.textContent = `${destinations.length} destinos para explorar`;
+        } else {
+          const parts: string[] = [];
+
+          if (visibleDestinations > 0) {
+            parts.push(visibleDestinations === 1 ? "1 destino" : `${visibleDestinations} destinos`);
+          }
+
+          if (visibleGuides > 0) {
+            parts.push(visibleGuides === 1 ? "1 guía específica" : `${visibleGuides} guías específicas`);
+          }
+
+          resultsCount.textContent = parts.length > 0 ? parts.join(" · ") : "Sin resultados";
+        }
+      }
+
+      const visibleResults = visibleDestinations + visibleGuides;
+
+      if (noResults) noResults.hidden = visibleResults > 0;
       if (popularSection) popularSection.hidden = Boolean(query) || activeContinent !== "all";
     };
 
@@ -250,8 +275,8 @@ const continents: DestinationContinent[] = [
 
 <style>
 .travel-hero{padding:9rem 2rem 7rem;background:var(--color-papel)}.travel-hero-inner{width:min(var(--content-width),calc(100% - 4rem));margin:0 auto;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(220px,.6fr);gap:6rem;align-items:end}.travel-hero-copy{max-width:900px}.eyebrow{margin:0 0 1.35rem;color:var(--color-cobre);font-size:.72rem;font-weight:600;letter-spacing:2px;text-transform:uppercase}.travel-hero h1{max-width:980px;margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3.8rem,7vw,6.8rem);font-weight:400;line-height:.96;letter-spacing:-.04em}.travel-hero h1 em{color:var(--color-cobre);font-style:italic}.travel-hero-description{max-width:720px;margin-top:2.5rem;color:#555;font-size:1.1rem;line-height:1.8}.travel-hero-note{padding-left:2rem;border-left:1px solid rgba(28,48,38,.2)}.travel-hero-note span{display:block;margin-bottom:.8rem;color:var(--color-cobre);font-size:.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase}.travel-hero-note p{margin:0;color:#555;font-family:var(--font-serif);font-size:1.25rem;line-height:1.5}
-.destination-explorer{padding:8rem 2rem;background:#f7f4ef}.explorer-inner{width:min(var(--content-width),100%);margin:0 auto}.explorer-heading{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.55fr);gap:5rem;align-items:end}.explorer-heading h2,.popular-heading h2{margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3rem,5vw,4.8rem);font-weight:400;line-height:1;letter-spacing:-.035em}.explorer-heading>p,.popular-heading>p{margin:0;color:#555;font-size:1rem;line-height:1.75}.destination-search{max-width:760px;margin-top:4rem}.destination-search label{display:block;margin-bottom:.7rem;color:var(--color-bosque);font-size:.78rem;font-weight:600;letter-spacing:1px;text-transform:uppercase}.destination-search-field{display:flex;align-items:center;gap:.8rem;padding:1rem 1.2rem;border:1px solid rgba(28,48,38,.18);border-radius:999px;background:var(--color-papel)}.destination-search-field span{color:var(--color-cobre);font-size:1.2rem}.destination-search-field input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:var(--color-grafito);font:inherit;font-size:1rem}.destination-search-field input::placeholder{color:#888}.destination-results-meta{margin:.7rem 0 0 .1rem;color:#777;font-size:.76rem;line-height:1.5}.continent-filter{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:2rem}.continent-button{padding:.7rem 1rem;border:1px solid rgba(28,48,38,.18);border-radius:999px;background:transparent;color:var(--color-bosque);cursor:pointer;font:inherit;font-size:.82rem;transition:all .2s ease}.continent-button:hover,.continent-button.is-active{border-color:var(--color-bosque);background:var(--color-bosque);color:var(--color-papel)}.destination-results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.9rem;margin-top:3rem}.destination-result{min-width:0;border:1px solid rgba(28,48,38,.08);border-radius:18px;background:var(--color-papel);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}.destination-result:hover{transform:translateY(-2px);border-color:rgba(28,48,38,.24);box-shadow:0 10px 24px rgba(28,48,38,.05)}.destination-result[hidden]{display:none}.destination-result--disabled{opacity:.64}.destination-result--disabled:hover{transform:none;border-color:rgba(28,48,38,.08);box-shadow:none}.destination-result-link{display:grid;grid-template-columns:auto minmax(0,1fr) 72px auto;gap:.85rem;align-items:center;min-width:0;min-height:82px;padding:.85rem 1.05rem;color:inherit;text-decoration:none}.destination-result-link[aria-disabled="true"]{cursor:default}.destination-result-number{color:var(--color-cobre);font-size:.7rem;font-weight:600;letter-spacing:1px}.destination-result-copy{min-width:0}.destination-result-copy strong{display:block;min-width:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:1.28rem;font-weight:400;line-height:1.08;overflow-wrap:anywhere}.destination-result-copy small{display:block;margin-top:.25rem;color:#777;font-size:.68rem;text-transform:uppercase}.destination-result-image{display:block;width:72px;height:70px;overflow:hidden;align-self:stretch;background:transparent}.destination-result-image-placeholder{display:grid;place-items:center;width:100%;height:100%;background:var(--color-bosque);color:var(--color-papel);font-family:var(--font-serif);font-size:1.25rem;letter-spacing:.08em}.destination-result-image img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;transition:transform .35s ease}.destination-result-image-placeholder{display:grid;width:100%;height:100%;place-items:center;border:1px solid rgba(28,48,38,.08);border-radius:12px;background:rgba(28,48,38,.05);color:var(--color-cobre);font-family:var(--font-serif);font-size:1rem}.destination-result:hover .destination-result-image img{transform:scale(1.04)}.destination-result-status{justify-self:end;color:var(--color-cobre);font-size:.68rem;font-weight:600;white-space:nowrap}.destination-result--disabled .destination-result-status{color:#777;font-weight:500}.destination-no-results{margin:2rem 0 0;color:#666;font-size:.95rem}.special-guides{padding:8rem 2rem;background:#f3f0e9;border-top:1px solid rgba(28,48,38,.08)}.special-guides-inner{width:min(var(--content-width),100%);margin:0 auto}.special-guides-heading{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.55fr);gap:5rem;align-items:end}.special-guides-heading h2{max-width:820px;margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3rem,5vw,4.8rem);font-weight:400;line-height:1;letter-spacing:-.035em}.special-guides-heading>p{margin:0;color:#555;font-size:1rem;line-height:1.75}.special-guides-list{display:grid;grid-template-columns:1fr;margin-top:5rem}.special-guide-card{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);min-height:460px;overflow:hidden;border:1px solid rgba(28,48,38,.1);border-radius:28px;background:var(--color-papel);box-shadow:0 18px 55px rgba(20,35,28,.05)}.special-guide-media{position:relative;display:block;min-height:460px;overflow:hidden;background:#d8d5cc}.special-guide-media img{display:block;width:100%;height:100%;min-height:460px;object-fit:cover;transform:scale(1.01);transition:transform .9s cubic-bezier(.2,.65,.25,1)}.special-guide-card:hover .special-guide-media img{transform:scale(1.045)}.special-guide-media-label{position:absolute;right:1.35rem;bottom:1.35rem;display:inline-flex;align-items:center;gap:.45rem;padding:.65rem .8rem;border:1px solid rgba(255,255,255,.32);border-radius:999px;background:rgba(18,33,26,.38);backdrop-filter:blur(10px);color:#fff;font-size:.68rem;font-weight:500;letter-spacing:.04em}.special-guide-copy{display:flex;min-width:0;flex-direction:column;justify-content:center;padding:clamp(2rem,4vw,4.25rem)}.special-guide-parent{margin:0 0 1.1rem;color:var(--color-cobre);font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase}.special-guide-copy h3{margin:0 0 1.15rem;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(2.5rem,4vw,4rem);font-weight:400;line-height:.98;letter-spacing:-.035em}.special-guide-copy h3 a{color:inherit;text-decoration:none}.special-guide-copy h3 a:hover{color:var(--color-cobre)}.special-guide-copy>p:not(.special-guide-parent){max-width:34rem;margin:0;color:#555;font-size:.98rem;line-height:1.8}.special-guide-link{display:inline-flex;align-items:center;gap:.7rem;width:fit-content;margin-top:1.7rem;color:var(--color-bosque);font-size:.78rem;font-weight:600;letter-spacing:.03em;text-decoration:none}.special-guide-link:hover{color:var(--color-cobre)}.special-guide-link span{transition:transform .25s ease}.special-guide-link:hover span{transform:translateX(4px)}.popular-destinations{padding:9rem 2rem;background:var(--color-papel)}.popular-destinations[hidden]{display:none}.popular-inner{width:min(var(--content-width),100%);margin:0 auto}.popular-heading{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.55fr);gap:5rem;align-items:end}.popular-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5rem 3rem;margin-top:5rem}.knowledge{padding:9rem 2rem;background:var(--color-papel);border-top:1px solid rgba(28,48,38,.08)}.knowledge-inner{width:min(var(--content-width),100%);margin:0 auto;display:grid;grid-template-columns:.85fr 1.15fr;gap:8rem}.knowledge-copy{max-width:540px}.knowledge-copy h2{margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3rem,4.5vw,4.4rem);font-weight:400;line-height:1;letter-spacing:-.035em}.knowledge-copy>p:last-child{margin-top:2rem;color:#555;font-size:1rem;line-height:1.8}.knowledge-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3.5rem 3rem}.knowledge-grid article{padding-top:1.5rem;border-top:1px solid rgba(28,48,38,.18)}.knowledge-grid span{display:block;margin-bottom:1.1rem;color:var(--color-cobre);font-size:.72rem;font-weight:600;letter-spacing:2px}.knowledge-grid h3{margin:0 0 .7rem;color:var(--color-bosque);font-family:var(--font-serif);font-size:1.9rem;font-weight:400}.knowledge-grid p{margin:0;color:#555;font-size:.95rem;line-height:1.75}.travel-cta{padding:9rem 2rem;background:var(--color-arena);text-align:center}.travel-cta-inner{width:min(820px,100%);margin:0 auto}.travel-cta h2{margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3rem,5.8vw,5.2rem);font-weight:400;line-height:.98;letter-spacing:-.035em}.travel-cta p:not(.eyebrow){max-width:650px;margin:2rem auto 2.5rem;color:#555;font-size:1.05rem;line-height:1.75}.travel-cta .button-primary{gap:.6rem}.travel-cta .button-primary span{transition:transform .2s ease}.travel-cta .button-primary:hover span{transform:translate(3px,-3px)}
-@media (max-width:900px){.special-guides{padding:6rem 1.5rem 7rem}.special-guides-heading{grid-template-columns:1fr;gap:2.5rem}.special-guide-card{grid-template-columns:1fr}.special-guide-media,.special-guide-media img{min-height:360px}.special-guide-copy{padding:2rem}.travel-hero{padding:7rem 1.5rem 5rem}.travel-hero-inner{width:min(100% - 3rem,var(--content-width));grid-template-columns:1fr;gap:3rem}.travel-hero h1{font-size:clamp(3.4rem,10vw,5rem)}.travel-hero-note{max-width:560px;padding-left:0;padding-top:1.5rem;border-left:0;border-top:1px solid rgba(28,48,38,.2)}.destination-explorer,.popular-destinations,.knowledge,.travel-cta{padding-left:1.5rem;padding-right:1.5rem}.destination-explorer,.popular-destinations{padding-top:6rem;padding-bottom:7rem}.explorer-heading,.popular-heading,.knowledge-inner{grid-template-columns:1fr;gap:2.5rem}.destination-results{grid-template-columns:repeat(2,minmax(0,1fr))}.popular-grid{gap:4rem 2rem;margin-top:4rem}.knowledge{padding-top:6rem;padding-bottom:7rem}.travel-cta{padding-top:7rem;padding-bottom:7rem}}
+.destination-explorer{padding:8rem 2rem;background:#f7f4ef}.explorer-inner{width:min(var(--content-width),100%);margin:0 auto}.explorer-heading{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.55fr);gap:5rem;align-items:end}.explorer-heading h2,.popular-heading h2{margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3rem,5vw,4.8rem);font-weight:400;line-height:1;letter-spacing:-.035em}.explorer-heading>p,.popular-heading>p{margin:0;color:#555;font-size:1rem;line-height:1.75}.destination-search{max-width:760px;margin-top:4rem}.destination-search label{display:block;margin-bottom:.7rem;color:var(--color-bosque);font-size:.78rem;font-weight:600;letter-spacing:1px;text-transform:uppercase}.destination-search-field{display:flex;align-items:center;gap:.8rem;padding:1rem 1.2rem;border:1px solid rgba(28,48,38,.18);border-radius:999px;background:var(--color-papel)}.destination-search-field span{color:var(--color-cobre);font-size:1.2rem}.destination-search-field input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:var(--color-grafito);font:inherit;font-size:1rem}.destination-search-field input::placeholder{color:#888}.destination-results-meta{margin:.7rem 0 0 .1rem;color:#777;font-size:.76rem;line-height:1.5}.continent-filter{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:2rem}.continent-button{padding:.7rem 1rem;border:1px solid rgba(28,48,38,.18);border-radius:999px;background:transparent;color:var(--color-bosque);cursor:pointer;font:inherit;font-size:.82rem;transition:all .2s ease}.continent-button:hover,.continent-button.is-active{border-color:var(--color-bosque);background:var(--color-bosque);color:var(--color-papel)}.destination-results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.9rem;margin-top:3rem}.destination-result{min-width:0;border:1px solid rgba(28,48,38,.08);border-radius:18px;background:var(--color-papel);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}.destination-result:hover{transform:translateY(-2px);border-color:rgba(28,48,38,.24);box-shadow:0 10px 24px rgba(28,48,38,.05)}.destination-result[hidden]{display:none}.destination-result--disabled{opacity:.64}.destination-result--guide{background:#eef0e9}.destination-result--guide .destination-result-number{font-size:.58rem;letter-spacing:.08em}.destination-result--disabled:hover{transform:none;border-color:rgba(28,48,38,.08);box-shadow:none}.destination-result-link{display:grid;grid-template-columns:auto minmax(0,1fr) 72px auto;gap:.85rem;align-items:center;min-width:0;min-height:82px;padding:.85rem 1.05rem;color:inherit;text-decoration:none}.destination-result-link[aria-disabled="true"]{cursor:default}.destination-result-number{color:var(--color-cobre);font-size:.7rem;font-weight:600;letter-spacing:1px}.destination-result-copy{min-width:0}.destination-result-copy strong{display:block;min-width:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:1.28rem;font-weight:400;line-height:1.08;overflow-wrap:anywhere}.destination-result-copy small{display:block;margin-top:.25rem;color:#777;font-size:.68rem;text-transform:uppercase}.destination-result-image{display:block;width:72px;height:70px;overflow:hidden;align-self:stretch;background:transparent}.destination-result-image-placeholder{display:grid;place-items:center;width:100%;height:100%;background:var(--color-bosque);color:var(--color-papel);font-family:var(--font-serif);font-size:1.25rem;letter-spacing:.08em}.destination-result-image img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;transition:transform .35s ease}.destination-result-image-placeholder{display:grid;width:100%;height:100%;place-items:center;border:1px solid rgba(28,48,38,.08);border-radius:12px;background:rgba(28,48,38,.05);color:var(--color-cobre);font-family:var(--font-serif);font-size:1rem}.destination-result:hover .destination-result-image img{transform:scale(1.04)}.destination-result-status{justify-self:end;color:var(--color-cobre);font-size:.68rem;font-weight:600;white-space:nowrap}.destination-result--disabled .destination-result-status{color:#777;font-weight:500}.destination-no-results{margin:2rem 0 0;color:#666;font-size:.95rem}.popular-destinations{padding:9rem 2rem;background:var(--color-papel)}.popular-destinations[hidden]{display:none}.popular-inner{width:min(var(--content-width),100%);margin:0 auto}.popular-heading{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.55fr);gap:5rem;align-items:end}.popular-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5rem 3rem;margin-top:5rem}.knowledge{padding:9rem 2rem;background:var(--color-papel);border-top:1px solid rgba(28,48,38,.08)}.knowledge-inner{width:min(var(--content-width),100%);margin:0 auto;display:grid;grid-template-columns:.85fr 1.15fr;gap:8rem}.knowledge-copy{max-width:540px}.knowledge-copy h2{margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3rem,4.5vw,4.4rem);font-weight:400;line-height:1;letter-spacing:-.035em}.knowledge-copy>p:last-child{margin-top:2rem;color:#555;font-size:1rem;line-height:1.8}.knowledge-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3.5rem 3rem}.knowledge-grid article{padding-top:1.5rem;border-top:1px solid rgba(28,48,38,.18)}.knowledge-grid span{display:block;margin-bottom:1.1rem;color:var(--color-cobre);font-size:.72rem;font-weight:600;letter-spacing:2px}.knowledge-grid h3{margin:0 0 .7rem;color:var(--color-bosque);font-family:var(--font-serif);font-size:1.9rem;font-weight:400}.knowledge-grid p{margin:0;color:#555;font-size:.95rem;line-height:1.75}.travel-cta{padding:9rem 2rem;background:var(--color-arena);text-align:center}.travel-cta-inner{width:min(820px,100%);margin:0 auto}.travel-cta h2{margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3rem,5.8vw,5.2rem);font-weight:400;line-height:.98;letter-spacing:-.035em}.travel-cta p:not(.eyebrow){max-width:650px;margin:2rem auto 2.5rem;color:#555;font-size:1.05rem;line-height:1.75}.travel-cta .button-primary{gap:.6rem}.travel-cta .button-primary span{transition:transform .2s ease}.travel-cta .button-primary:hover span{transform:translate(3px,-3px)}
+@media (max-width:900px){.travel-hero{padding:7rem 1.5rem 5rem}.travel-hero-inner{width:min(100% - 3rem,var(--content-width));grid-template-columns:1fr;gap:3rem}.travel-hero h1{font-size:clamp(3.4rem,10vw,5rem)}.travel-hero-note{max-width:560px;padding-left:0;padding-top:1.5rem;border-left:0;border-top:1px solid rgba(28,48,38,.2)}.destination-explorer,.popular-destinations,.knowledge,.travel-cta{padding-left:1.5rem;padding-right:1.5rem}.destination-explorer,.popular-destinations{padding-top:6rem;padding-bottom:7rem}.explorer-heading,.popular-heading,.knowledge-inner{grid-template-columns:1fr;gap:2.5rem}.destination-results{grid-template-columns:repeat(2,minmax(0,1fr))}.popular-grid{gap:4rem 2rem;margin-top:4rem}.knowledge{padding-top:6rem;padding-bottom:7rem}.travel-cta{padding-top:7rem;padding-bottom:7rem}}
 @media (max-width:650px){.special-guide-media,.special-guide-media img{min-height:300px}.destination-results,.popular-grid,.knowledge-grid{grid-template-columns:1fr}.destination-result-link{grid-template-columns:auto minmax(0,1fr) 70px}.destination-result-image{width:70px;height:70px}.destination-result-status{grid-column:2 / -1;justify-self:start}.destination-result-copy strong{font-size:1.18rem}.travel-cta h2{font-size:3rem}}
 
 .destination-results{gap:1rem}.destination-result{overflow:hidden}.destination-result-link{min-height:96px;grid-template-columns:auto minmax(0,1fr) 88px auto}.destination-result-image{width:88px;height:80px;overflow:hidden;border-radius:12px;background:#e7e2d9}.destination-result-image img{width:100%;height:100%;object-fit:cover !important;object-position:center !important}.destination-result-status{padding-right:.1rem}.destination-search-field{min-height:58px;box-shadow:0 12px 35px rgba(28,48,38,.04)}.continent-button:focus-visible,.destination-search-field:focus-within,.destination-result-link:focus-visible{outline:2px solid var(--color-cobre);outline-offset:3px}
