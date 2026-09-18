@@ -152,7 +152,7 @@ const explorerItems: ExplorerItem[] = [
             <span aria-hidden="true">⌕</span>
             <input id="destination-search-input" type="search" autocomplete="off" placeholder="Busca un país, ciudad o destino…" enterkeyhint="search" />
           </div>
-          <p class="destination-results-meta" data-results-count aria-live="polite">{destinations.length} destinos · {editorialGuideEntries.length} guía específica · 1 hub regional</p>
+          <p class="destination-results-meta" data-results-count aria-live="polite">{destinations.length} destinos · {editorialGuideEntries.length} {editorialGuideEntries.length === 1 ? "guía específica" : "guías específicas"} · 1 hub regional</p>
         </div>
 
         <div class="continent-filter" role="group" aria-label="Filtrar por continente">
@@ -162,7 +162,13 @@ const explorerItems: ExplorerItem[] = [
           ))}
         </div>
 
-        <div class="destination-results" data-destination-results data-destination-total={destinations.length}>
+        <div
+          class="destination-results"
+          data-destination-results
+          data-destination-total={destinations.length}
+          data-guide-total={editorialGuideEntries.length}
+          data-region-total={1}
+        >
           {explorerItems.map((item, index) => {
             const explorerNumber = String(index + 1).padStart(2, "0");
 
@@ -345,6 +351,8 @@ const explorerItems: ExplorerItem[] = [
     const resultsCount = document.querySelector<HTMLElement>("[data-results-count]");
     const destinationResults = document.querySelector<HTMLElement>("[data-destination-results]");
     const destinationTotal = Number(destinationResults?.dataset.destinationTotal ?? "0");
+    const guideTotal = Number(destinationResults?.dataset.guideTotal ?? "0");
+    const regionTotal = Number(destinationResults?.dataset.regionTotal ?? "0");
     const searchStart = document.querySelector<HTMLAnchorElement>('[data-travel-start="search"]');
     let activeContinent = "all";
 
@@ -370,7 +378,9 @@ const explorerItems: ExplorerItem[] = [
         const isDefaultView = !query && activeContinent === "all";
 
         if (isDefaultView) {
-          resultsCount.textContent = `${destinationTotal} destinos · 1 guía específica · 1 hub regional`;
+          const guideLabel = guideTotal === 1 ? "1 guía específica" : `${guideTotal} guías específicas`;
+          const regionLabel = regionTotal === 1 ? "1 hub regional" : `${regionTotal} hubs regionales`;
+          resultsCount.textContent = `${destinationTotal} destinos · ${guideLabel} · ${regionLabel}`;
         } else {
           const parts: string[] = [];
 
