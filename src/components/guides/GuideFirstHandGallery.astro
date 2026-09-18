@@ -4,9 +4,10 @@ import type { DestinationFirstHandMedia } from "../../data/guide-media";
 
 interface Props {
   media: DestinationFirstHandMedia;
+  limit?: number;
 }
 
-const { media }: Props = Astro.props;
+const { media, limit = 6 }: Props = Astro.props;
 ---
 
 <section class="guide-first-hand" aria-labelledby="guide-first-hand-title">
@@ -24,7 +25,7 @@ const { media }: Props = Astro.props;
     </div>
 
     <div class="guide-first-hand__grid">
-      {media.gallery.slice(0, 6).map((item, index) => (
+      {media.gallery.slice(0, limit).map((item, index) => (
         <figure class:list={["guide-first-hand__item", { "guide-first-hand__item--large": index === 0 || index === 3 }]}>
           <Image
             src={item.src}
