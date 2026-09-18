@@ -66,6 +66,8 @@ const formatBudgetCategory = (category: string) => {
 
 
 const plannedPlaces = trip.plannedButNotVisited;
+const visibleTripPlaces = trip.places.slice(0, 24);
+const additionalTripPlaces = trip.places.slice(24);
 
 const identifiedBudgetTotal = trip.slug === "costa-rica"
   ? trip.budget
@@ -900,7 +902,7 @@ const budgetGroups = budgetGroupDefinitions
          LUGARES GUARDADOS
     ========================================================== -->
     {
-      trip.places.length > 0 && (
+      trip.places.length > 0 && trip.slug !== "costa-rica" && (
         <section class="trip-places" aria-labelledby="trip-places-title">
           <div class="trip-places-inner">
             <div class="trip-section-header">
@@ -911,21 +913,36 @@ const budgetGroups = budgetGroupDefinitions
             </div>
 
             <p class="trip-places-note">
-              El registro original marca {metrics.placesRecorded ?? trip.places.length} sitios
-              en Mauricio. En esta primera transcripción aparecen {trip.places.length} nombres
-              legibles. Los mostramos como lugares guardados en nuestro mapa, no como visitas
-              confirmadas, hasta contrastar el recorrido con más pruebas.
+              La lista procede de nuestro mapa compartido. Un lugar guardado aquí no implica
+              por sí solo que lo demos por visitado: mantenemos esa distinción hasta poder
+              contrastar el recorrido con registros suficientes.
+              Mostramos primero una selección para que la página siga siendo legible.
             </p>
 
             <div class="trip-places-grid">
-              {trip.places.map((place) => (
+              {visibleTripPlaces.map((place) => (
                 <article class="trip-place-item">
-                  <span>{place.category.replaceAll("_", " ")}</span>
+                  <span>{place.location ?? "Viaje"} · {place.category.replaceAll("_", " ")}</span>
                   <h3>{place.name}</h3>
                   <p>Guardado en nuestro mapa · estado todavía sin verificar.</p>
                 </article>
               ))}
             </div>
+
+            {additionalTripPlaces.length > 0 && (
+              <details class="trip-places-more">
+                <summary>Ver los {additionalTripPlaces.length} lugares restantes</summary>
+                <div class="trip-places-grid trip-places-grid-more">
+                  {additionalTripPlaces.map((place) => (
+                    <article class="trip-place-item">
+                      <span>{place.location ?? "Viaje"} · {place.category.replaceAll("_", " ")}</span>
+                      <h3>{place.name}</h3>
+                      <p>Guardado en nuestro mapa · estado todavía sin verificar.</p>
+                    </article>
+                  ))}
+                </div>
+              </details>
+            )}
           </div>
         </section>
       )
