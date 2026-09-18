@@ -1,6 +1,5 @@
 import type { ImageMetadata } from "astro";
 
-import sudafrica from "../assets/images/leonas.jpg";
 import sudafricaFirstHand from "../assets/images/animales-kruger/leopardo.jpg";
 import mauricioFirstHand from "../assets/images/mauricio.jpg";
 import jordania from "../assets/images/petra.jpg";
