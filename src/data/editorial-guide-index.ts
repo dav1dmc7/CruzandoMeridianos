@@ -7,6 +7,7 @@ export interface EditorialGuideIndexEntry {
   eyebrow: string;
   description: string;
   parentName: string;
+  parentSlug: string;
   image: typeof krugerCover;
   imageAlt: string;
 }
@@ -20,6 +21,7 @@ export const editorialGuideEntries: EditorialGuideIndexEntry[] = [
     description:
       "Cómo organizar un safari por tu cuenta: noches, coche, safaris guiados, entradas, alojamiento y decisiones que conviene tomar antes de reservar.",
     parentName: "Sudáfrica",
+    parentSlug: "sudafrica",
     image: krugerCover,
     imageAlt: "Leopardo fotografiado durante nuestro viaje por Kruger, Sudáfrica",
   },
