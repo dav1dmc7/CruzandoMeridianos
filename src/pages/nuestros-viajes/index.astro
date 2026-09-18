@@ -14,7 +14,17 @@ const livedTripSlugs = new Set(
 );
 
 const livedDestinations = readyDestinations.filter(
-  (destination) => livedTripSlugs.has(destination.slug),
+  (destination) =>
+    destination.publishedTripSlug &&
+    livedTripSlugs.has(destination.publishedTripSlug),
+);
+
+const uniqueLivedDestinations = livedDestinations.filter(
+  (destination, index, all) =>
+    all.findIndex(
+      (candidate) =>
+        candidate.publishedTripSlug === destination.publishedTripSlug,
+    ) === index,
 );
 
 const title = "Nuestros viajes | Cruzando Meridianos";
@@ -23,9 +33,11 @@ const description =
   "Viajes que hemos vivido, investigado y documentado. Descubre lo que aprendimos sobre el terreno y el criterio que hay detrás de cada destino.";
 
 const livedTripLabel =
-  livedDestinations.length === 1
+  visibleLivedDestinations.length === 1
     ? "1 viaje vivido publicado"
-    : `${livedDestinations.length} viajes vividos publicados`;
+    : `${visibleLivedDestinations.length} viajes vividos publicados`;
+
+const visibleLivedDestinations = uniqueLivedDestinations;
 
 const guideCountLabel =
   readyDestinations.length === 1
@@ -91,7 +103,7 @@ const guideCountLabel =
       </div>
     </section>
 
-    {livedDestinations.length > 0 && (
+    {visibleLivedDestinations.length > 0 && (
       <section class="trips-destinations" id="vividos">
         <div class="section-frame">
           <div class="section-heading">
@@ -108,7 +120,7 @@ const guideCountLabel =
           </div>
 
           <div class="lived-destinations">
-            {livedDestinations.map((destination, index) => (
+            {visibleLivedDestinations.map((destination, index) => (
               <DestinationCard destination={destination} featured={index === 0} />
             ))}
           </div>
