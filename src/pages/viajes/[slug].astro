@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 
 import Layout from "../../layouts/Layout.astro";
 import Footer from "../../components/layout/Footer.astro";
+import GuidePlacesMap from "../../components/guides/GuidePlacesMap.astro";
 
 import { destinations } from "../../data/destinations";
 import { getGuideBySlug } from "../../data/guides";
@@ -886,6 +887,14 @@ const travelerData =
 
         </section>
 
+      )
+    }
+
+
+    {
+      guide.places &&
+      guide.places.length > 0 && (
+        <GuidePlacesMap places={guide.places} />
       )
     }
 
