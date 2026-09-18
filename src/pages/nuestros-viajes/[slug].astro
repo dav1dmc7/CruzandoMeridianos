@@ -139,7 +139,7 @@ const budgetGroups = budgetGroupDefinitions
 
 ---
 
-<Layout title={title} description={description}>
+<Layout title={title} description={description} ogImage={trip.slug === "costa-rica" ? costaRicaMedia.cover.src.src : livedTripMedia?.cover.src.src ?? "/brujula.png"} type="article">
   <main class="trip-page">
     <!-- =========================================================
          HERO
