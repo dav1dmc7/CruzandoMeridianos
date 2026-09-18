@@ -57,6 +57,9 @@ jobs:
       - name: Content quality audit
         run: npm run audit:content-quality
 
+      - name: Page SEO quality audit
+        run: npm run audit:page-quality
+
       - name: Travel intelligence rule tests
         run: npm run audit:travel-intelligence-rules
 
