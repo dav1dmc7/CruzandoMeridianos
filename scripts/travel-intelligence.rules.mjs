@@ -1,3 +1,5 @@
+export const TRAVEL_INTELLIGENCE_RULESET_VERSION = "2026-09-18-2";
+
 export const TRAVEL_INTELLIGENCE_RULES = [
   {
     type: "carretera",
@@ -82,8 +84,10 @@ export const TRAVEL_INTELLIGENCE_RULES = [
       /avoid\s+travel/i,
       /reconsider\s+travel/i,
       /no\s+se\s+recomienda\s+viajar/i,
-      /se\s+desaconseja\s+el\s+viaje/i,
-      /aplazar\s+el\s+viaje/i,
+      /se\s+desaconseja\s+(?:el\s+)?viaje/i,
+      /se\s+aconseja\s+(?:aplazar|posponer)\s+(?:(?:el|su)\s+)?viaje/i,
+      /se\s+recomienda\s+(?:aplazar|posponer)\s+(?:(?:el|su)\s+)?viaje/i,
+      /aplazar\s+(?:(?:el|su)\s+)?viaje/i,
       /evitar\s+viajes?/i,
       /estado\s+de\s+emergencia.*(viaje|movilidad|evacuaci[oó]n)/i,
       /emergency\s+state.*(travel|movement|evacuation)/i,
