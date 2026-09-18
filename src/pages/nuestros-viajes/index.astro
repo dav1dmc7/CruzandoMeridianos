@@ -27,6 +27,8 @@ const uniqueLivedDestinations = livedDestinations.filter(
     ) === index,
 );
 
+const visibleLivedDestinations = uniqueLivedDestinations;
+
 const title = "Nuestros viajes | Cruzando Meridianos";
 
 const description =
@@ -36,8 +38,6 @@ const livedTripLabel =
   visibleLivedDestinations.length === 1
     ? "1 viaje vivido publicado"
     : `${visibleLivedDestinations.length} viajes vividos publicados`;
-
-const visibleLivedDestinations = uniqueLivedDestinations;
 
 const guideCountLabel =
   readyDestinations.length === 1
