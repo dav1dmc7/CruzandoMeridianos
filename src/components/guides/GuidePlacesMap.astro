@@ -70,15 +70,17 @@ const centerY =
     0,
   ) / projected.length;
 
-const originX = Math.floor(centerX / tileSize) - 2;
-const originY = Math.floor(centerY / tileSize) - 1;
+const tileCount = 2 ** zoom;
+const rawOriginX = Math.floor(centerX / tileSize) - 2;
+const rawOriginY = Math.floor(centerY / tileSize) - 1;
+const originX = rawOriginX;
+const originY = Math.max(0, Math.min(rawOriginY, tileCount - 2));
 
 const tiles = Array.from({ length: 8 }, (_, index) => {
   const column = index % 4;
   const row = Math.floor(index / 4);
   const x = originX + column;
   const y = originY + row;
-  const tileCount = 2 ** zoom;
   const wrappedX = ((x % tileCount) + tileCount) % tileCount;
   return {
     key: `${wrappedX}-${y}`,
@@ -374,6 +376,11 @@ const markers = projected.map((place, index) => ({
     transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
   }
 
+  .guide-place-marker:focus-visible {
+    outline: 2px solid var(--color-cobre);
+    outline-offset: 3px;
+  }
+
   .guide-place-marker:hover,
   .guide-place-marker.is-active {
     transform: translate(-50%, -50%) scale(1.16);
@@ -455,10 +462,6 @@ const markers = projected.map((place, index) => ({
 
     .guide-place__copy strong {
       font-size: 1.25rem;
-    }
-
-    .guide-places__map {
-      aspect-ratio: 1.35 / 1;
     }
 
     .guide-map-tile {
