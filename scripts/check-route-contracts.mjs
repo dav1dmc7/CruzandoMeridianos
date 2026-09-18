@@ -95,15 +95,6 @@ for (const slug of ourTripSlugs) {
   }
 }
 
-const publishedTripTargets = destinationEntries
-  .filter((entry) => entry.status === "ready" && entry.publishedTripSlug)
-  .map((entry) => entry.publishedTripSlug);
-
-if (new Set(publishedTripTargets).size !== publishedTripTargets.length) {
-  // Multiple destinations can intentionally share one lived-trip page.
-  // This is the supported contract for combined trips.
-}
-
 if (!guideRegistry.includes("additionalGuides")) {
   failures.push("Guide registry is not consuming additionalGuides.");
 }
@@ -116,8 +107,8 @@ if (!destinationCard.includes('import { ourTrips } from "../../data/our-trips";'
   failures.push("DestinationCard must use lived-trip data before generating /nuestros-viajes routes.");
 }
 
-if (!destinationCard.includes("ourTrips.some((trip) => trip.slug === destination.slug)")) {
-  failures.push("DestinationCard must guard lived-trip links against known our-trip slugs.");
+if (!destinationCard.includes("destination.publishedTripSlug") || !destinationCard.includes("ourTrips.some((trip) => trip.slug === publishedTripSlug)")) {
+  failures.push("DestinationCard must guard lived-trip links against known published trip slugs.");
 }
 
 if (!livedTripsPage.includes('import { ourTrips } from "../../data/our-trips";')) {
