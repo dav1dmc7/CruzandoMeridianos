@@ -10,6 +10,8 @@ const layout = read("src/layouts/Layout.astro");
 const header = read("src/components/layout/Header.astro");
 const formPage = read("src/pages/cuentatuviaje.astro");
 const guideMap = read("src/components/guides/GuidePlacesMap.astro");
+const firstHandGallery = read("src/components/guides/GuideFirstHandGallery.astro");
+const livedTripPage = read("src/pages/nuestros-viajes/[slug].astro");
 
 const failures = [];
 
@@ -37,6 +39,16 @@ requirePattern(formPage, /class="sub-question age-range-question"[\s\S]*16–17 
 requirePattern(formPage, /age_range:[\s\S]*formData/, "Travel form must collect the optional age range in its request payload.");
 requirePattern(guideMap, /aria-pressed="false"/, "Guide place controls must expose an initial pressed state.");
 requirePattern(guideMap, /setAttribute\("aria-pressed", String\(isActive\)\)/, "Guide place controls must update their pressed state when selection changes.");
+
+requirePattern(firstHandGallery, /titleId\?: string/, "First-hand galleries must support caller-defined heading ids.");
+requirePattern(firstHandGallery, /aria-labelledby=\{titleId\}/, "First-hand galleries must connect their region label to the visible heading id.");
+requirePattern(firstHandGallery, /<h2 id=\{titleId\}>/, "First-hand galleries must use the configured heading id on the visible h2.");
+
+const livedGalleryOccurrences = [...livedTripPage.matchAll(/<GuideFirstHandGallery\b/g)].length;
+const livedGalleryTitleIdOccurrences = [...livedTripPage.matchAll(/titleId="/g)].length;
+if (livedGalleryOccurrences > 1 && livedGalleryTitleIdOccurrences < livedGalleryOccurrences) {
+  failures.push("Pages with multiple first-hand galleries must provide a unique titleId for each gallery.");
+}
 
 const formIds = new Set(
   [...formPage.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]),
