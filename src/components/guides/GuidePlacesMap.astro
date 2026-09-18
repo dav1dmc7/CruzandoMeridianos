@@ -5,7 +5,7 @@ interface Props {
   places: GuidePlace[];
 }
 
-const { places } = Astro.props;
+const { places }: Props = Astro.props;
 
 const mapWidth = 1024;
 const mapHeight = 512;
@@ -47,14 +47,28 @@ const chooseZoom = (items: GuidePlace[]): number => {
 };
 
 const zoom = chooseZoom(places);
-const projected = places.map((place) => ({
+type ProjectedGuidePlace = GuidePlace & {
+  x: number;
+  y: number;
+};
+
+const projected: ProjectedGuidePlace[] = places.map((place: GuidePlace) => ({
   ...place,
   x: projectX(place.longitude, zoom),
   y: projectY(place.latitude, zoom),
 }));
 
-const centerX = projected.reduce((sum, place) => sum + place.x, 0) / projected.length;
-const centerY = projected.reduce((sum, place) => sum + place.y, 0) / projected.length;
+const centerX =
+  projected.reduce(
+    (sum: number, place: ProjectedGuidePlace) => sum + place.x,
+    0,
+  ) / projected.length;
+
+const centerY =
+  projected.reduce(
+    (sum: number, place: ProjectedGuidePlace) => sum + place.y,
+    0,
+  ) / projected.length;
 
 const originX = Math.floor(centerX / tileSize) - 2;
 const originY = Math.floor(centerY / tileSize) - 1;
@@ -67,10 +81,10 @@ const tiles = Array.from({ length: 8 }, (_, index) => {
   const tileCount = 2 ** zoom;
   const wrappedX = ((x % tileCount) + tileCount) % tileCount;
   return {
-    key: \`\${wrappedX}-\${y}\`,
-    left: \`\${column * 25}%\`,
-    top: \`\${row * 50}%\`,
-    src: \`https://tile.openstreetmap.org/\${zoom}/\${wrappedX}/\${y}.png\`,
+    key: `${wrappedX}-${y}`,
+    left: `${column * 25}%`,
+    top: `${row * 50}%`,
+    src: `https://tile.openstreetmap.org/${zoom}/${wrappedX}/${y}.png`,
   };
 });
 
@@ -80,8 +94,8 @@ const mapOriginY = originY * tileSize;
 const markers = projected.map((place, index) => ({
   ...place,
   index,
-  left: \`\${((place.x - mapOriginX) / mapWidth) * 100}%\`,
-  top: \`\${((place.y - mapOriginY) / mapHeight) * 100}%\`,
+  left: `${((place.x - mapOriginX) / mapWidth) * 100}%`,
+  top: `${((place.y - mapOriginY) / mapHeight) * 100}%`,
 }));
 ---
 
@@ -121,7 +135,7 @@ const markers = projected.map((place, index) => ({
         <div
           class="guide-places__map"
           role="group"
-          aria-label={\`Mapa orientativo con \${places.length} lugares clave de \${places.map((place) => place.name).join(", ")}\`}
+          aria-label={`Mapa orientativo con ${places.length} lugares clave de ${places.map((place) => place.name).join(", ")}`}
         >
           <div class="guide-places__tiles" aria-hidden="true">
             {tiles.map((tile) => (
@@ -130,7 +144,7 @@ const markers = projected.map((place, index) => ({
                 alt=""
                 loading="lazy"
                 class="guide-map-tile"
-                style={\`left:\${tile.left};top:\${tile.top};\`}
+                style={`left:${tile.left};top:${tile.top};`}
               />
             ))}
           </div>
@@ -141,8 +155,8 @@ const markers = projected.map((place, index) => ({
                 type="button"
                 class="guide-place-marker"
                 data-place-id={place.id}
-                aria-label={\`Ver \${place.name}\`}
-                style={\`left:\${place.left};top:\${place.top};--marker-index:\${place.index};\`}
+                aria-label={`Ver ${place.name}`}
+                style={`left:${place.left};top:${place.top};--marker-index:${place.index};`}
               >
                 <span>{String(place.index + 1).padStart(2, "0")}</span>
               </button>
@@ -187,7 +201,7 @@ const markers = projected.map((place, index) => ({
 
         if (control.classList.contains("guide-place-marker")) {
           const target = document.querySelector<HTMLButtonElement>(
-            \`.guide-place[data-place-id="\${CSS.escape(id)}"]\`
+            `.guide-place[data-place-id="${CSS.escape(id)}"]`
           );
           target?.scrollIntoView({ behavior: "smooth", block: "nearest" });
         }
