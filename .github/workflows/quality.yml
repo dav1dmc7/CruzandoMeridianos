@@ -60,6 +60,9 @@ jobs:
       - name: Page SEO quality audit
         run: npm run audit:page-quality
 
+      - name: Visual accessibility audit
+        run: npm run audit:visual-accessibility
+
       - name: Travel intelligence rule tests
         run: npm run audit:travel-intelligence-rules
 
