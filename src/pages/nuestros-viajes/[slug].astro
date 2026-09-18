@@ -31,6 +31,11 @@ const livedTripMedia =
     ? firstHandMediaBySlug["sudafrica"]
     : undefined;
 
+const livedTripMauritiusMedia =
+  trip.slug === "sudafrica-mauricio"
+    ? firstHandMediaBySlug["mauricio"]
+    : undefined;
+
 const [
   selvaCostaRica,
   playaCostaRica,
@@ -991,6 +996,18 @@ const budgetGroups = budgetGroupDefinitions
           eyebrow="FAUNA · SUDÁFRICA"
           title="La parte de fauna que vivimos durante este viaje."
           description="Estas imágenes pertenecen a la etapa de Sudáfrica de nuestro viaje. Las mostramos como registro de lo que encontramos sobre el terreno, no como una promesa de avistamientos para otros viajeros."
+        />
+      )
+    }
+
+    {
+      livedTripMauritiusMedia && (
+        <GuideFirstHandGallery
+          media={livedTripMauritiusMedia}
+          limit={1}
+          eyebrow="ISLA · MAURICIO"
+          title="También hubo una parte del viaje completamente distinta."
+          description="Una fotografía propia de Mauricio para separar visualmente esta etapa del safari y mostrar que el viaje combinado tuvo dos ritmos y paisajes muy diferentes."
         />
       )
     }
