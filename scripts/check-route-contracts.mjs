@@ -23,6 +23,7 @@ const destinations = await read("src/data/destinations.ts");
 const additionalGuides = await read("src/data/guides/additional.ts");
 const guideRegistry = await read("src/data/guides/index.ts");
 const destinationCard = await read("src/components/sections/DestinationCard.astro");
+const livedTripsPage = await read("src/pages/nuestros-viajes/index.astro");
 const ourTripsRoot = path.join(root, "src/data/our-trips");
 const guideFiles = (await walk(path.join(root, "src/data/guides")))
   .filter((file) => file.endsWith(".ts"));
@@ -87,6 +88,18 @@ if (!destinationCard.includes("ourTrips.some((trip) => trip.slug === destination
   failures.push("DestinationCard must guard lived-trip links against known our-trip slugs.");
 }
 
+if (!livedTripsPage.includes('import { ourTrips } from "../../data/our-trips";')) {
+  failures.push("Nuestros viajes must source its published experience list from src/data/our-trips.");
+}
+
+if (!livedTripsPage.includes("livedDestinations")) {
+  failures.push("Nuestros viajes must build its visible experience list from lived-trip destinations.");
+}
+
+if (/readyDestinations\.map\(/.test(livedTripsPage)) {
+  failures.push("Nuestros viajes must not render the complete ready-destination catalog as lived trips.");
+}
+
 console.log("\nRoute/data contract audit");
 console.log("=========================");
 console.log(`- Ready destinations: ${readyDestinationSlugs.size}`);
@@ -94,6 +107,7 @@ console.log(`- Registered guides: ${guideSlugs.size}`);
 console.log(`- Lived trips: ${ourTripSlugs.size}`);
 console.log("- relatedTripSlug targets: checked");
 console.log("- DestinationCard lived-trip route guard: checked");
+console.log("- Nuestros viajes lived-trip data source: checked");
 
 if (failures.length) {
   console.error("\nRoute/data contract audit failed:");
