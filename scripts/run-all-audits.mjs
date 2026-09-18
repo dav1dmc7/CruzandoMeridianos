@@ -1,6 +1,7 @@
 import { spawnSync } from "node:child_process";
 
 const auditScripts = [
+  "check-audit-script-syntax.mjs",
   "check-seo.mjs",
   "check-security.mjs",
   "check-sitemap-consistency.mjs",
