@@ -14,6 +14,10 @@ const journeyPage = read("src/pages/cuentatuviaje.astro");
 const robots = read("public/robots.txt");
 const astroConfig = read("astro.config.mjs");
 
+const editorialGuidePagesMatch = astroConfig.match(
+  /const editorialGuidePages = \[([\s\S]*?)\];/m,
+);
+
 const failures = [];
 const requirePattern = (source, pattern, label) => {
   if (!pattern.test(source)) failures.push(label);
@@ -86,6 +90,49 @@ if (!/monitoring:\s*undefined/.test(guidesData) || !/commercial:\s*undefined/.te
 }
 if (!/const publicSections\s*=\s*guide\.sections/.test(guidePage) || !/publicSections\.map\(/.test(guidePage)) {
   failures.push("Guide pages must render the public guide section collection.");
+}
+
+
+if (editorialGuidePagesMatch) {
+  const editorialGuidePages = [...editorialGuidePagesMatch[1].matchAll(/'([^']+)'/g)].map(
+    (match) => match[1],
+  );
+
+  for (const route of editorialGuidePages) {
+    const pagePath = path.join(root, "src", "pages", "viajes", ...route.split("/")) + ".astro";
+
+    if (!fs.existsSync(pagePath)) {
+      failures.push(`Nested editorial guide "${route}" is declared but its Astro page does not exist.`);
+      continue;
+    }
+
+    const editorialPage = fs.readFileSync(pagePath, "utf8");
+
+    if (!/<h1[\s\S]*?<\/h1>/.test(editorialPage)) {
+      failures.push(`Nested editorial guide "${route}" must expose an H1.`);
+    }
+
+    if (!/<Layout\b[\s\S]*canonical=/.test(editorialPage)) {
+      failures.push(`Nested editorial guide "${route}" must declare a canonical URL through Layout.`);
+    }
+
+    if (!/"@type":\s*"Article"/.test(editorialPage)) {
+      failures.push(`Nested editorial guide "${route}" must emit Article structured data.`);
+    }
+
+    if (!/"@type":\s*"BreadcrumbList"/.test(editorialPage)) {
+      failures.push(`Nested editorial guide "${route}" must emit breadcrumb structured data.`);
+    }
+
+    const parentRoute = route.split("/").slice(0, -1).join("/");
+    if (parentRoute && !editorialPage.includes(`/viajes/${parentRoute}`)) {
+      failures.push(`Nested editorial guide "${route}" must link back to its parent guide.`);
+    }
+
+    if (/noindex/i.test(editorialPage)) {
+      failures.push(`Nested editorial guide "${route}" must not opt into noindex.`);
+    }
+  }
 }
 
 if (failures.length) {
