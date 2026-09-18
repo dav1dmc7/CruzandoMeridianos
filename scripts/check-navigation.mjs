@@ -34,7 +34,7 @@ for (const file of ["src/pages/index.astro", "src/pages/como-trabajamos.astro", 
   if (!fs.existsSync(path.join(root, file))) failures.push(`Missing public route source file: ${file}`);
 }
 
-const navItemsMatch = header.match(/const navItems = [([\s\S]*?)\];/m);
+const navItemsMatch = header.match(/const navItems = \[([\s\S]*?)\];/m);
 if (!navItemsMatch) {
   failures.push("Header navigation registry is missing.");
 } else {
