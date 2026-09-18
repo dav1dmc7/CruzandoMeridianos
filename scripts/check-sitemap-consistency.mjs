@@ -26,6 +26,10 @@ const livedTripSlugsMatch = astroConfig.match(
   /const livedTripSlugs = \[([\s\S]*?)\];/m,
 );
 
+const editorialGuidePagesMatch = astroConfig.match(
+  /const editorialGuidePages = \[([\s\S]*?)\];/m,
+);
+
 const failures = [];
 
 if (!destinationSlugsMatch) {
@@ -56,6 +60,25 @@ if (!destinationSlugsMatch) {
 
 if (!/\.\.\.destinationSlugs\.map\(/.test(astroConfig)) {
   failures.push("Sitemap customPages must derive destination guide URLs from destinationSlugs.");
+}
+
+if (!editorialGuidePagesMatch) {
+  failures.push("Astro config must declare editorialGuidePages for nested editorial guides.");
+} else {
+  const editorialGuidePages = [...editorialGuidePagesMatch[1].matchAll(/'([^']+)'/g)].map(
+    (match) => match[1],
+  );
+
+  for (const slug of editorialGuidePages) {
+    const routePath = path.join(root, "src", "pages", "viajes", ...slug.split("/")) + ".astro";
+    if (!fs.existsSync(routePath)) {
+      failures.push(`Editorial guide "${slug}" is declared in sitemap but its Astro route is missing.`);
+    }
+  }
+
+  if (editorialGuidePages.length > 0 && !/\.\.\.editorialGuidePages\.map\(/.test(astroConfig)) {
+    failures.push("Sitemap customPages must derive nested editorial guide URLs from editorialGuidePages.");
+  }
 }
 
 const walk = (directory) => {
