@@ -31,6 +31,7 @@
     "audit:content-quality": "node scripts/check-content-quality.mjs",
     "audit:page-quality": "node scripts/check-page-quality.mjs",
     "audit:visual-accessibility": "node scripts/check-visual-accessibility.mjs",
+    "audit:script-syntax": "node scripts/check-audit-script-syntax.mjs",
     "audit:all": "node scripts/run-all-audits.mjs",
     "verify": "npm run check && npm run audit:all && npm run build",
     "deploy:production": "npm run verify && npx wrangler deploy",
