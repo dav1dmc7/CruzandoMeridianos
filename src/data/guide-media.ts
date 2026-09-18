@@ -10,6 +10,7 @@ import cocodrilo from "../assets/images/costa-rica/cocodrilo.jpg";
 import rana from "../assets/images/costa-rica/rana.jpg";
 import mono from "../assets/images/costa-rica/mono.jpg";
 import perezoso from "../assets/images/costa-rica/perezoso.jpg";
+import mauricioFirstHand from "../assets/images/mauricio.jpg";
 import bufaloKruger from "../assets/images/animales-kruger/bufalo.jpg";
 import cocodriloKruger from "../assets/images/animales-kruger/cocodrilo.jpg";
 import elefanteKruger from "../assets/images/animales-kruger/elefante.jpg";
@@ -92,6 +93,20 @@ export const firstHandMediaBySlug: Readonly<
         src: arbol,
         alt: "Árbol entre la vegetación del bosque de Costa Rica",
         caption: "El paisaje no era solo el fondo: condicionaba cómo viajábamos.",
+      },
+    ],
+  },
+  "mauricio": {
+    cover: {
+      src: mauricioFirstHand,
+      alt: "Fotografía propia de Mauricio durante nuestro viaje",
+      caption: "Una escena de Mauricio tal y como la vivimos durante nuestro viaje.",
+    },
+    gallery: [
+      {
+        src: mauricioFirstHand,
+        alt: "Fotografía propia de Mauricio durante nuestro viaje",
+        caption: "Una imagen propia para acompañar la guía de Mauricio.",
       },
     ],
   },
