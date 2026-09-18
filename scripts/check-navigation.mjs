@@ -81,7 +81,7 @@ if ((start.match(/class="travel-start-card"/g) ?? []).length !== 3) failures.pus
 
 if (!guidesIndex.includes('id="explorador"')) failures.push("Destination explorer anchor #explorador is missing.");
 if (!guidesIndex.includes('id="radar"')) failures.push("Destination radar anchor #radar is missing.");
-if (!guidesIndex.includes('id="espana"')) warnings.push("The Spain hierarchy section no longer exposes #espana.");
+// Spain's atlas entry is now the grouped Canary Islands hub; no #espana anchor is required.
 if (!hierarchy.includes('href="/viajes/canarias"')) failures.push("Spain hierarchy must link to the grouped Canary Islands hub.");
 if (!canarias.includes('href="/viajes"')) failures.push("Canary Islands hub must link back to the destination atlas.");
 if (!canarias.includes('href={`/viajes/${island.slug}`}')) failures.push("Canary Islands hub must link each island to its destination route.");
