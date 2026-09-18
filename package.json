@@ -37,7 +37,8 @@
     "deploy:production": "npm run verify && npx wrangler deploy",
     "preview": "astro preview",
     "astro": "astro",
-    "generate-types": "wrangler types"
+    "generate-types": "wrangler types",
+    "audit:canonical-routing": "node scripts/check-canonical-routing.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.3.1",
