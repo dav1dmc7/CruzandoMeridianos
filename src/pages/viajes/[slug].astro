@@ -5,9 +5,11 @@ import Layout from "../../layouts/Layout.astro";
 import Footer from "../../components/layout/Footer.astro";
 import GuidePlacesMap from "../../components/guides/GuidePlacesMap.astro";
 import GuidePlaceDecisions from "../../components/guides/GuidePlaceDecisions.astro";
+import GuideFirstHandGallery from "../../components/guides/GuideFirstHandGallery.astro";
 
 import { destinations } from "../../data/destinations";
 import { getGuideBySlug } from "../../data/guides";
+import { firstHandMediaBySlug } from "../../data/guide-media";
 
 import type {
   DestinationGuide,
@@ -62,6 +64,9 @@ const guide:
 if (!guide) {
   return Astro.redirect("/viajes");
 }
+
+const firstHandMedia =
+  firstHandMediaBySlug[slug];
 
 const publicGuideTitle =
   guide.title
@@ -903,6 +908,12 @@ const travelerData =
 
           <GuidePlaceDecisions places={guide.places} />
         </>
+      )
+    }
+
+    {
+      firstHandMedia && (
+        <GuideFirstHandGallery media={firstHandMedia} />
       )
     }
 
