@@ -7,11 +7,17 @@ const destinationsSource = await fs.readFile(
   path.join(root, "src", "data", "destinations.ts"),
   "utf8",
 );
+const guideMediaSource = await fs.readFile(
+  path.join(root, "src", "data", "guide-media.ts"),
+  "utf8",
+);
 
 
-const destinationCoverInventory = destinationsSource
+const destinationBlocks = destinationsSource
   .split(/\n\s*\{/)
-  .slice(1)
+  .slice(1);
+
+const destinationCoverInventory = destinationBlocks
   .flatMap((block) => {
     const slug = block.match(/slug:\s*"([^"]+)"/)?.[1];
     const coverKind = block.match(/coverKind:\s*"([^"]+)"/)?.[1];
@@ -27,9 +33,7 @@ const coverInventoryByKind = destinationCoverInventory.reduce(
   {},
 );
 
-const destinationsUsingFallback = destinationsSource
-  .split(/\n\s*\{/)
-  .slice(1)
+const destinationsUsingFallback = destinationBlocks
   .flatMap((block) => {
     if (!/status:\s*"ready"/.test(block) || !/image:\s*atlasGuideFallback/.test(block)) {
       return [];
@@ -38,6 +42,21 @@ const destinationsUsingFallback = destinationsSource
     const match = block.match(/slug:\s*"([^"]+)"/);
     return match ? [match[1]] : [];
   });
+
+const livedDestinationInventory = destinationBlocks.flatMap((block) => {
+  const slug = block.match(/slug:\s*"([^"]+)"/)?.[1];
+  const status = block.match(/status:\s*"([^"]+)"/)?.[1];
+  const publishedTripSlug = block.match(/publishedTripSlug:\s*"([^"]+)"/)?.[1];
+
+  if (!slug || status !== "ready" || !publishedTripSlug) return [];
+  return [{ slug, publishedTripSlug }];
+});
+
+const mediaRegistrySlugs = new Set(
+  [...guideMediaSource.matchAll(/^\s*"([^"]+)":\s*\{/gm)].map(
+    (match) => match[1],
+  ),
+);
 
 const costaRicaMediaPage = await fs.readFile(
   path.join(root, "src", "pages", "nuestros-viajes", "[slug].astro"),
@@ -158,6 +177,39 @@ if (destinationsUsingFallback.length) {
   console.warn("\nEditorial cover warnings:");
   for (const slug of destinationsUsingFallback) {
     console.warn(`- Ready destination "${slug}" still uses atlas-guide-fallback.svg as its cover.`);
+  }
+}
+
+const livedDestinationsWithoutMedia = livedDestinationInventory.filter(
+  ({ slug }) => !mediaRegistrySlugs.has(slug),
+);
+
+console.log("\nFirst-hand media coverage:");
+console.log(`- Ready destinations linked to a published lived trip: ${livedDestinationInventory.length}`);
+console.log(`- With a dedicated first-hand media registry entry: ${livedDestinationInventory.length - livedDestinationsWithoutMedia.length}`);
+
+if (livedDestinationsWithoutMedia.length) {
+  console.warn("First-hand media coverage warnings:");
+  for (const { slug, publishedTripSlug } of livedDestinationsWithoutMedia) {
+    console.warn(
+      `- "${slug}" is linked to lived trip "${publishedTripSlug}" but has no dedicated first-hand media entry yet.`,
+    );
+  }
+}
+
+const unusedMediaRegistrySlugs = [...mediaRegistrySlugs].filter(
+  (slug) =>
+    !livedDestinationInventory.some(
+      (destination) => destination.slug === slug,
+    ),
+);
+
+if (unusedMediaRegistrySlugs.length) {
+  console.warn("First-hand media registry warnings:");
+  for (const slug of unusedMediaRegistrySlugs) {
+    console.warn(
+      `- Media registry contains "${slug}" without a published lived-trip destination mapping.`,
+    );
   }
 }
 
