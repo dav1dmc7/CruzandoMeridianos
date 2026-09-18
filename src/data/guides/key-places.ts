@@ -7,6 +7,10 @@ const p = (
   description: string,
   latitude: number,
   longitude: number,
+  editorial: Pick<
+    GuidePlace,
+    "recommendedNights" | "fit" | "routeNote"
+  > = {},
 ): GuidePlace => ({
   id,
   name,
@@ -14,15 +18,76 @@ const p = (
   description,
   latitude,
   longitude,
+  ...editorial,
 });
 
 export const keyPlacesBySlug: Readonly<Record<string, GuidePlace[]>> = {
   "costa-rica": [
-    p("san-jose", "San José", "Valle Central", "Punto de entrada útil para entender el país y organizar conexiones.", 9.9281, -84.0907),
-    p("la-fortuna", "La Fortuna", "Zona Norte", "Volcanes, aguas termales y una de las mejores bases para naturaleza.", 10.4709, -84.6453),
-    p("monteverde", "Monteverde", "Cordillera de Tilarán", "Bosque nuboso y un paisaje de montaña que cambia por completo el ritmo.", 10.3135, -84.8253),
-    p("manuel-antonio", "Manuel Antonio", "Pacífico Central", "Una combinación muy accesible de selva, fauna y costa.", 9.3925, -84.1365),
-    p("puerto-viejo", "Puerto Viejo", "Caribe Sur", "Otra cara del país: Caribe, selva y un ritmo más relajado.", 9.6565, -82.7534),
+    p(
+      "san-jose",
+      "San José",
+      "Valle Central",
+      "Punto de entrada útil para entender el país y organizar conexiones.",
+      9.9281,
+      -84.0907,
+      {
+        recommendedNights: "0–1 noche",
+        fit: "Llegadas, salidas y viajeros que quieran conocer algo de la capital.",
+        routeNote: "No hace falta convertirla en una parada larga solo por aterrizar aquí.",
+      },
+    ),
+    p(
+      "la-fortuna",
+      "La Fortuna",
+      "Zona Norte",
+      "Volcanes, aguas termales y una de las mejores bases para naturaleza.",
+      10.4709,
+      -84.6453,
+      {
+        recommendedNights: "2–3 noches",
+        fit: "Naturaleza, aventura, termas y viajeros que quieran una base muy completa.",
+        routeNote: "Suele justificar más tiempo que una parada de paso porque concentra experiencias diferentes.",
+      },
+    ),
+    p(
+      "monteverde",
+      "Monteverde",
+      "Cordillera de Tilarán",
+      "Bosque nuboso y un paisaje de montaña que cambia por completo el ritmo.",
+      10.3135,
+      -84.8253,
+      {
+        recommendedNights: "1–2 noches",
+        fit: "Bosque nuboso, aves, senderismo, canopy y viajeros que disfrutan de un ambiente de montaña.",
+        routeNote: "No lo trataría como una parada automática de 3 noches: gana sentido cuando vas a aprovechar actividades concretas o quieres un ritmo muy pausado.",
+      },
+    ),
+    p(
+      "manuel-antonio",
+      "Manuel Antonio",
+      "Pacífico Central",
+      "Una combinación muy accesible de selva, fauna y costa.",
+      9.3925,
+      -84.1365,
+      {
+        recommendedNights: "2–3 noches",
+        fit: "Quien quiera mezclar parque, fauna y playa sin complicar demasiado la logística.",
+        routeNote: "Funciona especialmente bien cuando se busca una transición clara entre naturaleza y costa.",
+      },
+    ),
+    p(
+      "puerto-viejo",
+      "Puerto Viejo",
+      "Caribe Sur",
+      "Otra cara del país: Caribe, selva y un ritmo más relajado.",
+      9.6565,
+      -82.7534,
+      {
+        recommendedNights: "2–3 noches",
+        fit: "Caribe, playa, ambiente relajado y viajeros que quieran una experiencia distinta al Pacífico.",
+        routeNote: "Añadir esta costa tiene más sentido cuando el viaje tiene días suficientes para que el desvío no se coma el ritmo.",
+      },
+    ),
   ],
   sudafrica: [
     p("cape-town", "Ciudad del Cabo", "Western Cape", "La base urbana más completa para combinar ciudad, costa y montaña.", -33.9249, 18.4241),
