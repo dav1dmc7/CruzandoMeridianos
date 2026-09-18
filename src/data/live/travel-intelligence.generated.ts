@@ -7,6 +7,7 @@ import type { TravelAlert } from "../guides/types";
 
 export interface LiveGuideUpdate {
   checkedAt: string;
+  rulesetVersion: string;
   sourceFingerprints: Record<string, string>;
   sourceAlerts: Record<string, TravelAlert[]>;
   alerts: TravelAlert[];
@@ -64,7 +65,8 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
     "sourceFailures": [
       "us-state: HTTP 403",
       "cne: HTTP 403"
-    ]
+    ],
+    "rulesetVersion": "2026-09-18-2"
   },
   "sudafrica": {
     "checkedAt": "2026-09-18T09:47:47.142Z",
@@ -81,7 +83,8 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
     "sourceFailures": [
       "us-state: HTTP 403",
       "fetch failed"
-    ]
+    ],
+    "rulesetVersion": "2026-09-18-2"
   },
   "jordania": {
     "checkedAt": "2026-09-18T09:47:47.142Z",
@@ -90,13 +93,46 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
       "uk-fcdo": "39ec8dc0301f62a4f1a5a3111c9b5d1d9e290ace42527809803544e17bc185f3"
     },
     "sourceAlerts": {
-      "es-maec": [],
+      "es-maec": [
+        {
+          "id": "live-8afa465fb26bb6eb",
+          "date": "2026-09-18",
+          "type": "seguridad",
+          "severity": "high",
+          "title": "Seguridad — información detectada",
+          "description": "LA REGIÓN DE ORIENTE PRÓXIMO SE ENCUENTRA EN LA ACTUALIDAD AFECTADA POR UN CONFLICTO DE ALCANCE REGIONAL. SE ACONSEJA APLAZAR SU VIAJE A JORDANIA HASTA NUEVO AVISO.",
+          "source": "https://exteriores.gob.es/Embajadas/amman/en/ViajarA/Paginas/Recomendaciones-de-viaje.aspx",
+          "sourceLabel": "España — Recomendaciones de viaje (ES)",
+          "sourceType": "official",
+          "active": true,
+          "checkedAt": "2026-09-18T09:47:47.142Z",
+          "affectedAreas": [],
+          "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
+        }
+      ],
       "uk-fcdo": []
     },
-    "alerts": [],
+    "alerts": [
+      {
+        "id": "live-8afa465fb26bb6eb",
+        "date": "2026-09-18",
+        "type": "seguridad",
+        "severity": "high",
+        "title": "Seguridad — información detectada",
+        "description": "LA REGIÓN DE ORIENTE PRÓXIMO SE ENCUENTRA EN LA ACTUALIDAD AFECTADA POR UN CONFLICTO DE ALCANCE REGIONAL. SE ACONSEJA APLAZAR SU VIAJE A JORDANIA HASTA NUEVO AVISO.",
+        "source": "https://exteriores.gob.es/Embajadas/amman/en/ViajarA/Paginas/Recomendaciones-de-viaje.aspx",
+        "sourceLabel": "España — Recomendaciones de viaje (ES)",
+        "sourceType": "official",
+        "active": true,
+        "checkedAt": "2026-09-18T09:47:47.142Z",
+        "affectedAreas": [],
+        "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
+      }
+    ],
     "sourceFailures": [
       "us-state: HTTP 403"
-    ]
+    ],
+    "rulesetVersion": "2026-09-18-2"
   },
   "grecia": {
     "checkedAt": "2026-09-18T09:47:47.142Z",
@@ -173,6 +209,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
     ],
     "sourceFailures": [
       "us-state: HTTP 403"
-    ]
+    ],
+    "rulesetVersion": "2026-09-18-2"
   }
 };
