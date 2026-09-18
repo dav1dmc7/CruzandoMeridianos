@@ -21,6 +21,16 @@ const title = "Nuestros viajes | Cruzando Meridianos";
 
 const description =
   "Viajes que hemos vivido, investigado y documentado. Descubre lo que aprendimos sobre el terreno y el criterio que hay detrás de cada destino.";
+
+const livedTripLabel =
+  livedDestinations.length === 1
+    ? "1 viaje vivido publicado"
+    : `${livedDestinations.length} viajes vividos publicados`;
+
+const guideCountLabel =
+  readyDestinations.length === 1
+    ? "1 destino con guía editorial"
+    : `${readyDestinations.length} destinos con guía editorial`;
 ---
 
 <Layout title={title} description={description}>
@@ -112,18 +122,17 @@ const description =
           <p class="eyebrow">Guías de destino</p>
           <h2>
             Lo que hemos vivido nosotros
-            <em>es una cosa. Lo que hemos investigado, otra.</em>
+            <em>también está detrás de estas guías.</em>
           </h2>
         </div>
 
         <div class="trips-guide-bridge-copy">
           <p>
-            Ahora mismo tenemos
-            {livedDestinations.length}
-            viaje vivido publicado y
-            {Math.max(readyDestinations.length - livedDestinations.length, 0)}
-            destinos con guía editorial.
-            No los presentamos como si hubiéramos estado en todos ellos.
+            Ahora mismo tenemos {livedTripLabel} y {guideCountLabel}.
+            Todos esos destinos forman parte de nuestra experiencia de primera mano;
+            la diferencia está en el formato: solo una parte está además desarrollada
+            y publicada como relato de viaje, con su recorrido y lo que aprendimos sobre
+            el terreno.
           </p>
 
           <a href="/viajes" class="cta-link">
