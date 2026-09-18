@@ -8,6 +8,7 @@ import atlasGuideFallback from "../assets/images/atlas-guide-fallback.svg";
 import { firstHandMediaBySlug } from "./guide-media";
 
 export type DestinationExperience = "first-hand" | "researched";
+export type DestinationCoverKind = "first-hand" | "existing-editorial" | "placeholder";
 
 export type DestinationContinent =
   | "Europa"
@@ -28,6 +29,7 @@ export interface Destination {
   region?: string;
   status: "ready" | "coming-soon";
   experience: DestinationExperience;
+  coverKind: DestinationCoverKind;
   publishedTripSlug?: string;
 }
 
@@ -44,6 +46,7 @@ export const destinations: Destination[] = [
     continent: "América",
     country: "Costa Rica",
     status: "ready",
+    coverKind: "first-hand",
     experience: "first-hand",
     publishedTripSlug: "costa-rica",
   },
@@ -58,6 +61,7 @@ export const destinations: Destination[] = [
     continent: "África",
     country: "Sudáfrica",
     status: "ready",
+    coverKind: "existing-editorial",
     experience: "first-hand",
   },
   {
@@ -71,6 +75,7 @@ export const destinations: Destination[] = [
     continent: "Asia",
     country: "Jordania",
     status: "ready",
+    coverKind: "existing-editorial",
     experience: "first-hand",
   },
   {
@@ -84,6 +89,7 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Grecia",
     status: "ready",
+    coverKind: "existing-editorial",
     experience: "first-hand",
   },
   {
@@ -97,6 +103,7 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Varios destinos",
     status: "ready",
+    coverKind: "existing-editorial",
     experience: "first-hand",
   },
   {
@@ -110,6 +117,7 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Polonia",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -123,6 +131,7 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Italia",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -136,6 +145,7 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Austria",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -149,6 +159,7 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Chequia",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -162,6 +173,7 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Hungría",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -175,6 +187,7 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Países Bajos",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -188,6 +201,7 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Francia",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -201,6 +215,7 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Francia",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -214,6 +229,7 @@ export const destinations: Destination[] = [
     continent: "América",
     country: "Estados Unidos",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -227,6 +243,7 @@ export const destinations: Destination[] = [
     continent: "América",
     country: "Estados Unidos",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -240,6 +257,7 @@ export const destinations: Destination[] = [
     continent: "África",
     country: "Egipto",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -253,6 +271,7 @@ export const destinations: Destination[] = [
     continent: "África",
     country: "Mauricio",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -266,6 +285,7 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Malta",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -280,6 +300,7 @@ export const destinations: Destination[] = [
     country: "España",
     region: "Canarias",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -294,6 +315,7 @@ export const destinations: Destination[] = [
     country: "España",
     region: "Canarias",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -308,6 +330,7 @@ export const destinations: Destination[] = [
     country: "España",
     region: "Canarias",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -322,6 +345,7 @@ export const destinations: Destination[] = [
     country: "España",
     region: "Canarias",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
   {
@@ -336,6 +360,7 @@ export const destinations: Destination[] = [
     country: "España",
     region: "Canarias",
     status: "ready",
+    coverKind: "placeholder",
     experience: "first-hand",
   },
 ];
