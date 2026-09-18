@@ -150,7 +150,7 @@ import type {
       "Visit Costa Rica — Guía turística de Monteverde",
 
     url:
-      "https://it.visitcostarica.com/sites/default/files/2024-09/MONTEVERDE_INGLES.pdf",
+      "https://es.visitcostarica.com/where-to-go/puntarenas",
 
     type:
       "official",
