@@ -1108,15 +1108,15 @@ import type {
         "practical",
 
       intro:
-        "Las mejores preguntas suelen aparecer durante la planificación real.",
+        "Preguntas concretas que suelen aparecer al planificar un viaje a Costa Rica.",
 
       paragraphs: [
-        "Esta sección crecerá a partir de preguntas reales de viajeros, consultas recibidas y dudas que surjan durante nuestra propia investigación.",
-        "La idea no es repetir información, sino resolver dudas concretas con respuestas claras y fuentes cuando corresponda.",
+        "Aquí reunimos dudas reales de planificación para resolver decisiones sobre entrada, transporte, ritmo y preparación del viaje.",
+        "La idea no es repetir información, sino responder con claridad y señalar la fuente que conviene volver a comprobar cuando un dato puede cambiar.",
       ],
 
       status:
-        "draft",
+        "published",
     },
   ];
 
