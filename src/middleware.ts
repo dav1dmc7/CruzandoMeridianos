@@ -1,7 +1,6 @@
 import { defineMiddleware } from "astro:middleware";
 
-export const onRequest = defineMiddleware(async (_context, next) => {
-  const response = await next();
+const applySecurityHeaders = (response: Response): Response => {
   const headers = new Headers(response.headers);
 
   headers.set("X-Content-Type-Options", "nosniff");
@@ -18,4 +17,19 @@ export const onRequest = defineMiddleware(async (_context, next) => {
     statusText: response.statusText,
     headers,
   });
+};
+
+export const onRequest = defineMiddleware(async (context, next) => {
+  const requestUrl = new URL(context.request.url);
+
+  if (requestUrl.hostname.toLowerCase() === "cruzandomeridianos.com") {
+    requestUrl.hostname = "www.cruzandomeridianos.com";
+    requestUrl.protocol = "https:";
+
+    return applySecurityHeaders(
+      Response.redirect(requestUrl.href, 301),
+    );
+  }
+
+  return applySecurityHeaders(await next());
 });
