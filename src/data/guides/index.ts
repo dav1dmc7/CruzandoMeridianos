@@ -258,6 +258,12 @@ const withLiveUpdates = (guide: DestinationGuide): DestinationGuide => {
 const toPublicGuide = (guide: DestinationGuide): DestinationGuide => ({
   ...guide,
   editorial: undefined,
+  publicFreshness: guide.editorial
+    ? {
+        updatedAt: guide.editorial.updatedAt,
+        factsCheckedAt: guide.editorial.factsCheckedAt,
+      }
+    : undefined,
   sections: guide.sections.map(({ status, reviewedAt, ...section }) => section),
 });
 
