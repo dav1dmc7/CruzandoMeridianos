@@ -1,6 +1,7 @@
 import type { ImageMetadata } from "astro";
 
 import sudafricaFirstHand from "../assets/images/animales-kruger/leopardo.jpg";
+import sudafricaFirstHandCover from "../assets/images/sudafrica.jpg";
 import mauricioFirstHand from "../assets/images/mauricio.jpg";
 import jordania from "../assets/images/petra.jpg";
 import grecia from "../assets/images/corfu.jpg";
@@ -57,8 +58,8 @@ export const destinations: Destination[] = [
     number: "02",
     description:
       "Safari, costa, naturaleza, gastronomía y ciudad. Un país con muchos viajes posibles dentro del mismo destino.",
-    image: sudafricaFirstHand,
-    imageAlt: "Leopardo fotografiado durante nuestro viaje por Kruger, Sudáfrica",
+    image: sudafricaFirstHandCover,
+    imageAlt: "Fotografía propia de Sudáfrica durante nuestro viaje",
     continent: "África",
     country: "Sudáfrica",
     status: "ready",
