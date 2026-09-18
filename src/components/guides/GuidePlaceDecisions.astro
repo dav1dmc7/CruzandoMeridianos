@@ -6,12 +6,7 @@ interface Props {
 }
 
 const { places }: Props = Astro.props;
-const enrichedPlaces = places.filter(
-  (place) =>
-    place.recommendedNights ||
-    place.fit ||
-    place.routeNote
-);
+const enrichedPlaces = places;
 ---
 
 {
@@ -20,13 +15,13 @@ const enrichedPlaces = places.filter(
       <div class="guide-shell">
         <div class="guide-place-decisions__header">
           <div>
-            <p class="eyebrow">Cómo repartir el tiempo</p>
-            <h2 id="guide-place-decisions-title">No todas las zonas pesan lo mismo.</h2>
+            <p class="eyebrow">Cómo leer el mapa</p>
+            <h2 id="guide-place-decisions-title">No todas las zonas cumplen la misma función.</h2>
           </div>
 
           <p>
-            El mapa responde a «¿dónde está?». Esta capa responde a una pregunta más útil:
-            «¿cuánto tiempo merece dentro de mi viaje y qué estoy consiguiendo a cambio?».
+            El mapa responde a «¿dónde está?». Esta capa enseña las variables que hay que cruzar:
+            qué aporta una zona, para quién tiene sentido y cuánto tiempo merece dentro de una ruta.
           </p>
         </div>
 
@@ -52,10 +47,18 @@ const enrichedPlaces = places.filter(
                   </div>
                 )}
 
-                {place.routeNote && (
+                {place.routeNote ? (
                   <div class="guide-place-decision__detail">
                     <span>Cómo encaja</span>
                     <p>{place.routeNote}</p>
+                  </div>
+                ) : (
+                  <div class="guide-place-decision__detail">
+                    <span>La pregunta que queda abierta</span>
+                    <p>
+                      ¿Qué aporta esta zona que no consigues en otra y cuánto
+                      tiempo, energía y desplazamiento cuesta incorporarla?
+                    </p>
                   </div>
                 )}
               </article>
