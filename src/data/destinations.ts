@@ -1,6 +1,8 @@
 import type { ImageMetadata } from "astro";
 
 import sudafrica from "../assets/images/leonas.jpg";
+import sudafricaFirstHand from "../assets/images/animales-kruger/leopardo.jpg";
+import mauricioFirstHand from "../assets/images/mauricio.jpg";
 import jordania from "../assets/images/petra.jpg";
 import grecia from "../assets/images/corfu.jpg";
 import auroras from "../assets/images/aurora.jpg";
@@ -56,12 +58,12 @@ export const destinations: Destination[] = [
     number: "02",
     description:
       "Safari, costa, naturaleza, gastronomía y ciudad. Un país con muchos viajes posibles dentro del mismo destino.",
-    image: sudafrica,
-    imageAlt: "Leonas durante un safari en Sudáfrica",
+    image: sudafricaFirstHand,
+    imageAlt: "Leopardo fotografiado durante nuestro viaje por Kruger, Sudáfrica",
     continent: "África",
     country: "Sudáfrica",
     status: "ready",
-    coverKind: "existing-editorial",
+    coverKind: "first-hand",
     experience: "first-hand",
     publishedTripSlug: "sudafrica-mauricio",
   },
@@ -267,12 +269,12 @@ export const destinations: Destination[] = [
     number: "17",
     description:
       "Una isla que nosotros vivimos dentro de un viaje combinado con Sudáfrica. Naturaleza, costa y una parte del viaje muy distinta.",
-    image: atlasGuideFallback,
-    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Mauricio",
+    image: mauricioFirstHand,
+    imageAlt: "Fotografía propia de Mauricio durante nuestro viaje",
     continent: "África",
     country: "Mauricio",
     status: "ready",
-    coverKind: "placeholder",
+    coverKind: "first-hand",
     experience: "first-hand",
     publishedTripSlug: "sudafrica-mauricio",
   },
