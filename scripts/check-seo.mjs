@@ -74,8 +74,14 @@ requirePattern(
 if (/Estado editorial|Última revisión:/.test(guidePage)) {
   failures.push("Guide pages must not expose internal editorial-status wording.");
 }
-if (/data-section-status=|section\.status/.test(guidePage)) {
+if (/data-section-status=/.test(guidePage)) {
   failures.push("Guide pages must not expose internal section editorial-status implementation.");
+}
+if (!/const publicSections =\s*guide\.sections\.filter\([\s\S]*section\.status !== "draft"/.test(guidePage)) {
+  failures.push("Guide pages must filter draft sections before public rendering.");
+}
+if (!/publicSections\.map\(/.test(guidePage)) {
+  failures.push("Guide pages must render the public section collection rather than the internal section collection.");
 }
 
 if (failures.length) {
