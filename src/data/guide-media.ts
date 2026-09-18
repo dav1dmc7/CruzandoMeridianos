@@ -10,6 +10,17 @@ import cocodrilo from "../assets/images/costa-rica/cocodrilo.jpg";
 import rana from "../assets/images/costa-rica/rana.jpg";
 import mono from "../assets/images/costa-rica/mono.jpg";
 import perezoso from "../assets/images/costa-rica/perezoso.jpg";
+import bufaloKruger from "../assets/images/animales-kruger/bufalo.jpg";
+import cocodriloKruger from "../assets/images/animales-kruger/cocodrilo.jpg";
+import elefanteKruger from "../assets/images/animales-kruger/elefante.jpg";
+import impalaHembraKruger from "../assets/images/animales-kruger/impalahembra.jpg";
+import impalaMachoKruger from "../assets/images/animales-kruger/impalamacho.jpg";
+import leonKruger from "../assets/images/animales-kruger/leon.jpg";
+import leonaKruger from "../assets/images/animales-kruger/leona.jpg";
+import leopardoKruger from "../assets/images/animales-kruger/leopardo.jpg";
+import leopardo2Kruger from "../assets/images/animales-kruger/leopardo2.jpg";
+import monoKruger from "../assets/images/animales-kruger/mono.jpg";
+
 
 export interface FirstHandMediaItem {
   src: ImageMetadata;
@@ -84,4 +95,64 @@ export const firstHandMediaBySlug: Readonly<
       },
     ],
   },
+  "sudafrica": {
+    cover: {
+      src: leopardoKruger,
+      alt: "Leopardo fotografiado durante nuestro viaje por la zona de Kruger, Sudáfrica",
+      caption: "Una de las escenas de fauna que forman parte de nuestro viaje por Sudáfrica.",
+    },
+    gallery: [
+      {
+        src: leopardoKruger,
+        alt: "Leopardo durante nuestro viaje por Kruger",
+        caption: "La fauna es parte del viaje, pero nunca debería convertirse en una promesa de avistamientos.",
+      },
+      {
+        src: leopardo2Kruger,
+        alt: "Segundo encuentro con un leopardo en Kruger",
+        caption: "Dos escenas diferentes recuerdan que cada salida tiene su propio ritmo.",
+      },
+      {
+        src: leonaKruger,
+        alt: "Leona fotografiada durante nuestro safari en Kruger",
+        caption: "El safari se construye con tiempo, observación y mucha paciencia.",
+      },
+      {
+        src: leonKruger,
+        alt: "León fotografiado durante nuestro viaje por Kruger",
+        caption: "La distancia y el comportamiento de los animales importan tanto como el lugar.",
+      },
+      {
+        src: elefanteKruger,
+        alt: "Elefante fotografiado en Kruger",
+        caption: "Kruger cambia de paisaje y de ritmo constantemente.",
+      },
+      {
+        src: bufaloKruger,
+        alt: "Búfalo fotografiado en Kruger",
+        caption: "No todo el viaje gira alrededor de los animales más famosos.",
+      },
+      {
+        src: impalaMachoKruger,
+        alt: "Impala macho fotografiado en Kruger",
+        caption: "La experiencia de safari también está en aprender a mirar lo que aparece alrededor.",
+      },
+      {
+        src: impalaHembraKruger,
+        alt: "Impala hembra fotografiada en Kruger",
+        caption: "Cada recorrido tiene encuentros distintos y ninguno está garantizado.",
+      },
+      {
+        src: cocodriloKruger,
+        alt: "Cocodrilo fotografiado durante el viaje por Sudáfrica",
+        caption: "Agua, fauna y paisaje forman parte del mismo ecosistema.",
+      },
+      {
+        src: monoKruger,
+        alt: "Mono fotografiado durante nuestro viaje por Sudáfrica",
+        caption: "También hay espacio para escenas pequeñas lejos de los grandes mamíferos.",
+      },
+    ],
+  },
+
 };
