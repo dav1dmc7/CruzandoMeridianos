@@ -600,7 +600,7 @@ const travelerData =
           <span
             class="guide-hero__label"
           >
-            Guía de viaje · {destination.experience === "first-hand" ? "experiencia propia" : "investigación editorial"}
+            Guía de viaje · {destination.publishedTripSlug ? "experiencia propia · viaje vivido publicado" : destination.experience === "first-hand" ? "experiencia propia" : "investigación editorial"}
           </span>
 
         </div>
@@ -700,6 +700,20 @@ const travelerData =
           >
             {guide.intro}
           </p>
+
+          {
+            destination.publishedTripSlug && (
+              <a
+                class="guide-lived-trip-link"
+                href={`/nuestros-viajes/${destination.publishedTripSlug}`}
+              >
+                <span>
+                  Lo hemos vivido sobre el terreno.
+                </span>
+                Ver nuestro viaje <span aria-hidden="true">↗</span>
+              </a>
+            )
+          }
 
 
           <p>
@@ -5873,5 +5887,36 @@ summary::after {
   }
 
 }
+
+
+  .guide-lived-trip-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    margin-top: 1.35rem;
+    padding-bottom: .45rem;
+    border-bottom: 1px solid var(--color-cobre);
+    color: var(--color-bosque);
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    text-decoration: none;
+    transition: color .2s ease, gap .2s ease;
+  }
+
+  .guide-lived-trip-link > span:first-child {
+    color: rgba(28, 54, 42, .62);
+    font-weight: 500;
+  }
+
+  .guide-lived-trip-link:hover {
+    gap: .7rem;
+    color: var(--color-cobre);
+  }
+
+  .guide-lived-trip-link:focus-visible {
+    outline: 2px solid var(--color-cobre);
+    outline-offset: 4px;
+  }
 
 </style>
