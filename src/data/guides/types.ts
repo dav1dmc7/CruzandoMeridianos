@@ -250,6 +250,15 @@
    latitude: number;
 
    longitude: number;
+
+   /** Orientación editorial sobre cuánto pesa esta parada dentro de una ruta. */
+   recommendedNights?: string;
+
+   /** Tipo de viajero o prioridad para la que esta zona suele encajar mejor. */
+   fit?: string;
+
+   /** Nota de encaje con la ruta para evitar añadir lugares por inercia. */
+   routeNote?: string;
  }
 
 
