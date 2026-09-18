@@ -6,6 +6,7 @@ import jordania from "../assets/images/petra.jpg";
 import grecia from "../assets/images/corfu.jpg";
 import auroras from "../assets/images/aurora.jpg";
 import atlasGuideFallback from "../assets/images/atlas-guide-fallback.svg";
+import { firstHandMediaBySlug } from "./guide-media";
 
 export type DestinationContinent =
   | "Europa"
@@ -34,8 +35,10 @@ export const destinations: Destination[] = [
     number: "01",
     description:
       "Selva, fauna y costa. Naturaleza, playas, parques y experiencias muy diferentes dentro de un mismo país.",
-    image: costaRica,
-    imageAlt: "Playa tropical en Costa Rica",
+    image: firstHandMediaBySlug["costa-rica"]?.cover.src ?? costaRica,
+    imageAlt:
+      firstHandMediaBySlug["costa-rica"]?.cover.alt ??
+      "Playa tropical en Costa Rica",
     continent: "América",
     country: "Costa Rica",
     status: "ready",
