@@ -273,7 +273,7 @@ const faqCategoryLabel = (item: FAQItem) => {
 
         <div class="kruger-sources__list">
           {krugerSources.map((source) => (
-            <a href={source.url} target="_blank" rel="noreferrer">
+            <a href={source.url} target="_blank" rel="noreferrer noopener">
               <span>{source.type}</span>
               {source.label}
               <strong aria-hidden="true">↗</strong>
