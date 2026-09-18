@@ -17,7 +17,7 @@ const requirePattern = (source, pattern, label) => {
   if (!pattern.test(source)) failures.push(label);
 };
 
-requirePattern(middleware, /cruzandomeridianos\.com.*www\.cruzandomeridianos\.com/, "Global middleware must consolidate the production host on www.");
+requirePattern(middleware, /cruzandomeridianos\.com[\s\S]*www\.cruzandomeridianos\.com/, "Global middleware must consolidate the production host on www.");
 requirePattern(middleware, /protocol\s*=\s*"https:"/, "Canonical host redirect must enforce HTTPS.");
 requirePattern(middleware, /X-Content-Type-Options.*nosniff/, "Global middleware must set X-Content-Type-Options.");
 requirePattern(middleware, /X-Frame-Options.*(?:DENY|SAMEORIGIN)/, "Global middleware must set X-Frame-Options.");
