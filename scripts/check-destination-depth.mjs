@@ -64,6 +64,10 @@ if (!/GuidePlacesMap/.test(read("src/pages/viajes/[slug].astro"))) {
   failures.push("Destination guide pages must render the key places map.");
 }
 
+if (!/GuidePlaceDecisions/.test(read("src/pages/viajes/[slug].astro"))) {
+  failures.push("Destination guide pages must render the reusable place-decision framework.");
+}
+
 if (!/places\?: GuidePlace\[\]/.test(read("src/data/guides/types.ts"))) {
   failures.push("Destination guide contract must expose key places.");
 }
