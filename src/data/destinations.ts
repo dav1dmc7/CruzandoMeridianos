@@ -1,6 +1,5 @@
 import type { ImageMetadata } from "astro";
 
-import costaRica from "../assets/images/costa-rica/playa-costa-rica.jpg";
 import sudafrica from "../assets/images/leonas.jpg";
 import jordania from "../assets/images/petra.jpg";
 import grecia from "../assets/images/corfu.jpg";
@@ -35,10 +34,9 @@ export const destinations: Destination[] = [
     number: "01",
     description:
       "Selva, fauna y costa. Naturaleza, playas, parques y experiencias muy diferentes dentro de un mismo país.",
-    image: firstHandMediaBySlug["costa-rica"]?.cover.src ?? costaRica,
+    image: firstHandMediaBySlug["costa-rica"].cover.src,
     imageAlt:
-      firstHandMediaBySlug["costa-rica"]?.cover.alt ??
-      "Playa tropical en Costa Rica",
+      firstHandMediaBySlug["costa-rica"].cover.alt,
     continent: "América",
     country: "Costa Rica",
     status: "ready",
