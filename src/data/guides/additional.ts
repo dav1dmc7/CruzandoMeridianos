@@ -115,6 +115,33 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
       reviewedAt: REVIEWED_AT,
     },
     {
+      id: "donde-alojarse",
+      number: "04",
+      title: "Dónde alojarse y cómo elegir zona",
+      category: "planning",
+      intro: "La ubicación del alojamiento puede cambiar más el viaje que una diferencia de categoría entre hoteles.",
+      paragraphs: [
+        `No queremos darte aquí una lista de hoteles para ${spec.name}. Lo útil antes de reservar es entender qué estás comprando con cada zona: cercanía a lo que quieres hacer, facilidad para moverte, ambiente, tiempo de ida y vuelta y libertad para improvisar.`,
+        `En ${spec.name}, la base debería salir de las prioridades del viaje. ${spec.regions}`,
+        `También importa la logística. ${spec.transport} Cambiar de alojamiento demasiado a menudo puede parecer eficiente sobre el mapa y acabar robando tiempo de viaje, maletas y energía.`,
+      ],
+      highlights: [
+        {
+          title: "Primero la zona, después el hotel",
+          description: "Una habitación mejor situada puede mejorar mucho más el viaje que otra con más servicios pero peor encaje con la ruta.",
+          type: "decision",
+        },
+        {
+          title: "No cambies de base por inercia",
+          description: "Cada mudanza tiene un coste real: check-out, equipaje, trayecto y tiempo que deja de estar disponible para disfrutar del destino.",
+          type: "important",
+        },
+      ],
+      closing: "La guía te enseña qué variables comparar. La elección final de zona y alojamiento depende de tus fechas, presupuesto y forma de viajar.",
+      status: "published",
+      reviewedAt: REVIEWED_AT,
+    },
+    {
       id: "cuando-ir",
       number: "03",
       title: "Cuándo ir y qué cambia con la fecha",
@@ -134,7 +161,7 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
     },
     {
       id: "experiencias-que-merecen-espacio",
-      number: "04",
+      number: "05",
       title: "Qué experiencias merecen espacio",
       category: "experience",
       intro: "No todas las atracciones tienen el mismo peso en un viaje.",
@@ -152,7 +179,7 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
     },
     {
       id: "como-moverse",
-      number: "05",
+      number: "06",
       title: "Cómo moverse sin complicar el viaje",
       category: "practical",
       intro: "El medio de transporte correcto depende del tipo de destino y de la experiencia buscada.",
@@ -170,7 +197,7 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
     },
     {
       id: "encaja-contigo",
-      number: "06",
+      number: "07",
       title: "¿Este destino encaja contigo?",
       category: "planning",
       intro: spec.fit.intro,
@@ -184,7 +211,7 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
     },
     {
       id: "errores-a-evitar",
-      number: "07",
+      number: "08",
       title: "Errores que empobrecen el viaje",
       category: "planning",
       intro: "La mejor planificación también consiste en saber qué no hacer.",
@@ -203,7 +230,7 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
     },
     {
       id: "informacion-practica-y-alertas",
-      number: "08",
+      number: "09",
       title: "Información práctica y actualidad",
       category: "updates",
       intro: "La parte más sensible de una guía es la que puede cambiar.",
@@ -220,7 +247,7 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
     },
     {
       id: "preguntas-frecuentes",
-      number: "09",
+      number: "10",
       title: "Preguntas frecuentes",
       category: "practical",
       intro: `Preguntas concretas que suelen aparecer al planificar un viaje a ${spec.name}.`,
@@ -246,6 +273,10 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
       spec.season,
     ],
     [
+      `¿En qué zona conviene alojarse en ${spec.name}?`,
+      `No hay una zona universalmente correcta. La elección depende de qué quieras priorizar, cuánto tiempo tengas, cómo te muevas y cuánto valor tenga para ti estar cerca de unas experiencias u otras. En ${spec.name}, ${spec.regions}`,
+    ],
+    [
       `¿Cómo moverse por ${spec.name} y hace falta coche?`,
       `${spec.transport} En las zonas donde el transporte público resuelve bien los desplazamientos, el coche puede aportar poco; fuera de esos ejes, la flexibilidad puede justificarlo.`,
     ],
@@ -256,7 +287,7 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
   ].filter((entry, index, entries) =>
       entries.findIndex(([question]) => question === entry[0]) === index,
     )
-    .slice(0, 5);
+    .slice(0, 6);
   const faq: FAQItem[] = faqPairs.map(([question, answer]) => ({ question, answer, category: "planning", reviewedAt: REVIEWED_AT }));
 
   const monitoring: GuideMonitoringConfig = {
