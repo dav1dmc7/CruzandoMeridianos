@@ -37,7 +37,8 @@ const destinationEntries = destinationBlocks.flatMap((block) => {
   const status = block.match(/status:\s*["']([^"']+)["']/)?.[1];
   const experience = block.match(/experience:\s*["']([^"']+)["']/)?.[1];
   const publishedTripSlug = block.match(/publishedTripSlug:\s*["']([^"']+)["']/)?.[1];
-  return slug ? [{ slug, status, experience, publishedTripSlug }] : [];
+  const region = block.match(/region:\s*["']([^"']+)["']/)?.[1];
+  return slug ? [{ slug, status, experience, publishedTripSlug, region }] : [];
 });
 
 const readyDestinationSlugs = new Set(
@@ -130,12 +131,7 @@ if (!canariasHub.includes('canonical="/viajes/canarias"')) {
 }
 
 const canarySlugs = destinationEntries
-  .filter((entry) => entry.status === "ready" && /region:\s*"Canarias"/.test(
-    destinations.slice(
-      destinations.indexOf(`slug: "${entry.slug}"`),
-      destinations.indexOf(`slug: "${entry.slug}"`) + 500,
-    ),
-  ))
+  .filter((entry) => entry.status === "ready" && entry.region === "Canarias")
   .map((entry) => entry.slug);
 
 if (!canariasHub.includes('destinations.filter((destination) => destination.region === "Canarias")')) {
