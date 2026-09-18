@@ -60,6 +60,14 @@ for (const slug of deepDiveSlugs) {
   }
 }
 
+if (!/GuidePlacesMap/.test(read("src/pages/viajes/[slug].astro"))) {
+  failures.push("Destination guide pages must render the key places map.");
+}
+
+if (!/places\?: GuidePlace\[\]/.test(read("src/data/guides/types.ts"))) {
+  failures.push("Destination guide contract must expose key places.");
+}
+
 if (!/export const keyPlacesBySlug/.test(placeCatalog)) {
   failures.push("Key places catalog is missing.");
 }
