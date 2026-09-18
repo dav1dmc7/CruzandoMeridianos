@@ -78,8 +78,8 @@ if (/Estado editorial|Última revisión:/.test(guidePage)) {
 if (/data-section-status=|section\.status/.test(guidePage)) {
   failures.push("Guide pages must not expose or depend on internal section editorial-status implementation.");
 }
-if (!/sections:\s*guide\.sections\s*\.filter\(\(section\)\s*=>\s*section\.status\s*!==\s*"draft"\)/.test(guidesData)) {
-  failures.push("Public guide data must filter draft sections before removing internal editorial metadata.");
+if (!/sections:\s*renumberSections\([\s\S]*?guide\.sections\s*\.filter\(\(section\)\s*=>\s*section\.status\s*!==\s*"draft"/.test(guidesData)) {
+  failures.push("Public guide data must filter and renumber sections before removing internal editorial metadata.");
 }
 if (!/const publicSections\s*=\s*guide\.sections/.test(guidePage) || !/publicSections\.map\(/.test(guidePage)) {
   failures.push("Guide pages must render the public guide section collection.");
