@@ -8,6 +8,8 @@ const auditScripts = [
   "check-layout-contracts.mjs",
   "check-form-privacy.mjs",
   "check-motion.mjs",
+  "check-navigation.mjs",
+  "check-content-quality.mjs",
   "check-travel-intelligence-rules.mjs",
   "check-internal-links.mjs",
   "check-external-links.mjs",
