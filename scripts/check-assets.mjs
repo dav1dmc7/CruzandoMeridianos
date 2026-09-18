@@ -20,6 +20,36 @@ const destinationsUsingFallback = destinationsSource
     return match ? [match[1]] : [];
   });
 
+const costaRicaMediaPage = await fs.readFile(
+  path.join(root, "src", "pages", "nuestros-viajes", "[slug].astro"),
+  "utf8",
+);
+const costaRicaGuidePage = await fs.readFile(
+  path.join(root, "src", "pages", "viajes", "[slug].astro"),
+  "utf8",
+);
+const destinationsData = await fs.readFile(
+  path.join(root, "src", "data", "destinations.ts"),
+  "utf8",
+);
+
+const costaRicaDirectImageImport = /\.\.\/\.\.\/assets\/images\/costa-rica\//;
+if (costaRicaDirectImageImport.test(costaRicaMediaPage) || costaRicaDirectImageImport.test(costaRicaGuidePage)) {
+  console.warn("Costa Rica media warning: destination pages should consume the shared first-hand media registry.");
+}
+
+if (!/firstHandMediaBySlug\["costa-rica"\]/.test(costaRicaMediaPage)) {
+  console.warn("Costa Rica media warning: lived-trip page is not consuming firstHandMediaBySlug.");
+}
+
+if (!/firstHandMediaBySlug\[slug\]/.test(costaRicaGuidePage)) {
+  console.warn("Costa Rica media warning: guide page is not consuming the shared first-hand media registry.");
+}
+
+if (!/firstHandMediaBySlug\["costa-rica"\]/.test(destinationsData)) {
+  console.warn("Costa Rica media warning: destination registry is not consuming the shared first-hand media cover.");
+}
+
 const assetRoots = [
   path.join(root, "public"),
   path.join(root, "src", "assets"),
