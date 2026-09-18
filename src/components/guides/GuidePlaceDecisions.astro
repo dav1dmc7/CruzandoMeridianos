@@ -1,0 +1,198 @@
+---
+import type { GuidePlace } from "../../data/guides/types";
+
+interface Props {
+  places: GuidePlace[];
+}
+
+const { places }: Props = Astro.props;
+const enrichedPlaces = places.filter(
+  (place) =>
+    place.recommendedNights ||
+    place.fit ||
+    place.routeNote
+);
+---
+
+{
+  enrichedPlaces.length > 0 && (
+    <section class="guide-place-decisions" aria-labelledby="guide-place-decisions-title">
+      <div class="guide-shell">
+        <div class="guide-place-decisions__header">
+          <div>
+            <p class="eyebrow">Cómo repartir el tiempo</p>
+            <h2 id="guide-place-decisions-title">No todas las zonas pesan lo mismo.</h2>
+          </div>
+
+          <p>
+            El mapa responde a «¿dónde está?». Esta capa responde a una pregunta más útil:
+            «¿cuánto tiempo merece dentro de mi viaje y qué estoy consiguiendo a cambio?».
+          </p>
+        </div>
+
+        <div class="guide-place-decisions__grid">
+          {
+            enrichedPlaces.map((place) => (
+              <article class="guide-place-decision">
+                <div class="guide-place-decision__meta">
+                  {place.region && <span>{place.region}</span>}
+                  {place.recommendedNights && (
+                    <strong>{place.recommendedNights}</strong>
+                  )}
+                </div>
+
+                <h3>{place.name}</h3>
+
+                <p>{place.description}</p>
+
+                {place.fit && (
+                  <div class="guide-place-decision__detail">
+                    <span>Encaja especialmente si</span>
+                    <p>{place.fit}</p>
+                  </div>
+                )}
+
+                {place.routeNote && (
+                  <div class="guide-place-decision__detail">
+                    <span>Cómo encaja</span>
+                    <p>{place.routeNote}</p>
+                  </div>
+                )}
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+.guide-place-decisions {
+  padding: 7rem 0;
+  background: #f3f0e9;
+}
+
+.guide-place-decisions__header {
+  display: grid;
+  grid-template-columns: 1fr .72fr;
+  gap: 4rem;
+  align-items: end;
+  margin-bottom: 3.5rem;
+}
+
+.guide-place-decisions__header h2 {
+  max-width: 720px;
+  margin: .7rem 0 0;
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 5vw, 5rem);
+  font-weight: 400;
+  line-height: .98;
+  letter-spacing: -.035em;
+  color: var(--color-bosque);
+}
+
+.guide-place-decisions__header > p {
+  max-width: 540px;
+  margin: 0;
+  color: #5b5b5b;
+  line-height: 1.8;
+}
+
+.guide-place-decisions__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  border-top: 1px solid rgba(28,48,38,.18);
+  border-left: 1px solid rgba(28,48,38,.18);
+}
+
+.guide-place-decision {
+  min-height: 100%;
+  padding: 2rem;
+  border-right: 1px solid rgba(28,48,38,.18);
+  border-bottom: 1px solid rgba(28,48,38,.18);
+  background: rgba(251,249,245,.55);
+}
+
+.guide-place-decision__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+  color: #777;
+  font-size: .72rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.guide-place-decision__meta strong {
+  color: var(--color-cobre);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.guide-place-decision h3 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--color-bosque);
+}
+
+.guide-place-decision > p {
+  margin: 1rem 0 0;
+  color: #5b5b5b;
+  line-height: 1.7;
+}
+
+.guide-place-decision__detail {
+  margin-top: 1.4rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(28,48,38,.12);
+}
+
+.guide-place-decision__detail span {
+  display: block;
+  margin-bottom: .4rem;
+  color: var(--color-bosque);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.guide-place-decision__detail p {
+  margin: 0;
+  color: #696969;
+  font-size: .92rem;
+  line-height: 1.65;
+}
+
+@media (max-width: 900px) {
+  .guide-place-decisions__header {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 680px) {
+  .guide-place-decisions {
+    padding: 5rem 0;
+  }
+
+  .guide-place-decisions__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-place-decision {
+    padding: 1.4rem;
+  }
+
+  .guide-place-decision__meta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+</style>
