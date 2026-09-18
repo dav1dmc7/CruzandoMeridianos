@@ -27,6 +27,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Audit script syntax
+        run: npm run audit:script-syntax
+
       - name: Astro check
         run: npm run check
 
