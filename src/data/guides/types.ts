@@ -545,6 +545,17 @@
  }
 
 
+ /**
+  * Metadata segura para mostrar al viajero sin exponer estados
+  * editoriales internos.
+  */
+ export interface PublicGuideFreshness {
+   updatedAt?: string;
+
+   factsCheckedAt?: string;
+ }
+
+
  /* ============================================================
     COMMERCIAL POSITIONING
     ============================================================ */
@@ -609,6 +620,11 @@
       ---------------------------------------------------------- */
 
    editorial?: GuideEditorialMeta;
+
+   /**
+    * Metadata de frescura expuesta por la capa pública de datos.
+    */
+   publicFreshness?: PublicGuideFreshness;
 
 
    /* ----------------------------------------------------------
