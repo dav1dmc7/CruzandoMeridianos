@@ -98,6 +98,14 @@
         originalAlert(message);
         return;
       }
+      const activeQuestion = form.querySelector<HTMLElement>(".question-block.active");
+      const step = Number(activeQuestion?.dataset.step);
+
+      sendEvent("travel_form_error", {
+        step: Number.isInteger(step) ? step : null,
+        label: message || "No hemos podido completar la solicitud.",
+      });
+
       status.textContent = message || "No hemos podido completar la solicitud.";
       status.setAttribute("role", "alert");
       status.focus({ preventScroll: true });
@@ -147,6 +155,15 @@
       const block = next.closest<HTMLElement>(".question-block");
       const step = Number(block?.dataset.step);
       sendEvent("travel_form_step", {
+        step: Number.isInteger(step) ? step : null,
+        label: block?.dataset.message ?? null,
+      });
+    }
+
+    if (back) {
+      const block = back.closest<HTMLElement>(".question-block");
+      const step = Number(block?.dataset.step);
+      sendEvent("travel_form_back", {
         step: Number.isInteger(step) ? step : null,
         label: block?.dataset.message ?? null,
       });
