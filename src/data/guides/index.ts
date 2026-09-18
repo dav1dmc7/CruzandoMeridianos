@@ -272,7 +272,9 @@ const toPublicGuide = (guide: DestinationGuide): DestinationGuide => ({
         factsCheckedAt: guide.editorial.factsCheckedAt,
       }
     : undefined,
-  sections: guide.sections.map(({ status, reviewedAt, ...section }) => section),
+  sections: guide.sections
+    .filter((section) => section.status !== "draft")
+    .map(({ status, reviewedAt, ...section }) => section),
 });
 
 const getInternalGuideBySlug = (
