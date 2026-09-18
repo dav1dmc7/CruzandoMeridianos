@@ -72,16 +72,6 @@ for (const badPhrase of [
 }
 
 const viajes = read("src/pages/viajes.astro");
-const expectedPriority = [
-  "costa-rica",
-  "sudafrica/kruger",
-  "sudafrica",
-  "mauricio",
-  "grecia",
-  "jordania",
-  "auroras",
-];
-
 const prioritySource = viajes.match(/const prioritySlugs = \[([\s\S]*?)\]\s+as const;/m)?.[1] ?? "";
 const prioritySlugs = [...prioritySource.matchAll(/"([^"]+)"/g)].map((match) => match[1]);
 const expectedDestinationPriority = [
