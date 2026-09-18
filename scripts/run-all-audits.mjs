@@ -10,6 +10,7 @@ const auditScripts = [
   "check-motion.mjs",
   "check-navigation.mjs",
   "check-content-quality.mjs",
+  "check-page-quality.mjs",
   "check-travel-intelligence-rules.mjs",
   "check-internal-links.mjs",
   "check-external-links.mjs",
