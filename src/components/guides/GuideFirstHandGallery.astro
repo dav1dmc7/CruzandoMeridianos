@@ -29,7 +29,7 @@ const { media }: Props = Astro.props;
           <Image
             src={item.src}
             alt={item.alt}
-            loading={index < 3 ? "lazy" : "lazy"}
+            loading="lazy"
             sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw"
           />
           <figcaption>{item.caption}</figcaption>
