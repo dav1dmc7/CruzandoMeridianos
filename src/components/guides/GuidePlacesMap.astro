@@ -120,7 +120,7 @@ const markers = projected.map((place, index) => ({
       <div class="guide-places__map-wrap">
         <div
           class="guide-places__map"
-          role="img"
+          role="group"
           aria-label={\`Mapa orientativo con \${places.length} lugares clave de \${places.map((place) => place.name).join(", ")}\`}
         >
           <div class="guide-places__tiles" aria-hidden="true">
@@ -160,7 +160,7 @@ const markers = projected.map((place, index) => ({
             target="_blank"
             rel="noreferrer"
           >
-            © OpenStreetMap
+            © OpenStreetMap contributors
           </a>
         </div>
       </div>
@@ -254,6 +254,11 @@ const markers = projected.map((place, index) => ({
     text-align: left;
     cursor: pointer;
     transition: transform .2s ease, border-color .2s ease, background .2s ease;
+  }
+
+  .guide-place:focus-visible {
+    outline: 2px solid var(--color-cobre);
+    outline-offset: 3px;
   }
 
   .guide-place:hover,
