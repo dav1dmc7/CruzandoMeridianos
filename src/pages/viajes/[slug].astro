@@ -4,6 +4,7 @@ import { Image } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
 import Footer from "../../components/layout/Footer.astro";
 import GuidePlacesMap from "../../components/guides/GuidePlacesMap.astro";
+import GuidePlaceDecisions from "../../components/guides/GuidePlaceDecisions.astro";
 
 import { destinations } from "../../data/destinations";
 import { getGuideBySlug } from "../../data/guides";
@@ -115,6 +116,12 @@ const hasAlerts =
 
 const hasFaq =
   guide.faq.length > 0;
+
+const publicSections =
+  guide.sections.filter(
+    (section) =>
+      section.status !== "draft"
+  );
 
 
 /* =========================================================
@@ -894,7 +901,11 @@ const travelerData =
     {
       guide.places &&
       guide.places.length > 0 && (
-        <GuidePlacesMap places={guide.places} />
+        <>
+          <GuidePlacesMap places={guide.places} />
+
+          <GuidePlaceDecisions places={guide.places} />
+        </>
       )
     }
 
@@ -942,7 +953,7 @@ const travelerData =
         >
 
           {
-            guide.sections.map(
+            publicSections.map(
               (
                 section: GuideSection
               ) => (
@@ -1159,7 +1170,7 @@ const travelerData =
     >
 
       {
-        guide.sections.map(
+        publicSections.map(
           (
             section: GuideSection,
             index: number
