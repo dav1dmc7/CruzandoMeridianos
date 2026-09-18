@@ -65,6 +65,20 @@ const enrichedPlaces = places;
             ))
           }
         </div>
+
+        <div class="guide-place-decisions__boundary">
+          <div>
+            <span class="guide-place-decisions__boundary-label">Aquí empieza el trabajo difícil</span>
+            <h3>Las piezas las puedes ver. La combinación correcta depende de tu viaje.</h3>
+            <p>
+              Fechas, presupuesto, ritmo, intereses, noches disponibles y forma de desplazarte
+              cambian qué merece entrar y qué conviene dejar fuera. La guía enseña el problema;
+              nosotros hacemos la investigación y el cruce de decisiones cuando el viaje es para ti.
+            </p>
+          </div>
+
+          <a href="/cuentatuviaje">Cuéntanos tu viaje <span aria-hidden="true">↗</span></a>
+        </div>
       </div>
     </section>
   )
@@ -173,6 +187,63 @@ const enrichedPlaces = places;
   line-height: 1.65;
 }
 
+.guide-place-decisions__boundary {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  gap: 2rem;
+  align-items: end;
+  margin-top: 3rem;
+  padding: 2rem;
+  border: 1px solid rgba(28,48,38,.18);
+  background: rgba(251,249,245,.68);
+}
+
+.guide-place-decisions__boundary-label {
+  display: block;
+  margin-bottom: .7rem;
+  color: var(--color-cobre);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.guide-place-decisions__boundary h3 {
+  max-width: 720px;
+  margin: 0;
+  color: var(--color-bosque);
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.guide-place-decisions__boundary p {
+  max-width: 720px;
+  margin: 1rem 0 0;
+  color: #5b5b5b;
+  line-height: 1.75;
+}
+
+.guide-place-decisions__boundary a {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .85rem 1.15rem;
+  border-radius: 999px;
+  background: var(--color-bosque);
+  color: var(--color-papel);
+  text-decoration: none;
+  font-size: .84rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.guide-place-decisions__boundary a:focus-visible {
+  outline: 2px solid var(--color-cobre);
+  outline-offset: 4px;
+}
+
 @media (max-width: 900px) {
   .guide-place-decisions__header {
     grid-template-columns: 1fr;
@@ -190,6 +261,12 @@ const enrichedPlaces = places;
   }
 
   .guide-place-decision {
+    padding: 1.4rem;
+  }
+
+  .guide-place-decisions__boundary {
+    grid-template-columns: 1fr;
+    align-items: start;
     padding: 1.4rem;
   }
 
