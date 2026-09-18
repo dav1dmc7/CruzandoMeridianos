@@ -3,6 +3,11 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import cloudflare from '@astrojs/cloudflare';
 
+const livedTripSlugs = [
+  'costa-rica',
+  'sudafrica-mauricio',
+];
+
 const destinationSlugs = [
   'costa-rica',
   'sudafrica',
@@ -42,7 +47,9 @@ export default defineConfig({
         ...destinationSlugs.map(
           (slug) => `https://www.cruzandomeridianos.com/viajes/${slug}`,
         ),
-        'https://www.cruzandomeridianos.com/nuestros-viajes/costa-rica',
+        ...livedTripSlugs.map(
+          (slug) => `https://www.cruzandomeridianos.com/nuestros-viajes/${slug}`,
+        ),
         'https://www.cruzandomeridianos.com/viajes/costa-rica/mejor-epoca',
         'https://www.cruzandomeridianos.com/viajes/costa-rica/parques-nacionales',
         'https://www.cruzandomeridianos.com/viajes/costa-rica/alquilar-coche',
