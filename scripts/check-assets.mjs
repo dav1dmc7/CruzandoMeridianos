@@ -8,6 +8,25 @@ const destinationsSource = await fs.readFile(
   "utf8",
 );
 
+
+const destinationCoverInventory = destinationsSource
+  .split(/\n\s*\{/)
+  .slice(1)
+  .flatMap((block) => {
+    const slug = block.match(/slug:\s*"([^"]+)"/)?.[1];
+    const coverKind = block.match(/coverKind:\s*"([^"]+)"/)?.[1];
+    if (!slug || !coverKind) return [];
+    return [{ slug, coverKind }];
+  });
+
+const coverInventoryByKind = destinationCoverInventory.reduce(
+  (counts, destination) => {
+    counts[destination.coverKind] = (counts[destination.coverKind] ?? 0) + 1;
+    return counts;
+  },
+  {},
+);
+
 const destinationsUsingFallback = destinationsSource
   .split(/\n\s*\{/)
   .slice(1)
@@ -115,6 +134,25 @@ const failures = assets.filter(
 const justified = assets.filter(
   ({ file, bytes }) => bytes > FAIL_BYTES && justifiedLargeAssets.has(file)
 );
+
+const coverKindMismatches = destinationCoverInventory.filter((destination) => {
+  const usesFallback = destinationsUsingFallback.includes(destination.slug);
+  return usesFallback !== (destination.coverKind === "placeholder");
+});
+
+if (coverKindMismatches.length) {
+  for (const destination of coverKindMismatches) {
+    console.error(
+      `Cover metadata mismatch for "${destination.slug}": coverKind=${destination.coverKind}.`,
+    );
+  }
+  process.exit(1);
+}
+
+console.log("\nDestination cover inventory:");
+console.log(`- First-hand cover: ${coverInventoryByKind["first-hand"] ?? 0}`);
+console.log(`- Existing editorial cover: ${coverInventoryByKind["existing-editorial"] ?? 0}`);
+console.log(`- Placeholder cover: ${coverInventoryByKind["placeholder"] ?? 0}`);
 
 if (destinationsUsingFallback.length) {
   console.warn("\nEditorial cover warnings:");
