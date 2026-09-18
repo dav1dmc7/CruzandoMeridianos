@@ -8,6 +8,7 @@ interface Props {
   eyebrow?: string;
   title?: string;
   description?: string;
+  titleId?: string;
 }
 
 const {
@@ -16,15 +17,16 @@ const {
   eyebrow = "EXPERIENCIA PROPIA",
   title = "También hemos vivido este destino sobre el terreno.",
   description = "Estas imágenes forman parte de nuestro viaje. Las utilizamos como contexto y prueba de experiencia, no como sustituto de la investigación ni como promesa de que tu viaje tenga que parecerse al nuestro.",
+  titleId = "guide-first-hand-title",
 }: Props = Astro.props;
 ---
 
-<section class="guide-first-hand" aria-labelledby="guide-first-hand-title">
+<section class="guide-first-hand" aria-labelledby={titleId}>
   <div class="guide-shell">
     <div class="guide-first-hand__heading">
       <div>
         <p class="eyebrow">{eyebrow}</p>
-        <h2 id="guide-first-hand-title">{title}</h2>
+        <h2 id={titleId}>{title}</h2>
       </div>
       <p>{description}</p>
     </div>
