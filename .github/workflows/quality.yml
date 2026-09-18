@@ -66,6 +66,9 @@ jobs:
       - name: Visual accessibility audit
         run: npm run audit:visual-accessibility
 
+      - name: Canonical routing audit
+        run: npm run audit:canonical-routing
+
       - name: Travel intelligence rule tests
         run: npm run audit:travel-intelligence-rules
 
