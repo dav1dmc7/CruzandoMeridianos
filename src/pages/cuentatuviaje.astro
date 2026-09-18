@@ -253,6 +253,59 @@ import Footer from "../components/layout/Footer.astro";
               Cuéntanos quiénes vais a viajar.
             </p>
 
+            <fieldset class="sub-question age-range-question">
+              <legend>
+                ¿Hay alguna franja de edad que debamos tener en cuenta?
+                <span>Opcional</span>
+              </legend>
+
+              <p class="field-note">
+                No necesitamos edades exactas. Solo nos ayuda a entender
+                necesidades, ritmo y tipo de experiencias que pueden encajar.
+              </p>
+
+              <div
+                class="small-choice-group age-range-options"
+                role="group"
+                aria-label="Franjas de edad de los viajeros"
+              >
+                <label class="small-choice">
+                  <input type="checkbox" name="age_range" value="0–5 años" />
+                  <span>0–5 años</span>
+                </label>
+
+                <label class="small-choice">
+                  <input type="checkbox" name="age_range" value="6–12 años" />
+                  <span>6–12 años</span>
+                </label>
+
+                <label class="small-choice">
+                  <input type="checkbox" name="age_range" value="13–17 años" />
+                  <span>13–17 años</span>
+                </label>
+
+                <label class="small-choice">
+                  <input type="checkbox" name="age_range" value="18–29 años" />
+                  <span>18–29 años</span>
+                </label>
+
+                <label class="small-choice">
+                  <input type="checkbox" name="age_range" value="30–49 años" />
+                  <span>30–49 años</span>
+                </label>
+
+                <label class="small-choice">
+                  <input type="checkbox" name="age_range" value="50–64 años" />
+                  <span>50–64 años</span>
+                </label>
+
+                <label class="small-choice">
+                  <input type="checkbox" name="age_range" value="65+ años" />
+                  <span>65+ años</span>
+                </label>
+              </div>
+            </fieldset>
+
             <div class="question-actions">
 
               <button
@@ -3031,6 +3084,17 @@ import Footer from "../components/layout/Footer.astro";
             String(
               formData.get("travellers") || ""
             ).trim(),
+
+          age_range:
+            Array.from(
+              form.querySelectorAll<HTMLInputElement>(
+                "input[name='age_range']:checked"
+              )
+            ).map(
+              (
+                input: HTMLInputElement
+              ) => input.value
+            ).join(", "),
 
           dates:
             String(
