@@ -8,9 +8,17 @@ const destinationsSource = await fs.readFile(
   "utf8",
 );
 
-const destinationsUsingFallback = [...destinationsSource.matchAll(
-  /\{[\s\S]*?slug:\s*"([^"]+)"[\s\S]*?image:\s*atlasGuideFallback[\s\S]*?\}/g,
-)].map((match) => match[1]);
+const destinationsUsingFallback = destinationsSource
+  .split(/\n\s*\{/)
+  .slice(1)
+  .flatMap((block) => {
+    if (!/status:\s*"ready"/.test(block) || !/image:\s*atlasGuideFallback/.test(block)) {
+      return [];
+    }
+
+    const match = block.match(/slug:\s*"([^"]+)"/);
+    return match ? [match[1]] : [];
+  });
 
 const assetRoots = [
   path.join(root, "public"),
