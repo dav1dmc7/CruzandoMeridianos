@@ -266,6 +266,8 @@ const withLiveUpdates = (guide: DestinationGuide): DestinationGuide => {
 const toPublicGuide = (guide: DestinationGuide): DestinationGuide => ({
   ...guide,
   editorial: undefined,
+  monitoring: undefined,
+  commercial: undefined,
   publicFreshness: guide.editorial
     ? {
         updatedAt: guide.editorial.updatedAt,
