@@ -8,6 +8,8 @@ const destinations = read("src/data/destinations.ts");
 const registry = read("src/data/guides/index.ts");
 const deepDive = read("src/data/guides/destination-deep-dive.ts");
 const placeCatalog = read("src/data/guides/key-places.ts");
+const additionalGuides = read("src/data/guides/additional.ts");
+const costaRicaGuide = read("src/data/guides/costa-rica.ts");
 
 const extractReadySlugs = (source) => {
   const blocks = source.split(/\n\s*\{/).slice(1);
@@ -94,6 +96,14 @@ for (const slug of readySlugs) {
       'Ready destination "' + slug + '" must have at least five curated key places.',
     );
   }
+}
+
+if (!/id:\s*"donde-alojarse"/.test(additionalGuides)) {
+  failures.push('Universal accommodation decision section "donde-alojarse" is missing from additional guides.');
+}
+
+if (!/id:\s*\n\s*"donde-alojarse"/.test(costaRicaGuide)) {
+  failures.push('Costa Rica accommodation decision section "donde-alojarse" is missing.');
 }
 
 if (!/id:\s*"herramientas-y-comprobaciones"/.test(registry)) {
