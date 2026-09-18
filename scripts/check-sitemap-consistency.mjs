@@ -7,6 +7,7 @@ const read = (relativePath) =>
 
 const destinations = read("src/data/destinations.ts");
 const astroConfig = read("astro.config.mjs");
+const ourTripsRoot = path.join(root, "src/data/our-trips");
 
 const extractReadySlugs = (source) => {
   const blocks = source.split(/\n\s*\{/).slice(1);
@@ -19,6 +20,10 @@ const extractReadySlugs = (source) => {
 
 const destinationSlugsMatch = astroConfig.match(
   /const destinationSlugs = \[([\s\S]*?)\];/m,
+);
+
+const livedTripSlugsMatch = astroConfig.match(
+  /const livedTripSlugs = \[([\s\S]*?)\];/m,
 );
 
 const failures = [];
@@ -51,6 +56,46 @@ if (!destinationSlugsMatch) {
 
 if (!/\.\.\.destinationSlugs\.map\(/.test(astroConfig)) {
   failures.push("Sitemap customPages must derive destination guide URLs from destinationSlugs.");
+}
+
+const walk = async (directory) => {
+  const entries = await fs.readdir(directory, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const fullPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...(await walk(fullPath)));
+    else files.push(fullPath);
+  }
+  return files;
+};
+
+const ourTripSlugs = new Set();
+for (const file of await walk(ourTripsRoot)) {
+  if (!file.endsWith(".ts")) continue;
+  const content = await fs.readFile(file, "utf8");
+  for (const match of content.matchAll(/\bslug:\s*["']([^"']+)["']/g)) {
+    ourTripSlugs.add(match[1]);
+  }
+}
+
+if (!livedTripSlugsMatch) {
+  failures.push("Astro config must declare livedTripSlugs for published lived-trip routes.");
+} else {
+  const configuredTrips = [...livedTripSlugsMatch[1].matchAll(/'([^']+)'/g)].map(
+    (match) => match[1],
+  );
+
+  for (const slug of ourTripSlugs) {
+    if (!configuredTrips.includes(slug)) {
+      failures.push(`Published lived trip "${slug}" is missing from astro.config.mjs livedTripSlugs.`);
+    }
+  }
+
+  for (const slug of configuredTrips) {
+    if (!ourTripSlugs.has(slug)) {
+      failures.push(`astro.config.mjs contains lived trip "${slug}" which is not registered in src/data/our-trips.`);
+    }
+  }
 }
 
 if (failures.length) {
