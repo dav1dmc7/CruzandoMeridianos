@@ -14,6 +14,7 @@ const guidesData = read("src/data/guides/index.ts");
 const journeyPage = read("src/pages/cuentatuviaje.astro");
 const robots = read("public/robots.txt");
 const astroConfig = read("astro.config.mjs");
+const canariasPage = read("src/pages/viajes/canarias/index.astro");
 
 const editorialGuidePagesMatch = astroConfig.match(
   /const editorialGuidePages = \[([\s\S]*?)\];/m,
@@ -62,6 +63,10 @@ requirePattern(guidesIndex, /data-result-type="region"/, "The destination index 
 requirePattern(editorialGuideIndex, /slug:\s*"sudafrica\/kruger"/, "The standalone editorial guide index must include the Kruger guide.");
 requirePattern(editorialGuideIndex, /href:\s*"\/viajes\/sudafrica\/kruger"/, "The Kruger editorial index entry must point to its canonical public route.");
 requirePattern(guidesIndex, /canonical="\/viajes"/, "The destination index must keep a stable canonical /viajes path.");
+requirePattern(canariasPage, /canonical="\/viajes\/canarias"/, "The Canary Islands hub must declare a stable canonical URL.");
+requirePattern(canariasPage, /"@type":\s*"BreadcrumbList"/, "The Canary Islands hub must emit breadcrumb structured data.");
+requirePattern(canariasPage, /<a class="breadcrumb" href="\/viajes">/, "The Canary Islands hub must provide a visible parent breadcrumb.");
+
 
 requirePattern(robots, /User-agent:\s*\*/, "robots.txt must define a wildcard crawler policy.");
 requirePattern(robots, /Allow:\s*\//, "robots.txt must allow public crawling.");
