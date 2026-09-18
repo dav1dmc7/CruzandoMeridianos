@@ -15,6 +15,7 @@ const journeyPage = read("src/pages/cuentatuviaje.astro");
 const robots = read("public/robots.txt");
 const astroConfig = read("astro.config.mjs");
 const canariasPage = read("src/pages/viajes/canarias/index.astro");
+const livedTripPage = read("src/pages/nuestros-viajes/[slug].astro");
 
 const editorialGuidePagesMatch = astroConfig.match(
   /const editorialGuidePages = \[([\s\S]*?)\];/m,
@@ -66,6 +67,10 @@ requirePattern(guidesIndex, /canonical="\/viajes"/, "The destination index must 
 requirePattern(canariasPage, /canonical="\/viajes\/canarias"/, "The Canary Islands hub must declare a stable canonical URL.");
 requirePattern(canariasPage, /"@type":\s*"BreadcrumbList"/, "The Canary Islands hub must emit breadcrumb structured data.");
 requirePattern(canariasPage, /<a class="breadcrumb" href="\/viajes">/, "The Canary Islands hub must provide a visible parent breadcrumb.");
+requirePattern(livedTripPage, /"@type":\s*"Article"/, "Lived-trip pages must emit Article structured data.");
+requirePattern(livedTripPage, /"@type":\s*"BreadcrumbList"/, "Lived-trip pages must emit breadcrumb structured data.");
+requirePattern(livedTripPage, /ogImage=\{socialImage\}/, "Lived-trip pages must use the resolved social image in their Layout.");
+
 
 
 requirePattern(robots, /User-agent:\s*\*/, "robots.txt must define a wildcard crawler policy.");
