@@ -137,9 +137,14 @@ const budgetGroups = budgetGroupDefinitions
   }))
   .filter((group) => group.total > 0);
 
-const socialImage = trip.slug === "costa-rica"
-  ? costaRicaMedia.cover.src.src
-  : livedTripMedia?.cover.src.src ?? "/brujula.png";
+const socialImage =
+  trip.slug === "costa-rica"
+    ? costaRicaMedia.cover.src.src
+    : livedTripMedia?.cover.src.src;
+
+if (!socialImage) {
+  throw new Error(`Missing route-specific social image for lived trip: ${trip.slug}`);
+}
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
