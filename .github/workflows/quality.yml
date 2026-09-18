@@ -51,6 +51,12 @@ jobs:
       - name: Motion accessibility audit
         run: npm run audit:motion
 
+      - name: Navigation UX audit
+        run: npm run audit:navigation
+
+      - name: Content quality audit
+        run: npm run audit:content-quality
+
       - name: Travel intelligence rule tests
         run: npm run audit:travel-intelligence-rules
 
