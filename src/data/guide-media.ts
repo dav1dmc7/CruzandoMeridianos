@@ -1,15 +1,15 @@
 import type { ImageMetadata } from "astro";
 
-import selvaCostaRica from "./assets/images/costa-rica/selva-costa-rica.jpg";
-import playaCostaRica from "./assets/images/costa-rica/playa-costa-rica.jpg";
-import rioPlaya from "./assets/images/costa-rica/rio-playa.jpg";
-import bosqueCascada from "./assets/images/costa-rica/bosque-cascada.jpg";
-import cascada from "./assets/images/costa-rica/cascada.jpg";
-import arbol from "./assets/images/costa-rica/arbol.jpg";
-import cocodrilo from "./assets/images/costa-rica/cocodrilo.jpg";
-import rana from "./assets/images/costa-rica/rana.jpg";
-import mono from "./assets/images/costa-rica/mono.jpg";
-import perezoso from "./assets/images/costa-rica/perezoso.jpg";
+import selvaCostaRica from "../assets/images/costa-rica/selva-costa-rica.jpg";
+import playaCostaRica from "../assets/images/costa-rica/playa-costa-rica.jpg";
+import rioPlaya from "../assets/images/costa-rica/rio-playa.jpg";
+import bosqueCascada from "../assets/images/costa-rica/bosque-cascada.jpg";
+import cascada from "../assets/images/costa-rica/cascada.jpg";
+import arbol from "../assets/images/costa-rica/arbol.jpg";
+import cocodrilo from "../assets/images/costa-rica/cocodrilo.jpg";
+import rana from "../assets/images/costa-rica/rana.jpg";
+import mono from "../assets/images/costa-rica/mono.jpg";
+import perezoso from "../assets/images/costa-rica/perezoso.jpg";
 
 export interface FirstHandMediaItem {
   src: ImageMetadata;
