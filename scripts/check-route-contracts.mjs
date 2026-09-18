@@ -20,18 +20,29 @@ const walk = async (directory) => {
 const failures = [];
 
 const destinations = await read("src/data/destinations.ts");
+const editorialGuideIndex = await read("src/data/editorial-guide-index.ts");
 const additionalGuides = await read("src/data/guides/additional.ts");
 const guideRegistry = await read("src/data/guides/index.ts");
 const destinationCard = await read("src/components/sections/DestinationCard.astro");
+const canariasHub = await read("src/pages/viajes/canarias/index.astro");
 const livedTripsPage = await read("src/pages/nuestros-viajes/index.astro");
+const livedTripDetailPage = await read("src/pages/nuestros-viajes/[slug].astro");
 const ourTripsRoot = path.join(root, "src/data/our-trips");
 const guideFiles = (await walk(path.join(root, "src/data/guides")))
   .filter((file) => file.endsWith(".ts"));
 
+const destinationBlocks = destinations.split(/\n\s*\{/).slice(1);
+const destinationEntries = destinationBlocks.flatMap((block) => {
+  const slug = block.match(/slug:\s*["']([^"']+)["']/)?.[1];
+  const status = block.match(/status:\s*["']([^"']+)["']/)?.[1];
+  const experience = block.match(/experience:\s*["']([^"']+)["']/)?.[1];
+  const publishedTripSlug = block.match(/publishedTripSlug:\s*["']([^"']+)["']/)?.[1];
+  const region = block.match(/region:\s*["']([^"']+)["']/)?.[1];
+  return slug ? [{ slug, status, experience, publishedTripSlug, region }] : [];
+});
+
 const readyDestinationSlugs = new Set(
-  [...destinations.matchAll(
-    /\{[\s\S]*?slug:\s*["']([^"']+)["'][\s\S]*?status:\s*["']ready["'][\s\S]*?\}/g,
-  )].map((match) => match[1]),
+  destinationEntries.filter((entry) => entry.status === "ready").map((entry) => entry.slug),
 );
 
 const additionalGuideSlugs = new Set(
@@ -39,6 +50,18 @@ const additionalGuideSlugs = new Set(
 );
 
 const guideSlugs = new Set(["costa-rica", ...additionalGuideSlugs]);
+
+const editorialGuideEntries = [...editorialGuideIndex.matchAll(
+  /slug:\s*"([^"]+)"[\s\S]*?href:\s*"([^"]+)"/g,
+)].map((match) => ({ slug: match[1], href: match[2] }));
+
+const astroConfig = await read("astro.config.mjs");
+const editorialGuidePagesMatch = astroConfig.match(
+  /const editorialGuidePages = \[([\s\S]*?)\];/m,
+);
+const configuredEditorialGuides = editorialGuidePagesMatch
+  ? [...editorialGuidePagesMatch[1].matchAll(/'([^']+)'/g)].map((match) => match[1])
+  : [];
 
 const ourTripSlugs = new Set();
 for (const file of await walk(ourTripsRoot)) {
@@ -49,9 +72,32 @@ for (const file of await walk(ourTripsRoot)) {
   }
 }
 
-for (const slug of readyDestinationSlugs) {
-  if (!guideSlugs.has(slug)) {
-    failures.push(`Ready destination "${slug}" has no matching guide registry entry.`);
+for (const entry of editorialGuideEntries) {
+  if (!configuredEditorialGuides.includes(entry.slug)) {
+    failures.push(`Editorial guide "${entry.slug}" is indexed but not declared in astro.config.mjs.`);
+  }
+  if (entry.href !== `/viajes/${entry.slug}`) {
+    failures.push(`Editorial guide "${entry.slug}" must use /viajes/${entry.slug} as its public href.`);
+  }
+}
+
+for (const slug of configuredEditorialGuides) {
+  if (!editorialGuideEntries.some((entry) => entry.slug === slug)) {
+    failures.push(`Editorial guide "${slug}" is declared in astro.config.mjs but missing from the public index.`);
+  }
+}
+
+for (const entry of destinationEntries.filter((item) => item.status === "ready")) {
+  if (entry.experience !== "first-hand") {
+    failures.push(`Ready destination "${entry.slug}" must declare experience: "first-hand".`);
+  }
+
+  if (entry.publishedTripSlug && !ourTripSlugs.has(entry.publishedTripSlug)) {
+    failures.push(`Destination "${entry.slug}" points to missing publishedTripSlug "${entry.publishedTripSlug}".`);
+  }
+
+  if (!guideSlugs.has(entry.slug)) {
+    failures.push(`Ready destination "${entry.slug}" has no matching guide registry entry.`);
   }
 }
 
@@ -71,21 +117,53 @@ for (const file of guideFiles) {
 }
 
 for (const slug of ourTripSlugs) {
-  if (!readyDestinationSlugs.has(slug)) {
-    failures.push(`Lived trip "${slug}" does not match a ready destination.`);
+  const linkedDestinations = destinationEntries.filter(
+    (entry) => entry.status === "ready" && entry.publishedTripSlug === slug,
+  );
+
+  if (linkedDestinations.length === 0) {
+    failures.push(`Lived trip "${slug}" has no ready destination linked through publishedTripSlug.`);
   }
+}
+
+if (!canariasHub.includes('canonical="/viajes/canarias"')) {
+  failures.push("Canary Islands hub must declare /viajes/canarias as its canonical route.");
+}
+
+const canarySlugs = destinationEntries
+  .filter((entry) => entry.status === "ready" && entry.region === "Canarias")
+  .map((entry) => entry.slug);
+
+if (!canariasHub.includes('destinations.filter((destination) => destination.region === "Canarias")')) {
+  failures.push("Canary Islands hub must derive its island list from destination data.");
+}
+
+if (!canariasHub.includes('href={`/viajes/${island.slug}`}')) {
+  failures.push("Canary Islands hub must link each configured island through its destination slug.");
+}
+
+if (canarySlugs.length < 1) {
+  failures.push("Destination data must contain at least one ready Canary Islands destination.");
+}
+
+if (!editorialGuideIndex.includes('parentSlug: "sudafrica"')) {
+  failures.push("Standalone editorial guide index entries must declare their parent destination slug.");
 }
 
 if (!guideRegistry.includes("additionalGuides")) {
   failures.push("Guide registry is not consuming additionalGuides.");
 }
 
+if (!additionalGuides.includes('id: "preguntas-frecuentes"')) {
+  failures.push("Additional destination guides must expose a visible preguntas-frecuentes section.");
+}
+
 if (!destinationCard.includes('import { ourTrips } from "../../data/our-trips";')) {
   failures.push("DestinationCard must use lived-trip data before generating /nuestros-viajes routes.");
 }
 
-if (!destinationCard.includes("ourTrips.some((trip) => trip.slug === destination.slug)")) {
-  failures.push("DestinationCard must guard lived-trip links against known our-trip slugs.");
+if (!destinationCard.includes("destination.publishedTripSlug") || !destinationCard.includes("ourTrips.some((trip) => trip.slug === publishedTripSlug)")) {
+  failures.push("DestinationCard must guard lived-trip links against known published trip slugs.");
 }
 
 if (!livedTripsPage.includes('import { ourTrips } from "../../data/our-trips";')) {
@@ -100,14 +178,20 @@ if (/readyDestinations\.map\(/.test(livedTripsPage)) {
   failures.push("Nuestros viajes must not render the complete ready-destination catalog as lived trips.");
 }
 
+if (livedTripDetailPage.includes("\\n")) {
+  failures.push("Lived-trip detail page contains literal \\n sequences in Astro markup.");
+}
+
 console.log("\nRoute/data contract audit");
 console.log("=========================");
 console.log(`- Ready destinations: ${readyDestinationSlugs.size}`);
-console.log(`- Registered guides: ${guideSlugs.size}`);
-console.log(`- Lived trips: ${ourTripSlugs.size}`);
+console.log(`- First-hand ready destinations: ${destinationEntries.filter((entry) => entry.status === "ready" && entry.experience === "first-hand").length}`);
+console.log(`- Published lived-trip destination mappings: ${destinationEntries.filter((entry) => entry.publishedTripSlug).length}`);
+console.log(`- Unique lived trips: ${ourTripSlugs.size}`);
 console.log("- relatedTripSlug targets: checked");
 console.log("- DestinationCard lived-trip route guard: checked");
 console.log("- Nuestros viajes lived-trip data source: checked");
+console.log(`- Standalone editorial guides indexed: ${editorialGuideEntries.length}`);
 
 if (failures.length) {
   console.error("\nRoute/data contract audit failed:");

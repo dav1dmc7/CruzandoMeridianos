@@ -6,7 +6,9 @@ const read = (relativePath) =>
   fs.readFileSync(path.join(root, relativePath), "utf8");
 
 const destinations = read("src/data/destinations.ts");
+const editorialGuideIndex = read("src/data/editorial-guide-index.ts");
 const astroConfig = read("astro.config.mjs");
+const ourTripsRoot = path.join(root, "src/data/our-trips");
 
 const extractReadySlugs = (source) => {
   const blocks = source.split(/\n\s*\{/).slice(1);
@@ -19,6 +21,14 @@ const extractReadySlugs = (source) => {
 
 const destinationSlugsMatch = astroConfig.match(
   /const destinationSlugs = \[([\s\S]*?)\];/m,
+);
+
+const livedTripSlugsMatch = astroConfig.match(
+  /const livedTripSlugs = \[([\s\S]*?)\];/m,
+);
+
+const editorialGuidePagesMatch = astroConfig.match(
+  /const editorialGuidePages = \[([\s\S]*?)\];/m,
 );
 
 const failures = [];
@@ -51,6 +61,82 @@ if (!destinationSlugsMatch) {
 
 if (!/\.\.\.destinationSlugs\.map\(/.test(astroConfig)) {
   failures.push("Sitemap customPages must derive destination guide URLs from destinationSlugs.");
+}
+
+if (!editorialGuidePagesMatch) {
+  failures.push("Astro config must declare editorialGuidePages for nested editorial guides.");
+} else {
+  const indexedEditorialGuides = [...editorialGuideIndex.matchAll(/slug:\s*"([^"]+)"/g)].map(
+    (match) => match[1],
+  );
+  const configuredIndexedGuideSlugs = [...editorialGuidePagesMatch[1].matchAll(/'([^']+)'/g)].map(
+    (match) => match[1],
+  );
+
+  for (const slug of indexedEditorialGuides) {
+    if (!configuredIndexedGuideSlugs.includes(slug)) {
+      failures.push(`Editorial guide index entry "${slug}" is missing from astro.config.mjs editorialGuidePages.`);
+    }
+  }
+  for (const slug of configuredIndexedGuideSlugs) {
+    if (!indexedEditorialGuides.includes(slug)) {
+      failures.push(`astro.config.mjs editorial guide "${slug}" is not exposed in src/data/editorial-guide-index.ts.`);
+    }
+  }
+  const editorialGuidePages = [...editorialGuidePagesMatch[1].matchAll(/'([^']+)'/g)].map(
+    (match) => match[1],
+  );
+
+  for (const slug of editorialGuidePages) {
+    const routePath = path.join(root, "src", "pages", "viajes", ...slug.split("/")) + ".astro";
+    if (!fs.existsSync(routePath)) {
+      failures.push(`Editorial guide "${slug}" is declared in sitemap but its Astro route is missing.`);
+    }
+  }
+
+  if (editorialGuidePages.length > 0 && !/\.\.\.editorialGuidePages\.map\(/.test(astroConfig)) {
+    failures.push("Sitemap customPages must derive nested editorial guide URLs from editorialGuidePages.");
+  }
+}
+
+const walk = (directory) => {
+  const entries = fs.readdirSync(directory, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const fullPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...walk(fullPath));
+    else files.push(fullPath);
+  }
+  return files;
+};
+
+const ourTripSlugs = new Set();
+for (const file of walk(ourTripsRoot)) {
+  if (!file.endsWith(".ts")) continue;
+  const content = fs.readFileSync(file, "utf8");
+  for (const match of content.matchAll(/\bslug:\s*["']([^"']+)["']/g)) {
+    ourTripSlugs.add(match[1]);
+  }
+}
+
+if (!livedTripSlugsMatch) {
+  failures.push("Astro config must declare livedTripSlugs for published lived-trip routes.");
+} else {
+  const configuredTrips = [...livedTripSlugsMatch[1].matchAll(/'([^']+)'/g)].map(
+    (match) => match[1],
+  );
+
+  for (const slug of ourTripSlugs) {
+    if (!configuredTrips.includes(slug)) {
+      failures.push(`Published lived trip "${slug}" is missing from astro.config.mjs livedTripSlugs.`);
+    }
+  }
+
+  for (const slug of configuredTrips) {
+    if (!ourTripSlugs.has(slug)) {
+      failures.push(`astro.config.mjs contains lived trip "${slug}" which is not registered in src/data/our-trips.`);
+    }
+  }
 }
 
 if (failures.length) {

@@ -30,6 +30,24 @@ const RATE_LIMIT_MAX_REQUESTS = 3;
 const MAX_BODY_BYTES = 64 * 1024;
 const RESEND_TIMEOUT_MS = 8000;
 
+const ALLOWED_TRANSPORT = new Set([
+  "drive",
+  "public-transport",
+  "private-transfers",
+  "private-guide",
+  "small-group",
+  "destination-dependent",
+  "recommend",
+]);
+
+const ALLOWED_AGE_RANGES = new Set([
+  "16–17 años",
+  "18–29 años",
+  "30–49 años",
+  "50–64 años",
+  "65+ años",
+]);
+
 const COLORS = {
   background: "#f5f2eb", white: "#ffffff", cream: "#fbf9f4", text: "#292722",
   muted: "#706d66", lightMuted: "#918d84", border: "#e8e3d9", gold: "#b77b17",
@@ -159,13 +177,33 @@ export const POST: APIRoute = async ({ request }) => {
       data.transport !== undefined &&
       (
         !Array.isArray(data.transport) ||
-        data.transport.some((value) => typeof value !== "string")
+        data.transport.some((value) =>
+          typeof value !== "string" ||
+          !ALLOWED_TRANSPORT.has(value)
+        )
       )
     ) {
       return new Response(JSON.stringify({ success: false, error: "La selección de transporte no es válida." }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
+    }
+
+    if (data.age_range !== undefined) {
+      const ageRanges = data.age_range
+        .split(",")
+        .map((value) => value.trim())
+        .filter(Boolean);
+
+      if (
+        ageRanges.some((value) => !ALLOWED_AGE_RANGES.has(value)) ||
+        new Set(ageRanges).size !== ageRanges.length
+      ) {
+        return new Response(JSON.stringify({ success: false, error: "La selección de edad no es válida." }), {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
     }
 
     const limits: Partial<Record<Exclude<keyof TravelRequestData, "transport">, number>> = {

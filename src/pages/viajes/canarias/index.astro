@@ -1,0 +1,115 @@
+---
+import { Image } from "astro:assets";
+
+import Layout from "../../../layouts/Layout.astro";
+import Footer from "../../../components/layout/Footer.astro";
+import { destinations } from "../../../data/destinations";
+
+const islands = destinations.filter((destination) => destination.region === "Canarias");
+
+if (islands.length === 0) {
+  throw new Error("No Canary Islands destinations are configured.");
+}
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Inicio",
+      item: "https://www.cruzandomeridianos.com/",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Guías de destino",
+      item: "https://www.cruzandomeridianos.com/viajes",
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: "Islas Canarias",
+      item: "https://www.cruzandomeridianos.com/viajes/canarias",
+    },
+  ],
+};
+
+---
+
+<Layout
+  title="Islas Canarias | Guías de destino | Cruzando Meridianos"
+  description="Explora las Islas Canarias desde una sola entrada y elige qué isla quieres conocer: Tenerife, Gran Canaria, Lanzarote, Fuerteventura o El Hierro."
+  canonical="/viajes/canarias"
+>
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify([breadcrumbSchema])}
+  />
+
+  <main>
+    <section class="canarias-hero">
+      <div class="canarias-hero-inner">
+        <div>
+          <a class="breadcrumb" href="/viajes">← Guías de destino</a>
+          <p class="eyebrow">DESTINO · ESPAÑA</p>
+          <h1>Islas Canarias.<em> Elige la isla después.</em></h1>
+          <p class="hero-copy">
+            En lugar de repartir Canarias en cinco miniaturas distintas, aquí reunimos el
+            archipiélago en un mismo espacio. Empieza por la isla que más te llame y entra
+            en su propia guía.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="canarias-islands" aria-labelledby="islands-title">
+      <div class="canarias-inner">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">EL ARCHIPIÉLAGO</p>
+            <h2 id="islands-title">¿Qué isla quieres conocer?</h2>
+          </div>
+          <p>
+            Cinco islas, cinco formas distintas de plantear el viaje. Aquí puedes elegir
+            sin que Canarias desaparezca detrás de una lista interminable de destinos.
+          </p>
+        </div>
+
+        <div class="island-grid">
+          {islands.map((island, index) => (
+            <article class="island-card">
+              <a href={`/viajes/${island.slug}`} class="island-link" aria-label={`Explorar ${island.name}`}>
+                <div class="island-image">
+                  {island.image ? <Image src={island.image} alt="" loading="lazy" /> : <span>CM</span>}
+                </div>
+                <div class="island-copy">
+                  <span class="island-number">{String(index + 1).padStart(2, "0")}</span>
+                  <h3>{island.name}</h3>
+                  <p>{island.description}</p>
+                  <span class="island-cta">Explorar {island.name} <span aria-hidden="true">↗</span></span>
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="canarias-close">
+      <div class="canarias-close-inner">
+        <p class="eyebrow">UNA SOLA ENTRADA</p>
+        <h2>Primero eliges la isla. Después construyes el viaje.</h2>
+        <a href="/viajes" class="back-link">Volver al atlas <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+.canarias-hero{padding:8rem 2rem 7rem;background:var(--color-papel)}.canarias-hero-inner,.canarias-inner,.canarias-close-inner{width:min(var(--content-width),100%);margin:0 auto}.breadcrumb{display:inline-block;margin-bottom:3rem;color:var(--color-bosque);font-size:.8rem;text-decoration:none}.breadcrumb:hover{text-decoration:underline}.eyebrow{margin:0 0 1.25rem;color:var(--color-cobre);font-size:.72rem;font-weight:600;letter-spacing:2px;text-transform:uppercase}.canarias-hero h1{max-width:920px;margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3.6rem,7vw,6.4rem);font-weight:400;line-height:.96;letter-spacing:-.04em}.canarias-hero h1 em{color:var(--color-cobre);font-style:italic}.hero-copy{max-width:700px;margin:2rem 0 0;color:#555;font-size:1.08rem;line-height:1.8}.canarias-islands{padding:7rem 2rem 9rem;background:#f7f4ef}.section-heading{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.55fr);gap:5rem;align-items:end}.section-heading h2{margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3rem,5vw,4.8rem);font-weight:400;line-height:1;letter-spacing:-.035em}.section-heading>p{margin:0;color:#555;font-size:1rem;line-height:1.75}.island-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:4rem}.island-card{min-width:0;border:1px solid rgba(28,48,38,.1);border-radius:24px;background:var(--color-papel);overflow:hidden;transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease}.island-card:hover{transform:translateY(-3px);border-color:rgba(28,48,38,.22);box-shadow:0 18px 40px rgba(28,48,38,.06)}.island-link{display:grid;grid-template-columns:170px minmax(0,1fr);min-height:230px;color:inherit;text-decoration:none}.island-image{min-width:0;background:#e7e2d9;overflow:hidden}.island-image img{display:block;width:100%;height:100%;object-fit:cover}.island-image span{display:grid;place-items:center;height:100%;color:var(--color-cobre);font-family:var(--font-serif);font-size:1.3rem}.island-copy{display:flex;min-width:0;flex-direction:column;padding:1.5rem 1.6rem}.island-number{color:var(--color-cobre);font-size:.7rem;font-weight:600;letter-spacing:1px}.island-copy h3{margin:.7rem 0 .55rem;color:var(--color-bosque);font-family:var(--font-serif);font-size:2.15rem;font-weight:400;line-height:1}.island-copy p{margin:0;color:#666;font-size:.86rem;line-height:1.6}.island-cta{margin-top:auto;padding-top:1.25rem;color:var(--color-cobre);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em}.island-cta span{display:inline-block;margin-left:.25rem;transition:transform .2s ease}.island-card:hover .island-cta span{transform:translate(3px,-3px)}.canarias-close{padding:8rem 2rem;background:var(--color-arena)}.canarias-close-inner{text-align:center}.canarias-close h2{max-width:850px;margin:0 auto;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(3rem,5.5vw,5rem);font-weight:400;line-height:.98;letter-spacing:-.035em}.back-link{display:inline-block;margin-top:2rem;color:var(--color-bosque);font-weight:600;text-decoration:none}.back-link:hover{text-decoration:underline}@media (max-width:900px){.canarias-hero{padding:6rem 1.5rem 5rem}.canarias-islands,.canarias-close{padding-left:1.5rem;padding-right:1.5rem}.section-heading{grid-template-columns:1fr;gap:2rem}.island-grid{grid-template-columns:1fr}}@media (max-width:620px){.canarias-hero h1{font-size:3.4rem}.island-link{grid-template-columns:110px minmax(0,1fr);min-height:215px}.island-copy{padding:1.25rem}.island-copy h3{font-size:1.8rem}.island-copy p{font-size:.8rem}.canarias-close{padding-top:6rem;padding-bottom:6rem}}
+</style>

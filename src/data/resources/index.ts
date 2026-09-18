@@ -60,8 +60,8 @@ const blinkEsim: TravelResource = {
     "Una eSIM para tener conexión móvil durante el viaje sin depender de una tarjeta SIM física.",
   longDescription:
     "BLINKeSIM ofrece conectividad mediante eSIM. En la promoción de referidos que nos ha comunicado BLINKeSIM, quien se registre con nuestro enlace obtiene 1 día de internet gratis y Cruzando Meridianos puede recibir 1 día adicional cuando se cumplen las condiciones del programa.",
-  url: "https://blinkesim.com/",
-  trackingUrl: "https://blinkesim.com/es/my-account?pkey=M5HI4PQ8GE",
+  url: "https://www.blinkesim.com/es/",
+  trackingUrl: "https://dashboard.blinkesim.com/es/my-account/?pkey=M5HI4PQ8GE",
   provider: "BLINKeSIM",
   status: "active",
   recommended: true,

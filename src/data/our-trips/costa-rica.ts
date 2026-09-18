@@ -129,7 +129,7 @@ export interface TripDay {
 export interface TripAccommodation {
   location: string;
   name: string;
-  nights: number;
+  nights?: number;
 
   amount?: number;
   currency?: string;
@@ -222,6 +222,14 @@ export interface PlannedButNotVisited {
   lesson?: string;
 }
 
+export interface TripBudgetSummary {
+  total: number;
+  perPerson?: number;
+  currency: string;
+  source: "tricount";
+  note: string;
+}
+
 export interface OurTrip {
   slug: string;
 
@@ -257,6 +265,8 @@ export interface OurTrip {
   accommodations: TripAccommodation[];
 
   budget: TripBudgetItem[];
+
+  budgetSummary?: TripBudgetSummary;
 
   whatWeWouldRepeat: string[];
 

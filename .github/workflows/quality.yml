@@ -27,6 +27,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Audit script syntax
+        run: npm run audit:script-syntax
+
       - name: Astro check
         run: npm run check
 
@@ -50,6 +53,21 @@ jobs:
 
       - name: Motion accessibility audit
         run: npm run audit:motion
+
+      - name: Navigation UX audit
+        run: npm run audit:navigation
+
+      - name: Content quality audit
+        run: npm run audit:content-quality
+
+      - name: Page SEO quality audit
+        run: npm run audit:page-quality
+
+      - name: Visual accessibility audit
+        run: npm run audit:visual-accessibility
+
+      - name: Canonical routing audit
+        run: npm run audit:canonical-routing
 
       - name: Travel intelligence rule tests
         run: npm run audit:travel-intelligence-rules
