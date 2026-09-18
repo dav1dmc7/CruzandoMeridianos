@@ -58,21 +58,21 @@ if (!/\.\.\.destinationSlugs\.map\(/.test(astroConfig)) {
   failures.push("Sitemap customPages must derive destination guide URLs from destinationSlugs.");
 }
 
-const walk = async (directory) => {
-  const entries = await fs.readdir(directory, { withFileTypes: true });
+const walk = (directory) => {
+  const entries = fs.readdirSync(directory, { withFileTypes: true });
   const files = [];
   for (const entry of entries) {
     const fullPath = path.join(directory, entry.name);
-    if (entry.isDirectory()) files.push(...(await walk(fullPath)));
+    if (entry.isDirectory()) files.push(...walk(fullPath));
     else files.push(fullPath);
   }
   return files;
 };
 
 const ourTripSlugs = new Set();
-for (const file of await walk(ourTripsRoot)) {
+for (const file of walk(ourTripsRoot)) {
   if (!file.endsWith(".ts")) continue;
-  const content = await fs.readFile(file, "utf8");
+  const content = fs.readFileSync(file, "utf8");
   for (const match of content.matchAll(/\bslug:\s*["']([^"']+)["']/g)) {
     ourTripSlugs.add(match[1]);
   }
