@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
 import Footer from "../../components/layout/Footer.astro";
+import GuideFirstHandGallery from "../../components/guides/GuideFirstHandGallery.astro";
 import { getOurTripBySlug } from "../../data/our-trips";
 
 import { firstHandMediaBySlug } from "../../data/guide-media";
@@ -24,6 +25,11 @@ const costaRicaMedia = firstHandMediaBySlug["costa-rica"];
 if (!costaRicaMedia) {
   throw new Error("Costa Rica first-hand media registry is missing.");
 }
+
+const livedTripMedia =
+  trip.slug === "sudafrica-mauricio"
+    ? firstHandMediaBySlug["sudafrica"]
+    : undefined;
 
 const [
   selvaCostaRica,
@@ -976,6 +982,15 @@ const budgetGroups = budgetGroupDefinitions
     </section>
 
     )}
+
+    {
+      livedTripMedia && (
+        <GuideFirstHandGallery
+          media={livedTripMedia}
+          limit={10}
+        />
+      )
+    }
 
     <!-- =========================================================
          GUÍA RELACIONADA
