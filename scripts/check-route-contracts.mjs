@@ -129,10 +129,25 @@ if (!canariasHub.includes('canonical="/viajes/canarias"')) {
   failures.push("Canary Islands hub must declare /viajes/canarias as its canonical route.");
 }
 
-for (const slug of ["tenerife", "gran-canaria", "lanzarote", "fuerteventura", "el-hierro"]) {
-  if (!canariasHub.includes(`/viajes/${slug}`)) {
-    failures.push(`Canary Islands hub is missing a link for "${slug}".`);
-  }
+const canarySlugs = destinationEntries
+  .filter((entry) => entry.status === "ready" && /region:\s*"Canarias"/.test(
+    destinations.slice(
+      destinations.indexOf(`slug: "${entry.slug}"`),
+      destinations.indexOf(`slug: "${entry.slug}"`) + 500,
+    ),
+  ))
+  .map((entry) => entry.slug);
+
+if (!canariasHub.includes('destinations.filter((destination) => destination.region === "Canarias")')) {
+  failures.push("Canary Islands hub must derive its island list from destination data.");
+}
+
+if (!canariasHub.includes('href={`/viajes/${island.slug}`}')) {
+  failures.push("Canary Islands hub must link each configured island through its destination slug.");
+}
+
+if (canarySlugs.length < 1) {
+  failures.push("Destination data must contain at least one ready Canary Islands destination.");
 }
 
 if (!editorialGuideIndex.includes('parentSlug: "sudafrica"')) {
