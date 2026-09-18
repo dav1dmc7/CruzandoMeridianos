@@ -24,6 +24,7 @@ const editorialGuideIndex = await read("src/data/editorial-guide-index.ts");
 const additionalGuides = await read("src/data/guides/additional.ts");
 const guideRegistry = await read("src/data/guides/index.ts");
 const destinationCard = await read("src/components/sections/DestinationCard.astro");
+const canariasHub = await read("src/pages/viajes/canarias/index.astro");
 const livedTripsPage = await read("src/pages/nuestros-viajes/index.astro");
 const livedTripDetailPage = await read("src/pages/nuestros-viajes/[slug].astro");
 const ourTripsRoot = path.join(root, "src/data/our-trips");
@@ -121,6 +122,16 @@ for (const slug of ourTripSlugs) {
 
   if (linkedDestinations.length === 0) {
     failures.push(`Lived trip "${slug}" has no ready destination linked through publishedTripSlug.`);
+  }
+}
+
+if (!canariasHub.includes('canonical="/viajes/canarias"')) {
+  failures.push("Canary Islands hub must declare /viajes/canarias as its canonical route.");
+}
+
+for (const slug of ["tenerife", "gran-canaria", "lanzarote", "fuerteventura", "el-hierro"]) {
+  if (!canariasHub.includes(`/viajes/${slug}`)) {
+    failures.push(`Canary Islands hub is missing a link for "${slug}".`);
   }
 }
 
