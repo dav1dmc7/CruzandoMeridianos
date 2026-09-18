@@ -28,7 +28,7 @@ const ourTripsRoot = path.join(root, "src/data/our-trips");
 const guideFiles = (await walk(path.join(root, "src/data/guides")))
   .filter((file) => file.endsWith(".ts"));
 
-const destinationBlocks = [...destinations.matchAll(/\n  \{\n([\s\S]*?)\n  \},\n/g)].map((match) => match[1]);
+const destinationBlocks = destinations.split(/\n\s*\{/).slice(1);
 const destinationEntries = destinationBlocks.flatMap((block) => {
   const slug = block.match(/slug:\s*["']([^"']+)["']/)?.[1];
   const status = block.match(/status:\s*["']([^"']+)["']/)?.[1];
