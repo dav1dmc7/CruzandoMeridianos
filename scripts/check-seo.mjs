@@ -14,14 +14,8 @@ const robots = read("public/robots.txt");
 const astroConfig = read("astro.config.mjs");
 
 const failures = [];
-const warnings = [];
-
 const requirePattern = (source, pattern, label) => {
   if (!pattern.test(source)) failures.push(label);
-};
-
-const warnIfPattern = (source, pattern, label) => {
-  if (pattern.test(source)) warnings.push(label);
 };
 
 requirePattern(layout, /<html\s+lang="es">/, "Layout must declare the Spanish document language.");
@@ -45,11 +39,11 @@ requirePattern(
 
 requirePattern(guidePage, /const breadcrumbSchema = \{/, "Guide pages must define breadcrumb structured data.");
 requirePattern(guidePage, /"@type":\s*"Article"/, "Guide pages must emit Article structured data.");
-requirePattern(guidePage, /headline:\s*guide\.title/, "Guide Article schema must use the editorial title as headline.");
+requirePattern(guidePage, /headline:\s*publicGuideTitle/, "Guide Article schema must use the public guide title as headline.");
 requirePattern(guidePage, /description:\s*guide\.subtitle/, "Guide Article schema must use the editorial subtitle as description.");
-requirePattern(guidePage, /dateModified:/, "Guide Article schema must expose the editorial update date when available.");
+requirePattern(guidePage, /guide\.publicFreshness\?\.updatedAt/, "Guide Article schema must derive dateModified from public guide freshness metadata.");
 requirePattern(guidePage, /about:\s*\{/, "Guide Article schema must identify the destination entity.");
-requirePattern(guidePage, /<h1>\s*\{guide\.title\}\s*<\/h1>/, "Guide pages must have a single primary H1 driven by the guide title.");
+requirePattern(guidePage, /<h1>\s*\{publicGuideTitle\}\s*<\/h1>/, "Guide pages must have a single primary H1 driven by the public guide title.");
 requirePattern(guidePage, /canonical=\{`\/viajes\/\$\{destination\.slug\}`\}/, "Guide pages must provide a stable canonical path.");
 
 requirePattern(guidesIndex, /title="Guías de destino \| Cruzando Meridianos"/, "The destination index must use the public " + '"Guías de destino"' + " terminology in its title.");
@@ -70,16 +64,17 @@ requirePattern(
   "The journey form privacy note must link directly to /privacidad."
 );
 
-warnIfPattern(
+requirePattern(
   guidePage,
-  /name:\s*"Viajes"\s*,\s*item:\s*"https:\/\/www\.cruzandomeridianos\.com\/viajes"/,
-  "Guide breadcrumb structured data still uses the legacy public label \"Viajes\"; align it with \"Guías de destino\"."
+  /name:\s*"Guías de destino"\s*,\s*item:\s*"https:\/\/www\.cruzandomeridianos\.com\/viajes"/,
+  "Guide breadcrumb structured data must use the public \"Guías de destino\" label."
 );
-warnIfPattern(
-  guidePage,
-  /Estado editorial|Última revisión:/,
-  "Guide pages still expose internal editorial-status wording; migrate the public copy toward visitor-facing freshness language."
-);
+if (/Estado editorial|Última revisión:/.test(guidePage)) {
+  failures.push("Guide pages must not expose internal editorial-status wording.");
+}
+if (/data-section-status=|section\.status/.test(guidePage)) {
+  failures.push("Guide pages must not expose internal section editorial-status implementation.");
+}
 
 if (failures.length) {
   console.error("SEO audit failed:");
@@ -87,9 +82,5 @@ if (failures.length) {
   process.exit(1);
 }
 
-if (warnings.length) {
-  console.warn("SEO audit warnings:");
-  for (const warning of warnings) console.warn(`- ${warning}`);
-}
 
-console.log("SEO architecture audit passed: metadata, canonical, robots, sitemap, JSON-LD and public destination terminology contracts are present.");
+console.log("SEO architecture audit passed: metadata, canonical, robots, sitemap, JSON-LD, public guide freshness and destination terminology contracts are present.");
