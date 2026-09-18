@@ -9,6 +9,7 @@ const read = (relativePath) =>
 const layout = read("src/layouts/Layout.astro");
 const guidePage = read("src/pages/viajes/[slug].astro");
 const guidesIndex = read("src/pages/viajes.astro");
+const guidesData = read("src/data/guides/index.ts");
 const journeyPage = read("src/pages/cuentatuviaje.astro");
 const robots = read("public/robots.txt");
 const astroConfig = read("astro.config.mjs");
@@ -74,14 +75,14 @@ requirePattern(
 if (/Estado editorial|Última revisión:/.test(guidePage)) {
   failures.push("Guide pages must not expose internal editorial-status wording.");
 }
-if (/data-section-status=/.test(guidePage)) {
-  failures.push("Guide pages must not expose internal section editorial-status implementation.");
+if (/data-section-status=|section\.status/.test(guidePage)) {
+  failures.push("Guide pages must not expose or depend on internal section editorial-status implementation.");
 }
-if (!/const publicSections =\s*guide\.sections\.filter\([\s\S]*section\.status !== "draft"/.test(guidePage)) {
-  failures.push("Guide pages must filter draft sections before public rendering.");
+if (!/sections:\s*guide\.sections\s*\.filter\(\(section\)\s*=>\s*section\.status\s*!==\s*"draft"\)/.test(guidesData)) {
+  failures.push("Public guide data must filter draft sections before removing internal editorial metadata.");
 }
-if (!/publicSections\.map\(/.test(guidePage)) {
-  failures.push("Guide pages must render the public section collection rather than the internal section collection.");
+if (!/const publicSections\s*=\s*guide\.sections/.test(guidePage) || !/publicSections\.map\(/.test(guidePage)) {
+  failures.push("Guide pages must render the public guide section collection.");
 }
 
 if (failures.length) {
