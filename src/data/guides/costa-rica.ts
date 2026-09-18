@@ -515,6 +515,60 @@ import type {
 
     {
       id:
+        "donde-alojarse",
+
+      title:
+        "Dónde alojarse y cómo elegir zona",
+
+      category:
+        "planning",
+
+      intro:
+        "En Costa Rica la zona del alojamiento puede cambiar mucho más el viaje que una pequeña diferencia de categoría del hotel.",
+
+      paragraphs: [
+        "No hace falta empezar por buscar hoteles. Primero conviene decidir qué quieres tener cerca y cuánto estás dispuesto a moverte cada día.",
+        "San José puede funcionar como noche de llegada o salida y como base logística, pero no hace falta convertirla en una estancia larga por defecto. La Fortuna suele ser una base muy completa para combinar volcán, naturaleza, termas y actividades. Monteverde cambia el paisaje y el ritmo y tiene sentido cuando quieres bosque nuboso, montaña o fauna. En la costa, la elección entre Pacífico Central y Caribe Sur cambia bastante la personalidad del viaje.",
+        "También importa el tamaño de la ruta. Una base muy bien situada puede permitirte hacer varias experiencias sin mover maletas, mientras que cambiar de alojamiento para acercarte a cada punto puede consumir una parte importante del día.",
+        "Por eso no vamos a convertir esta sección en una lista de hoteles. La pregunta útil es qué zona encaja con el tipo de viaje que quieres hacer y qué coste tiene esa elección en tiempo, coche y ritmo.",
+      ],
+
+      highlights: [
+        {
+          title:
+            "Primero decide la base",
+
+          description:
+            "La zona correcta puede ahorrarte trayectos cada día y hacer que una ruta aparentemente complicada se vuelva mucho más sencilla.",
+
+          type:
+            "decision",
+        },
+
+        {
+          title:
+            "No cambies de hotel porque sí",
+
+          description:
+            "Cada cambio significa equipaje, check-out, traslado y tiempo perdido. Solo merece la pena cuando aporta una experiencia o una mejora logística clara.",
+
+          type:
+            "important",
+        },
+      ],
+
+      closing:
+        "Entender las zonas es público. Decidir dónde dormir con tus fechas, presupuesto, ritmo y prioridades concretas es precisamente el tipo de trabajo que hacemos nosotros.",
+
+      status:
+        "published",
+
+      reviewedAt:
+        LAST_REVIEWED,
+    },
+
+    {
+      id:
         "que-ver-y-hacer",
 
       title:
@@ -1662,6 +1716,17 @@ import type {
 
       answer:
         "No hay una única respuesta. El Pacífico Central puede facilitar una combinación de fauna, parque y playa dentro de una ruta relativamente sencilla. El Caribe Sur cambia el ambiente y la experiencia. En viajes cortos suele ser más importante elegir una costa que intentar conocer las dos.",
+
+      category:
+        "planning",
+    },
+
+    {
+      question:
+        "¿En qué zona conviene alojarse en Costa Rica?",
+
+      answer:
+        "Depende de lo que quieras priorizar. San José funciona sobre todo para logística; La Fortuna es una base muy completa para interior y Arenal; Monteverde cambia el ecosistema y el ritmo; Manuel Antonio facilita la combinación de fauna, parque y costa; y Puerto Viejo aporta una experiencia caribeña distinta. La elección correcta depende también de cuántos días tengas y de cuánto desplazamiento quieras asumir.",
 
       category:
         "planning",
