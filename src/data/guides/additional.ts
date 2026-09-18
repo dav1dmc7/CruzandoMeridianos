@@ -220,6 +220,7 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
     },
     {
       id: "preguntas-frecuentes",
+      number: "09",
       title: "Preguntas frecuentes",
       category: "practical",
       intro: `Preguntas concretas que suelen aparecer al planificar un viaje a ${spec.name}.`,
