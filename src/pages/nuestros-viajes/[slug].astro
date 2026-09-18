@@ -137,9 +137,68 @@ const budgetGroups = budgetGroupDefinitions
   }))
   .filter((group) => group.total > 0);
 
+const socialImage = trip.slug === "costa-rica"
+  ? costaRicaMedia.cover.src.src
+  : livedTripMedia?.cover.src.src ?? "/brujula.png";
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Inicio",
+      item: "https://www.cruzandomeridianos.com/",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Nuestros viajes",
+      item: "https://www.cruzandomeridianos.com/nuestros-viajes",
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: trip.destination,
+      item: `https://www.cruzandomeridianos.com/nuestros-viajes/${trip.slug}`,
+    },
+  ],
+};
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: title,
+  description,
+  inLanguage: "es",
+  url: `https://www.cruzandomeridianos.com/nuestros-viajes/${trip.slug}`,
+  image: socialImage,
+  author: {
+    "@type": "Organization",
+    name: "Cruzando Meridianos",
+    url: "https://www.cruzandomeridianos.com/",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Cruzando Meridianos",
+    url: "https://www.cruzandomeridianos.com/",
+  },
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": `https://www.cruzandomeridianos.com/nuestros-viajes/${trip.slug}`,
+  },
+};
+
 ---
 
-<Layout title={title} description={description} ogImage={trip.slug === "costa-rica" ? costaRicaMedia.cover.src.src : livedTripMedia?.cover.src.src ?? "/brujula.png"} type="article">
+<Layout title={title} description={description} ogImage={socialImage} type="article">
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify([breadcrumbSchema, articleSchema])}
+  />
+
   <main class="trip-page">
     <!-- =========================================================
          HERO
