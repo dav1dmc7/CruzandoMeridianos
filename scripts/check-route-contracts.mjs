@@ -80,6 +80,10 @@ if (!guideRegistry.includes("additionalGuides")) {
   failures.push("Guide registry is not consuming additionalGuides.");
 }
 
+if (!additionalGuides.includes('id: "preguntas-frecuentes"')) {
+  failures.push("Additional destination guides must expose a visible preguntas-frecuentes section.");
+}
+
 if (!destinationCard.includes('import { ourTrips } from "../../data/our-trips";')) {
   failures.push("DestinationCard must use lived-trip data before generating /nuestros-viajes routes.");
 }
