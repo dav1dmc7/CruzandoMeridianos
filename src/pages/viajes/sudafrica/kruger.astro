@@ -1,0 +1,766 @@
+---
+import { Image } from "astro:assets";
+
+import Layout from "../../../layouts/Layout.astro";
+import Footer from "../../../components/layout/Footer.astro";
+import GuideFirstHandGallery from "../../../components/guides/GuideFirstHandGallery.astro";
+
+import {
+  krugerGuideDescription,
+  krugerGuideFaq,
+  krugerGuideLastReviewed,
+  krugerGuideSections,
+  krugerGuideSubtitle,
+  krugerGuideTitle,
+  krugerSources,
+} from "../../../data/guides/kruger";
+import { firstHandMediaBySlug } from "../../../data/guide-media";
+import type { GuideSection, FAQItem } from "../../../data/guides/types";
+
+const media = firstHandMediaBySlug["sudafrica"];
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Inicio",
+      item: "https://www.cruzandomeridianos.com/",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Guía de Sudáfrica",
+      item: "https://www.cruzandomeridianos.com/viajes/sudafrica",
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: "Safari en Kruger",
+      item: "https://www.cruzandomeridianos.com/viajes/sudafrica/kruger",
+    },
+  ],
+};
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: krugerGuideTitle,
+  description: krugerGuideDescription,
+  dateModified: krugerGuideLastReviewed,
+  inLanguage: "es",
+  url: "https://www.cruzandomeridianos.com/viajes/sudafrica/kruger",
+  image: media?.cover.src.src,
+  author: {
+    "@type": "Organization",
+    name: "Cruzando Meridianos",
+    url: "https://www.cruzandomeridianos.com/",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Cruzando Meridianos",
+    url: "https://www.cruzandomeridianos.com/",
+  },
+  isPartOf: {
+    "@type": "WebPage",
+    "@id": "https://www.cruzandomeridianos.com/viajes/sudafrica",
+  },
+};
+
+const sectionLabel = (section: GuideSection) => {
+  switch (section.category) {
+    case "overview":
+      return "Contexto";
+    case "planning":
+      return "Planificación";
+    case "experience":
+      return "Experiencia";
+    case "practical":
+      return "Información práctica";
+    default:
+      return "Kruger";
+  }
+};
+
+const faqCategoryLabel = (item: FAQItem) => {
+  switch (item.category) {
+    case "planning":
+      return "Planificación";
+    case "transport":
+      return "Transporte";
+    case "practical":
+      return "Práctica";
+    case "safety":
+      return "Seguridad";
+    default:
+      return "General";
+  }
+};
+---
+
+<Layout
+  title={krugerGuideTitle}
+  description={krugerGuideDescription}
+  canonical="/viajes/sudafrica/kruger"
+  ogImage={media?.cover.src}
+  type="article"
+>
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify([breadcrumbSchema, articleSchema])}
+  />
+
+  <main class="kruger-page">
+    <section class="kruger-hero">
+      <div class="kruger-shell kruger-hero__grid">
+        <div class="kruger-hero__copy">
+          <a class="kruger-back" href="/viajes/sudafrica">
+            <span aria-hidden="true">←</span>
+            Guía de Sudáfrica
+          </a>
+
+          <p class="eyebrow">SAFARI · KRUGER</p>
+
+          <h1>Cómo organizar un safari en Kruger sin perderte en la logística.</h1>
+
+          <p class="kruger-hero__lead">
+            Una guía específica para entender el parque, elegir entre coche y safaris guiados,
+            decidir dónde dormir y construir una estancia con tiempo suficiente para disfrutarla.
+          </p>
+
+          <div class="kruger-hero__meta">
+            <span>Actualizada {krugerGuideLastReviewed}</span>
+            <span>Experiencia propia + fuentes oficiales</span>
+          </div>
+        </div>
+
+        {
+          media && (
+            <figure class="kruger-hero__media">
+              <Image
+                src={media.cover.src}
+                alt={media.cover.alt}
+                loading="eager"
+                widths={[900, 1400, 1800]}
+                sizes="(max-width: 900px) 100vw, 48vw"
+              />
+              <figcaption>{media.cover.caption}</figcaption>
+            </figure>
+          )
+        }
+      </div>
+    </section>
+
+    <section class="kruger-intro">
+      <div class="kruger-shell kruger-intro__grid">
+        <div>
+          <p class="eyebrow">LA IDEA CLAVE</p>
+          <h2>Kruger merece una página propia dentro de Sudáfrica.</h2>
+        </div>
+
+        <div class="kruger-intro__copy">
+          <p>
+            Sudáfrica es el destino. Kruger es una de las experiencias que pueden justificar un
+            viaje entero o una parte importante de él. Separarlos permite explicar el país sin
+            convertir la guía general en una guía de safari interminable.
+          </p>
+          <p>
+            SANParks describe Kruger como un parque de casi 2 millones de hectáreas y ofrece
+            visita con vehículo propio, campamentos públicos y otras modalidades de alojamiento.
+            La organización del safari merece por tanto decisiones propias. citeturn645918search1
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <nav class="kruger-jump" aria-label="Índice de la guía de Kruger">
+      <div class="kruger-shell kruger-jump__inner">
+        {krugerGuideSections.map((section) => (
+          <a href={`#${section.id}`}>
+            <span>{section.number}</span>
+            {section.title}
+          </a>
+        ))}
+        <a href="#preguntas">
+          <span>FAQ</span>
+          Preguntas frecuentes
+        </a>
+      </div>
+    </nav>
+
+    {
+      krugerGuideSections.map((section) => (
+        <section id={section.id} class:list={["kruger-section", { "kruger-section--soft": Number(section.number) % 2 === 0 }]}>
+          <div class="kruger-shell">
+            <div class="kruger-section__header">
+              <div>
+                <p class="eyebrow">{section.number} · {sectionLabel(section)}</p>
+                <h2>{section.title}</h2>
+              </div>
+              {section.intro && <p class="kruger-section__intro">{section.intro}</p>}
+            </div>
+
+            <div class="kruger-section__body">
+              <div class="kruger-section__text">
+                {(section.paragraphs ?? []).map((paragraph) => <p>{paragraph}</p>)}
+              </div>
+
+              {
+                section.highlights && section.highlights.length > 0 && (
+                  <div class="kruger-decision-grid">
+                    {section.highlights.map((highlight) => (
+                      <article class="kruger-decision-card">
+                        <span>{highlight.type ?? "A tener en cuenta"}</span>
+                        <h3>{highlight.title}</h3>
+                        <p>{highlight.description}</p>
+                      </article>
+                    ))}
+                  </div>
+                )
+              }
+            </div>
+          </div>
+        </section>
+      ))
+    }
+
+    {
+      media && (
+        <GuideFirstHandGallery media={media} />
+      )
+    }
+
+    <section id="preguntas" class="kruger-faq">
+      <div class="kruger-shell">
+        <div class="kruger-section__header">
+          <div>
+            <p class="eyebrow">FAQ · KRUGER</p>
+            <h2>Las preguntas que conviene resolver antes de reservar.</h2>
+          </div>
+
+          <p class="kruger-section__intro">
+            Son preguntas de planificación, no una receta única. La respuesta final depende de
+            fechas, presupuesto, ritmo y de cuánto protagonismo quieras darle al safari.
+          </p>
+        </div>
+
+        <div class="kruger-faq__list">
+          {krugerGuideFaq.map((item) => (
+            <details>
+              <summary>
+                <span>{faqCategoryLabel(item)}</span>
+                {item.question}
+              </summary>
+              <p>{item.answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="kruger-sources">
+      <div class="kruger-shell kruger-sources__grid">
+        <div>
+          <p class="eyebrow">FUENTES</p>
+          <h2>Lo que puede cambiar hay que volver a comprobarlo.</h2>
+          <p>
+            La página se revisa con referencias oficiales, pero horarios, disponibilidad,
+            condiciones de acceso y avisos deben comprobarse de nuevo antes del viaje.
+          </p>
+        </div>
+
+        <div class="kruger-sources__list">
+          {krugerSources.map((source) => (
+            <a href={source.url} target="_blank" rel="noreferrer">
+              <span>{source.type}</span>
+              {source.label}
+              <strong aria-hidden="true">↗</strong>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="kruger-next">
+      <div class="kruger-shell kruger-next__grid">
+        <div>
+          <p class="eyebrow">SEGUIR EXPLORANDO</p>
+          <h2>Kruger es una pieza de Sudáfrica, no un destino aislado.</h2>
+          <p>
+            Después de decidir el safari, toca encajarlo con vuelos, Ciudad del Cabo, costa,
+            carretera y el resto de prioridades del viaje.
+          </p>
+        </div>
+
+        <div class="kruger-next__links">
+          <a href="/viajes/sudafrica">
+            <span>Guía general</span>
+            Volver a Sudáfrica <strong aria-hidden="true">→</strong>
+          </a>
+          <a href="/nuestros-viajes/sudafrica-mauricio">
+            <span>Experiencia propia</span>
+            Ver nuestro viaje <strong aria-hidden="true">→</strong>
+          </a>
+          <a href="/cuentatuviaje">
+            <span>Planificación</span>
+            Cuéntanos tu viaje <strong aria-hidden="true">↗</strong>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .kruger-page {
+    --kruger-max: min(1180px, calc(100% - 3rem));
+    background: var(--color-papel);
+    color: var(--color-bosque);
+  }
+
+  .kruger-shell {
+    width: var(--kruger-max);
+    margin-inline: auto;
+  }
+
+  .kruger-hero {
+    padding: 2rem 0 7rem;
+    background: var(--color-papel);
+  }
+
+  .kruger-hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr);
+    gap: clamp(3rem, 8vw, 8rem);
+    align-items: end;
+  }
+
+  .kruger-back {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    margin-bottom: 4rem;
+    color: var(--color-bosque);
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-decoration: none;
+  }
+
+  .kruger-back:hover {
+    color: var(--color-cobre);
+  }
+
+  .kruger-hero__copy h1 {
+    max-width: 760px;
+    margin: .7rem 0 1.5rem;
+    font-family: var(--font-serif);
+    font-size: clamp(3.8rem, 7vw, 7.2rem);
+    font-weight: 400;
+    line-height: .92;
+    letter-spacing: -.055em;
+  }
+
+  .kruger-hero__lead {
+    max-width: 680px;
+    margin: 0;
+    color: rgba(28,54,42,.74);
+    font-family: var(--font-serif);
+    font-size: clamp(1.25rem, 2vw, 1.7rem);
+    line-height: 1.55;
+  }
+
+  .kruger-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .8rem 1.4rem;
+    margin-top: 2rem;
+    color: rgba(28,54,42,.5);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .kruger-hero__media {
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    border-radius: 1.4rem;
+    background: #d9d5ca;
+  }
+
+  .kruger-hero__media img {
+    display: block;
+    width: 100%;
+    aspect-ratio: .82;
+    object-fit: cover;
+  }
+
+  .kruger-hero__media figcaption {
+    padding: .8rem 1rem 1rem;
+    color: rgba(28,54,42,.58);
+    background: var(--color-papel);
+    font-size: .72rem;
+    line-height: 1.5;
+  }
+
+  .kruger-intro,
+  .kruger-section,
+  .kruger-faq,
+  .kruger-sources,
+  .kruger-next {
+    padding: clamp(5rem, 9vw, 8rem) 0;
+  }
+
+  .kruger-intro {
+    background: #f3f0e9;
+  }
+
+  .kruger-intro__grid,
+  .kruger-sources__grid,
+  .kruger-next__grid {
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(280px, .72fr);
+    gap: clamp(3rem, 8vw, 8rem);
+    align-items: start;
+  }
+
+  .kruger-intro h2,
+  .kruger-section__header h2,
+  .kruger-sources h2,
+  .kruger-next h2 {
+    max-width: 760px;
+    margin: .7rem 0 0;
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 5.2vw, 5.8rem);
+    font-weight: 400;
+    line-height: .95;
+    letter-spacing: -.05em;
+  }
+
+  .kruger-intro__copy p,
+  .kruger-sources__grid > div > p,
+  .kruger-next__grid > div > p {
+    margin: 0 0 1.1rem;
+    color: rgba(28,54,42,.7);
+    font-size: .98rem;
+    line-height: 1.85;
+  }
+
+  .kruger-jump {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-top: 1px solid rgba(28,54,42,.12);
+    border-bottom: 1px solid rgba(28,54,42,.12);
+    background: rgba(251,249,245,.93);
+    backdrop-filter: blur(12px);
+  }
+
+  .kruger-jump__inner {
+    display: flex;
+    gap: .8rem;
+    overflow-x: auto;
+    padding: .8rem 0;
+    scrollbar-width: none;
+  }
+
+  .kruger-jump__inner::-webkit-scrollbar {
+    display: none;
+  }
+
+  .kruger-jump a {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    padding: .55rem .8rem;
+    border: 1px solid rgba(28,54,42,.1);
+    color: var(--color-bosque);
+    font-size: .72rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .kruger-jump a span {
+    color: var(--color-cobre);
+  }
+
+  .kruger-section--soft {
+    background: #f3f0e9;
+  }
+
+  .kruger-section__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, .58fr);
+    gap: 3rem;
+    align-items: end;
+    margin-bottom: 3.5rem;
+  }
+
+  .kruger-section__intro {
+    margin: 0;
+    color: rgba(28,54,42,.62);
+    font-size: .96rem;
+    line-height: 1.8;
+  }
+
+  .kruger-section__body {
+    display: grid;
+    grid-template-columns: minmax(0, .78fr) minmax(320px, 1.22fr);
+    gap: clamp(3rem, 8vw, 8rem);
+    align-items: start;
+  }
+
+  .kruger-section__text p {
+    margin: 0 0 1.2rem;
+    color: rgba(28,54,42,.73);
+    font-size: 1rem;
+    line-height: 1.9;
+  }
+
+  .kruger-decision-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    border-top: 1px solid rgba(28,54,42,.14);
+    border-left: 1px solid rgba(28,54,42,.14);
+  }
+
+  .kruger-decision-card {
+    padding: 1.5rem;
+    border-right: 1px solid rgba(28,54,42,.14);
+    border-bottom: 1px solid rgba(28,54,42,.14);
+    background: rgba(251,249,245,.64);
+  }
+
+  .kruger-decision-card > span {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--color-cobre);
+    font-size: .66rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .kruger-decision-card h3 {
+    margin: 0 0 .7rem;
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .kruger-decision-card p {
+    margin: 0;
+    color: rgba(28,54,42,.66);
+    font-size: .9rem;
+    line-height: 1.7;
+  }
+
+  .kruger-faq {
+    background: var(--color-bosque);
+    color: var(--color-papel);
+  }
+
+  .kruger-faq .kruger-section__header h2 {
+    color: var(--color-papel);
+  }
+
+  .kruger-faq .kruger-section__intro {
+    color: rgba(251,249,245,.68);
+  }
+
+  .kruger-faq__list {
+    border-top: 1px solid rgba(251,249,245,.18);
+  }
+
+  .kruger-faq__list details {
+    padding: 1.4rem 0;
+    border-bottom: 1px solid rgba(251,249,245,.18);
+  }
+
+  .kruger-faq__list summary {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr);
+    gap: 1rem;
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+  }
+
+  .kruger-faq__list summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .kruger-faq__list summary span {
+    color: rgba(251,249,245,.48);
+    font-family: var(--font-sans);
+    font-size: .64rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .kruger-faq__list details p {
+    max-width: 820px;
+    margin: 1rem 0 0 10rem;
+    color: rgba(251,249,245,.68);
+    line-height: 1.8;
+  }
+
+  .kruger-sources {
+    background: #f3f0e9;
+  }
+
+  .kruger-sources__list {
+    border-top: 1px solid rgba(28,54,42,.15);
+  }
+
+  .kruger-sources__list a {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0,1fr) auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(28,54,42,.15);
+    color: var(--color-bosque);
+    text-decoration: none;
+  }
+
+  .kruger-sources__list a:hover {
+    color: var(--color-cobre);
+  }
+
+  .kruger-sources__list a span {
+    color: rgba(28,54,42,.5);
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .kruger-sources__list strong {
+    font-size: 1.1rem;
+    font-weight: 400;
+  }
+
+  .kruger-next {
+    background: var(--color-bosque);
+    color: var(--color-papel);
+  }
+
+  .kruger-next h2 {
+    color: var(--color-papel);
+  }
+
+  .kruger-next__grid > div > p {
+    color: rgba(251,249,245,.68);
+  }
+
+  .kruger-next__links {
+    border-top: 1px solid rgba(251,249,245,.18);
+  }
+
+  .kruger-next__links a {
+    display: block;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid rgba(251,249,245,.18);
+    color: var(--color-papel);
+    text-decoration: none;
+  }
+
+  .kruger-next__links a:hover {
+    color: var(--color-cobre);
+  }
+
+  .kruger-next__links a span {
+    display: block;
+    margin-bottom: .35rem;
+    color: rgba(251,249,245,.48);
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .kruger-next__links a strong {
+    float: right;
+    font-weight: 400;
+  }
+
+  @media (max-width: 900px) {
+    .kruger-hero__grid,
+    .kruger-intro__grid,
+    .kruger-section__header,
+    .kruger-section__body,
+    .kruger-sources__grid,
+    .kruger-next__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .kruger-hero__copy h1 {
+      font-size: clamp(3.2rem, 12vw, 5.5rem);
+    }
+
+    .kruger-decision-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .kruger-faq__list summary {
+      grid-template-columns: 1fr;
+    }
+
+    .kruger-faq__list details p {
+      margin-left: 0;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .kruger-page {
+      --kruger-max: min(100% - 1.5rem, 1180px);
+    }
+
+    .kruger-hero {
+      padding-bottom: 4rem;
+    }
+
+    .kruger-back {
+      margin-bottom: 2.5rem;
+    }
+
+    .kruger-hero__meta {
+      flex-direction: column;
+      gap: .45rem;
+    }
+
+    .kruger-jump {
+      top: 0;
+    }
+
+    .kruger-jump__inner {
+      padding-right: 1rem;
+      padding-left: 1rem;
+    }
+
+    .kruger-faq__list summary {
+      font-size: 1.25rem;
+    }
+
+    .kruger-sources__list a {
+      grid-template-columns: 1fr auto;
+    }
+
+    .kruger-sources__list a span {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
