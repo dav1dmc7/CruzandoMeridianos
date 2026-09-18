@@ -124,6 +124,10 @@ for (const slug of ourTripSlugs) {
   }
 }
 
+if (!editorialGuideIndex.includes('parentSlug: "sudafrica"')) {
+  failures.push("Standalone editorial guide index entries must declare their parent destination slug.");
+}
+
 if (!guideRegistry.includes("additionalGuides")) {
   failures.push("Guide registry is not consuming additionalGuides.");
 }
