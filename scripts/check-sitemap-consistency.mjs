@@ -6,6 +6,7 @@ const read = (relativePath) =>
   fs.readFileSync(path.join(root, relativePath), "utf8");
 
 const destinations = read("src/data/destinations.ts");
+const editorialGuideIndex = read("src/data/editorial-guide-index.ts");
 const astroConfig = read("astro.config.mjs");
 const ourTripsRoot = path.join(root, "src/data/our-trips");
 
@@ -65,6 +66,23 @@ if (!/\.\.\.destinationSlugs\.map\(/.test(astroConfig)) {
 if (!editorialGuidePagesMatch) {
   failures.push("Astro config must declare editorialGuidePages for nested editorial guides.");
 } else {
+  const indexedEditorialGuides = [...editorialGuideIndex.matchAll(/slug:\s*"([^"]+)"/g)].map(
+    (match) => match[1],
+  );
+  const configuredIndexedGuideSlugs = [...editorialGuidePagesMatch[1].matchAll(/'([^']+)'/g)].map(
+    (match) => match[1],
+  );
+
+  for (const slug of indexedEditorialGuides) {
+    if (!configuredIndexedGuideSlugs.includes(slug)) {
+      failures.push(`Editorial guide index entry "${slug}" is missing from astro.config.mjs editorialGuidePages.`);
+    }
+  }
+  for (const slug of configuredIndexedGuideSlugs) {
+    if (!indexedEditorialGuides.includes(slug)) {
+      failures.push(`astro.config.mjs editorial guide "${slug}" is not exposed in src/data/editorial-guide-index.ts.`);
+    }
+  }
   const editorialGuidePages = [...editorialGuidePagesMatch[1].matchAll(/'([^']+)'/g)].map(
     (match) => match[1],
   );
