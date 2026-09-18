@@ -246,12 +246,14 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
       spec.season,
     ],
     [
-      `¿Cómo moverse por ${spec.name}?`,
-      spec.transport,
+      `¿Cómo moverse por ${spec.name} y hace falta coche?`,
+      `${spec.transport} En las zonas donde el transporte público resuelve bien los desplazamientos, el coche puede aportar poco; fuera de esos ejes, la flexibilidad puede justificarlo.`,
     ],
   ];
-  const faqPairs = [...spec.faqs, ...searchFaqs]
-    .filter((entry, index, entries) =>
+  const faqPairs = [
+    ...spec.faqs.filter(([question]) => !/hace falta coche|cómo moverse/i.test(question)),
+    ...searchFaqs,
+  ].filter((entry, index, entries) =>
       entries.findIndex(([question]) => question === entry[0]) === index,
     )
     .slice(0, 5);
