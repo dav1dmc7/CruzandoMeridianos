@@ -116,7 +116,7 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
     },
     {
       id: "donde-alojarse",
-      number: "04",
+      number: "03",
       title: "Dónde alojarse y cómo elegir zona",
       category: "planning",
       intro: "La ubicación del alojamiento puede cambiar más el viaje que una diferencia de categoría entre hoteles.",
@@ -143,7 +143,7 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
     },
     {
       id: "cuando-ir",
-      number: "03",
+      number: "04",
       title: "Cuándo ir y qué cambia con la fecha",
       category: "planning",
       intro: "La temporada modifica precios, luz, clima, actividad y disponibilidad.",
