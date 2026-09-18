@@ -24,6 +24,7 @@ const additionalGuides = await read("src/data/guides/additional.ts");
 const guideRegistry = await read("src/data/guides/index.ts");
 const destinationCard = await read("src/components/sections/DestinationCard.astro");
 const livedTripsPage = await read("src/pages/nuestros-viajes/index.astro");
+const livedTripDetailPage = await read("src/pages/nuestros-viajes/[slug].astro");
 const ourTripsRoot = path.join(root, "src/data/our-trips");
 const guideFiles = (await walk(path.join(root, "src/data/guides")))
   .filter((file) => file.endsWith(".ts"));
@@ -121,6 +122,10 @@ if (!livedTripsPage.includes("livedDestinations")) {
 
 if (/readyDestinations\.map\(/.test(livedTripsPage)) {
   failures.push("Nuestros viajes must not render the complete ready-destination catalog as lived trips.");
+}
+
+if (livedTripDetailPage.includes("\\n")) {
+  failures.push("Lived-trip detail page contains literal \\n sequences in Astro markup.");
 }
 
 console.log("\nRoute/data contract audit");
