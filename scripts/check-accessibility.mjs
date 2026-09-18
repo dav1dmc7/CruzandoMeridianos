@@ -32,6 +32,8 @@ requirePattern(formPage, /<form\s+id="journey-form"/, "The travel request page m
 requirePattern(formPage, /aria-live="polite"\s+id="progress-message"/, "Travel form progress must be announced politely to assistive technology.");
 requirePattern(formPage, /<label\s+for="trip">/, "The first travel-form field must use an explicit label association.");
 requirePattern(formPage, /<label\s+for="website">/, "The honeypot field must remain correctly labelled for markup validity.");
+requirePattern(formPage, /class="sub-question age-range-question"[\s\S]*16–17 años[\s\S]*65\+ años/, "Travel form must expose the optional traveler age bands.");
+requirePattern(formPage, /age_range:[\s\S]*formData/, "Travel form must collect the optional age range in its request payload.");
 
 const formIds = new Set(
   [...formPage.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]),
