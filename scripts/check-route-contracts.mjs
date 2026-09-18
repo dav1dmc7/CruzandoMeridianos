@@ -20,6 +20,7 @@ const walk = async (directory) => {
 const failures = [];
 
 const destinations = await read("src/data/destinations.ts");
+const editorialGuideIndex = await read("src/data/editorial-guide-index.ts");
 const additionalGuides = await read("src/data/guides/additional.ts");
 const guideRegistry = await read("src/data/guides/index.ts");
 const destinationCard = await read("src/components/sections/DestinationCard.astro");
@@ -48,12 +49,39 @@ const additionalGuideSlugs = new Set(
 
 const guideSlugs = new Set(["costa-rica", ...additionalGuideSlugs]);
 
+const editorialGuideEntries = [...editorialGuideIndex.matchAll(
+  /slug:\s*"([^"]+)"[\s\S]*?href:\s*"([^"]+)"/g,
+)].map((match) => ({ slug: match[1], href: match[2] }));
+
+const astroConfig = await read("astro.config.mjs");
+const editorialGuidePagesMatch = astroConfig.match(
+  /const editorialGuidePages = \[([\s\S]*?)\];/m,
+);
+const configuredEditorialGuides = editorialGuidePagesMatch
+  ? [...editorialGuidePagesMatch[1].matchAll(/'([^']+)'/g)].map((match) => match[1])
+  : [];
+
 const ourTripSlugs = new Set();
 for (const file of await walk(ourTripsRoot)) {
   if (!file.endsWith(".ts")) continue;
   const content = await fs.readFile(file, "utf8");
   for (const match of content.matchAll(/\bslug:\s*["']([^"']+)["']/g)) {
     ourTripSlugs.add(match[1]);
+  }
+}
+
+for (const entry of editorialGuideEntries) {
+  if (!configuredEditorialGuides.includes(entry.slug)) {
+    failures.push(`Editorial guide "${entry.slug}" is indexed but not declared in astro.config.mjs.`);
+  }
+  if (entry.href !== `/viajes/${entry.slug}`) {
+    failures.push(`Editorial guide "${entry.slug}" must use /viajes/${entry.slug} as its public href.`);
+  }
+}
+
+for (const slug of configuredEditorialGuides) {
+  if (!editorialGuideEntries.some((entry) => entry.slug === slug)) {
+    failures.push(`Editorial guide "${slug}" is declared in astro.config.mjs but missing from the public index.`);
   }
 }
 
@@ -137,6 +165,7 @@ console.log(`- Unique lived trips: ${ourTripSlugs.size}`);
 console.log("- relatedTripSlug targets: checked");
 console.log("- DestinationCard lived-trip route guard: checked");
 console.log("- Nuestros viajes lived-trip data source: checked");
+console.log(`- Standalone editorial guides indexed: ${editorialGuideEntries.length}`);
 
 if (failures.length) {
   console.error("\nRoute/data contract audit failed:");
