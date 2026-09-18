@@ -7,6 +7,7 @@ const read = (relativePath) => fs.readFileSync(path.join(root, relativePath), "u
 const destinations = read("src/data/destinations.ts");
 const registry = read("src/data/guides/index.ts");
 const deepDive = read("src/data/guides/destination-deep-dive.ts");
+const placeCatalog = read("src/data/guides/key-places.ts");
 
 const extractReadySlugs = (source) => {
   const blocks = source.split(/\n\s*\{/).slice(1);
@@ -56,6 +57,18 @@ for (const slug of readySlugs) {
 for (const slug of deepDiveSlugs) {
   if (!readySlugs.includes(slug)) {
     failures.push(`Deep-dive destination "${slug}" is not marked ready in destinations.ts.`);
+  }
+}
+
+if (!/export const keyPlacesBySlug/.test(placeCatalog)) {
+  failures.push("Key places catalog is missing.");
+}
+
+for (const slug of readySlugs) {
+  const placeCountMatch = placeCatalog.match(new RegExp(`"${slug}": \\[([\\s\\S]*?)\\]\\,`));
+  const placeCount = placeCountMatch ? [...placeCountMatch[1].matchAll(/\\bp\(/g)].length : 0;
+  if (placeCount < 5) {
+    failures.push(`Ready destination "${slug}" must have at least five curated key places.`);
   }
 }
 
