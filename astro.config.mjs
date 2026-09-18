@@ -57,6 +57,7 @@ export default defineConfig({
         ...editorialGuidePages.map(
           (slug) => `https://www.cruzandomeridianos.com/viajes/${slug}`,
         ),
+        'https://www.cruzandomeridianos.com/viajes/canarias',
         'https://www.cruzandomeridianos.com/viajes/costa-rica/mejor-epoca',
         'https://www.cruzandomeridianos.com/viajes/costa-rica/parques-nacionales',
         'https://www.cruzandomeridianos.com/viajes/costa-rica/alquilar-coche',
