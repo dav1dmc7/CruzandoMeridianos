@@ -1,4 +1,4 @@
-import type { GuideFAQItem, GuideSource, GuideSection } from "./types";
+import type { FAQItem, GuideSource, GuideSection } from "./types";
 
 export const krugerGuideTitle =
   "Safari en Kruger: cómo organizar tu viaje por tu cuenta | Cruzando Meridianos";
@@ -240,7 +240,7 @@ export const krugerGuideSections: GuideSection[] = [
   },
 ];
 
-export const krugerGuideFaq: GuideFAQItem[] = [
+export const krugerGuideFaq: FAQItem[] = [
   {
     question: "¿Es mejor hacer safari con coche propio o contratar un guía?",
     answer:
