@@ -36,9 +36,22 @@ const placeholderPatterns = [
   /coming soon/iu,
 ];
 
+const missingSpacePatterns = [
+  /tengasel/iu,
+  /itinerario\.Es/iu,
+  /nosotroses/iu,
+  /parte\.Ahora/iu,
+  /lugares\.Queremos/iu,
+  /nosotroses una/iu,
+];
+
 for (const { file, content } of sources) {
   for (const pattern of placeholderPatterns) {
     if (pattern.test(content)) failures.push(`${file}: placeholder-like editorial/code text matches ${pattern}`);
+  }
+
+  for (const pattern of missingSpacePatterns) {
+    if (pattern.test(content)) failures.push(`${file}: possible missing whitespace around inline copy: ${pattern}`);
   }
 }
 
