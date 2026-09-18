@@ -27,6 +27,8 @@
     "audit:layout": "node scripts/check-layout-contracts.mjs",
     "audit:form-privacy": "node scripts/check-form-privacy.mjs",
     "audit:motion": "node scripts/check-motion.mjs",
+    "audit:all": "node scripts/run-all-audits.mjs",
+    "verify": "npm run check && npm run audit:all && npm run build",
     "preview": "astro preview",
     "astro": "astro",
     "generate-types": "wrangler types"
