@@ -46,8 +46,15 @@ for (const file of pageFiles) {
     warnings.push(`${file}: meta description length ${literalDescription.length} (target 110–170).`);
   }
 
-  if (file !== "src/pages/viajes/[slug].astro" && file !== "src/pages/nuestros-viajes/[slug].astro" && h1Count !== 1) {
-    failures.push(`${file}: expected exactly one H1 in page source, found ${h1Count}.`);
+  const composedH1 = /<Hero\b/.test(source);
+  const h1ContractOk =
+    file === "src/pages/viajes/[slug].astro" ||
+    file === "src/pages/nuestros-viajes/[slug].astro" ||
+    composedH1 ||
+    h1Count === 1;
+
+  if (!h1ContractOk) {
+    failures.push(`${file}: expected exactly one H1 or a known H1-providing composition, found ${h1Count}.`);
   }
 
   if (/target="_blank"/.test(source) && !/rel="[^"]*noopener/.test(source)) {
