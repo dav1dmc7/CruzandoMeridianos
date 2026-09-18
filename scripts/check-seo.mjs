@@ -9,6 +9,7 @@ const read = (relativePath) =>
 const layout = read("src/layouts/Layout.astro");
 const guidePage = read("src/pages/viajes/[slug].astro");
 const guidesIndex = read("src/pages/viajes.astro");
+const editorialGuideIndex = read("src/data/editorial-guide-index.ts");
 const guidesData = read("src/data/guides/index.ts");
 const journeyPage = read("src/pages/cuentatuviaje.astro");
 const robots = read("public/robots.txt");
@@ -55,6 +56,10 @@ requirePattern(guidePage, /guide\.faq\.map/, "Guide pages must render the guide 
 
 requirePattern(guidesIndex, /title="Guías de destino \| Cruzando Meridianos"/, "The destination index must use the public " + '"Guías de destino"' + " terminology in its title.");
 requirePattern(guidesIndex, /<p class="eyebrow">GUÍAS DE DESTINO<\/p>/, "The destination index must use the public " + '"Guías de destino"' + " terminology in its hero.");
+requirePattern(guidesIndex, /editorialGuideEntries/, "The destination index must surface the standalone editorial guide registry.");
+requirePattern(guidesIndex, /id="guias-especificas"/, "The destination index must expose a dedicated section for standalone editorial guides.");
+requirePattern(editorialGuideIndex, /slug:\s*"sudafrica\/kruger"/, "The standalone editorial guide index must include the Kruger guide.");
+requirePattern(editorialGuideIndex, /href:\s*"\/viajes\/sudafrica\/kruger"/, "The Kruger editorial index entry must point to its canonical public route.");
 requirePattern(guidesIndex, /canonical="\/viajes"/, "The destination index must keep a stable canonical /viajes path.");
 
 requirePattern(robots, /User-agent:\s*\*/, "robots.txt must define a wildcard crawler policy.");
