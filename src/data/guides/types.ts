@@ -233,6 +233,25 @@
    featured?: boolean;
  }
 
+ 
+ /* ============================================================
+    KEY PLACES
+    ============================================================ */
+ 
+ export interface GuidePlace {
+   id: string;
+
+   name: string;
+
+   region?: string;
+
+   description: string;
+
+   latitude: number;
+
+   longitude: number;
+ }
+
 
  /* ============================================================
     TRAVEL ALERTS
