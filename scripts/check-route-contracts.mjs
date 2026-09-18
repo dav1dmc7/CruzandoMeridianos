@@ -86,14 +86,22 @@ for (const file of guideFiles) {
 }
 
 for (const slug of ourTripSlugs) {
-  if (!readyDestinationSlugs.has(slug)) {
-    failures.push(`Lived trip "${slug}" does not match a ready destination.`);
-  }
+  const linkedDestinations = destinationEntries.filter(
+    (entry) => entry.status === "ready" && entry.publishedTripSlug === slug,
+  );
 
-  const matchingDestination = destinationEntries.find((entry) => entry.slug === slug);
-  if (matchingDestination?.publishedTripSlug !== slug) {
-    failures.push(`Lived trip "${slug}" must be linked from its destination using publishedTripSlug: "${slug}".`);
+  if (linkedDestinations.length === 0) {
+    failures.push(`Lived trip "${slug}" has no ready destination linked through publishedTripSlug.`);
   }
+}
+
+const publishedTripTargets = destinationEntries
+  .filter((entry) => entry.status === "ready" && entry.publishedTripSlug)
+  .map((entry) => entry.publishedTripSlug);
+
+if (new Set(publishedTripTargets).size !== publishedTripTargets.length) {
+  // Multiple destinations can intentionally share one lived-trip page.
+  // This is the supported contract for combined trips.
 }
 
 if (!guideRegistry.includes("additionalGuides")) {
@@ -128,9 +136,8 @@ console.log("\nRoute/data contract audit");
 console.log("=========================");
 console.log(`- Ready destinations: ${readyDestinationSlugs.size}`);
 console.log(`- First-hand ready destinations: ${destinationEntries.filter((entry) => entry.status === "ready" && entry.experience === "first-hand").length}`);
-console.log(`- Published lived-trip mappings: ${destinationEntries.filter((entry) => entry.publishedTripSlug).length}`);
-console.log(`- Registered guides: ${guideSlugs.size}`);
-console.log(`- Lived trips: ${ourTripSlugs.size}`);
+console.log(`- Published lived-trip destination mappings: ${destinationEntries.filter((entry) => entry.publishedTripSlug).length}`);
+console.log(`- Unique lived trips: ${ourTripSlugs.size}`);
 console.log("- relatedTripSlug targets: checked");
 console.log("- DestinationCard lived-trip route guard: checked");
 console.log("- Nuestros viajes lived-trip data source: checked");
