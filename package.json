@@ -29,6 +29,7 @@
     "audit:motion": "node scripts/check-motion.mjs",
     "audit:navigation": "node scripts/check-navigation.mjs",
     "audit:content-quality": "node scripts/check-content-quality.mjs",
+    "audit:page-quality": "node scripts/check-page-quality.mjs",
     "audit:all": "node scripts/run-all-audits.mjs",
     "verify": "npm run check && npm run audit:all && npm run build",
     "preview": "astro preview",
