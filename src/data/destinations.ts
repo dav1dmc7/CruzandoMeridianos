@@ -1,11 +1,15 @@
 import type { ImageMetadata } from "astro";
 
-import costaRica from "../assets/images/costa-rica/playa-costa-rica.jpg";
-import sudafrica from "../assets/images/leonas.jpg";
+import sudafricaFirstHandCover from "../assets/images/sudafrica.jpg";
+import mauricioFirstHand from "../assets/images/mauricio.jpg";
 import jordania from "../assets/images/petra.jpg";
 import grecia from "../assets/images/corfu.jpg";
 import auroras from "../assets/images/aurora.jpg";
 import atlasGuideFallback from "../assets/images/atlas-guide-fallback.svg";
+import { firstHandMediaBySlug } from "./guide-media";
+
+export type DestinationExperience = "first-hand" | "researched";
+export type DestinationCoverKind = "first-hand" | "existing-editorial" | "placeholder";
 
 export type DestinationContinent =
   | "Europa"
@@ -25,6 +29,9 @@ export interface Destination {
   country?: string;
   region?: string;
   status: "ready" | "coming-soon";
+  experience: DestinationExperience;
+  coverKind: DestinationCoverKind;
+  publishedTripSlug?: string;
 }
 
 export const destinations: Destination[] = [
@@ -34,11 +41,15 @@ export const destinations: Destination[] = [
     number: "01",
     description:
       "Selva, fauna y costa. Naturaleza, playas, parques y experiencias muy diferentes dentro de un mismo país.",
-    image: costaRica,
-    imageAlt: "Playa tropical en Costa Rica",
+    image: firstHandMediaBySlug["costa-rica"].cover.src,
+    imageAlt:
+      firstHandMediaBySlug["costa-rica"].cover.alt,
     continent: "América",
     country: "Costa Rica",
     status: "ready",
+    coverKind: "first-hand",
+    experience: "first-hand",
+    publishedTripSlug: "costa-rica",
   },
   {
     name: "Sudáfrica",
@@ -46,11 +57,14 @@ export const destinations: Destination[] = [
     number: "02",
     description:
       "Safari, costa, naturaleza, gastronomía y ciudad. Un país con muchos viajes posibles dentro del mismo destino.",
-    image: sudafrica,
-    imageAlt: "Leonas durante un safari en Sudáfrica",
+    image: sudafricaFirstHandCover,
+    imageAlt: "Fotografía propia de Sudáfrica durante nuestro viaje",
     continent: "África",
     country: "Sudáfrica",
     status: "ready",
+    coverKind: "first-hand",
+    experience: "first-hand",
+    publishedTripSlug: "sudafrica-mauricio",
   },
   {
     name: "Jordania",
@@ -63,6 +77,8 @@ export const destinations: Destination[] = [
     continent: "Asia",
     country: "Jordania",
     status: "ready",
+    coverKind: "existing-editorial",
+    experience: "first-hand",
   },
   {
     name: "Grecia",
@@ -75,6 +91,8 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Grecia",
     status: "ready",
+    coverKind: "existing-editorial",
+    experience: "first-hand",
   },
   {
     name: "Auroras",
@@ -87,6 +105,8 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Varios destinos",
     status: "ready",
+    coverKind: "existing-editorial",
+    experience: "first-hand",
   },
   {
     name: "Polonia",
@@ -99,6 +119,8 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Polonia",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
   {
     name: "Italia",
@@ -111,6 +133,8 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Italia",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
   {
     name: "Viena",
@@ -123,6 +147,8 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Austria",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
   {
     name: "Praga",
@@ -135,6 +161,8 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Chequia",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
   {
     name: "Budapest",
@@ -147,6 +175,8 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Hungría",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
   {
     name: "Ámsterdam",
@@ -159,6 +189,8 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Países Bajos",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
   {
     name: "París",
@@ -171,6 +203,8 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Francia",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
   {
     name: "Sur de Francia",
@@ -183,6 +217,8 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Francia",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
   {
     name: "Nueva York",
@@ -195,6 +231,8 @@ export const destinations: Destination[] = [
     continent: "América",
     country: "Estados Unidos",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
   {
     name: "Washington",
@@ -207,6 +245,8 @@ export const destinations: Destination[] = [
     continent: "América",
     country: "Estados Unidos",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
   {
     name: "Egipto",
@@ -219,6 +259,8 @@ export const destinations: Destination[] = [
     continent: "África",
     country: "Egipto",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
   {
     name: "Mauricio",
@@ -226,11 +268,14 @@ export const destinations: Destination[] = [
     number: "17",
     description:
       "Una isla que nosotros vivimos dentro de un viaje combinado con Sudáfrica. Naturaleza, costa y una parte del viaje muy distinta.",
-    image: atlasGuideFallback,
-    imageAlt: "Composición editorial del atlas de Cruzando Meridianos para Mauricio",
+    image: mauricioFirstHand,
+    imageAlt: "Fotografía propia de Mauricio durante nuestro viaje",
     continent: "África",
     country: "Mauricio",
     status: "ready",
+    coverKind: "first-hand",
+    experience: "first-hand",
+    publishedTripSlug: "sudafrica-mauricio",
   },
   {
     name: "Malta",
@@ -243,6 +288,8 @@ export const destinations: Destination[] = [
     continent: "Europa",
     country: "Malta",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
   {
     name: "Tenerife",
@@ -256,6 +303,8 @@ export const destinations: Destination[] = [
     country: "España",
     region: "Canarias",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
   {
     name: "Gran Canaria",
@@ -269,6 +318,8 @@ export const destinations: Destination[] = [
     country: "España",
     region: "Canarias",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
   {
     name: "Lanzarote",
@@ -282,6 +333,8 @@ export const destinations: Destination[] = [
     country: "España",
     region: "Canarias",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
   {
     name: "Fuerteventura",
@@ -295,6 +348,8 @@ export const destinations: Destination[] = [
     country: "España",
     region: "Canarias",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
   {
     name: "El Hierro",
@@ -308,5 +363,7 @@ export const destinations: Destination[] = [
     country: "España",
     region: "Canarias",
     status: "ready",
+    coverKind: "placeholder",
+    experience: "first-hand",
   },
 ];

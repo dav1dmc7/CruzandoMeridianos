@@ -9,9 +9,17 @@ const read = (relativePath) =>
 const layout = read("src/layouts/Layout.astro");
 const guidePage = read("src/pages/viajes/[slug].astro");
 const guidesIndex = read("src/pages/viajes.astro");
+const editorialGuideIndex = read("src/data/editorial-guide-index.ts");
+const guidesData = read("src/data/guides/index.ts");
 const journeyPage = read("src/pages/cuentatuviaje.astro");
 const robots = read("public/robots.txt");
 const astroConfig = read("astro.config.mjs");
+const canariasPage = read("src/pages/viajes/canarias/index.astro");
+const livedTripPage = read("src/pages/nuestros-viajes/[slug].astro");
+
+const editorialGuidePagesMatch = astroConfig.match(
+  /const editorialGuidePages = \[([\s\S]*?)\];/m,
+);
 
 const failures = [];
 const requirePattern = (source, pattern, label) => {
@@ -45,10 +53,25 @@ requirePattern(guidePage, /guide\.publicFreshness\?\.updatedAt/, "Guide Article 
 requirePattern(guidePage, /about:\s*\{/, "Guide Article schema must identify the destination entity.");
 requirePattern(guidePage, /<h1>\s*\{publicGuideTitle\}\s*<\/h1>/, "Guide pages must have a single primary H1 driven by the public guide title.");
 requirePattern(guidePage, /canonical=\{`\/viajes\/\$\{destination\.slug\}`\}/, "Guide pages must provide a stable canonical path.");
+requirePattern(guidePage, /section\.id ===\s*faqSectionId/, "Guide pages must render a visible FAQ section when FAQ data is available.");
+requirePattern(guidePage, /guide\.faq\.map/, "Guide pages must render the guide FAQ items in the page content.");
 
 requirePattern(guidesIndex, /title="Guías de destino \| Cruzando Meridianos"/, "The destination index must use the public " + '"Guías de destino"' + " terminology in its title.");
 requirePattern(guidesIndex, /<p class="eyebrow">GUÍAS DE DESTINO<\/p>/, "The destination index must use the public " + '"Guías de destino"' + " terminology in its hero.");
+requirePattern(guidesIndex, /data-result-type="guide"/, "The destination index must render standalone editorial guides inside the destination explorer.");
+requirePattern(guidesIndex, /editorialGuideEntries/, "The destination index must surface the standalone editorial guide registry.");
+requirePattern(guidesIndex, /data-result-type="region"/, "The destination index must render grouped regional hubs inside the explorer.");
+requirePattern(editorialGuideIndex, /slug:\s*"sudafrica\/kruger"/, "The standalone editorial guide index must include the Kruger guide.");
+requirePattern(editorialGuideIndex, /href:\s*"\/viajes\/sudafrica\/kruger"/, "The Kruger editorial index entry must point to its canonical public route.");
 requirePattern(guidesIndex, /canonical="\/viajes"/, "The destination index must keep a stable canonical /viajes path.");
+requirePattern(canariasPage, /canonical="\/viajes\/canarias"/, "The Canary Islands hub must declare a stable canonical URL.");
+requirePattern(canariasPage, /"@type":\s*"BreadcrumbList"/, "The Canary Islands hub must emit breadcrumb structured data.");
+requirePattern(canariasPage, /<a class="breadcrumb" href="\/viajes">/, "The Canary Islands hub must provide a visible parent breadcrumb.");
+requirePattern(livedTripPage, /"@type":\s*"Article"/, "Lived-trip pages must emit Article structured data.");
+requirePattern(livedTripPage, /"@type":\s*"BreadcrumbList"/, "Lived-trip pages must emit breadcrumb structured data.");
+requirePattern(livedTripPage, /ogImage=\{socialImage\}/, "Lived-trip pages must use the resolved social image in their Layout.");
+
+
 
 requirePattern(robots, /User-agent:\s*\*/, "robots.txt must define a wildcard crawler policy.");
 requirePattern(robots, /Allow:\s*\//, "robots.txt must allow public crawling.");
@@ -73,7 +96,59 @@ if (/Estado editorial|Última revisión:/.test(guidePage)) {
   failures.push("Guide pages must not expose internal editorial-status wording.");
 }
 if (/data-section-status=|section\.status/.test(guidePage)) {
-  failures.push("Guide pages must not expose internal section editorial-status implementation.");
+  failures.push("Guide pages must not expose or depend on internal section editorial-status implementation.");
+}
+if (!/sections:\s*renumberSections\([\s\S]*?guide\.sections\s*\.filter\(\(section\)\s*=>\s*section\.status\s*!==\s*"draft"/.test(guidesData)) {
+  failures.push("Public guide data must filter and renumber sections before removing internal editorial metadata.");
+}
+if (!/monitoring:\s*undefined/.test(guidesData) || !/commercial:\s*undefined/.test(guidesData)) {
+  failures.push("Public guide data must strip internal monitoring and commercial metadata.");
+}
+if (!/const publicSections\s*=\s*guide\.sections/.test(guidePage) || !/publicSections\.map\(/.test(guidePage)) {
+  failures.push("Guide pages must render the public guide section collection.");
+}
+
+
+if (editorialGuidePagesMatch) {
+  const editorialGuidePages = [...editorialGuidePagesMatch[1].matchAll(/'([^']+)'/g)].map(
+    (match) => match[1],
+  );
+
+  for (const route of editorialGuidePages) {
+    const pagePath = path.join(root, "src", "pages", "viajes", ...route.split("/")) + ".astro";
+
+    if (!fs.existsSync(pagePath)) {
+      failures.push(`Nested editorial guide "${route}" is declared but its Astro page does not exist.`);
+      continue;
+    }
+
+    const editorialPage = fs.readFileSync(pagePath, "utf8");
+
+    if (!/<h1[\s\S]*?<\/h1>/.test(editorialPage)) {
+      failures.push(`Nested editorial guide "${route}" must expose an H1.`);
+    }
+
+    if (!/<Layout\b[\s\S]*canonical=/.test(editorialPage)) {
+      failures.push(`Nested editorial guide "${route}" must declare a canonical URL through Layout.`);
+    }
+
+    if (!/"@type":\s*"Article"/.test(editorialPage)) {
+      failures.push(`Nested editorial guide "${route}" must emit Article structured data.`);
+    }
+
+    if (!/"@type":\s*"BreadcrumbList"/.test(editorialPage)) {
+      failures.push(`Nested editorial guide "${route}" must emit breadcrumb structured data.`);
+    }
+
+    const parentRoute = route.split("/").slice(0, -1).join("/");
+    if (parentRoute && !editorialPage.includes(`/viajes/${parentRoute}`)) {
+      failures.push(`Nested editorial guide "${route}" must link back to its parent guide.`);
+    }
+
+    if (/noindex/i.test(editorialPage)) {
+      failures.push(`Nested editorial guide "${route}" must not opt into noindex.`);
+    }
+  }
 }
 
 if (failures.length) {

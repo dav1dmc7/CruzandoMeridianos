@@ -22,6 +22,9 @@ const extractReadySlugs = (source) => {
 
 const readySlugs = extractReadySlugs(destinations);
 const additionalSlugs = [...guides.matchAll(/slug:\s*"([^"]+)"\s*,\s*name:/g)].map((match) => match[1]);
+const costaRicaGuide = read(path.join(root, "src/data/guides/costa-rica.ts"));
+const guideEditorialSource = `${guides}\n${costaRicaGuide}`;
+
 const registryUsesAdditional = /additionalGuides/.test(registry) &&
   ( /\.\.\.Object\.fromEntries\(additionalGuides/.test(registry) || /\.\.\.additionalGuides/.test(registry) );
 
@@ -44,6 +47,30 @@ if (!registryUsesAdditional) {
 
 if (additionalSlugs.length === 0) {
   failures.push("No additional guides found.");
+}
+
+const placeholderPhrases = [
+  "esta sección crecerá",
+  "aquí reuniremos",
+  "aquí iremos",
+  "próximamente",
+  "coming soon",
+  "lorem ipsum",
+];
+
+const editorialText = guideEditorialSource
+  .replace(/\/\*[\s\S]*?\*\//g, "")
+  .replace(/\/\/.*$/gm, "")
+  .toLowerCase();
+
+for (const phrase of placeholderPhrases) {
+  if (editorialText.includes(phrase)) {
+    failures.push(`Guide content contains placeholder-like editorial language: "${phrase}".`);
+  }
+}
+
+if (!/GuidePlaceDecisions/.test(read(path.join(root, "src/pages/viajes/[slug].astro")))) {
+  failures.push("Guide pages must render the reusable place-decision framework.");
 }
 
 const reviewedMatch = guides.match(/const REVIEWED_AT = "(\d{4}-\d{2}-\d{2})";/);

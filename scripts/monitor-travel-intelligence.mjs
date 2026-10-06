@@ -4,7 +4,11 @@ import crypto from "node:crypto";
 import { pathToFileURL } from "node:url";
 
 import { TRAVEL_INTELLIGENCE_SOURCES } from "./travel-intelligence.sources.mjs";
-import { TRAVEL_INTELLIGENCE_RULES, findRuleMatch } from "./travel-intelligence.rules.mjs";
+import {
+  TRAVEL_INTELLIGENCE_RULESET_VERSION,
+  TRAVEL_INTELLIGENCE_RULES,
+  findRuleMatch,
+} from "./travel-intelligence.rules.mjs";
 
 const root = process.cwd();
 const generatedPath = path.join(root, "src/data/live/travel-intelligence.generated.ts");
@@ -136,7 +140,10 @@ for (const destination of TRAVEL_INTELLIGENCE_SOURCES) {
 
       sourceFingerprints[source.id] = current.fingerprint;
 
-      if (current.fingerprint !== previousFingerprint) {
+      if (
+        current.fingerprint !== previousFingerprint ||
+        previousUpdate?.rulesetVersion !== TRAVEL_INTELLIGENCE_RULESET_VERSION
+      ) {
         sourceAlerts[source.id] = classifyText(current.text, source);
       }
     } catch (error) {
@@ -154,6 +161,7 @@ for (const destination of TRAVEL_INTELLIGENCE_SOURCES) {
 
   generated[destination.slug] = {
     checkedAt,
+    rulesetVersion: TRAVEL_INTELLIGENCE_RULESET_VERSION,
     sourceFingerprints: activeSourceFingerprints,
     sourceAlerts: activeSourceAlerts,
     alerts: dedupeAlerts(Object.values(activeSourceAlerts).flat()),
@@ -185,6 +193,7 @@ import type { TravelAlert } from "../guides/types";
 
 export interface LiveGuideUpdate {
   checkedAt: string;
+  rulesetVersion: string;
   sourceFingerprints: Record<string, string>;
   sourceAlerts: Record<string, TravelAlert[]>;
   alerts: TravelAlert[];

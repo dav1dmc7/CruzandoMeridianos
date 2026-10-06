@@ -115,8 +115,35 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
       reviewedAt: REVIEWED_AT,
     },
     {
-      id: "cuando-ir",
+      id: "donde-alojarse",
       number: "03",
+      title: "Dónde alojarse y cómo elegir zona",
+      category: "planning",
+      intro: "La ubicación del alojamiento puede cambiar más el viaje que una diferencia de categoría entre hoteles.",
+      paragraphs: [
+        `No queremos darte aquí una lista de hoteles para ${spec.name}. Lo útil antes de reservar es entender qué estás comprando con cada zona: cercanía a lo que quieres hacer, facilidad para moverte, ambiente, tiempo de ida y vuelta y libertad para improvisar.`,
+        `En ${spec.name}, la base debería salir de las prioridades del viaje. ${spec.regions}`,
+        `También importa la logística. ${spec.transport} Cambiar de alojamiento demasiado a menudo puede parecer eficiente sobre el mapa y acabar robando tiempo de viaje, maletas y energía.`,
+      ],
+      highlights: [
+        {
+          title: "Primero la zona, después el hotel",
+          description: "Una habitación mejor situada puede mejorar mucho más el viaje que otra con más servicios pero peor encaje con la ruta.",
+          type: "decision",
+        },
+        {
+          title: "No cambies de base por inercia",
+          description: "Cada mudanza tiene un coste real: check-out, equipaje, trayecto y tiempo que deja de estar disponible para disfrutar del destino.",
+          type: "important",
+        },
+      ],
+      closing: "La guía te enseña qué variables comparar. La elección final de zona y alojamiento depende de tus fechas, presupuesto y forma de viajar.",
+      status: "published",
+      reviewedAt: REVIEWED_AT,
+    },
+    {
+      id: "cuando-ir",
+      number: "04",
       title: "Cuándo ir y qué cambia con la fecha",
       category: "planning",
       intro: "La temporada modifica precios, luz, clima, actividad y disponibilidad.",
@@ -134,7 +161,7 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
     },
     {
       id: "experiencias-que-merecen-espacio",
-      number: "04",
+      number: "05",
       title: "Qué experiencias merecen espacio",
       category: "experience",
       intro: "No todas las atracciones tienen el mismo peso en un viaje.",
@@ -152,7 +179,7 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
     },
     {
       id: "como-moverse",
-      number: "05",
+      number: "06",
       title: "Cómo moverse sin complicar el viaje",
       category: "practical",
       intro: "El medio de transporte correcto depende del tipo de destino y de la experiencia buscada.",
@@ -170,7 +197,7 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
     },
     {
       id: "encaja-contigo",
-      number: "06",
+      number: "07",
       title: "¿Este destino encaja contigo?",
       category: "planning",
       intro: spec.fit.intro,
@@ -184,7 +211,7 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
     },
     {
       id: "errores-a-evitar",
-      number: "07",
+      number: "08",
       title: "Errores que empobrecen el viaje",
       category: "planning",
       intro: "La mejor planificación también consiste en saber qué no hacer.",
@@ -203,7 +230,7 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
     },
     {
       id: "informacion-practica-y-alertas",
-      number: "08",
+      number: "09",
       title: "Información práctica y actualidad",
       category: "updates",
       intro: "La parte más sensible de una guía es la que puede cambiar.",
@@ -218,10 +245,50 @@ const buildGuide = (spec: DestinationSpec): DestinationGuide => {
       status: "published",
       reviewedAt: REVIEWED_AT,
     },
+    {
+      id: "preguntas-frecuentes",
+      number: "10",
+      title: "Preguntas frecuentes",
+      category: "practical",
+      intro: `Preguntas concretas que suelen aparecer al planificar un viaje a ${spec.name}.`,
+      paragraphs: [
+        "Aquí respondemos dudas de planificación que ayudan a decidir fechas, duración, transporte y ritmo antes de reservar.",
+        "Las respuestas se apoyan en la propia guía y, cuando una cuestión puede cambiar, en las fuentes que indicamos en ella.",
+      ],
+      status: "published",
+      reviewedAt: REVIEWED_AT,
+    },
   ];
 
   const durationOptions: GuideDurationOption[] = spec.durations.map(([days, title, description, featured]) => ({ days, title, description, featured }));
-  const faq: FAQItem[] = spec.faqs.map(([question, answer]) => ({ question, answer, category: "planning", reviewedAt: REVIEWED_AT }));
+  const [firstDuration] = spec.durations;
+  const lastDuration = spec.durations[spec.durations.length - 1];
+  const searchFaqs: Array<[string, string]> = [
+    [
+      `¿Cuántos días necesito para viajar a ${spec.name}?`,
+      `Como referencia, esta guía plantea opciones desde ${firstDuration[0]} días (${firstDuration[1].toLowerCase()}) hasta ${lastDuration[0]} días (${lastDuration[1].toLowerCase()}). La duración adecuada depende de las zonas que quieras combinar y del ritmo que quieras llevar.`,
+    ],
+    [
+      `¿Cuál es la mejor época para viajar a ${spec.name}?`,
+      spec.season,
+    ],
+    [
+      `¿En qué zona conviene alojarse en ${spec.name}?`,
+      `No hay una zona universalmente correcta. La elección depende de qué quieras priorizar, cuánto tiempo tengas, cómo te muevas y cuánto valor tenga para ti estar cerca de unas experiencias u otras. En ${spec.name}, ${spec.regions}`,
+    ],
+    [
+      `¿Cómo moverse por ${spec.name} y hace falta coche?`,
+      `${spec.transport} En las zonas donde el transporte público resuelve bien los desplazamientos, el coche puede aportar poco; fuera de esos ejes, la flexibilidad puede justificarlo.`,
+    ],
+  ];
+  const faqPairs = [
+    ...spec.faqs.filter(([question]) => !/hace falta coche|cómo moverse/i.test(question)),
+    ...searchFaqs,
+  ].filter((entry, index, entries) =>
+      entries.findIndex(([question]) => question === entry[0]) === index,
+    )
+    .slice(0, 6);
+  const faq: FAQItem[] = faqPairs.map(([question, answer]) => ({ question, answer, category: "planning", reviewedAt: REVIEWED_AT }));
 
   const monitoring: GuideMonitoringConfig = {
     enabled: true,
@@ -343,7 +410,7 @@ const specs: DestinationSpec[] = [
     title: "Guía de Praga: barrios, arquitectura e historia | Cruzando Meridianos",
     subtitle: "Cómo entender una ciudad que se disfruta más caminando que tachando monumentos.",
     intro: "Praga es manejable y fotogénica, pero su mejor versión aparece cuando se organiza por zonas y horas del día, no como una lista plana de lugares.",
-    officialLabel: "Prague City Tourism", officialUrl: "https://www.prague.eu/en", maecUrl: "https://exteriores.gob.es/Embajadas/praga/es/ViajarA/Paginas/Recomendaciones-de-viaje.aspx",
+    officialLabel: "Prague City Tourism", officialUrl: "https://prague.eu/en/", maecUrl: "https://exteriores.gob.es/Embajadas/praga/es/ViajarA/Paginas/Recomendaciones-de-viaje.aspx",
     snapshot: { climateSummary: "Estacionalidad clara; primavera, otoño e invierno ofrecen atmósferas muy diferentes.", travelStyle: "Escapada urbana caminable y cultural.", mainStrengths: ["Arquitectura", "Historia", "Paseos", "Cerveza y gastronomía"], mainConsiderations: ["Aglomeraciones", "Escala turística", "Barrios"] },
     fit: { title: "Praga funciona muy bien en pocos días", intro: "Ideal para una escapada con mucha identidad visual y cultural.", goodFor: ["primeras escapadas", "parejas", "arquitectura", "historia"], notFor: ["quien necesita naturaleza o gran variedad regional"] },
     decision: "La gran decisión es cuándo dedicar el centro histórico y cuánto espacio reservar para barrios y orillas del río.", regions: "Staré Město, Malá Strana, Hradčany, Josefov, Vinohrady y Holešovice tienen ritmos diferentes.", transport: "Caminar y transporte público son suficientes para casi toda la experiencia urbana.", season: "La ciudad cambia mucho con la luz y el frío; una jornada de invierno y una de verano no se sienten iguales.", tradeoff: "La ciudad es pequeña en comparación con grandes capitales, por lo que el valor está en profundizar y no en añadir excursiones por defecto.", experience: "Arquitectura, cafés, cervecerías, miradores y barrios pueden formar una narrativa mucho más rica que el circuito de puente-castillo-reloj.", avoid: "Quedarse solo en las horas de máxima afluencia del centro histórico.", durations: [[3,"Praga esencial","Perfecta para una escapada de primera vez.",true],[4,"Praga con barrios","Mejor equilibrio entre iconos y ciudad real."],[5,"Praga tranquila","Más margen para museos, comida y zonas menos centrales."]], visaRequirement: "none", entryNotes: ["Chequia forma parte del espacio Schengen; revisa la documentación y recomendaciones oficiales vigentes."], faqs: [["¿Praga se hace a pie?","En gran medida sí, complementando con transporte público cuando conviene."],["¿Merece la pena dormir fuera del centro?","Depende del barrio; la prioridad debería ser una zona que facilite el tipo de ritmo que buscas."]]

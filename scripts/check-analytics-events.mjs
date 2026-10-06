@@ -70,4 +70,22 @@ if (missing.length > 0) {
   process.exit(1);
 }
 
+const requiredTravelFormEvents = [
+  "travel_form_start",
+  "travel_form_step",
+  "travel_form_back",
+  "travel_form_error",
+  "travel_form_submit",
+];
+
+const missingTravelFormEvents = requiredTravelFormEvents.filter(
+  (name) => !eventUsage.has(name) || !allowedEvents.has(name),
+);
+
+if (missingTravelFormEvents.length > 0) {
+  console.error("Travel form funnel instrumentation is incomplete:");
+  for (const event of missingTravelFormEvents) console.error(`- ${event}`);
+  process.exit(1);
+}
+
 console.log(`Analytics event contract OK: ${eventUsage.size} frontend event names are allowlisted by the API.`);

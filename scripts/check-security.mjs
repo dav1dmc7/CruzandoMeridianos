@@ -52,6 +52,9 @@ requirePattern(travelRequest, /try\s*\{\s*rawData\s*=\s*await request\.json\(\)/
 requirePattern(travelRequest, /isRecord\(rawData\)/, "Travel requests must validate that the JSON body is a plain object.");
 requirePattern(travelRequest, /typeof value !== "string"/, "Travel requests must reject non-string scalar field values before coercion.");
 requirePattern(travelRequest, /Array\.isArray\(data\.transport\)[\s\S]*typeof value !== "string"/, "Travel requests must reject non-string transport options.");
+requirePattern(travelRequest, /ALLOWED_TRANSPORT/, "Travel requests must validate transport values against an explicit allowlist.");
+requirePattern(travelRequest, /ALLOWED_AGE_RANGES/, "Travel requests must validate age ranges against an explicit allowlist.");
+requirePattern(travelRequest, /new Set\(ageRanges\)\.size !== ageRanges\.length/, "Travel requests must reject duplicate age-range selections.");
 requirePattern(travelRequest, /data\.website\?\.trim\(\)/, "Travel requests must keep the honeypot spam control.");
 requirePattern(travelRequest, /escapeHtml\(/, "Travel request emails must HTML-escape user-controlled values.");
 requirePattern(travelRequest, /INSERT INTO travel_requests/, "Travel requests must persist leads before sending email.");

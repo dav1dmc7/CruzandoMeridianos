@@ -40,6 +40,14 @@ expectType(
   "Las nuevas normas de visado han sido introducidas y son obligatorias para entrar.",
   "entrada",
 );
+expectType(
+  "Se aconseja aplazar viaje hasta nuevo aviso.",
+  "seguridad",
+);
+expectType(
+  "LA REGIÓN DE ORIENTE PRÓXIMO SE ENCUENTRA EN LA ACTUALIDAD AFECTADA POR UN CONFLICTO DE ALCANCE REGIONAL. SE ACONSEJA APLAZAR SU VIAJE A JORDANIA HASTA NUEVO AVISO.",
+  "seguridad",
+);
 
 expectNoMatch("The government has previously discussed a national strike in parliament.");
 expectNoMatch("The annual report mentions past flight cancellations during the winter season.");

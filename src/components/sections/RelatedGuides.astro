@@ -1,5 +1,6 @@
 ---
 import { destinations } from "../../data/destinations";
+import { editorialGuideEntries } from "../../data/editorial-guide-index";
 
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 const match = currentPath.match(/^\/viajes\/([^/]+)$/);
@@ -8,7 +9,11 @@ const current = currentSlug
   ? destinations.find((destination) => destination.slug === currentSlug)
   : null;
 
-const related = current
+const relatedGuides = current
+  ? editorialGuideEntries.filter((guide) => guide.parentSlug === current.slug)
+  : [];
+
+const relatedDestinations = current
   ? destinations
       .filter((destination) => destination.status === "ready" && destination.slug !== current.slug)
       .sort((a, b) => {
@@ -16,11 +21,13 @@ const related = current
         const sameContinentB = b.continent === current.continent ? 1 : 0;
         return sameContinentB - sameContinentA || a.number.localeCompare(b.number, undefined, { numeric: true });
       })
-      .slice(0, 3)
+      .slice(0, Math.max(0, 3 - relatedGuides.length))
   : [];
+
+const hasRelated = relatedGuides.length > 0 || relatedDestinations.length > 0;
 ---
 
-{current && related.length > 0 && (
+{current && hasRelated && (
   <section class="related-guides" aria-labelledby="related-guides-title">
     <div class="related-guides__inner">
       <div class="related-guides__intro">
@@ -33,7 +40,20 @@ const related = current
       </div>
 
       <div class="related-guides__grid">
-        {related.map((destination) => (
+        {relatedGuides.map((guide, index) => (
+          <a
+            href={guide.href}
+            class="related-guides__card related-guides__card--guide"
+            data-track="interaction"
+            data-track-label={`Guía relacionada — ${current.name} → ${guide.name}`}
+          >
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <strong>{guide.name}</strong>
+            <small>Guía específica · {guide.parentName}</small>
+            <em aria-hidden="true">↗</em>
+          </a>
+        ))}
+        {relatedDestinations.map((destination) => (
           <a
             href={`/viajes/${destination.slug}`}
             class="related-guides__card"
@@ -56,5 +76,5 @@ const related = current
 )}
 
 <style>
-.related-guides{padding:7rem 0;background:#ece9e1}.related-guides__inner{width:min(var(--content-width),calc(100% - 4rem));margin:0 auto}.related-guides__intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.62fr);gap:5rem;align-items:end;margin-bottom:3rem}.related-guides__intro h2{max-width:760px;margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(2.8rem,5vw,4.8rem);font-weight:400;line-height:.98;letter-spacing:-.035em}.related-guides__intro>p:last-child{margin:0;color:#666;line-height:1.75}.related-guides__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem}.related-guides__card{position:relative;display:flex;min-height:190px;flex-direction:column;justify-content:flex-end;padding:1.35rem;border:1px solid rgba(28,48,38,.13);border-radius:18px;background:var(--color-papel);color:inherit;text-decoration:none;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}.related-guides__card:hover{transform:translateY(-3px);border-color:rgba(194,125,56,.6);box-shadow:0 14px 32px rgba(28,48,38,.08)}.related-guides__card>span{position:absolute;top:1.2rem;left:1.25rem;color:var(--color-cobre);font-size:.68rem;font-weight:600;letter-spacing:.12em}.related-guides__card strong{max-width:11ch;color:var(--color-bosque);font-family:var(--font-serif);font-size:1.8rem;font-weight:400;line-height:1}.related-guides__card small{margin-top:.55rem;color:#777;font-size:.7rem;text-transform:uppercase}.related-guides__card em{position:absolute;right:1.2rem;top:1.15rem;color:var(--color-cobre);font-style:normal;transition:transform .2s ease}.related-guides__card:hover em{transform:translate(3px,-3px)}.related-guides__footer{margin-top:1.8rem}.related-guides__footer a{display:inline-flex;gap:.55rem;color:var(--color-bosque);font-size:.78rem;font-weight:600;text-decoration:none}.related-guides__footer a:hover{color:var(--color-cobre)}@media(max-width:900px){.related-guides{padding:5.5rem 0}.related-guides__intro{grid-template-columns:1fr;gap:2rem}.related-guides__grid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.related-guides__inner{width:calc(100% - 2rem)}.related-guides__grid{grid-template-columns:1fr}.related-guides__card{min-height:155px}}@media(prefers-reduced-motion:reduce){.related-guides__card,.related-guides__card em{transition:none}.related-guides__card:hover{transform:none}.related-guides__card:hover em{transform:none}}
+.related-guides{padding:7rem 0;background:#ece9e1}.related-guides__inner{width:min(var(--content-width),calc(100% - 4rem));margin:0 auto}.related-guides__intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.62fr);gap:5rem;align-items:end;margin-bottom:3rem}.related-guides__intro h2{max-width:760px;margin:0;color:var(--color-bosque);font-family:var(--font-serif);font-size:clamp(2.8rem,5vw,4.8rem);font-weight:400;line-height:.98;letter-spacing:-.035em}.related-guides__intro>p:last-child{margin:0;color:#666;line-height:1.75}.related-guides__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem}.related-guides__card{position:relative;display:flex;min-height:190px;flex-direction:column;justify-content:flex-end;padding:1.35rem;border:1px solid rgba(28,48,38,.13);border-radius:18px;background:var(--color-papel);color:inherit;text-decoration:none;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}.related-guides__card:hover{transform:translateY(-3px);border-color:rgba(194,125,56,.6);box-shadow:0 14px 32px rgba(28,48,38,.08)}.related-guides__card--guide{background:#eef0e9}.related-guides__card>span{position:absolute;top:1.2rem;left:1.25rem;color:var(--color-cobre);font-size:.68rem;font-weight:600;letter-spacing:.12em}.related-guides__card strong{max-width:11ch;color:var(--color-bosque);font-family:var(--font-serif);font-size:1.8rem;font-weight:400;line-height:1}.related-guides__card small{margin-top:.55rem;color:#777;font-size:.7rem;text-transform:uppercase}.related-guides__card em{position:absolute;right:1.2rem;top:1.15rem;color:var(--color-cobre);font-style:normal;transition:transform .2s ease}.related-guides__card:hover em{transform:translate(3px,-3px)}.related-guides__footer{margin-top:1.8rem}.related-guides__footer a{display:inline-flex;gap:.55rem;color:var(--color-bosque);font-size:.78rem;font-weight:600;text-decoration:none}.related-guides__footer a:hover{color:var(--color-cobre)}@media(max-width:900px){.related-guides{padding:5.5rem 0}.related-guides__intro{grid-template-columns:1fr;gap:2rem}.related-guides__grid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.related-guides__inner{width:calc(100% - 2rem)}.related-guides__grid{grid-template-columns:1fr}.related-guides__card{min-height:155px}}@media(prefers-reduced-motion:reduce){.related-guides__card,.related-guides__card em{transition:none}.related-guides__card:hover{transform:none}.related-guides__card:hover em{transform:none}}
 </style>

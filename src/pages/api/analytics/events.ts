@@ -5,6 +5,8 @@ const ALLOWED_EVENTS = new Set([
   "cta_travel_request",
   "travel_form_start",
   "travel_form_step",
+  "travel_form_back",
+  "travel_form_error",
   "travel_form_submit",
   "proof_of_work",
   "costa_rica_decision_nav",

@@ -1,0 +1,222 @@
+import type {
+  OurTrip,
+  TripPlace,
+} from "./costa-rica";
+
+const place = (
+  id: string,
+  name: string,
+  category: TripPlace["category"],
+): TripPlace => ({
+  id,
+  name,
+  category,
+  status: "unverified",
+  evidence: ["google_maps"],
+  confidence: "medium",
+  tags: ["mauricio"],
+});
+
+const sudafricaPlaces: TripPlace[] = [
+  Object.assign(place("aerotropolis-guest-lodge", "Aerotropolis Guest Lodge", "hotel"), { location: "Johannesburgo", tags: ["sudafrica", "johannesburgo"] }),
+  Object.assign(place("airport-inn-isando", "Airport Inn & Suites Isando", "hotel"), { location: "Isando", tags: ["sudafrica", "johannesburgo"] }),
+  Object.assign(place("or-tambo", "Aeropuerto Internacional de Johannesburgo-Oliver Reginald Tambo", "transport"), { location: "Johannesburgo", tags: ["sudafrica", "johannesburgo", "aeropuerto"] }),
+  Object.assign(place("fnb-stadium", "FNB Stadium", "other"), { location: "Johannesburgo", tags: ["sudafrica", "johannesburgo"] }),
+  Object.assign(place("lower-sabie-rest-camp", "Lower Sabie Rest Camp", "hotel"), { location: "Kruger", tags: ["sudafrica", "kruger", "alojamiento"] }),
+  Object.assign(place("berg-en-dal-rest-camp", "Berg-en-Dal Rest Camp", "hotel"), { location: "Kruger", tags: ["sudafrica", "kruger", "alojamiento"] }),
+  Object.assign(place("skukuza-golf-club", "Skukuza Golf Club", "other"), { location: "Kruger", tags: ["sudafrica", "kruger"] }),
+  Object.assign(place("sabie-river", "Sabie River", "other"), { location: "Kruger", tags: ["sudafrica", "kruger", "naturaleza"] }),
+  Object.assign(place("longwe-lookout", "Longwe Lookout", "viewpoint"), { location: "Kruger", tags: ["sudafrica", "kruger", "mirador"] }),
+  Object.assign(place("lion-sands-tinga-lodge", "Lion Sands Tinga Lodge", "hotel"), { location: "Kruger", tags: ["sudafrica", "kruger", "alojamiento"] }),
+  Object.assign(place("robben-island-museum", "Robben Island Museum", "historical"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo", "historia"] }),
+  Object.assign(place("green-point-lighthouse", "Faro de Green Point", "historical"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo"] }),
+  Object.assign(place("v-and-a-waterfront", "V&A Waterfront", "city"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo"] }),
+  Object.assign(place("lion-battery", "Lion Battery", "historical"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo"] }),
+  Object.assign(place("signal-hill", "Signal Hill", "viewpoint"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo", "atardecer"] }),
+  Object.assign(place("bo-kaap", "Bo-Kaap", "historical"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo"] }),
+  Object.assign(place("bo-kaap-dorp-straat", "Bo Kaap - Dorp Street", "historical"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo"] }),
+  Object.assign(place("evangelical-lutheran-church", "Evangelical Lutheran Church", "historical"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo"] }),
+  Object.assign(place("30-burg-st", "30 Burg St", "other"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo"] }),
+  Object.assign(place("long-st", "Long St", "other"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo"] }),
+  Object.assign(place("companys-garden", "El Jardín de la Compañía", "other"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo"] }),
+  Object.assign(place("mandela-statue", "President Nelson Mandela Statue", "historical"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo"] }),
+  Object.assign(place("cape-town-city-hall", "Cape Town City Hall", "historical"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo"] }),
+  Object.assign(place("parliament-south-africa", "Parliament of the Republic of South Africa", "historical"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo"] }),
+  Object.assign(place("castle-good-hope", "Castillo de Buena Esperanza", "historical"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo"] }),
+  Object.assign(place("lions-head", "Cabeza de León", "viewpoint"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo", "senderismo"] }),
+  Object.assign(place("camps-bay-table-mountain-view", "Camps Bay Beach and Table Mountain View Point", "viewpoint"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo"] }),
+  Object.assign(place("camps-bay-beach", "Camps Bay Beach", "beach"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo", "playa"] }),
+  Object.assign(place("table-mountain", "Montaña de la Mesa", "viewpoint"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo", "senderismo"] }),
+  Object.assign(place("cape-town-airport", "Aeropuerto Internacional de la Ciudad del Cabo", "transport"), { location: "Ciudad del Cabo", tags: ["sudafrica", "ciudad-del-cabo", "aeropuerto"] }),
+  Object.assign(place("chapmans-peak-lookout", "Chapman's Peak Drive Lookout Point", "viewpoint"), { location: "Península del Cabo", tags: ["sudafrica", "peninsula-del-cabo", "mirador"] }),
+  Object.assign(place("chapmans-peak-drive", "Chapman's Peak Drive", "transport"), {
+    location: "Península del Cabo",
+    tags: ["sudafrica", "peninsula-del-cabo", "carretera"],
+    note: "Apuntamos que el peaje rondó los 70 rands y que nos resultó interesante recorrerla de vuelta hacia Ciudad del Cabo.",
+  }),
+  Object.assign(place("engen-false-bay", "Engen False Bay 1 Stop", "transport"), { location: "Península del Cabo", tags: ["sudafrica", "peninsula-del-cabo", "gasolinera"] }),
+  Object.assign(place("muizenberg-beach", "Muizenberg Beach", "beach"), {
+    location: "Península del Cabo",
+    tags: ["sudafrica", "peninsula-del-cabo", "playa", "surf"],
+    note: "La guardamos por sus casitas de colores y el ambiente de surf.",
+  }),
+  Object.assign(place("seal-island", "Seal Island", "island"), { location: "Península del Cabo", tags: ["sudafrica", "peninsula-del-cabo", "fauna"] }),
+  Object.assign(place("boulders-beach", "Playa de Boulders", "beach"), { location: "Península del Cabo", tags: ["sudafrica", "peninsula-del-cabo", "playa", "pinguinos"] }),
+  Object.assign(place("middle-beach", "Middle Beach", "beach"), {
+    location: "Península del Cabo",
+    tags: ["sudafrica", "peninsula-del-cabo", "pinguinos"],
+    note: "La guardamos como punto para bañarse cerca de los pingüinos; el acceso era de pago.",
+  }),
+  Object.assign(place("cape-peninsula-wooden-walkway", "Cape Peninsula Wooden Walkway", "other"), { location: "Península del Cabo", tags: ["sudafrica", "peninsula-del-cabo"] }),
+  Object.assign(place("cape-of-good-hope", "Cabo de Buena Esperanza", "nature_reserve"), { location: "Península del Cabo", tags: ["sudafrica", "peninsula-del-cabo", "naturaleza"] }),
+  Object.assign(place("new-cape-point-lighthouse", "Nuevo faro de la punta del cabo", "historical"), { location: "Península del Cabo", tags: ["sudafrica", "peninsula-del-cabo"] }),
+  Object.assign(place("stony-point-penguin-colony", "Stony Point Penguin Colony Entrance", "wildlife"), {
+    location: "Betty's Bay",
+    tags: ["sudafrica", "pingüinos", "fauna"],
+    note: "Apuntamos que era una buena visita por la tarde, cuando los pingüinos regresan de pescar, y que estaba incluida en la WildCard.",
+  }),
+  Object.assign(place("hermanus-cliff-path", "Hermanus Cliff Path Biodiversity Walk", "viewpoint"), {
+    location: "Hermanus",
+    tags: ["sudafrica", "hermanus", "ballenas"],
+    note: "Punto guardado por el avistamiento de ballenas.",
+  }),
+  Object.assign(place("marine-dynamics-shark-tours", "Marine Dynamics · Shark Tours · Shark Cage Dive", "activity"), {
+    location: "Sudáfrica",
+    tags: ["sudafrica", "tiburones", "actividad"],
+  }),
+];
+
+const mauricioPlaces: TripPlace[] = [
+  place("ile-aux-cerfs", "Île aux Cerfs", "island"),
+  place("mon-choisy", "Mon Choisy Public Beach", "beach"),
+  place("ocean-v-hotel", "Ocean V Hotel", "hotel"),
+  place("pereybere", "Pereybere Beach", "beach"),
+  place("bain-boeuf", "Bain Boeuf Public Beach", "beach"),
+  place("la-cuvette", "La Cuvette Public Beach", "beach"),
+  place("trou-aux-biches", "Trou aux Biches", "beach"),
+  place("cap-malheureux", "Cap Malheureux", "viewpoint"),
+  place("blue-penny-museum", "Blue Penny Museum", "historical"),
+  place("central-post-office", "Central Post Office", "historical"),
+  place("port-louis-waterfront", "Port Louis Waterfront by Landscope Mauritius", "city"),
+  place("mercado-central-port-louis", "Mercado Central", "city"),
+  place("casa-gobierno", "Casa de Gobierno", "historical"),
+  place("port-louis-theatre", "Port Louis Theatre", "historical"),
+  place("supreme-court", "Supreme Court of Mauritius", "historical"),
+  place("catedral-san-luis", "Catedral de San Luis", "historical"),
+  place("flic-en-flac", "Flic en Flac Beach", "beach"),
+  place("maison-eureka", "Maison Eureka", "historical"),
+  place("tamarin-beach", "Tamarin Public Beach", "beach"),
+  place("ben-whale-safari", "Ben Whale Safari", "activity"),
+  place("le-morne-public-beach", "Le Morne Public Beach", "beach"),
+  place("cascadas-tamarin", "Cascadas de Tamarin", "waterfall"),
+  place("le-morne-brabant", "Le Morne Brabant", "viewpoint"),
+  place("trou-aux-cerfs", "Trou aux Cerfs Viewpoint", "viewpoint"),
+  place("chamarel-seven-coloured-earth", "Chamarel Seven Colored Earth Geopark", "other"),
+  place("chamarel-waterfall", "Chamarel Waterfall Viewpoint", "waterfall"),
+  place("gorges-viewpoint", "Gorges Viewpoint", "viewpoint"),
+  place("lagoon-island", "Lagoon Island", "island"),
+  place("maconde-viewpoint", "Maconde Viewpoint", "viewpoint"),
+  place("belle-mare-beach", "Belle Mare Beach", "beach"),
+  place("grand-bassin", "Grand Bassin Temple", "historical"),
+  place("cascade-mamzelle", "Cascade Mamzelle", "waterfall"),
+  place("gris-gris", "Gris Gris Beach", "beach"),
+  place("ile-aux-aigrettes", "Île aux Aigrettes", "island"),
+  place("pointe-desny", "Pointe d'Esny Beach", "beach"),
+  place("blue-bay", "Blue Bay Beach", "beach"),
+];
+
+export const sudafricaMauricioTrip: OurTrip = {
+  slug: "sudafrica-mauricio",
+  title: "Sudáfrica y Mauricio",
+  subtitle:
+    "Un viaje combinado de 28 días entre safari, carretera, Ciudad del Cabo y experiencias de océano.",
+  duration: "28 días",
+  destination: "Sudáfrica y Mauricio",
+  introduction:
+    "El registro de nuestro viaje une dos destinos muy distintos dentro de una misma experiencia: Sudáfrica, con safari y carretera, y Mauricio, con costa, actividades marinas y exploración de la isla. En lugar de reconstruir un itinerario perfecto, queremos conservar aquí lo que sí podemos demostrar con nuestros registros: dónde estuvimos, qué pagamos y qué lugares fuimos guardando sobre el terreno.",
+  metrics: {
+    durationDays: 28,
+    startDate: "2025-09-28",
+    endDate: "2025-10-25",
+    countries: 2,
+  },
+  whyDestination: [
+    "El viaje combinó dos geografías muy diferentes sin salir de una misma aventura: safari y carretera en Sudáfrica, y costa y actividades marinas en Mauricio.",
+    "El registro de gastos confirma etapas de alquiler de coche, alojamientos y actividades tanto en Sudáfrica como en Mauricio.",
+    "Entre las experiencias registradas aparecen safari nocturno, actividades de tiburón y ballena, buceo y snorkel, además de varios días de carretera.",
+  ],
+  whatWeWanted: [
+    "Safari y fauna terrestre.",
+    "Carretera y libertad de movimiento.",
+    "Ciudad del Cabo y paisaje costero.",
+    "Océano: tiburones, ballenas, buceo y snorkel.",
+    "Combinar exploración con días de isla y mar.",
+  ],
+  howWeDesignedTheRoute: [
+    "El viaje duró 28 días, del 28 de septiembre al 25 de octubre de 2025, y abarcó Sudáfrica y Mauricio.",
+    "En los gastos aparecen coches diferenciados para Mauricio, Kruger y Ciudad del Cabo, señal de que el coche fue una herramienta importante en distintos tramos del viaje.",
+    "En Sudáfrica el registro conserva gastos y alojamientos vinculados a Kruger y Ciudad del Cabo, además de combustible, peajes y actividades.",
+    "Mauricio aparece asociado a alquiler de coche y a varias experiencias marítimas y de costa.",
+    "No reconstruimos aquí trayectos que no estén confirmados en los registros: esta página distingue entre lo que sabemos y lo que todavía falta por documentar.",
+  ],
+  days: [],
+  places: [...sudafricaPlaces, ...mauricioPlaces],
+  plannedButNotVisited: [],
+  importantDecisions: [
+    {
+      title: "Separar safari y ciudad como experiencias diferentes",
+      content:
+        "Los gastos y alojamientos registrados muestran una etapa clara en Kruger y otra en Ciudad del Cabo. Son dos formas de viajar muy diferentes y merece la pena tratarlas como bloques distintos.",
+    },
+    {
+      title: "Usar coche donde aportaba libertad",
+      content:
+        "El registro incluye alquileres y combustible en Mauricio, Kruger y Ciudad del Cabo. El coche no fue una constante única, sino una herramienta adaptada a cada parte del viaje.",
+    },
+    {
+      title: "Dar espacio a las experiencias marinas",
+      content:
+        "Tiburón, ballena, buceo y snorkel aparecen entre los gastos registrados. El mar no fue un complemento puntual, sino una parte visible de la experiencia de Mauricio.",
+    },
+    {
+      title: "Conservar los datos aunque todavía falte parte del relato",
+      content:
+        "Tenemos un registro económico muy detallado y una lista compartida de lugares, pero no todos los trayectos y estados de visita están documentados con el mismo nivel de precisión. Preferimos dejar esa diferencia visible antes que rellenarla con suposiciones.",
+    },
+  ],
+  accommodations: [
+    { location: "Mauricio", name: "Hotel Mauricio", amount: 370.60, currency: "€", paidBy: "Itciar", evidence: ["tricount"] },
+    { location: "Mauricio", name: "Hotel Mauricio - HE", amount: 190.11, currency: "€", paidBy: "David", evidence: ["tricount"] },
+    { location: "Johannesburgo", name: "Hotel Aeropuerto Johannesburgo", amount: 28.83, currency: "€", paidBy: "David", evidence: ["tricount"] },
+    { location: "Kruger", name: "Hotel Puerta Kruger", amount: 39.80, currency: "€", paidBy: "David", evidence: ["tricount"] },
+    { location: "Kruger", name: "Hoteles Kruger", amount: 312.60, currency: "€", paidBy: "David", evidence: ["tricount"] },
+    { location: "Ciudad del Cabo", name: "Hotel Ciudad del Cabo", amount: 259.67, currency: "€", paidBy: "David", evidence: ["tricount"] },
+    { location: "Aeropuerto", name: "Hotel 2 Aeropuerto", amount: 33.60, currency: "€", paidBy: "David", evidence: ["tricount"] },
+  ],
+  budget: [],
+  budgetSummary: {
+    total: 5810.83,
+    perPerson: 2905.42,
+    currency: "€",
+    source: "tricount",
+    note:
+      "Total que aparece en Tricount para las dos personas. El texto compartido no conserva el importe legible de todas las líneas individuales, así que no reconstruimos un desglose artificial por categorías.",
+  },
+  whatWeWouldRepeat: [],
+  whatWeWouldChange: [],
+  whatWeWouldDoToday: [],
+  gallery: [],
+  relatedGuide: {
+    title: "Preparar la guía de Sudáfrica",
+    description:
+      "La guía reúne el criterio para decidir cómo combinar safari, ciudad, costa, carretera y tiempos de desplazamiento sin copiar nuestro viaje.",
+    href: "/viajes/sudafrica",
+  },
+  cta: {
+    title: "¿Quieres un viaje con esta complejidad, pero hecho para ti?",
+    description:
+      "Cuéntanos qué queréis combinar y empezamos a cruzar destinos, tiempos, ritmo y logística.",
+    buttonLabel: "Cuéntanos tu viaje",
+    buttonHref: "/cuentatuviaje",
+  },
+};

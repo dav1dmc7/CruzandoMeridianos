@@ -2,6 +2,92 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
+
+const destinationsSource = await fs.readFile(
+  path.join(root, "src", "data", "destinations.ts"),
+  "utf8",
+);
+const guideMediaSource = await fs.readFile(
+  path.join(root, "src", "data", "guide-media.ts"),
+  "utf8",
+);
+
+
+const destinationBlocks = destinationsSource
+  .split(/\n\s*\{/)
+  .slice(1);
+
+const destinationCoverInventory = destinationBlocks
+  .flatMap((block) => {
+    const slug = block.match(/slug:\s*"([^"]+)"/)?.[1];
+    const coverKind = block.match(/coverKind:\s*"([^"]+)"/)?.[1];
+    if (!slug || !coverKind) return [];
+    return [{ slug, coverKind }];
+  });
+
+const coverInventoryByKind = destinationCoverInventory.reduce(
+  (counts, destination) => {
+    counts[destination.coverKind] = (counts[destination.coverKind] ?? 0) + 1;
+    return counts;
+  },
+  {},
+);
+
+const destinationsUsingFallback = destinationBlocks
+  .flatMap((block) => {
+    if (!/status:\s*"ready"/.test(block) || !/image:\s*atlasGuideFallback/.test(block)) {
+      return [];
+    }
+
+    const match = block.match(/slug:\s*"([^"]+)"/);
+    return match ? [match[1]] : [];
+  });
+
+const livedDestinationInventory = destinationBlocks.flatMap((block) => {
+  const slug = block.match(/slug:\s*"([^"]+)"/)?.[1];
+  const status = block.match(/status:\s*"([^"]+)"/)?.[1];
+  const publishedTripSlug = block.match(/publishedTripSlug:\s*"([^"]+)"/)?.[1];
+
+  if (!slug || status !== "ready" || !publishedTripSlug) return [];
+  return [{ slug, publishedTripSlug }];
+});
+
+const mediaRegistrySlugs = new Set(
+  [...guideMediaSource.matchAll(/^\s*"([^"]+)":\s*\{/gm)].map(
+    (match) => match[1],
+  ),
+);
+
+const costaRicaMediaPage = await fs.readFile(
+  path.join(root, "src", "pages", "nuestros-viajes", "[slug].astro"),
+  "utf8",
+);
+const costaRicaGuidePage = await fs.readFile(
+  path.join(root, "src", "pages", "viajes", "[slug].astro"),
+  "utf8",
+);
+const destinationsData = await fs.readFile(
+  path.join(root, "src", "data", "destinations.ts"),
+  "utf8",
+);
+
+const costaRicaDirectImageImport = /\.\.\/\.\.\/assets\/images\/costa-rica\//;
+if (costaRicaDirectImageImport.test(costaRicaMediaPage) || costaRicaDirectImageImport.test(costaRicaGuidePage)) {
+  console.warn("Costa Rica media warning: destination pages should consume the shared first-hand media registry.");
+}
+
+if (!/firstHandMediaBySlug\["costa-rica"\]/.test(costaRicaMediaPage)) {
+  console.warn("Costa Rica media warning: lived-trip page is not consuming firstHandMediaBySlug.");
+}
+
+if (!/firstHandMediaBySlug\[slug\]/.test(costaRicaGuidePage)) {
+  console.warn("Costa Rica media warning: guide page is not consuming the shared first-hand media registry.");
+}
+
+if (!/firstHandMediaBySlug\["costa-rica"\]/.test(destinationsData)) {
+  console.warn("Costa Rica media warning: destination registry is not consuming the shared first-hand media cover.");
+}
+
 const assetRoots = [
   path.join(root, "public"),
   path.join(root, "src", "assets"),
@@ -67,6 +153,80 @@ const failures = assets.filter(
 const justified = assets.filter(
   ({ file, bytes }) => bytes > FAIL_BYTES && justifiedLargeAssets.has(file)
 );
+
+const coverKindMismatches = destinationCoverInventory.filter((destination) => {
+  const usesFallback = destinationsUsingFallback.includes(destination.slug);
+  return usesFallback !== (destination.coverKind === "placeholder");
+});
+
+const destinationExperienceMismatches = destinationCoverInventory.filter(
+  (destination) =>
+    mediaRegistrySlugs.has(destination.slug) &&
+    destination.coverKind !== "first-hand",
+);
+
+if (coverKindMismatches.length) {
+  for (const destination of coverKindMismatches) {
+    console.error(
+      `Cover metadata mismatch for "${destination.slug}": coverKind=${destination.coverKind}.`,
+    );
+  }
+  process.exit(1);
+}
+
+if (destinationExperienceMismatches.length) {
+  console.warn("\nFirst-hand cover warnings:");
+  for (const destination of destinationExperienceMismatches) {
+    console.warn(
+      `- "${destination.slug}" has a first-hand media registry entry but its coverKind is "${destination.coverKind}".`,
+    );
+  }
+}
+
+console.log("\nDestination cover inventory:");
+console.log(`- First-hand cover: ${coverInventoryByKind["first-hand"] ?? 0}`);
+console.log(`- Existing editorial cover: ${coverInventoryByKind["existing-editorial"] ?? 0}`);
+console.log(`- Placeholder cover: ${coverInventoryByKind["placeholder"] ?? 0}`);
+
+if (destinationsUsingFallback.length) {
+  console.warn("\nEditorial cover warnings:");
+  for (const slug of destinationsUsingFallback) {
+    console.warn(`- Ready destination "${slug}" still uses atlas-guide-fallback.svg as its cover.`);
+  }
+}
+
+const livedDestinationsWithoutMedia = livedDestinationInventory.filter(
+  ({ slug }) => !mediaRegistrySlugs.has(slug),
+);
+
+console.log("\nFirst-hand media coverage:");
+console.log(`- Ready destinations linked to a published lived trip: ${livedDestinationInventory.length}`);
+console.log(`- With a dedicated first-hand media registry entry: ${livedDestinationInventory.length - livedDestinationsWithoutMedia.length}`);
+
+if (livedDestinationsWithoutMedia.length) {
+  console.warn("First-hand media coverage warnings:");
+  for (const { slug, publishedTripSlug } of livedDestinationsWithoutMedia) {
+    console.warn(
+      `- "${slug}" is linked to lived trip "${publishedTripSlug}" but has no dedicated first-hand media entry yet.`,
+    );
+  }
+}
+
+const unusedMediaRegistrySlugs = [...mediaRegistrySlugs].filter(
+  (slug) =>
+    !livedDestinationInventory.some(
+      (destination) => destination.slug === slug,
+    ),
+);
+
+if (unusedMediaRegistrySlugs.length) {
+  console.warn("First-hand media registry warnings:");
+  for (const slug of unusedMediaRegistrySlugs) {
+    console.warn(
+      `- Media registry contains "${slug}" without a published lived-trip destination mapping.`,
+    );
+  }
+}
 
 console.log("Asset weight audit:");
 for (const { file, bytes } of warnings.slice(0, 15)) {

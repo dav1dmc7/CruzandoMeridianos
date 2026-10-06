@@ -14,13 +14,35 @@ const livedTripSlugs = new Set(
 );
 
 const livedDestinations = readyDestinations.filter(
-  (destination) => livedTripSlugs.has(destination.slug),
+  (destination) =>
+    destination.publishedTripSlug &&
+    livedTripSlugs.has(destination.publishedTripSlug),
 );
+
+const uniqueLivedDestinations = livedDestinations.filter(
+  (destination, index, all) =>
+    all.findIndex(
+      (candidate) =>
+        candidate.publishedTripSlug === destination.publishedTripSlug,
+    ) === index,
+);
+
+const visibleLivedDestinations = uniqueLivedDestinations;
 
 const title = "Nuestros viajes | Cruzando Meridianos";
 
 const description =
   "Viajes que hemos vivido, investigado y documentado. Descubre lo que aprendimos sobre el terreno y el criterio que hay detrás de cada destino.";
+
+const livedTripLabel =
+  visibleLivedDestinations.length === 1
+    ? "1 viaje vivido publicado"
+    : `${visibleLivedDestinations.length} viajes vividos publicados`;
+
+const guideCountLabel =
+  readyDestinations.length === 1
+    ? "1 destino con guía editorial"
+    : `${readyDestinations.length} destinos con guía editorial`;
 ---
 
 <Layout title={title} description={description}>
@@ -81,7 +103,7 @@ const description =
       </div>
     </section>
 
-    {livedDestinations.length > 0 && (
+    {visibleLivedDestinations.length > 0 && (
       <section class="trips-destinations" id="vividos">
         <div class="section-frame">
           <div class="section-heading">
@@ -98,7 +120,7 @@ const description =
           </div>
 
           <div class="lived-destinations">
-            {livedDestinations.map((destination, index) => (
+            {visibleLivedDestinations.map((destination, index) => (
               <DestinationCard destination={destination} featured={index === 0} />
             ))}
           </div>
@@ -111,19 +133,19 @@ const description =
         <div>
           <p class="eyebrow">Guías de destino</p>
           <h2>
-            Lo que hemos vivido nosotros
-            <em>es una cosa. Lo que hemos investigado, otra.</em>
+            Lo que hemos vivido nosotros{" "}
+            <em>también está detrás de estas guías.</em>
           </h2>
         </div>
 
         <div class="trips-guide-bridge-copy">
           <p>
-            Ahora mismo tenemos
-            {livedDestinations.length}
-            viaje vivido publicado y
-            {Math.max(readyDestinations.length - livedDestinations.length, 0)}
-            destinos con guía editorial.
-            No los presentamos como si hubiéramos estado en todos ellos.
+            Ahora mismo tenemos{" "}
+            {livedTripLabel} y {guideCountLabel}.
+            Todos esos destinos forman parte de nuestra experiencia de primera mano;
+            la diferencia está en el formato: solo una parte está además desarrollada
+            y publicada como relato de viaje, con su recorrido y lo que aprendimos sobre
+            el terreno.
           </p>
 
           <a href="/viajes" class="cta-link">
@@ -139,7 +161,7 @@ const description =
         <div class="philosophy-content">
           <p class="eyebrow">Lo que buscamos</p>
           <h2>
-            No queremos conocer todos los lugares.
+            No queremos conocer todos los lugares.{" "}
             <em>Queremos conocerlos bien.</em>
           </h2>
           <p>
@@ -155,7 +177,7 @@ const description =
         <div>
           <p class="eyebrow">Tu próximo viaje</p>
           <h2>
-            Ya hemos hecho nuestra parte.
+            Ya hemos hecho nuestra parte.{" "}
             <em>Ahora cuéntanos la tuya.</em>
           </h2>
         </div>

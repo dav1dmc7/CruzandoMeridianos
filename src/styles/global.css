@@ -9,7 +9,8 @@
     --color-arena: #F4F1EA;
     --color-papel: #FBF9F5;
     --color-grafito: #1A1A1A;
-    --color-cobre: #C27D38;
+    --color-cobre: #9A5B1E;
+    --color-cobre-on-dark: #D28B42;
   
     /* Tipografías */
     --font-serif: "Newsreader", serif;
@@ -435,4 +436,26 @@ html {
 :focus-visible {
   outline: 2px solid var(--color-cobre);
   outline-offset: 3px;
+}
+
+/* ============================================================
+   CM ACCESSIBILITY — CONTRASTE DE ACENTOS
+   El cobre principal se usa ahora como texto legible sobre
+   fondos claros. Los bloques oscuros disponen de un cobre
+   específico con contraste suficiente sobre bosque.
+============================================================ */
+
+.work-preview .eyebrow,
+.proof-work .eyebrow,
+.how-it-works .eyebrow,
+.process-section .eyebrow,
+.manifesto-section .eyebrow,
+.contact-cta .eyebrow,
+.resources-principles .eyebrow,
+.trip-page .trip-fauna .eyebrow {
+  color: var(--color-cobre-on-dark) !important;
+}
+
+.resources-hero h1 em {
+  color: var(--color-cobre-on-dark);
 }

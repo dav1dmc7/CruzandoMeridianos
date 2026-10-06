@@ -7,6 +7,9 @@ const read = (relativePath) => fs.readFileSync(path.join(root, relativePath), "u
 const destinations = read("src/data/destinations.ts");
 const registry = read("src/data/guides/index.ts");
 const deepDive = read("src/data/guides/destination-deep-dive.ts");
+const placeCatalog = read("src/data/guides/key-places.ts");
+const additionalGuides = read("src/data/guides/additional.ts");
+const costaRicaGuide = read("src/data/guides/costa-rica.ts");
 
 const extractReadySlugs = (source) => {
   const blocks = source.split(/\n\s*\{/).slice(1);
@@ -57,6 +60,50 @@ for (const slug of deepDiveSlugs) {
   if (!readySlugs.includes(slug)) {
     failures.push(`Deep-dive destination "${slug}" is not marked ready in destinations.ts.`);
   }
+}
+
+if (!/GuidePlacesMap/.test(read("src/pages/viajes/[slug].astro"))) {
+  failures.push("Destination guide pages must render the key places map.");
+}
+
+if (!/GuidePlaceDecisions/.test(read("src/pages/viajes/[slug].astro"))) {
+  failures.push("Destination guide pages must render the reusable place-decision framework.");
+}
+
+if (!/places\?: GuidePlace\[\]/.test(read("src/data/guides/types.ts"))) {
+  failures.push("Destination guide contract must expose key places.");
+}
+
+if (!/export const keyPlacesBySlug/.test(placeCatalog)) {
+  failures.push("Key places catalog is missing.");
+}
+
+const placeEntries = [...placeCatalog.matchAll(
+  /^\s*(?:"([^"]+)"|([a-z0-9-]+)):\s*\[([\s\S]*?)^\s*\],/gm,
+)];
+
+const placeCounts = new Map(
+  placeEntries.map((match) => [
+    match[1] ?? match[2],
+    (match[3].match(/\bp\(/g) ?? []).length,
+  ]),
+);
+
+for (const slug of readySlugs) {
+  const placeCount = placeCounts.get(slug) ?? 0;
+  if (placeCount < 5) {
+    failures.push(
+      'Ready destination "' + slug + '" must have at least five curated key places.',
+    );
+  }
+}
+
+if (!/id:\s*"donde-alojarse"/.test(additionalGuides)) {
+  failures.push('Universal accommodation decision section "donde-alojarse" is missing from additional guides.');
+}
+
+if (!/id:\s*\n\s*"donde-alojarse"/.test(costaRicaGuide)) {
+  failures.push('Costa Rica accommodation decision section "donde-alojarse" is missing.');
 }
 
 if (!/id:\s*"herramientas-y-comprobaciones"/.test(registry)) {

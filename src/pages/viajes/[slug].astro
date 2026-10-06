@@ -3,9 +3,13 @@ import { Image } from "astro:assets";
 
 import Layout from "../../layouts/Layout.astro";
 import Footer from "../../components/layout/Footer.astro";
+import GuidePlacesMap from "../../components/guides/GuidePlacesMap.astro";
+import GuidePlaceDecisions from "../../components/guides/GuidePlaceDecisions.astro";
+import GuideFirstHandGallery from "../../components/guides/GuideFirstHandGallery.astro";
 
 import { destinations } from "../../data/destinations";
 import { getGuideBySlug } from "../../data/guides";
+import { firstHandMediaBySlug } from "../../data/guide-media";
 
 import type {
   DestinationGuide,
@@ -61,6 +65,9 @@ if (!guide) {
   return Astro.redirect("/viajes");
 }
 
+const firstHandMedia =
+  firstHandMediaBySlug[slug];
+
 const publicGuideTitle =
   guide.title
     .replace(/\s*\|\s*Cruzando Meridianos\s*$/, "")
@@ -114,6 +121,9 @@ const hasAlerts =
 
 const hasFaq =
   guide.faq.length > 0;
+
+const publicSections =
+  guide.sections;
 
 
 /* =========================================================
@@ -525,6 +535,7 @@ const travelerData =
   description={pageDescription}
   canonical={`/viajes/${destination.slug}`}
   ogImage={destination.image.src}
+  ogImage={destination.image.src}
 >
 
   <script
@@ -590,7 +601,7 @@ const travelerData =
           <span
             class="guide-hero__label"
           >
-            Guía de viaje
+            Guía de viaje · {destination.publishedTripSlug ? "experiencia propia · viaje vivido publicado" : destination.experience === "first-hand" ? "experiencia propia" : "investigación editorial"}
           </span>
 
         </div>
@@ -653,7 +664,7 @@ const travelerData =
           </p>
 
           <span>
-            {guide.sections.length}
+            {publicSections.length}
             secciones
           </span>
 
@@ -690,6 +701,20 @@ const travelerData =
           >
             {guide.intro}
           </p>
+
+          {
+            destination.publishedTripSlug && (
+              <a
+                class="guide-lived-trip-link"
+                href={`/nuestros-viajes/${destination.publishedTripSlug}`}
+              >
+                <span>
+                  Lo hemos vivido sobre el terreno.
+                </span>
+                Ver nuestro viaje <span aria-hidden="true">↗</span>
+              </a>
+            )
+          }
 
 
           <p>
@@ -890,6 +915,49 @@ const travelerData =
     }
 
 
+    {
+      guide.places &&
+      guide.places.length > 0 && (
+        <>
+          <GuidePlacesMap places={guide.places} />
+
+          <GuidePlaceDecisions places={guide.places} />
+        </>
+      )
+    }
+
+    {
+      firstHandMedia && (
+        <GuideFirstHandGallery media={firstHandMedia} />
+      )
+    }
+
+    {
+      destination.slug === "sudafrica" && (
+        <section class="guide-kruger-callout" aria-labelledby="guide-kruger-title">
+          <div class="guide-shell guide-kruger-callout__grid">
+            <div>
+              <p class="eyebrow">SAFARI · KRUGER</p>
+              <h2 id="guide-kruger-title">La parte del viaje que merece su propia guía.</h2>
+            </div>
+
+            <div class="guide-kruger-callout__copy">
+              <p>
+                Kruger tiene suficiente complejidad como para no esconderlo dentro de la guía general:
+                puertas, campamentos, coche, safaris guiados y ritmo propio.
+              </p>
+
+              <a href="/viajes/sudafrica/kruger">
+                Cómo organizar un safari en Kruger
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+
     <!-- =====================================================
          TOC
     ====================================================== -->
@@ -933,7 +1001,7 @@ const travelerData =
         >
 
           {
-            guide.sections.map(
+            publicSections.map(
               (
                 section: GuideSection
               ) => (
@@ -1150,7 +1218,7 @@ const travelerData =
     >
 
       {
-        guide.sections.map(
+        publicSections.map(
           (
             section: GuideSection,
             index: number
@@ -5845,5 +5913,86 @@ summary::after {
   }
 
 }
+
+
+  .guide-lived-trip-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    margin-top: 1.35rem;
+    padding-bottom: .45rem;
+    border-bottom: 1px solid var(--color-cobre);
+    color: var(--color-bosque);
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    text-decoration: none;
+    transition: color .2s ease, gap .2s ease;
+  }
+
+  .guide-lived-trip-link > span:first-child {
+    color: rgba(28, 54, 42, .62);
+    font-weight: 500;
+  }
+
+  .guide-lived-trip-link:hover {
+    gap: .7rem;
+    color: var(--color-cobre);
+  }
+
+  .guide-lived-trip-link:focus-visible {
+    outline: 2px solid var(--color-cobre);
+    outline-offset: 4px;
+  }
+
+
+  .guide-kruger-callout {
+    padding: clamp(5rem, 9vw, 8rem) 0;
+    background: #f3f0e9;
+  }
+
+  .guide-kruger-callout__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, .62fr);
+    gap: 4rem;
+    align-items: end;
+  }
+
+  .guide-kruger-callout h2 {
+    max-width: 760px;
+    margin: .7rem 0 0;
+    color: var(--color-bosque);
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: 400;
+    line-height: .97;
+    letter-spacing: -.04em;
+  }
+
+  .guide-kruger-callout__copy p {
+    margin: 0 0 1.4rem;
+    color: rgba(28,54,42,.7);
+    line-height: 1.8;
+  }
+
+  .guide-kruger-callout__copy a {
+    display: inline-flex;
+    align-items: center;
+    gap: .7rem;
+    color: var(--color-bosque);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .guide-kruger-callout__copy a:hover {
+    color: var(--color-cobre);
+  }
+
+  @media (max-width: 900px) {
+    .guide-kruger-callout__grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
 
 </style>
