@@ -15,18 +15,18 @@ export interface LiveGuideUpdate {
 
 export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
   "costa-rica": {
-    "checkedAt": "2026-10-22T10:13:55.745Z",
+    "checkedAt": "2026-10-23T10:06:47.837Z",
     "sourceFingerprints": {
-      "es-maec": "aee1910aaa69eacbcb9e512292524d1daa855c0bfce65323de1ad881b34c852f",
-      "uk-fcdo": "9b67fcbdb6390480457bba7a2dfffbda9c4c2068b79466217a3211af93371d87",
+      "es-maec": "9c6a7b2526ad6e82362103cbcea914d5fbc45d27d8ee487f65a8f1c8513f02f1",
+      "uk-fcdo": "7d06c59bb2f97653d768c40bf7598d604566d3ab59aa272a1b946d7c19796d5e",
       "mopt": "357f6d0b865c45472951f788819f6f6b4ca6a457b147372712fa856d4f9754fd",
-      "imn": "3011055331bf568e2b6d9e40e347319c38e97c9cb02510c49128543f4139e7d5"
+      "imn": "c41ea505d9e9c7c577f4d356bc5d8a9a55ff8e5d461e88649515166a75213fd1"
     },
     "sourceAlerts": {
       "es-maec": [
         {
           "id": "live-0f617f2aad7c2995",
-          "date": "2026-10-22",
+          "date": "2026-10-23",
           "type": "carretera",
           "severity": "high",
           "title": "Carretera — información detectada",
@@ -35,7 +35,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
           "sourceLabel": "España — Recomendaciones de viaje (ES)",
           "sourceType": "official",
           "active": true,
-          "checkedAt": "2026-10-22T10:13:55.745Z",
+          "checkedAt": "2026-10-23T10:06:47.837Z",
           "affectedAreas": [],
           "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
         }
@@ -46,7 +46,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
     "alerts": [
       {
         "id": "live-0f617f2aad7c2995",
-        "date": "2026-10-22",
+        "date": "2026-10-23",
         "type": "carretera",
         "severity": "high",
         "title": "Carretera — información detectada",
@@ -55,7 +55,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
         "sourceLabel": "España — Recomendaciones de viaje (ES)",
         "sourceType": "official",
         "active": true,
-        "checkedAt": "2026-10-22T10:13:55.745Z",
+        "checkedAt": "2026-10-23T10:06:47.837Z",
         "affectedAreas": [],
         "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
       }
@@ -66,27 +66,27 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
     ]
   },
   "sudafrica": {
-    "checkedAt": "2026-10-22T10:13:55.745Z",
+    "checkedAt": "2026-10-23T10:06:47.837Z",
     "sourceFingerprints": {
-      "es-maec": "a446cc7ec02081d9b6877c619492858d6d57124870ba3c454ed95179b4d3ec64",
-      "uk-fcdo": "db9e771ffb3a042313bedce3f13fa2665c1161cd0a719deb6c236e29dd3cc7e7",
-      "gov-sa": "3952066d2745fa0ab9fee1c100131a194ccb6f4ef5dccf6962cefcab71584eb3"
+      "es-maec": "1d1073435267a9e37d9580b04db2254c0ad3ef665ab7907ff97f6213fdc033c7",
+      "uk-fcdo": "6de455e72e6507db21628e0eb503a93c9d9ad0484abe831d88780fd7f876e955",
+      "gov-sa": "c35b40d4b5e0861a4503c5ca45a72e1e9248f8f709c0e765b5873f1aec5a8e12"
     },
     "sourceAlerts": {
       "es-maec": [],
-      "uk-fcdo": []
+      "uk-fcdo": [],
+      "gov-sa": []
     },
     "alerts": [],
     "sourceFailures": [
-      "us-state: HTTP 403",
-      "fetch failed"
+      "us-state: HTTP 403"
     ]
   },
   "jordania": {
-    "checkedAt": "2026-10-22T10:13:55.745Z",
+    "checkedAt": "2026-10-23T10:06:47.837Z",
     "sourceFingerprints": {
-      "es-maec": "81b334f582493499ef254af9fff66784c9515979f200e402767c15e748faec61",
-      "uk-fcdo": "8765b79f3973aef21068b712cbc84232fb7713e644253efb367b3b18601051b3"
+      "es-maec": "92e42133226e05d90dff8dbe19b78f68dd7d9c08a2c77e18108c1854357860ea",
+      "uk-fcdo": "e3564d0848cdacfd764a56f36236acbc8d6daee7dce8a1b656eb95deb0e009c0"
     },
     "sourceAlerts": {
       "es-maec": [],
@@ -98,16 +98,16 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
     ]
   },
   "grecia": {
-    "checkedAt": "2026-10-22T10:13:55.745Z",
+    "checkedAt": "2026-10-23T10:06:47.837Z",
     "sourceFingerprints": {
-      "es-maec": "a85e437646e1c153876a45eea7788f9d3dd7936666b9db74f35c4dac1816adcc",
-      "uk-fcdo": "236f9ec44046d66a037d5027900322fda605e330cdf2fc71ccaeae2f5fc60481"
+      "es-maec": "a83e8f652eebaf19051e8a3fe4282f7e3ba7977eea7530036070ba1245897fcb",
+      "uk-fcdo": "0395129fe6b799f8cb88cff1116461b080c42a0c028584ef2b875f6412c9824d"
     },
     "sourceAlerts": {
       "es-maec": [
         {
           "id": "live-f50f63f4aea5f407",
-          "date": "2026-10-22",
+          "date": "2026-10-23",
           "type": "carretera",
           "severity": "high",
           "title": "Carretera — información detectada",
@@ -116,13 +116,13 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
           "sourceLabel": "España — Recomendaciones de viaje (ES)",
           "sourceType": "official",
           "active": true,
-          "checkedAt": "2026-10-22T10:13:55.745Z",
+          "checkedAt": "2026-10-23T10:06:47.837Z",
           "affectedAreas": [],
           "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
         },
         {
           "id": "live-97b180b4ede9a642",
-          "date": "2026-10-22",
+          "date": "2026-10-23",
           "type": "transporte",
           "severity": "high",
           "title": "Transporte — información detectada",
@@ -131,7 +131,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
           "sourceLabel": "España — Recomendaciones de viaje (ES)",
           "sourceType": "official",
           "active": true,
-          "checkedAt": "2026-10-22T10:13:55.745Z",
+          "checkedAt": "2026-10-23T10:06:47.837Z",
           "affectedAreas": [],
           "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
         }
@@ -141,7 +141,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
     "alerts": [
       {
         "id": "live-f50f63f4aea5f407",
-        "date": "2026-10-22",
+        "date": "2026-10-23",
         "type": "carretera",
         "severity": "high",
         "title": "Carretera — información detectada",
@@ -150,13 +150,13 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
         "sourceLabel": "España — Recomendaciones de viaje (ES)",
         "sourceType": "official",
         "active": true,
-        "checkedAt": "2026-10-22T10:13:55.745Z",
+        "checkedAt": "2026-10-23T10:06:47.837Z",
         "affectedAreas": [],
         "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
       },
       {
         "id": "live-97b180b4ede9a642",
-        "date": "2026-10-22",
+        "date": "2026-10-23",
         "type": "transporte",
         "severity": "high",
         "title": "Transporte — información detectada",
@@ -165,7 +165,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
         "sourceLabel": "España — Recomendaciones de viaje (ES)",
         "sourceType": "official",
         "active": true,
-        "checkedAt": "2026-10-22T10:13:55.745Z",
+        "checkedAt": "2026-10-23T10:06:47.837Z",
         "affectedAreas": [],
         "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
       }
