@@ -15,12 +15,12 @@ export interface LiveGuideUpdate {
 
 export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
   "costa-rica": {
-    "checkedAt": "2026-11-09T13:56:14.106Z",
+    "checkedAt": "2026-11-10T13:29:31.634Z",
     "sourceFingerprints": {
       "es-maec": "d75df1d316479925ce085a8f27488cd6f796ffc369d940e6b8ee6a5bd287fc51",
-      "uk-fcdo": "34b261f6f37338427e7b80f2fcadd95b0e806c48a3bc34e6796687e669b780f9",
-      "mopt": "89d3820b5528d0ca10375a5eb127d98d1505c952613fa68915e443ccc05a0503",
-      "imn": "b73f3fe6ff90deae8c364adf24b84472ad99f8b99052eec1cf4669e58a78b567"
+      "uk-fcdo": "de3d24c55629958ed20846d08976fb5d954b99eadfd5b6480b86ac1bc1aa08f9",
+      "mopt": "b667f022a7ece4bc692215115754f97016767abaf76a4caea2525ac625c2c75d",
+      "imn": "136dcfd03d56db57f710bb22e825e1153db6280aeb2878248cb6a8605202ed9b"
     },
     "sourceAlerts": {
       "es-maec": [
@@ -41,6 +41,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
         }
       ],
       "uk-fcdo": [],
+      "mopt": [],
       "imn": []
     },
     "alerts": [
@@ -61,32 +62,33 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
       }
     ],
     "sourceFailures": [
+      "es-maec: HTTP 504",
       "us-state: HTTP 403",
       "cne: HTTP 403"
     ]
   },
   "sudafrica": {
-    "checkedAt": "2026-11-09T13:56:14.106Z",
+    "checkedAt": "2026-11-10T13:29:31.634Z",
     "sourceFingerprints": {
       "es-maec": "3e03c8dc21476f95358edc864ae7b8fb51bec4e84e79dc5cc89a00373364dc65",
-      "uk-fcdo": "27f8df4b64c4282f688cbff3653c293c20233cde864f0f73a228adde335b77d9",
-      "gov-sa": "223cfae9dd1a52e38c223f56156fb72be8b98071ade859e8372c897bd313e085"
+      "uk-fcdo": "2ccf432de67d34177b962f8676ee0a47a7deff05d48cd7461a4a2eb01c2c9547",
+      "gov-sa": "a3b011447f425e8d102e4ff35f782885f0808203324c303e5ff392eed7829386"
     },
     "sourceAlerts": {
-      "es-maec": [],
       "uk-fcdo": [],
       "gov-sa": []
     },
     "alerts": [],
     "sourceFailures": [
+      "es-maec: HTTP 504",
       "us-state: HTTP 403"
     ]
   },
   "jordania": {
-    "checkedAt": "2026-11-09T13:56:14.106Z",
+    "checkedAt": "2026-11-10T13:29:31.634Z",
     "sourceFingerprints": {
-      "es-maec": "ff3b48729a3954906847f19f2fee965200c04400d156dec00b22a31bfab2f400",
-      "uk-fcdo": "2c45c1260d53b3374b1cecc21d8e070a78e01d1ac5f2019b1cb9884618cc01e8"
+      "es-maec": "7d0a47792c00834a5b78f1038676692c21cd3b0ace31ad0105749cc920ed9021",
+      "uk-fcdo": "fdddf3c8b5d0e73b7dbbddb338ca13896359bac2036bcf6eea668c8bf4acc5f8"
     },
     "sourceAlerts": {
       "es-maec": [],
@@ -98,10 +100,10 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
     ]
   },
   "grecia": {
-    "checkedAt": "2026-11-09T13:56:14.106Z",
+    "checkedAt": "2026-11-10T13:29:31.634Z",
     "sourceFingerprints": {
       "es-maec": "69e589c7103888f820e45a57ae3d82892a885f8e05c0354f5081c057652342e1",
-      "uk-fcdo": "28d12caaa2aac93654c598bd29378e91b59caf9e57f4feac8cf43319d4261e54"
+      "uk-fcdo": "85dd911927ffc32247e95d9621cf8128db6634b6932f9b5be817aee06194438c"
     },
     "sourceAlerts": {
       "es-maec": [
@@ -171,6 +173,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
       }
     ],
     "sourceFailures": [
+      "es-maec: HTTP 504",
       "us-state: HTTP 403"
     ]
   }
