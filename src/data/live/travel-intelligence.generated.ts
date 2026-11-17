@@ -15,12 +15,12 @@ export interface LiveGuideUpdate {
 
 export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
   "costa-rica": {
-    "checkedAt": "2026-11-16T13:41:08.083Z",
+    "checkedAt": "2026-11-17T14:27:48.874Z",
     "sourceFingerprints": {
       "es-maec": "d27efa05b6a990e96e74045bdad37e36bf12b9fb42ca100d6d77f3fb1d341fbe",
-      "uk-fcdo": "b42a6da991a37d6bb334f1e856ec3bf086e4303fddf78084fa0c3315b0f337f1",
-      "mopt": "d9d9c7e13f8a9df52b19ef96ec5cf9d3430faaea44b1dcd96db11ed344217fed",
-      "imn": "ada1a12a7be4939fc4171314279fb277648172cb7dabf67072e553ba4036a173"
+      "uk-fcdo": "c752ade21a56015f5d013f68c197926cd99295910c2b76bcef8d9aa743237b86",
+      "mopt": "e0f0b579ae5794656aff7a68a61a589f7e5599abdf72dac284c035225a0c71b8",
+      "imn": "73e4152901f225737b30fc5a2ae62493c677509e3a77487133116369fcaf9d17"
     },
     "sourceAlerts": {
       "es-maec": [
@@ -41,6 +41,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
         }
       ],
       "uk-fcdo": [],
+      "mopt": [],
       "imn": []
     },
     "alerts": [
@@ -61,16 +62,17 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
       }
     ],
     "sourceFailures": [
+      "es-maec: HTTP 504",
       "us-state: HTTP 403",
       "cne: HTTP 403"
     ]
   },
   "sudafrica": {
-    "checkedAt": "2026-11-16T13:41:08.083Z",
+    "checkedAt": "2026-11-17T14:27:48.874Z",
     "sourceFingerprints": {
-      "es-maec": "cddf4258b82e4f7b73469bae04f8c83c8c5e37543807d1cd8c9e03f89d98b6e2",
-      "uk-fcdo": "fda6f3205ac00c49d33323023f254beff6fa803765ea271e76c5c8fe546e20db",
-      "gov-sa": "f4d2f2593296427dd88fc9fca8b95f656ab55b59ff2a02b58fc356f2d83a274c"
+      "es-maec": "6f586e06448c3ab1dcf901d110792b20a38a8b527699d6a721fd8f517a44c9d8",
+      "uk-fcdo": "df1ad8fd06cc6e22fd16329c680fb8aca6665bcc1cd00ad577eeba8b7e3de3b2",
+      "gov-sa": "f88b77d60a23968439d8419dd5e72f03b895e9734af05684e2666e0ef4fb344e"
     },
     "sourceAlerts": {
       "es-maec": [],
@@ -83,31 +85,31 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
     ]
   },
   "jordania": {
-    "checkedAt": "2026-11-16T13:41:08.083Z",
+    "checkedAt": "2026-11-17T14:27:48.874Z",
     "sourceFingerprints": {
       "es-maec": "50230188c36c5598bafb7ad9e5ee821a223e45230f2fc9b7f450ce80a77ae550",
-      "uk-fcdo": "1a644690d882005c5d101069801fb765c1483bb4bbadbbf669d42d8c47ba827f"
+      "uk-fcdo": "43eb5a97abe22a0356929d82db992472f33025147c1b52fac82a61341ede815a"
     },
     "sourceAlerts": {
-      "es-maec": [],
       "uk-fcdo": []
     },
     "alerts": [],
     "sourceFailures": [
+      "es-maec: HTTP 504",
       "us-state: HTTP 403"
     ]
   },
   "grecia": {
-    "checkedAt": "2026-11-16T13:41:08.083Z",
+    "checkedAt": "2026-11-17T14:27:48.874Z",
     "sourceFingerprints": {
-      "es-maec": "50531ed1f4b71a4a2f08c248a3e1fbadb2e921b2bda9af39af2df398661837a4",
-      "uk-fcdo": "82de5b776962fc8d2deb9c212229b38f28c742859c5d42bcedff0ffd05e8be4d"
+      "es-maec": "c24dad72194fb5f6cdb4dce08e4e26cef7bf435de7bbfc4dff973fcaf4a28bf9",
+      "uk-fcdo": "4ec97e6f48954e8d3f727376332e6caf9db75556828cc1da7e2df96b86d578b1"
     },
     "sourceAlerts": {
       "es-maec": [
         {
           "id": "live-f50f63f4aea5f407",
-          "date": "2026-11-16",
+          "date": "2026-11-17",
           "type": "carretera",
           "severity": "high",
           "title": "Carretera — información detectada",
@@ -116,13 +118,13 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
           "sourceLabel": "España — Recomendaciones de viaje (ES)",
           "sourceType": "official",
           "active": true,
-          "checkedAt": "2026-11-16T13:41:08.083Z",
+          "checkedAt": "2026-11-17T14:27:48.874Z",
           "affectedAreas": [],
           "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
         },
         {
           "id": "live-97b180b4ede9a642",
-          "date": "2026-11-16",
+          "date": "2026-11-17",
           "type": "transporte",
           "severity": "high",
           "title": "Transporte — información detectada",
@@ -131,7 +133,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
           "sourceLabel": "España — Recomendaciones de viaje (ES)",
           "sourceType": "official",
           "active": true,
-          "checkedAt": "2026-11-16T13:41:08.083Z",
+          "checkedAt": "2026-11-17T14:27:48.874Z",
           "affectedAreas": [],
           "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
         }
@@ -141,7 +143,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
     "alerts": [
       {
         "id": "live-f50f63f4aea5f407",
-        "date": "2026-11-16",
+        "date": "2026-11-17",
         "type": "carretera",
         "severity": "high",
         "title": "Carretera — información detectada",
@@ -150,13 +152,13 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
         "sourceLabel": "España — Recomendaciones de viaje (ES)",
         "sourceType": "official",
         "active": true,
-        "checkedAt": "2026-11-16T13:41:08.083Z",
+        "checkedAt": "2026-11-17T14:27:48.874Z",
         "affectedAreas": [],
         "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
       },
       {
         "id": "live-97b180b4ede9a642",
-        "date": "2026-11-16",
+        "date": "2026-11-17",
         "type": "transporte",
         "severity": "high",
         "title": "Transporte — información detectada",
@@ -165,7 +167,7 @@ export const liveGuideUpdates: Record<string, LiveGuideUpdate> = {
         "sourceLabel": "España — Recomendaciones de viaje (ES)",
         "sourceType": "official",
         "active": true,
-        "checkedAt": "2026-11-16T13:41:08.083Z",
+        "checkedAt": "2026-11-17T14:27:48.874Z",
         "affectedAreas": [],
         "travelerAction": "Consulta la fuente oficial y comprueba cómo afecta a tu ruta antes de desplazarte."
       }
